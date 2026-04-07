@@ -79,17 +79,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: err?.message ?? 'AI generation failed' }, { status: 500 })
   }
 
-  // --- Save to Supabase ---
+  // --- Save to Supabase (upsert so it works for new images too) ---
   const supabase = createServiceClient()
   const { error: dbError } = await supabase
     .from('portfolio_images')
-    .update({
+    .upsert({
+      public_id: publicId,
       ...captions,
+      category:        category ?? 'other',
+      location:        location ?? '',
       ai_generated:    true,
       ai_generated_at: new Date().toISOString(),
       seo_keywords:    keywords ?? '',
-    })
-    .eq('public_id', publicId)
+    }, { onConflict: 'public_id' })
 
   if (dbError) {
     return NextResponse.json({ error: dbError.message }, { status: 500 })

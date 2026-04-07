@@ -84,12 +84,19 @@ export default function CloudinaryImage({
   }
 
   if (hasError) {
+    const fallbackUrl = `https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_${width || 800},h_${height || 600},c_fill,g_auto/samples/landscapes/nature-mountains`
     return (
-      <div
-        className={`bg-gray-200 flex items-center justify-center text-gray-400 ${className}`}
-        style={{ width, height }}
-      >
-        Failed to load image
+      <div className={`relative overflow-hidden bg-gray-100 ${caption ? '' : className}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={fallbackUrl}
+          alt={alt}
+          className={`w-full h-full object-cover ${className}`}
+          style={{ opacity: 0.5 }}
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-xs text-gray-500 bg-white/80 px-2 py-1 rounded">Imagen próximamente</span>
+        </div>
       </div>
     )
   }
