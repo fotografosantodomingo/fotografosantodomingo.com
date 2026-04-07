@@ -1,0 +1,31 @@
+// Site constants
+export const SITE_CONFIG = {
+  name: 'Fotografo Santo Domingo | Babula Shots',
+  url: 'https://fotografosantodomingo.com',
+  description: 'Fotografía profesional en Santo Domingo y República Dominicana',
+  ogImage: 'https://fotografosantodomingo.com/images/og-default.webp',
+}
+
+// Contact information
+export const CONTACT_INFO = {
+  email: 'info@fotografosantodomingo.com',
+  phone: '+1 (809) 720-9547',
+  whatsapp: '18097209547',
+  whatsappMessage: 'Hola! Me interesa una sesión de fotos.',
+}
+
+// Social media links
+export const SOCIAL_LINKS = {
+  instagram: 'https://instagram.com/babulashots',
+  facebook: 'https://facebook.com/babulashots',
+  tiktok: 'https://www.tiktok.com/@babulashots',
+  linkedin: 'https://linkedin.com/company/babula-shots',
+  youtube: 'https://youtube.com/@babulashots',
+  twitter: 'https://twitter.com/babulashots',
+}
+
+// Booking links
+export const BOOKING_LINKS = {
+  setmore: 'https://babulashotsrd.setmore.com',
+  calendly: 'https://calendly.com/info-vym7',
+}

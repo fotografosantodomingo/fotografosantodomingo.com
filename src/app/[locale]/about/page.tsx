@@ -1,0 +1,431 @@
+import Link from 'next/link'
+import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
+
+type Props = {
+  params: { locale: string }
+}
+
+export default function AboutPage({ params: { locale } }: Props) {
+  const testimonials = [
+    {
+      name: 'María González',
+      role: locale === 'es' ? 'Novia' : 'Bride',
+      content: locale === 'es'
+        ? 'Babula capturó perfectamente el día más importante de mi vida. Cada foto cuenta una historia hermosa de amor y alegría.'
+        : 'Babula perfectly captured the most important day of my life. Every photo tells a beautiful story of love and joy.',
+      rating: 5,
+    },
+    {
+      name: 'Carlos Rodríguez',
+      role: locale === 'es' ? 'CEO, TechCorp' : 'CEO, TechCorp',
+      content: locale === 'es'
+        ? 'Las fotos corporativas superaron nuestras expectativas. Profesional, creativo y entregó exactamente lo que necesitábamos.'
+        : 'The corporate photos exceeded our expectations. Professional, creative, and delivered exactly what we needed.',
+      rating: 5,
+    },
+    {
+      name: 'Ana Martínez',
+      role: locale === 'es' ? 'Madre de Familia' : 'Mother',
+      content: locale === 'es'
+        ? 'Nuestra sesión familiar fue increíble. Capturó los momentos más genuinos y naturales de nuestra familia.'
+        : 'Our family session was incredible. He captured the most genuine and natural moments of our family.',
+      rating: 5,
+    },
+  ]
+
+  const achievements = [
+    {
+      number: '500+',
+      label: locale === 'es' ? 'Bodas Fotografiadas' : 'Weddings Photographed',
+      icon: '💍',
+    },
+    {
+      number: '10+',
+      label: locale === 'es' ? 'Años de Experiencia' : 'Years Experience',
+      icon: '📅',
+    },
+    {
+      number: '20+',
+      label: locale === 'es' ? 'Ubicaciones Servidas' : 'Locations Served',
+      icon: '📍',
+    },
+    {
+      number: '5★',
+      label: locale === 'es' ? 'Calificación en Google' : 'Google Rating',
+      icon: '⭐',
+    },
+  ]
+
+  return (
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-primary-50 to-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              {locale === 'es' ? 'Sobre Babula Shots' : 'About Babula Shots'}
+            </h1>
+            <p className="text-xl text-gray-600 mb-8">
+              {locale === 'es'
+                ? 'Fotógrafo profesional especializado en capturar los momentos más importantes de tu vida con pasión y creatividad'
+                : 'Professional photographer specialized in capturing the most important moments of your life with passion and creativity'
+              }
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Story Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Story Content */}
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                {locale === 'es' ? 'Mi Historia' : 'My Story'}
+              </h2>
+              <div className="space-y-6 text-gray-600 leading-relaxed">
+                <p>
+                  {locale === 'es'
+                    ? 'Desde niño, siempre me fascinó capturar momentos especiales con la cámara. Lo que comenzó como un hobby se convirtió en mi pasión profesional hace más de una década.'
+                    : 'Since I was a child, I was always fascinated by capturing special moments with the camera. What started as a hobby became my professional passion over a decade ago.'
+                  }
+                </p>
+                <p>
+                  {locale === 'es'
+                    ? 'En 2013, decidí convertir mi pasión en mi carrera profesional. Comencé fotografiando eventos familiares y bodas locales, perfeccionando mi técnica y estilo único.'
+                    : 'In 2013, I decided to turn my passion into my professional career. I started photographing family events and local weddings, perfecting my technique and unique style.'
+                  }
+                </p>
+                <p>
+                  {locale === 'es'
+                    ? 'Hoy, con más de 500 bodas fotografiadas y miles de momentos especiales capturados, me enorgullezco de ser el fotógrafo de referencia en Santo Domingo y Punta Cana.'
+                    : 'Today, with over 500 weddings photographed and thousands of special moments captured, I pride myself on being the reference photographer in Santo Domingo and Punta Cana.'
+                  }
+                </p>
+                <p>
+                  {locale === 'es'
+                    ? 'Mi enfoque se basa en la autenticidad, la conexión emocional y la atención al detalle. Creo que cada historia merece ser contada de manera única y memorable.'
+                    : 'My approach is based on authenticity, emotional connection, and attention to detail. I believe every story deserves to be told in a unique and memorable way.'
+                  }
+                </p>
+              </div>
+
+              <div className="mt-8">
+                <Link
+                  href={`/${locale}/portfolio`}
+                  className="btn-primary mr-4"
+                >
+                  {locale === 'es' ? 'Ver Mi Trabajo' : 'View My Work'}
+                </Link>
+                <a
+                  href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary"
+                >
+                  {locale === 'es' ? 'Hablemos' : "Let's Talk"}
+                </a>
+              </div>
+            </div>
+
+            {/* Profile Image Placeholder */}
+            <div className="relative">
+              <div className="aspect-square bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="text-8xl opacity-30">📸</div>
+              </div>
+              {/* Decorative elements */}
+              <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center">
+                <span className="text-2xl">🎨</span>
+              </div>
+              <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-primary-200 rounded-full flex items-center justify-center">
+                <span className="text-xl">❤️</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Achievements Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              {locale === 'es' ? 'Logros y Experiencia' : 'Achievements & Experience'}
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              {locale === 'es'
+                ? 'Más de una década capturando momentos inolvidables'
+                : 'Over a decade capturing unforgettable moments'
+              }
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {achievements.map((achievement, index) => (
+              <div key={index} className="text-center">
+                <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-3xl">{achievement.icon}</span>
+                </div>
+                <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
+                  {achievement.number}
+                </div>
+                <div className="text-gray-600 font-medium">
+                  {achievement.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Overview */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              {locale === 'es' ? 'Especialidades' : 'Specialties'}
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              {locale === 'es'
+                ? 'Servicios especializados para cada tipo de ocasión'
+                : 'Specialized services for every type of occasion'
+              }
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: locale === 'es' ? 'Fotografía de Bodas' : 'Wedding Photography',
+                description: locale === 'es'
+                  ? 'Cobertura completa desde la preparación hasta el último baile'
+                  : 'Full coverage from preparation to the last dance',
+                icon: '💍',
+              },
+              {
+                title: locale === 'es' ? 'Retratos Corporativos' : 'Corporate Portraits',
+                description: locale === 'es'
+                  ? 'Imágenes profesionales para tu marca personal o empresa'
+                  : 'Professional images for your personal brand or company',
+                icon: '👔',
+              },
+              {
+                title: locale === 'es' ? 'Fotografía con Dron' : 'Drone Photography',
+                description: locale === 'es'
+                  ? 'Perspectivas únicas desde el cielo con licencia FAA'
+                  : 'Unique perspectives from the sky with FAA license',
+                icon: '🚁',
+              },
+              {
+                title: locale === 'es' ? 'Eventos Especiales' : 'Special Events',
+                description: locale === 'es'
+                  ? 'Bautizos, cumpleaños, aniversarios y celebraciones'
+                  : 'Baptisms, birthdays, anniversaries, and celebrations',
+                icon: '🎉',
+              },
+              {
+                title: locale === 'es' ? 'Sesiones Familiares' : 'Family Sessions',
+                description: locale === 'es'
+                  ? 'Momentos naturales y auténticos con tu familia'
+                  : 'Natural and authentic moments with your family',
+                icon: '👨‍👩‍👧‍👦',
+              },
+              {
+                title: locale === 'es' ? 'Fotografía Comercial' : 'Commercial Photography',
+                description: locale === 'es'
+                  ? 'Productos, alimentos, arquitectura y branding'
+                  : 'Products, food, architecture, and branding',
+                icon: '📸',
+              },
+            ].map((service, index) => (
+              <div key={index} className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
+                <div className="text-4xl mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  {service.title}
+                </h3>
+                <p className="text-gray-600">
+                  {service.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-primary-600 text-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {locale === 'es' ? 'Lo que dicen mis clientes' : 'What my clients say'}
+            </h2>
+            <p className="text-xl opacity-90 max-w-2xl mx-auto">
+              {locale === 'es'
+                ? 'Historias de parejas, familias y empresas que confiaron en mí'
+                : 'Stories from couples, families, and businesses who trusted me'
+              }
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6">
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <span key={i} className="text-yellow-400 text-lg">⭐</span>
+                  ))}
+                </div>
+                <blockquote className="text-white mb-4 italic">
+                  &ldquo;{testimonial.content}&rdquo;
+                </blockquote>
+                <div>
+                  <div className="font-semibold text-white">{testimonial.name}</div>
+                  <div className="text-primary-200 text-sm">{testimonial.role}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Equipment & Approach */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            {/* Equipment */}
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                {locale === 'es' ? 'Equipo Profesional' : 'Professional Equipment'}
+              </h2>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl">📷</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Cámaras Profesionales</h3>
+                    <p className="text-gray-600">Sony A7R series con lentes de alta calidad</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl">💡</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Iluminación Profesional</h3>
+                    <p className="text-gray-600">Sistema de iluminación continuo y flash</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl">🚁</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Dron Licenciado</h3>
+                    <p className="text-gray-600">DJI con licencia FAA para fotografía aérea</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl">💻</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Post-producción</h3>
+                    <p className="text-gray-600">Adobe Lightroom y Photoshop para edición profesional</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Approach */}
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                {locale === 'es' ? 'Mi Enfoque' : 'My Approach'}
+              </h2>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {locale === 'es' ? 'Autenticidad' : 'Authenticity'}
+                  </h3>
+                  <p className="text-gray-600">
+                    {locale === 'es'
+                      ? 'Capturo momentos genuinos y emociones reales, no poses forzadas.'
+                      : 'I capture genuine moments and real emotions, not forced poses.'
+                    }
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {locale === 'es' ? 'Conexión Personal' : 'Personal Connection'}
+                  </h3>
+                  <p className="text-gray-600">
+                    {locale === 'es'
+                      ? 'Creo una relación de confianza para que te sientas cómodo durante la sesión.'
+                      : 'I create a trusting relationship so you feel comfortable during the session.'
+                    }
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {locale === 'es' ? 'Atención al Detalle' : 'Attention to Detail'}
+                  </h3>
+                  <p className="text-gray-600">
+                    {locale === 'es'
+                      ? 'Cada imagen es editada meticulosamente para resaltar lo mejor de cada momento.'
+                      : 'Each image is meticulously edited to highlight the best of each moment.'
+                    }
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    {locale === 'es' ? 'Experiencia Local' : 'Local Experience'}
+                  </h3>
+                  <p className="text-gray-600">
+                    {locale === 'es'
+                      ? 'Conozco los mejores lugares de Santo Domingo y Punta Cana para sesiones inolvidables.'
+                      : 'I know the best places in Santo Domingo and Punta Cana for unforgettable sessions.'
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gray-900 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            {locale === 'es' ? '¿Listo para trabajar juntos?' : 'Ready to work together?'}
+          </h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+            {locale === 'es'
+              ? 'Hablemos de tu proyecto fotográfico y creemos algo increíble juntos.'
+              : "Let's talk about your photography project and create something amazing together."
+            }
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href={BOOKING_LINKS.calendly}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-primary-600 hover:bg-primary-700 px-8 py-4 rounded-lg font-semibold transition-colors"
+            >
+              {locale === 'es' ? 'Agendar Consulta Gratuita' : 'Book Free Consultation'}
+            </a>
+            <a
+              href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 hover:bg-green-600 px-8 py-4 rounded-lg font-semibold transition-colors"
+            >
+              WhatsApp: {CONTACT_INFO.phone}
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  )
+}
