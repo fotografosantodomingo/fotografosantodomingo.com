@@ -33,6 +33,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS portfolio_images_updated_at ON portfolio_images;
 CREATE TRIGGER portfolio_images_updated_at
   BEFORE UPDATE ON portfolio_images
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
