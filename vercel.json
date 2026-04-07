@@ -3,10 +3,6 @@
   "buildCommand": "next build",
   "outputDirectory": ".next",
   "installCommand": "npm install",
-  "domains": [
-    "fotografosantodomingo.com",
-    "www.fotografosantodomingo.com"
-  ],
   "headers": [
     {
       "source": "/(.*)",
