@@ -2,9 +2,15 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import type { PortfolioImage } from '@/lib/types/portfolio'
 import { resolveLocale } from '@/lib/types/portfolio'
+
+const CLOUD = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? 'dwewurxla'
+function cloudUrl(publicId: string) {
+  return `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto/${publicId}`
+}
 
 interface PortfolioClientProps {
   images: PortfolioImage[]
@@ -82,33 +88,28 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
               return (
                 <figure key={item.id} className="group cursor-pointer m-0">
                   <div className="relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    {/* Image placeholder — replaced with CloudinaryImage once Cloudinary has the photos */}
-                    <div
-                      className="h-80 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
-                      role="img"
-                      aria-label={loc.alt}
+                    <Image
+                      src={cloudUrl(item.public_id)}
+                      alt={loc.alt}
                       title={loc.title}
-                    >
-                      <div className="text-6xl opacity-30">
-                        {categoryEmoji[item.category] ?? '📷'}
-                      </div>
-                    </div>
-
+                      width={item.width || 1200}
+                      height={item.height || 800}
+                      className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                      priority
+                    />
                     {/* Overlay */}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-all duration-300 flex items-center justify-center">
-                      <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
                         <p className="text-xl font-bold mb-2">{loc.title}</p>
                         <p className="text-sm">{item.location}</p>
                         <p className="text-xs mt-2 max-w-xs">{loc.description}</p>
                       </div>
                     </div>
-
                     {/* Category badge */}
                     <div className="absolute top-4 left-4 bg-white bg-opacity-90 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
                       {categories.find((c) => c.id === item.category)?.label}
                     </div>
                   </div>
-                  {/* Semantic figcaption — crawlable by Google */}
                   {loc.caption && (
                     <figcaption className="text-sm text-gray-500 mt-2 italic px-1">
                       {loc.caption}
@@ -148,20 +149,16 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
               return (
                 <figure key={item.id} className="group cursor-pointer m-0">
                   <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <div
-                      className="h-64 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
-                      role="img"
-                      aria-label={loc.alt}
+                    <Image
+                      src={cloudUrl(item.public_id)}
+                      alt={loc.alt}
                       title={loc.title}
-                      // When real Cloudinary images are connected, replace this div with:
-                      // <CloudinaryImage publicId={item.public_id} alt={loc.alt}
-                      //   title={loc.title} caption={loc.caption} priority={isPriority} />
-                    >
-                      <div className="text-4xl opacity-30">
-                        {categoryEmoji[item.category] ?? '📷'}
-                      </div>
-                    </div>
-
+                      width={item.width || 1200}
+                      height={item.height || 800}
+                      className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading={isPriority ? 'eager' : 'lazy'}
+                      priority={isPriority}
+                    />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-end">
                       <div className="text-white p-4 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <p className="text-lg font-bold mb-1">{loc.title}</p>
@@ -170,7 +167,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                     </div>
                   </div>
                   {loc.caption && (
-                    <figcaption className="text-xs text-gray-500 mt-1 italic px-1 truncate">
+                    <figcaption className="text-xs text-gray-500 mt-1 italic px-1">
                       {loc.caption}
                     </figcaption>
                   )}
