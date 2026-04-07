@@ -47,5 +47,12 @@ database/*.sqlite
 *.temp
 
 # Service account keys and secrets
-*.json
 loyal-network-*.json
+# Ignore all JSON except project-required ones
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!vercel.json
+!src/messages/*.json
+!.eslintrc.json

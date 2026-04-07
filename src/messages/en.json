@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "title": "Professional Photographer Santo Domingo DR | Wedding, Portrait & Drone Photography",
+    "description": "Award-winning photographer in Santo Domingo, Dominican Republic. Specializing in weddings, corporate headshots, drone photography, family sessions & commercial work. Book today!"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "about": "About",
+    "blog": "Blog",
+    "contact": "Contact",
+    "book_now": "Book Now",
+    "whatsapp": "WhatsApp Us",
+    "phone": "Call Us",
+    "language_switch": "Español"
+  },
+  "hero": {
+    "title_main": "Professional Photography",
+    "title_highlight": "in Santo Domingo, DR",
+    "subtitle": "Capturing weddings, portraits, corporate headshots, drone shots & family moments across the Dominican Republic since 2015.",
+    "cta_primary": "View Our Work",
+    "cta_secondary": "Get a Quote",
+    "stats_weddings": "500+ Weddings Covered",
+    "stats_years": "10+ Years Experience",
+    "stats_locations": "20+ Locations Served",
+    "stats_reviews": "5-Star Google Reviews"
+  },
+  "common": {
+    "made_with_love": "Made with ❤️ in Santo Domingo, DR"
+  },
+  "footer": {
+    "description": "Professional photography services in Santo Domingo and the Dominican Republic since 2015. Weddings, portraits, drones, commercial & more.",
+    "newsletter": {
+      "title": "Newsletter",
+      "subtitle": "Get photography tips & exclusive offers from Santo Domingo's top photographer"
+    }
+  },
+  "contact": {
+    "info": {
+      "office": "Studio Location – Santo Domingo",
+      "response_time": "Average response time: 2 hours"
+    }
+  },
+  "blog": {
+    "title": "Photography Blog",
+    "subtitle": "Tips, insights, and stories from behind the lens",
+    "read_more": "Read More",
+    "back_to_blog": "Back to Blog",
+    "published_on": "Published on",
+    "by": "by",
+    "reading_time": "min read",
+    "share": "Share",
+    "related_posts": "Related Posts",
+    "categories": "Categories",
+    "tags": "Tags",
+    "search": "Search articles...",
+    "no_results": "No articles found matching your search.",
+    "load_more": "Load More",
+    "featured": "Featured",
+    "latest": "Latest Posts",
+    "popular": "Popular Posts",
+    "categories_list": {
+      "wedding": "Wedding Photography",
+      "portrait": "Portrait Photography",
+      "drone": "Drone Photography",
+      "commercial": "Commercial Photography",
+      "tips": "Photography Tips",
+      "behind_scenes": "Behind the Scenes"
+    }
+  }
+}

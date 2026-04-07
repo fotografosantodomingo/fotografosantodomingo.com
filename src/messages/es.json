@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "title": "Fotógrafo Profesional Santo Domingo RD | Bodas, Retratos y Drones",
+    "description": "Fotógrafo premiado en Santo Domingo, República Dominicana. Especialista en bodas, retratos ejecutivos, fotografía con dron, sesiones familiares y trabajo comercial. ¡Reserva hoy!"
+  },
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "portfolio": "Portafolio",
+    "about": "Nosotros",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "book_now": "Reservar Ahora",
+    "whatsapp": "WhatsApp",
+    "phone": "Llamar",
+    "language_switch": "English"
+  },
+  "hero": {
+    "title_main": "Fotografía Profesional",
+    "title_highlight": "en Santo Domingo, RD",
+    "subtitle": "Capturando bodas, retratos, fotos corporativas, drones y momentos familiares en toda República Dominicana desde 2015.",
+    "cta_primary": "Ver Nuestro Trabajo",
+    "cta_secondary": "Solicitar Cotización",
+    "stats_weddings": "500+ Bodas Cubiertas",
+    "stats_years": "10+ Años de Experiencia",
+    "stats_locations": "20+ Ubicaciones Atendidas",
+    "stats_reviews": "Reseñas 5 Estrellas en Google"
+  },
+  "common": {
+    "made_with_love": "Hecho con ❤️ en Santo Domingo, RD"
+  },
+  "footer": {
+    "description": "Servicios de fotografía profesional en Santo Domingo y toda República Dominicana desde 2015. Bodas, retratos, drones, comerciales y más.",
+    "newsletter": {
+      "title": "Boletín Informativo",
+      "subtitle": "Recibe tips de fotografía y ofertas exclusivas del mejor fotógrafo de Santo Domingo"
+    }
+  },
+  "contact": {
+    "info": {
+      "office": "Ubicación del Estudio – Santo Domingo",
+      "response_time": "Tiempo promedio de respuesta: 2 horas"
+    }
+  },
+  "blog": {
+    "title": "Blog de Fotografía",
+    "subtitle": "Tips, conocimientos e historias desde detrás de la lente",
+    "read_more": "Leer Más",
+    "back_to_blog": "Volver al Blog",
+    "published_on": "Publicado el",
+    "by": "por",
+    "reading_time": "min de lectura",
+    "share": "Compartir",
+    "related_posts": "Artículos Relacionados",
+    "categories": "Categorías",
+    "tags": "Etiquetas",
+    "search": "Buscar artículos...",
+    "no_results": "No se encontraron artículos que coincidan con tu búsqueda.",
+    "load_more": "Cargar Más",
+    "featured": "Destacado",
+    "latest": "Últimas Publicaciones",
+    "popular": "Publicaciones Populares",
+    "categories_list": {
+      "wedding": "Fotografía de Bodas",
+      "portrait": "Fotografía de Retratos",
+      "drone": "Fotografía con Dron",
+      "commercial": "Fotografía Comercial",
+      "tips": "Tips de Fotografía",
+      "behind_scenes": "Detrás de Cámaras"
+    }
+  }
+}
