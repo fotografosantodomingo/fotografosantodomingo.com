@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { CONTACT_INFO } from '@/lib/utils/constants'
@@ -11,6 +11,9 @@ const CLOUD = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? 'dwewurxla'
 function cloudUrl(publicId: string) {
   return `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto/${publicId}`
 }
+function cloudUrlLarge(publicId: string) {
+  return `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto,w_2400/${publicId}`
+}
 
 interface PortfolioClientProps {
   images: PortfolioImage[]
@@ -19,6 +22,20 @@ interface PortfolioClientProps {
 
 export default function PortfolioClient({ images, locale }: PortfolioClientProps) {
   const [activeFilter, setActiveFilter] = useState('all')
+  const [lightbox, setLightbox] = useState<PortfolioImage | null>(null)
+
+  const closeLightbox = useCallback(() => setLightbox(null), [])
+
+  useEffect(() => {
+    if (!lightbox) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeLightbox() }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [lightbox, closeLightbox])
 
   const categories = [
     { id: 'all',        label: locale === 'es' ? 'Todos'     : 'All' },
@@ -70,7 +87,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
 
       {/* Featured Work */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-0 md:px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               {locale === 'es' ? 'Trabajos Destacados' : 'Featured Work'}
@@ -82,12 +99,12 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-8 mb-16">
             {featuredItems.map((item) => {
               const loc = resolveLocale(item, locale)
               return (
-                <figure key={item.id} className="group cursor-pointer m-0">
-                  <div className="relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <figure key={item.id} className="group cursor-pointer m-0" onClick={() => setLightbox(item)}>
+                  <div className="relative overflow-hidden md:rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <Image
                       src={cloudUrl(item.public_id)}
                       alt={loc.alt}
@@ -103,6 +120,9 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                         <p className="text-xl font-bold mb-2">{loc.title}</p>
                         <p className="text-sm">{item.location}</p>
                         <p className="text-xs mt-2 max-w-xs">{loc.description}</p>
+                        <p className="text-xs mt-3 bg-white bg-opacity-20 px-3 py-1 rounded-full inline-block">
+                          {locale === 'es' ? 'Ver a tamaño original →' : 'View full size →'}
+                        </p>
                       </div>
                     </div>
                     {/* Category badge */}
@@ -111,7 +131,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                     </div>
                   </div>
                   {loc.caption && (
-                    <figcaption className="text-sm text-gray-500 mt-2 italic px-1">
+                    <figcaption className="text-sm text-gray-500 mt-2 italic px-1 hidden md:block">
                       {loc.caption}
                     </figcaption>
                   )}
@@ -124,8 +144,8 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
 
       {/* Filter + Grid */}
       <section className="py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div className="container mx-auto px-0 md:px-4">
+          <div className="flex flex-wrap justify-center gap-4 mb-12 px-4 md:px-0">
             {categories.map((category) => (
               <button
                 key={category.id}
@@ -141,14 +161,14 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-6">
             {filteredItems.map((item, index) => {
               const loc = resolveLocale(item, locale)
               // First 2 items are above the fold — no lazy loading (better LCP)
               const isPriority = index < 2
               return (
-                <figure key={item.id} className="group cursor-pointer m-0">
-                  <div className="relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                <figure key={item.id} className="group cursor-pointer m-0" onClick={() => setLightbox(item)}>
+                  <div className="relative overflow-hidden md:rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <Image
                       src={cloudUrl(item.public_id)}
                       alt={loc.alt}
@@ -167,7 +187,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                     </div>
                   </div>
                   {loc.caption && (
-                    <figcaption className="text-xs text-gray-500 mt-1 italic px-1">
+                    <figcaption className="text-xs text-gray-500 mt-1 italic px-1 hidden md:block">
                       {loc.caption}
                     </figcaption>
                   )}
@@ -224,6 +244,61 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
           </div>
         </div>
       </section>
+
+      {/* Lightbox */}
+      {lightbox && (() => {
+        const loc = resolveLocale(lightbox, locale)
+        return (
+          <div
+            className="fixed inset-0 z-50 bg-black flex flex-col"
+            onClick={closeLightbox}
+          >
+            {/* Top bar */}
+            <div
+              className="flex items-center justify-between px-4 py-3 bg-black bg-opacity-80 flex-shrink-0"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={closeLightbox}
+                className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors font-medium text-sm"
+              >
+                <span className="text-xl leading-none">←</span>
+                {locale === 'es' ? 'Volver al portafolio' : 'Back to portfolio'}
+              </button>
+              <div className="text-white text-center flex-1 mx-4">
+                <p className="font-semibold text-sm truncate">{loc.title}</p>
+                {lightbox.location && (
+                  <p className="text-xs text-gray-400">{lightbox.location}</p>
+                )}
+              </div>
+              <button
+                onClick={closeLightbox}
+                className="text-white hover:text-gray-300 transition-colors text-2xl leading-none w-8 h-8 flex items-center justify-center"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Image — fills remaining space */}
+            <div
+              className="flex-1 flex items-center justify-center overflow-hidden"
+              onClick={closeLightbox}
+            >
+              <Image
+                src={cloudUrlLarge(lightbox.public_id)}
+                alt={loc.alt}
+                title={loc.title}
+                width={lightbox.width || 2400}
+                height={lightbox.height || 1600}
+                className="max-w-full max-h-full object-contain"
+                priority
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+          </div>
+        )
+      })()}
     </main>
   )
 }
