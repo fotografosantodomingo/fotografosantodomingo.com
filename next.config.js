@@ -99,7 +99,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true, // Allow build to pass with ESLint errors
   },
-  },
 
   // =====================================================
   // OUTPUT MODE (for Vercel)
