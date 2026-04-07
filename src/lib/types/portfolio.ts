@@ -21,6 +21,10 @@ export interface PortfolioImage {
   sort_order: number
   width: number
   height: number
+  // AI generation tracking — added by migration 003
+  ai_generated?: boolean
+  ai_generated_at?: string | null
+  seo_keywords?: string
 }
 
 export interface ReviewStats {
