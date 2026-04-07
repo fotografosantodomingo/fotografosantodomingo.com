@@ -83,7 +83,7 @@ const nextConfig = {
   // EXPERIMENTAL FEATURES
   // =====================================================
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true, // Disabled for Vercel compatibility
   },
 
   // =====================================================
