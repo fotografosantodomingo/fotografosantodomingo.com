@@ -17,9 +17,18 @@ type CloudinaryTransformOptions = {
 interface CloudinaryImageProps {
   publicId: string
   alt: string
+  /** HTML title attribute — shown as tooltip on hover, helps search engines */
+  title?: string
+  /** Visible caption rendered in <figcaption> — crawlable by Google */
+  caption?: string
+  /** Class applied to the outer <figure> wrapper (used when caption is present) */
+  figureClassName?: string
+  /** Class applied to the <figcaption> element */
+  captionClassName?: string
   width?: number
   height?: number
   className?: string
+  /** Set true for above-the-fold images (LCP) to skip lazy loading */
   priority?: boolean
   quality?: number | 'auto'
   transform?: keyof typeof IMAGE_TRANSFORMS
@@ -32,6 +41,10 @@ interface CloudinaryImageProps {
 export default function CloudinaryImage({
   publicId,
   alt,
+  title,
+  caption,
+  figureClassName = '',
+  captionClassName = '',
   width,
   height,
   className = '',
@@ -81,8 +94,8 @@ export default function CloudinaryImage({
     )
   }
 
-  return (
-    <div className={`relative overflow-hidden ${className}`}>
+  const imageElement = (
+    <div className={`relative overflow-hidden ${caption ? '' : className}`}>
       {isLoading && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
           <div className="w-8 h-8 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
@@ -92,9 +105,11 @@ export default function CloudinaryImage({
       <Image
         src={imageUrl}
         alt={alt}
+        title={title}
         width={width || transformOptions.width || 600}
         height={height || transformOptions.height || 400}
         priority={priority}
+        loading={priority ? undefined : 'lazy'}
         placeholder={placeholder}
         blurDataURL={blurDataURL}
         className={`transition-opacity duration-300 ${
@@ -112,4 +127,19 @@ export default function CloudinaryImage({
       />
     </div>
   )
+
+  if (caption) {
+    return (
+      <figure className={`${figureClassName}`}>
+        <div className={`relative overflow-hidden ${className}`}>
+          {imageElement.props.children}
+        </div>
+        <figcaption className={`text-sm text-gray-600 mt-2 italic ${captionClassName}`}>
+          {caption}
+        </figcaption>
+      </figure>
+    )
+  }
+
+  return imageElement
 }

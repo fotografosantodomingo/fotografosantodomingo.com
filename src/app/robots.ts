@@ -9,6 +9,9 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/admin/', '/_next/', '/private/']
       }
     ],
-    sitemap: 'https://fotografosantodomingo.com/sitemap.xml' // UPDATED!
+    sitemap: [
+      'https://fotografosantodomingo.com/sitemap.xml',
+      'https://fotografosantodomingo.com/image-sitemap.xml',
+    ]
   }
 }
