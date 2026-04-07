@@ -1,4 +1,4 @@
-import { PortfolioImage, ReviewStats } from '@/lib/supabase/images'
+import { PortfolioImage, ReviewStats, resolveLocale } from '@/lib/types/portfolio'
 
 const BASE_URL = 'https://fotografosantodomingo.com'
 const CLOUDINARY_BASE = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
@@ -127,10 +127,10 @@ export const schemaGenerators = {
   // Provides 1:1, 4:3, and 16:9 crops so Google picks the best
   // ----------------------------------------------------------
   imageObject: (image: PortfolioImage, locale: string) => {
-    const title = locale === 'es' ? image.title_es : image.title_en
-    const description = locale === 'es' ? image.description_es : image.description_en
+    const { alt, title, caption, description } = resolveLocale(image, locale)
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
 
+    // Single canonical Cloudinary URL — never split between locales to preserve image authority
     const makeUrl = (transforms: string) =>
       `https://res.cloudinary.com/${cloudName}/image/upload/${transforms}/${image.public_id}`
 
@@ -139,8 +139,9 @@ export const schemaGenerators = {
       '@type': 'ImageObject',
       '@id': `${BASE_URL}/${locale}/portfolio#image-${image.id}`,
       name: title,
-      description: image.caption || description,
-      caption: image.caption || description,
+      description: caption || description,
+      caption: caption || description,
+      // Same Cloudinary URL for both locales — image authority stays consolidated
       contentUrl: makeUrl(`f_auto,q_auto`),
       url: makeUrl(`f_auto,q_auto`),
       // Multiple aspect ratios help Google choose the right snippet format
@@ -154,6 +155,11 @@ export const schemaGenerators = {
       height: image.height,
       encodingFormat: 'image/webp',
       representativeOfPage: image.featured,
+      // Locale-specific alternate links tell Google both language versions describe the same image
+      sameAs: [
+        `${BASE_URL}/es/portfolio#image-${image.id}`,
+        `${BASE_URL}/en/portfolio#image-${image.id}`,
+      ],
       author: {
         '@type': 'Person',
         name: 'Babula Shots',
@@ -193,16 +199,21 @@ export const schemaGenerators = {
       name: 'Babula Shots',
       url: BASE_URL,
     },
-    hasPart: images.map((img) => ({
-      '@type': 'ImageObject',
-      '@id': `${BASE_URL}/${locale}/portfolio#image-${img.id}`,
-      name: locale === 'es' ? img.title_es : img.title_en,
-      description: img.caption || (locale === 'es' ? img.description_es : img.description_en),
-      contentUrl: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/${img.public_id}`,
-      width: img.width,
-      height: img.height,
-      representativeOfPage: img.featured,
-    })),
+    hasPart: images.map((img) => {
+      const loc = resolveLocale(img, locale)
+      return {
+        '@type': 'ImageObject',
+        '@id': `${BASE_URL}/${locale}/portfolio#image-${img.id}`,
+        name: loc.title,
+        description: loc.caption || loc.description,
+        caption: loc.caption || loc.description,
+        // Same canonical URL regardless of locale
+        contentUrl: `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/f_auto,q_auto/${img.public_id}`,
+        width: img.width,
+        height: img.height,
+        representativeOfPage: img.featured,
+      }
+    }),
   }),
 
   // ... rest of generators updated with new base URL

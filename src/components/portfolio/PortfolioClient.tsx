@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { CONTACT_INFO } from '@/lib/utils/constants'
-import type { PortfolioImage } from '@/lib/supabase/images'
+import type { PortfolioImage } from '@/lib/types/portfolio'
+import { resolveLocale } from '@/lib/types/portfolio'
 
 interface PortfolioClientProps {
   images: PortfolioImage[]
@@ -76,9 +77,8 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {featuredItems.map((item, index) => {
-              const title = locale === 'es' ? item.title_es : item.title_en
-              const description = locale === 'es' ? item.description_es : item.description_en
+            {featuredItems.map((item) => {
+              const loc = resolveLocale(item, locale)
               return (
                 <figure key={item.id} className="group cursor-pointer m-0">
                   <div className="relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -86,8 +86,8 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                     <div
                       className="h-80 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
                       role="img"
-                      aria-label={item.alt_text}
-                      title={item.title_attribute}
+                      aria-label={loc.alt}
+                      title={loc.title}
                     >
                       <div className="text-6xl opacity-30">
                         {categoryEmoji[item.category] ?? '📷'}
@@ -97,9 +97,9 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                     {/* Overlay */}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-all duration-300 flex items-center justify-center">
                       <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="text-xl font-bold mb-2">{title}</p>
+                        <p className="text-xl font-bold mb-2">{loc.title}</p>
                         <p className="text-sm">{item.location}</p>
-                        <p className="text-xs mt-2 max-w-xs">{description}</p>
+                        <p className="text-xs mt-2 max-w-xs">{loc.description}</p>
                       </div>
                     </div>
 
@@ -109,9 +109,9 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                     </div>
                   </div>
                   {/* Semantic figcaption — crawlable by Google */}
-                  {item.caption && (
+                  {loc.caption && (
                     <figcaption className="text-sm text-gray-500 mt-2 italic px-1">
-                      {item.caption}
+                      {loc.caption}
                     </figcaption>
                   )}
                 </figure>
@@ -142,7 +142,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredItems.map((item, index) => {
-              const title = locale === 'es' ? item.title_es : item.title_en
+              const loc = resolveLocale(item, locale)
               // First 2 items are above the fold — no lazy loading (better LCP)
               const isPriority = index < 2
               return (
@@ -151,11 +151,11 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                     <div
                       className="h-64 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center group-hover:scale-105 transition-transform duration-300"
                       role="img"
-                      aria-label={item.alt_text}
-                      title={item.title_attribute}
+                      aria-label={loc.alt}
+                      title={loc.title}
                       // When real Cloudinary images are connected, replace this div with:
-                      // <CloudinaryImage publicId={item.public_id} alt={item.alt_text}
-                      //   title={item.title_attribute} priority={isPriority} ... />
+                      // <CloudinaryImage publicId={item.public_id} alt={loc.alt}
+                      //   title={loc.title} caption={loc.caption} priority={isPriority} />
                     >
                       <div className="text-4xl opacity-30">
                         {categoryEmoji[item.category] ?? '📷'}
@@ -164,14 +164,14 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
 
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-end">
                       <div className="text-white p-4 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="text-lg font-bold mb-1">{title}</p>
+                        <p className="text-lg font-bold mb-1">{loc.title}</p>
                         <p className="text-sm opacity-90">{item.location}</p>
                       </div>
                     </div>
                   </div>
-                  {item.caption && (
+                  {loc.caption && (
                     <figcaption className="text-xs text-gray-500 mt-1 italic px-1 truncate">
-                      {item.caption}
+                      {loc.caption}
                     </figcaption>
                   )}
                 </figure>
