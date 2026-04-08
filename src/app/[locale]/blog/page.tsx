@@ -9,6 +9,7 @@ import {
   searchPostsFromDb,
 } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
+import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -19,13 +20,18 @@ type Props = {
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   const isEs = locale === 'es'
+  const title = isEs
+    ? 'Blog de Fotografía — Consejos, Bodas & Tendencias | Babula Shots'
+    : 'Photography Blog — Tips, Weddings & Trends | Babula Shots'
+  const description = isEs
+    ? 'Artículos sobre fotografía profesional: consejos de bodas, sesiones familiares, drone y tendencias fotográficas en República Dominicana.'
+    : 'Photography articles: wedding tips, family sessions, drone and photography trends in the Dominican Republic.'
   return {
-    title: isEs
-      ? 'Blog de Fotografía — Consejos, Bodas & Tendencias | Babula Shots'
-      : 'Photography Blog — Tips, Weddings & Trends | Babula Shots',
-    description: isEs
-      ? 'Artículos sobre fotografía profesional: consejos de bodas, sesiones familiares, drone y tendencias fotográficas en República Dominicana.'
-      : 'Photography articles: wedding tips, family sessions, drone and photography trends in the Dominican Republic.',
+    title,
+    description,
+    keywords: isEs
+      ? 'blog fotografía santo domingo, consejos fotografía bodas, tendencias fotografía dominicana, sesiones familiares RD, drone fotografía caribe'
+      : 'photography blog santo domingo, wedding photography tips, dominican photography trends, family sessions DR, drone photography caribbean',
     alternates: {
       canonical: `${BASE_URL}/${locale}/blog`,
       languages: {
@@ -36,14 +42,27 @@ export async function generateMetadata({ params: { locale } }: { params: { local
     },
     openGraph: {
       type: 'website',
+      siteName: 'Fotografo Santo Domingo | Babula Shots',
       title: isEs ? 'Blog de Fotografía — Babula Shots' : 'Photography Blog — Babula Shots',
-      description: isEs
-        ? 'Artículos sobre fotografía profesional: consejos de bodas, sesiones familiares, drone y tendencias fotográficas en República Dominicana.'
-        : 'Photography articles: wedding tips, family sessions, drone and photography trends in the Dominican Republic.',
+      description,
       url: `${BASE_URL}/${locale}/blog`,
-      images: [{ url: `${BASE_URL}/api/og?title=Blog+de+Fotografía&subtitle=Consejos+·+Bodas+·+Tendencias`, width: 1200, height: 630 }],
+      locale: isEs ? 'es_DO' : 'en_US',
+      images: [{
+        url: `${BASE_URL}/api/og?title=Blog+de+Fotografía&subtitle=Consejos+·+Bodas+·+Tendencias`,
+        width: 1200,
+        height: 630,
+        alt: isEs ? 'Blog de Fotografía — Babula Shots' : 'Photography Blog — Babula Shots',
+      }],
     },
-    robots: { index: true, follow: true },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@babulashots',
+      creator: '@babulashots',
+      title: isEs ? 'Blog de Fotografía — Babula Shots' : 'Photography Blog — Babula Shots',
+      description,
+      images: [`${BASE_URL}/api/og?title=Blog+de+Fotografía&subtitle=Consejos+·+Bodas+·+Tendencias`],
+    },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
 }
 
@@ -87,8 +106,15 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
     })
   }
 
+  const breadcrumbSchema = schemaGenerators.breadcrumb([
+    { name: locale === 'es' ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
+    { name: locale === 'es' ? 'Blog' : 'Blog', url: `${BASE_URL}/${locale}/blog` },
+  ])
+
   return (
-    <main className="min-h-screen">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
+      <main className="min-h-screen">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-20">
         <div className="container mx-auto px-4">
@@ -380,5 +406,6 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
         </div>
       </section>
     </main>
+    </>
   )
 }

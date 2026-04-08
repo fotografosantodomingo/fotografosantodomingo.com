@@ -212,7 +212,153 @@ export const schemaGenerators = {
     }),
   }),
 
-  // ... rest of generators updated with new base URL
+  // ----------------------------------------------------------
+  // Article / BlogPosting — for individual blog post pages
+  // Enables Google Discover, article rich results, and sitelinks
+  // ----------------------------------------------------------
+  article: (post: {
+    slug: string
+    title: string
+    titleEs: string
+    excerpt: string
+    excerptEs: string
+    author: string
+    publishedAt: string
+    updatedAt?: string
+    tags: string[]
+    image?: string
+    seo: { title: string; titleEs: string; description: string; descriptionEs: string }
+  }, locale: string) => {
+    const title = locale === 'es' ? post.titleEs : post.title
+    const description = locale === 'es' ? post.excerptEs : post.excerpt
+    const url = `${BASE_URL}/${locale}/blog/${post.slug}`
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+    const image = post.image && cloudName
+      ? `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_1200/${post.image}`
+      : `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      '@id': url,
+      headline: title,
+      description,
+      image: { '@type': 'ImageObject', url: image, width: 1200, height: 630 },
+      author: {
+        '@type': 'Person',
+        name: post.author,
+        url: BASE_URL,
+        sameAs: ['https://www.instagram.com/babulashotsrd'],
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Fotografo Santo Domingo | Babula Shots',
+        url: BASE_URL,
+        logo: { '@type': 'ImageObject', url: `${BASE_URL}/images/logo.png`, width: 200, height: 60 },
+      },
+      datePublished: post.publishedAt,
+      dateModified: post.updatedAt || post.publishedAt,
+      url,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+      keywords: post.tags.join(', '),
+      inLanguage: locale === 'es' ? 'es-DO' : 'en-US',
+      isPartOf: { '@id': `${BASE_URL}/${locale}/blog` },
+    }
+  },
+
+  // ----------------------------------------------------------
+  // BreadcrumbList — for all inner pages (blog, services, etc.)
+  // Enables breadcrumb rich results in Google SERPs
+  // ----------------------------------------------------------
+  breadcrumb: (items: Array<{ name: string; url: string }>) => ({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  }),
+
+  // ----------------------------------------------------------
+  // Person — for the About page
+  // Establishes photographer identity in the knowledge graph
+  // ----------------------------------------------------------
+  person: (locale: string) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${BASE_URL}/#person`,
+    name: 'Michal Babula',
+    alternateName: 'Babula Shots',
+    url: BASE_URL,
+    image: `${BASE_URL}/images/og-default.webp`,
+    jobTitle: locale === 'es' ? 'Fotógrafo Profesional' : 'Professional Photographer',
+    description: locale === 'es'
+      ? 'Fotógrafo profesional con más de 10 años de experiencia en bodas, retratos, drone y eventos en Santo Domingo, República Dominicana.'
+      : 'Professional photographer with over 10 years of experience in weddings, portraits, drone and events in Santo Domingo, Dominican Republic.',
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Fotografo Santo Domingo | Babula Shots',
+      url: BASE_URL,
+    },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'C. El Conde 142',
+      addressLocality: 'Santo Domingo',
+      addressCountry: 'DO',
+    },
+    knowsAbout: locale === 'es'
+      ? ['fotografía de bodas', 'fotografía de retratos', 'fotografía con dron', 'fotografía de eventos', 'fotografía comercial']
+      : ['wedding photography', 'portrait photography', 'drone photography', 'event photography', 'commercial photography'],
+    sameAs: [
+      'https://www.instagram.com/babulashotsrd',
+      'https://babulashotsrd.com',
+    ],
+  }),
+
+  // ----------------------------------------------------------
+  // ServiceList — for the Services page
+  // Uses ItemList + Service for rich service results
+  // ----------------------------------------------------------
+  serviceList: (locale: string) => ({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: locale === 'es' ? 'Servicios Fotográficos — Babula Shots' : 'Photography Services — Babula Shots',
+    url: `${BASE_URL}/${locale}/services`,
+    itemListElement: [
+      { id: 'wedding', nameEs: 'Fotografía de Bodas', nameEn: 'Wedding Photography', price: '$2,500' },
+      { id: 'portrait', nameEs: 'Retratos Corporativos', nameEn: 'Corporate Portraits', price: '$150' },
+      { id: 'drone', nameEs: 'Fotografía con Dron', nameEn: 'Drone Photography', price: '$500' },
+      { id: 'event', nameEs: 'Fotografía de Eventos', nameEn: 'Event Photography', price: '$300' },
+      { id: 'family', nameEs: 'Sesiones Familiares', nameEn: 'Family Sessions', price: '$200' },
+      { id: 'commercial', nameEs: 'Fotografía Comercial', nameEn: 'Commercial Photography', price: '$250' },
+    ].map((svc, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        '@id': `${BASE_URL}/${locale}/services#${svc.id}`,
+        name: locale === 'es' ? svc.nameEs : svc.nameEn,
+        url: `${BASE_URL}/${locale}/services#${svc.id}`,
+        provider: {
+          '@type': 'LocalBusiness',
+          name: 'Fotografo Santo Domingo | Babula Shots',
+          url: BASE_URL,
+        },
+        areaServed: {
+          '@type': 'AdministrativeArea',
+          name: locale === 'es' ? 'República Dominicana' : 'Dominican Republic',
+        },
+        offers: {
+          '@type': 'Offer',
+          price: svc.price.replace('$', ''),
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+        },
+      },
+    })),
+  }),
 }
 
 export function generateJsonLd(schema: any) {

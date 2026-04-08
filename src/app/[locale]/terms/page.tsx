@@ -7,20 +7,36 @@ type Props = { params: { locale: string } }
 
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
   const isEs = locale === 'es'
+  const title = isEs
+    ? 'Términos y Condiciones — Fotógrafo Santo Domingo'
+    : 'Terms and Conditions — Photographer Santo Domingo'
+  const description = isEs
+    ? 'Términos y condiciones de fotografosantodomingo.com. Reservas, depósitos, cancela­ciones, derechos de imagen y entrega de fotografías.'
+    : 'Terms and conditions for fotografosantodomingo.com. Bookings, deposits, cancellations, image rights and photo delivery.'
   return {
-    title: isEs
-      ? 'Términos y Condiciones — Fotógrafo Santo Domingo'
-      : 'Terms and Conditions — Photographer Santo Domingo',
-    description: isEs
-      ? 'Términos y condiciones de fotografosantodomingo.com. Reservas, depósitos, cancela­ciones, derechos de imagen y entrega de fotografías.'
-      : 'Terms and conditions for fotografosantodomingo.com. Bookings, deposits, cancellations, image rights and photo delivery.',
+    title,
+    description,
+    keywords: isEs
+      ? 'términos condiciones fotografía santo domingo, política reservas fotógrafo RD, derechos imagen fotografía dominicana'
+      : 'terms conditions photography santo domingo, photographer booking policy DR, image rights dominican photography',
     alternates: {
       canonical: `${BASE_URL}/${locale}/terms`,
-      languages: {
-        es: `${BASE_URL}/es/terms`,
-        en: `${BASE_URL}/en/terms`,
-        'x-default': `${BASE_URL}/es/terms`,
-      },
+      languages: { es: `${BASE_URL}/es/terms`, en: `${BASE_URL}/en/terms`, 'x-default': `${BASE_URL}/es/terms` },
+    },
+    openGraph: {
+      type: 'website',
+      siteName: 'Fotografo Santo Domingo | Babula Shots',
+      title,
+      description,
+      url: `${BASE_URL}/${locale}/terms`,
+      locale: isEs ? 'es_DO' : 'en_US',
+      images: [{ url: `${BASE_URL}/api/og`, width: 1200, height: 630, alt: 'Fotografo Santo Domingo | Babula Shots' }],
+    },
+    twitter: {
+      card: 'summary',
+      site: '@babulashots',
+      title,
+      description,
     },
     robots: { index: true, follow: true },
   }

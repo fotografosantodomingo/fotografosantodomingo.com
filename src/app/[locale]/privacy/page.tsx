@@ -7,20 +7,36 @@ type Props = { params: { locale: string } }
 
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
   const isEs = locale === 'es'
+  const title = isEs
+    ? 'Política de Privacidad — Fotógrafo Santo Domingo'
+    : 'Privacy Policy — Photographer Santo Domingo'
+  const description = isEs
+    ? 'Política de privacidad de fotografosantodomingo.com. Cómo recopilamos, usamos y protegemos tu información personal.'
+    : 'Privacy policy for fotografosantodomingo.com. How we collect, use and protect your personal information.'
   return {
-    title: isEs
-      ? 'Política de Privacidad — Fotógrafo Santo Domingo'
-      : 'Privacy Policy — Photographer Santo Domingo',
-    description: isEs
-      ? 'Política de privacidad de fotografosantodomingo.com. Cómo recopilamos, usamos y protegemos tu información personal.'
-      : 'Privacy policy for fotografosantodomingo.com. How we collect, use and protect your personal information.',
+    title,
+    description,
+    keywords: isEs
+      ? 'política privacidad fotografía santo domingo, protección datos fotografosantodomingo, GDPR fotografía RD'
+      : 'privacy policy photography santo domingo, data protection fotografosantodomingo, photography DR privacy',
     alternates: {
       canonical: `${BASE_URL}/${locale}/privacy`,
-      languages: {
-        es: `${BASE_URL}/es/privacy`,
-        en: `${BASE_URL}/en/privacy`,
-        'x-default': `${BASE_URL}/es/privacy`,
-      },
+      languages: { es: `${BASE_URL}/es/privacy`, en: `${BASE_URL}/en/privacy`, 'x-default': `${BASE_URL}/es/privacy` },
+    },
+    openGraph: {
+      type: 'website',
+      siteName: 'Fotografo Santo Domingo | Babula Shots',
+      title,
+      description,
+      url: `${BASE_URL}/${locale}/privacy`,
+      locale: isEs ? 'es_DO' : 'en_US',
+      images: [{ url: `${BASE_URL}/api/og`, width: 1200, height: 630, alt: 'Fotografo Santo Domingo | Babula Shots' }],
+    },
+    twitter: {
+      card: 'summary',
+      site: '@babulashots',
+      title,
+      description,
     },
     robots: { index: true, follow: true },
   }

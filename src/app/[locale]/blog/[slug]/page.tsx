@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { getPostBySlug, getRelatedPosts } from '@/lib/blog/posts'
 import { getPostBySlugFromDb, getRelatedPostsFromDb } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
+import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 import type { Metadata } from 'next'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
@@ -36,21 +37,27 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
       },
     },
     openGraph: {
+      type: 'article',
+      siteName: 'Fotografo Santo Domingo | Babula Shots',
       title,
       description,
-      type: 'article',
       url: `${BASE_URL}/${locale}/blog/${slug}`,
+      locale: locale === 'es' ? 'es_DO' : 'en_US',
       publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt || post.publishedAt,
       authors: [post.author],
       tags: post.tags,
-      images: [{ url: `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`, width: 1200, height: 630 }],
+      images: [{ url: `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: 'summary_large_image',
+      site: '@babulashots',
+      creator: '@babulashots',
       title,
       description,
+      images: [`${BASE_URL}/api/og?title=${encodeURIComponent(title)}`],
     },
-    robots: { index: true, follow: true },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
 }
 
@@ -78,8 +85,18 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   // Split content into paragraphs for better rendering
   const paragraphs = content.split('\n\n').filter(p => p.trim())
 
+  const articleSchema = schemaGenerators.article(post, locale)
+  const breadcrumbSchema = schemaGenerators.breadcrumb([
+    { name: locale === 'es' ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
+    { name: 'Blog', url: `${BASE_URL}/${locale}/blog` },
+    { name: title, url: `${BASE_URL}/${locale}/blog/${slug}` },
+  ])
+
   return (
-    <main className="min-h-screen">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(articleSchema)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
+      <main className="min-h-screen">
       {/* Hero Section with Post Info */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-20">
         <div className="container mx-auto px-4">
@@ -333,5 +350,6 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         </div>
       </section>
     </main>
+    </>
   )
 }

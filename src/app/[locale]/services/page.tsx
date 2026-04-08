@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
+import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -11,22 +12,45 @@ type Props = {
 
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
   const isEs = locale === 'es'
+  const title = isEs
+    ? 'Servicios de Fotografía — Bodas, Drone, Retratos | Fotógrafo Santo Domingo'
+    : 'Photography Services — Weddings, Drone, Portraits | Photographer Santo Domingo'
+  const description = isEs
+    ? 'Servicios profesionales de fotografía en Santo Domingo: bodas, pre-boda, quinceañeras, retratos, moda, drone, eventos corporativos. Cotiza tu sesión hoy.'
+    : 'Professional photography services in Santo Domingo: weddings, pre-wedding, portraits, fashion, drone, corporate events. Get a quote today.'
   return {
-    title: isEs
-      ? 'Servicios de Fotografía — Bodas, Drone, Retratos | Fotógrafo Santo Domingo'
-      : 'Photography Services — Weddings, Drone, Portraits | Photographer Santo Domingo',
-    description: isEs
-      ? 'Servicios profesionales de fotografía en Santo Domingo: bodas, pre-boda, quinceañeras, retratos, moda, drone, eventos corporativos. Cotiza tu sesión hoy.'
-      : 'Professional photography services in Santo Domingo: weddings, pre-wedding, portraits, fashion, drone, corporate events. Get a quote today.',
+    title,
+    description,
+    keywords: isEs
+      ? 'servicios fotografía santo domingo, fotógrafo bodas RD, fotografía drone república dominicana, sesiones retratos ejecutivos, quinceañeras fotografía'
+      : 'photography services santo domingo, wedding photographer DR, drone photography dominican republic, executive portrait sessions, photography packages',
     alternates: {
       canonical: `${BASE_URL}/${locale}/services`,
       languages: { es: `${BASE_URL}/es/services`, en: `${BASE_URL}/en/services`, 'x-default': `${BASE_URL}/es/services` },
     },
     openGraph: {
+      type: 'website',
+      siteName: 'Fotografo Santo Domingo | Babula Shots',
       title: isEs ? 'Servicios de Fotografía — Fotógrafo Santo Domingo' : 'Photography Services — Photographer Santo Domingo',
+      description,
       url: `${BASE_URL}/${locale}/services`,
-      images: [{ url: `${BASE_URL}/api/og?title=Servicios+de+Fotografía&subtitle=Bodas+·+Drone+·+Retratos+·+Santo+Domingo`, width: 1200, height: 630 }],
+      locale: isEs ? 'es_DO' : 'en_US',
+      images: [{
+        url: `${BASE_URL}/api/og?title=Servicios+de+Fotografía&subtitle=Bodas+·+Drone+·+Retratos+·+Santo+Domingo`,
+        width: 1200,
+        height: 630,
+        alt: isEs ? 'Servicios de Fotografía Santo Domingo — Babula Shots' : 'Photography Services Santo Domingo — Babula Shots',
+      }],
     },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@babulashots',
+      creator: '@babulashots',
+      title: isEs ? 'Servicios de Fotografía — Fotógrafo Santo Domingo' : 'Photography Services — Photographer Santo Domingo',
+      description,
+      images: [`${BASE_URL}/api/og?title=Servicios+de+Fotografía&subtitle=Bodas+·+Drone+·+Retratos`],
+    },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
 }
 
@@ -163,8 +187,17 @@ export default async function ServicesPage({ params: { locale } }: Props) {
     },
   ]
 
+  const serviceListSchema = schemaGenerators.serviceList(locale)
+  const breadcrumbSchema = schemaGenerators.breadcrumb([
+    { name: locale === 'es' ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
+    { name: locale === 'es' ? 'Servicios' : 'Services', url: `${BASE_URL}/${locale}/services` },
+  ])
+
   return (
-    <main className="min-h-screen">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(serviceListSchema)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
+      <main className="min-h-screen">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-20">
         <div className="container mx-auto px-4">
@@ -406,5 +439,6 @@ export default async function ServicesPage({ params: { locale } }: Props) {
         </div>
       </section>
     </main>
+    </>
   )
 }

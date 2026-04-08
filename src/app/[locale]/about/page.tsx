@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
+import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -10,20 +11,45 @@ type Props = {
 
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
   const isEs = locale === 'es'
+  const title = isEs
+    ? 'Sobre Mí — Fotógrafo Santo Domingo | Babula Shots'
+    : 'About — Photographer Santo Domingo | Babula Shots'
+  const description = isEs
+    ? 'Conoce a tu fotógrafo profesional en Santo Domingo. Más de 10 años de experiencia en bodas, retratos, eventos y fotografía drone en República Dominicana.'
+    : 'Meet your professional photographer in Santo Domingo. Over 10 years of experience in weddings, portraits, events and drone photography in Dominican Republic.'
   return {
-    title: isEs ? 'Sobre Mí — Fotógrafo Santo Domingo | Babula Shots' : 'About — Photographer Santo Domingo | Babula Shots',
-    description: isEs
-      ? 'Conoce a tu fotógrafo profesional en Santo Domingo. Más de 10 años de experiencia en bodas, retratos, eventos y fotografía drone en República Dominicana.'
-      : 'Meet your professional photographer in Santo Domingo. Over 10 years of experience in weddings, portraits, events and drone photography in Dominican Republic.',
+    title,
+    description,
+    keywords: isEs
+      ? 'fotógrafo profesional santo domingo, Michal Babula fotógrafo, babula shots RD, fotógrafo con experiencia bodas, retratos ejecutivos santo domingo'
+      : 'professional photographer santo domingo, Michal Babula photographer, babula shots DR, experienced wedding photographer, executive portraits santo domingo',
     alternates: {
       canonical: `${BASE_URL}/${locale}/about`,
       languages: { es: `${BASE_URL}/es/about`, en: `${BASE_URL}/en/about`, 'x-default': `${BASE_URL}/es/about` },
     },
     openGraph: {
+      type: 'profile',
+      siteName: 'Fotografo Santo Domingo | Babula Shots',
       title: isEs ? 'Sobre Mí — Fotógrafo Santo Domingo' : 'About — Photographer Santo Domingo',
+      description,
       url: `${BASE_URL}/${locale}/about`,
-      images: [{ url: `${BASE_URL}/api/og?title=Sobre+el+Fotógrafo&subtitle=Babula+Shots+·+Santo+Domingo`, width: 1200, height: 630 }],
+      locale: isEs ? 'es_DO' : 'en_US',
+      images: [{
+        url: `${BASE_URL}/api/og?title=Sobre+el+Fotógrafo&subtitle=Babula+Shots+·+Santo+Domingo`,
+        width: 1200,
+        height: 630,
+        alt: isEs ? 'Michal Babula — Fotógrafo Profesional Santo Domingo' : 'Michal Babula — Professional Photographer Santo Domingo',
+      }],
     },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@babulashots',
+      creator: '@babulashots',
+      title: isEs ? 'Sobre Mí — Fotógrafo Santo Domingo' : 'About — Photographer Santo Domingo',
+      description,
+      images: [`${BASE_URL}/api/og?title=Sobre+el+Fotógrafo&subtitle=Babula+Shots`],
+    },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
 }
 
@@ -78,8 +104,17 @@ export default function AboutPage({ params: { locale } }: Props) {
     },
   ]
 
+  const personSchema = schemaGenerators.person(locale)
+  const breadcrumbSchema = schemaGenerators.breadcrumb([
+    { name: locale === 'es' ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
+    { name: locale === 'es' ? 'Sobre Mí' : 'About', url: `${BASE_URL}/${locale}/about` },
+  ])
+
   return (
-    <main className="min-h-screen">
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(personSchema)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
+      <main className="min-h-screen">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-50 to-white py-20">
         <div className="container mx-auto px-4">
@@ -472,5 +507,6 @@ export default function AboutPage({ params: { locale } }: Props) {
         </div>
       </section>
     </main>
+    </>
   )
 }
