@@ -7,10 +7,10 @@ ADMIN_SECRET="${ADMIN_SECRET:-}"
 FOLDER="${FOLDER:-PUBLISH_Wedding_PuntaCana_ZoniAndCarlos_ES}"
 PUBLIC_ID="${PUBLIC_ID:-${FOLDER}/photo_001}"
 PUBLISHED_AT="${PUBLISHED_AT:-2026-04-07T12:00:00Z}"
-IDEMPOTENCY_KEY="${IDEMPOTENCY_KEY:-$(printf '%s|%s' "$PUBLIC_ID" "$PUBLISHED_AT" | shasum -a 256 | awk '{print $1}')}"
 RUN_ID="${RUN_ID:-$(date +%s)}"
-SLUG_ES="fotografia-boda-punta-cana-zoni-carlos-${RUN_ID}"
-SLUG_EN="wedding-photography-punta-cana-zoni-carlos-${RUN_ID}"
+IDEMPOTENCY_KEY="${IDEMPOTENCY_KEY:-$(printf '%s|%s|%s' "$PUBLIC_ID" "$PUBLISHED_AT" "$RUN_ID" | shasum -a 256 | awk '{print $1}')}"
+SLUG_ES="${SLUG_ES:-fotografia-boda-punta-cana-zoni-carlos-${RUN_ID}}"
+SLUG_EN="${SLUG_EN:-wedding-photography-punta-cana-zoni-carlos-${RUN_ID}}"
 
 # Counters
 PASS=0
