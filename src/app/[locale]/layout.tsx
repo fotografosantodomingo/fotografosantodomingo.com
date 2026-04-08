@@ -11,62 +11,22 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
+// Global schema: WebSite only. LocalBusiness is emitted per-page (homepage)
+// with dynamic review count via schemaGenerators.localBusinessWithRating().
+// Publisher @id reference below still links to the LocalBusiness node.
 const globalSchema = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': ['LocalBusiness', 'ProfessionalService'],
-      '@id': `${BASE_URL}/#business`,
-      name: 'Fotografo Santo Domingo',
-      alternateName: 'Babula Shots',
-      url: BASE_URL,
-      telephone: '+18097209547',
-      email: 'info@fotografosantodomingo.com',
-      image: `${BASE_URL}/api/og`,
-      priceRange: '$$',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'C. El Conde 142',
-        addressLocality: 'Santo Domingo',
-        addressRegion: 'Distrito Nacional',
-        postalCode: '11111',
-        addressCountry: 'DO',
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: 18.4727,
-        longitude: -69.8866,
-      },
-      openingHoursSpecification: [
-        {
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-          opens: '00:00',
-          closes: '23:59',
-        },
-      ],
-      sameAs: [
-        'https://www.instagram.com/babulashotsrd',
-        'https://babulashotsrd.com',
-      ],
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.9',
-        reviewCount: '91',
-        bestRating: '5',
-        worstRating: '1',
-      },
-    },
-    {
       '@type': 'WebSite',
       '@id': `${BASE_URL}/#website`,
       url: BASE_URL,
-      name: 'Fotografo Santo Domingo',
+      name: 'Fotografo Santo Domingo | Babula Shots',
       inLanguage: ['es', 'en'],
       publisher: { '@id': `${BASE_URL}/#business` },
       potentialAction: {
         '@type': 'SearchAction',
-        target: `${BASE_URL}/es/portfolio?q={search_term_string}`,
+        target: { '@type': 'EntryPoint', urlTemplate: `${BASE_URL}/es/blog?q={search_term_string}` },
         'query-input': 'required name=search_term_string',
       },
     },
@@ -95,7 +55,7 @@ export async function generateMetadata({
   return {
     title: {
       default: t('title'),
-      template: `%s | ${locale === 'es' ? 'Fotógrafo SD' : 'Photographer SD'}`
+      template: `%s | Babula Shots`
     },
     description: t('description'),
     metadataBase: new URL(BASE_URL),

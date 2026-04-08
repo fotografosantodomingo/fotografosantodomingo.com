@@ -24,6 +24,10 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body className={inter.className}>
         {/* Anti-FOUC: read localStorage and apply theme class before first paint */}
         <script

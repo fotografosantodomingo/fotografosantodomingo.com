@@ -69,20 +69,6 @@ export default async function HomePage({ params: { locale } }: Props) {
 
   // ── JSON-LD schemas ──
   const localBusinessSchema = schemaGenerators.localBusinessWithRating(reviewStats)
-  const webSiteSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    '@id': `${BASE_URL}/#website`,
-    name: 'Fotografo Santo Domingo | Babula Shots',
-    url: BASE_URL,
-    inLanguage: ['es', 'en'],
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: { '@type': 'EntryPoint', urlTemplate: `${BASE_URL}/es/blog?q={search_term_string}` },
-      'query-input': 'required name=search_term_string',
-    },
-  }
-
   const testimonials = [
     {
       name: 'Kasia Sosenko',
@@ -369,12 +355,6 @@ export default async function HomePage({ params: { locale } }: Props) {
         dangerouslySetInnerHTML={generateJsonLd(localBusinessSchema)}
       />
 
-      {/* WebSite JSON-LD — enables Google Sitelinks Search Box */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
-      />
-
       {/* FAQ JSON-LD */}
       <script
         type="application/ld+json"
@@ -391,6 +371,27 @@ export default async function HomePage({ params: { locale } }: Props) {
         }}
       />
 
+      {/* Review JSON-LD — testimonials as structured reviews */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            itemListElement: testimonials.map((t, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              item: {
+                '@type': 'Review',
+                itemReviewed: { '@type': 'LocalBusiness', '@id': `${BASE_URL}/#business` },
+                author: { '@type': 'Person', name: t.name },
+                reviewRating: { '@type': 'Rating', ratingValue: t.rating, bestRating: 5 },
+                reviewBody: t.text,
+              },
+            })),
+          }),
+        }}
+      />
       {/* ── BOOKING CTA ── */}
       <section className="py-16 bg-gray-950 border-t border-gray-800">
         <div className="container mx-auto px-4">

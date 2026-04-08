@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /admin/
 
-Sitemap: https://fotografosantodomingo.com/sitemap.xml
+Sitemap: https://www.fotografosantodomingo.com/sitemap.xml
+Sitemap: https://www.fotografosantodomingo.com/image-sitemap.xml
+Sitemap: https://www.fotografosantodomingo.com/hreflang-sitemap.xml

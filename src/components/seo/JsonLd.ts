@@ -79,12 +79,13 @@ export const schemaGenerators = {
   // ----------------------------------------------------------
   localBusinessWithRating: (stats: ReviewStats) => ({
     '@context': 'https://schema.org',
-    '@type': ['LocalBusiness', 'Photographer'],
+    '@type': ['LocalBusiness', 'ProfessionalService'],
     '@id': `${BASE_URL}/#business`,
-    name: 'Fotografo Santo Domingo - Babula Shots',
-    image: `${BASE_URL}/images/og-default.webp`,
+    name: 'Fotografo Santo Domingo',
+    alternateName: 'Babula Shots',
+    image: `${BASE_URL}/api/og`,
     url: BASE_URL,
-    telephone: '+1-809-720-9547',
+    telephone: '+18097209547',
     email: 'info@fotografosantodomingo.com',
     address: {
       '@type': 'PostalAddress',
@@ -96,7 +97,7 @@ export const schemaGenerators = {
     },
     geo: { '@type': 'GeoCoordinates', latitude: 18.4727, longitude: -69.8866 },
     openingHoursSpecification: [
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '00:00', closes: '23:59' },
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '08:00', closes: '22:00' },
     ],
     priceRange: '$$',
     areaServed: [
@@ -114,6 +115,8 @@ export const schemaGenerators = {
     },
     sameAs: [
       'https://www.instagram.com/babulashotsrd',
+      'https://www.facebook.com/babulashots',
+      'https://www.tiktok.com/@babulashots',
       'https://babulashotsrd.com',
     ],
   }),
