@@ -96,16 +96,17 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(articleSchema)} />
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
-      <main className="min-h-screen">
+      <main className="min-h-screen bg-gray-950 text-white">
       {/* Hero Section with Post Info */}
-      <section className="bg-gradient-to-br from-primary-50 to-white py-20">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-gray-950 pt-20 pb-12">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
+        <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Breadcrumb */}
             <nav className="mb-8">
               <Link
                 href={`/${locale}/blog`}
-                className="text-primary-600 hover:text-primary-700 font-medium"
+                className="text-sky-400 hover:text-sky-300 font-medium"
               >
                 ← {t('blog.back_to_blog')}
               </Link>
@@ -121,14 +122,14 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                 <span>{t('blog.by')} {post.author}</span>
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
                 {title}
               </h1>
 
               {/* Tags */}
               <div className="flex flex-wrap justify-center gap-2 mb-6">
                 {post.tags.map(tag => (
-                  <span key={tag} className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm">
+                  <span key={tag} className="bg-sky-500/20 text-sky-300 px-3 py-1 rounded-full text-sm">
                     {tag}
                   </span>
                 ))}
@@ -136,9 +137,9 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
             </div>
 
             {/* Featured Image Placeholder */}
-            <div className="aspect-video bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl mb-8 relative overflow-hidden">
+            <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl mb-8 relative overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-8xl opacity-30">
+                <span className="text-8xl opacity-20">
                   {post.category === 'wedding' ? '💍' :
                    post.category === 'portrait' ? '👤' :
                    post.category === 'drone' ? '🚁' :
@@ -151,15 +152,15 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
       </section>
 
       {/* Article Content */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-950">
         <div className="container mx-auto px-4">
           <article className="max-w-4xl mx-auto">
-            <div className="prose prose-lg prose-primary max-w-none">
+            <div className="prose prose-lg prose-invert max-w-none">
               {paragraphs.map((paragraph, index) => {
                 // Handle headings
                 if (paragraph.startsWith('# ')) {
                   return (
-                    <h2 key={index} className="text-3xl font-bold text-gray-900 mt-12 mb-6 first:mt-0">
+                    <h2 key={index} className="text-3xl font-bold text-white mt-12 mb-6 first:mt-0">
                       {paragraph.replace('# ', '')}
                     </h2>
                   )
@@ -168,7 +169,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                 // Handle subheadings
                 if (paragraph.startsWith('## ')) {
                   return (
-                    <h3 key={index} className="text-2xl font-semibold text-gray-900 mt-10 mb-4">
+                    <h3 key={index} className="text-2xl font-semibold text-white mt-10 mb-4">
                       {paragraph.replace('## ', '')}
                     </h3>
                   )
@@ -178,7 +179,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                 if (paragraph.startsWith('- ')) {
                   const listItems = paragraph.split('\n').filter(item => item.trim())
                   return (
-                    <ul key={index} className="list-disc list-inside space-y-2 my-6 text-gray-700">
+                    <ul key={index} className="list-disc list-inside space-y-2 my-6 text-gray-300">
                       {listItems.map((item, itemIndex) => (
                         <li key={itemIndex}>{item.replace('- ', '')}</li>
                       ))}
@@ -188,7 +189,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
 
                 // Regular paragraphs
                 return (
-                  <p key={index} className="text-gray-700 leading-relaxed mb-6">
+                  <p key={index} className="text-gray-300 leading-relaxed mb-6">
                     {paragraph}
                   </p>
                 )
@@ -196,10 +197,10 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
             </div>
 
             {/* Share Section */}
-            <div className="border-t border-gray-200 pt-8 mt-12">
+            <div className="border-t border-gray-700 pt-8 mt-12">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <span className="text-gray-600 font-medium">{t('blog.share')}:</span>
+                  <span className="text-gray-400 font-medium">{t('blog.share')}:</span>
                   <div className="flex gap-2">
                     <button className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
                       <span className="text-sm">f</span>
@@ -224,19 +225,19 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-gray-900">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+              <h2 className="text-3xl font-bold text-white text-center mb-12">
                 {t('blog.related_posts')}
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {relatedPosts.map(relatedPost => (
-                  <article key={relatedPost.slug} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                    <div className="aspect-video bg-gradient-to-br from-gray-200 to-gray-300 relative">
+                  <article key={relatedPost.slug} className="bg-gray-950 rounded-xl border border-white/10 overflow-hidden hover:border-sky-500/40 transition-colors">
+                    <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 relative">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-4xl opacity-30">
+                        <span className="text-4xl opacity-20">
                           {relatedPost.category === 'wedding' ? '💍' :
                            relatedPost.category === 'portrait' ? '👤' :
                            relatedPost.category === 'drone' ? '🚁' :
@@ -252,22 +253,22 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                         <span>{relatedPost.readingTime} {t('blog.reading_time')}</span>
                       </div>
 
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      <h3 className="text-xl font-bold text-white mb-3">
                         <Link
                           href={`/${locale}/blog/${relatedPost.slug}`}
-                          className="hover:text-primary-600 transition-colors"
+                          className="hover:text-sky-400 transition-colors"
                         >
                           {locale === 'es' ? relatedPost.titleEs : relatedPost.title}
                         </Link>
                       </h3>
 
-                      <p className="text-gray-600 mb-4 line-clamp-2">
+                      <p className="text-gray-400 mb-4 line-clamp-2">
                         {locale === 'es' ? relatedPost.excerptEs : relatedPost.excerpt}
                       </p>
 
                       <Link
                         href={`/${locale}/blog/${relatedPost.slug}`}
-                        className="text-primary-600 hover:text-primary-700 font-medium"
+                        className="text-sky-400 hover:text-sky-300 font-medium"
                       >
                         {t('blog.read_more')} →
                       </Link>
@@ -281,27 +282,27 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
       )}
 
       {/* Author Bio */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-50 rounded-xl p-8">
+            <div className="bg-gray-900 rounded-xl border border-white/10 p-8">
               <div className="flex items-start gap-6">
-                <div className="w-20 h-20 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-20 h-20 bg-gradient-to-br from-sky-500 to-sky-700 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-2xl text-white">📸</span>
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-xl font-bold text-white mb-2">
                     {post.author}
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-400 mb-4">
                     Professional photographer specializing in weddings, portraits, and commercial photography in Santo Domingo, Dominican Republic. With over 10 years of experience, I help capture life&apos;s most precious moments with creativity and authenticity.
                   </p>
 
                   <div className="flex gap-4">
                     <Link
                       href={`/${locale}/about`}
-                      className="text-primary-600 hover:text-primary-700 font-medium"
+                      className="text-sky-400 hover:text-sky-300 font-medium"
                     >
                       Learn More About Me →
                     </Link>
@@ -309,7 +310,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                       href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-green-600 hover:text-green-700 font-medium"
+                      className="text-green-400 hover:text-green-300 font-medium"
                     >
                       Get in Touch →
                     </a>
@@ -322,12 +323,12 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
       </section>
 
       {/* Newsletter CTA */}
-      <section className="py-16 bg-primary-600 text-white">
+      <section className="py-16 bg-gray-900 border-t border-white/10">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-3xl font-bold text-white mb-4">
             {t('footer.newsletter.title')}
           </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          <p className="text-xl mb-8 text-gray-400 max-w-2xl mx-auto">
             {t('footer.newsletter.subtitle')}
           </p>
 
@@ -336,12 +337,12 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 px-4 py-3 rounded-lg text-gray-900"
+                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder:text-gray-500"
                 required
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-white text-primary-600 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                className="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-semibold"
               >
                 Subscribe
               </button>

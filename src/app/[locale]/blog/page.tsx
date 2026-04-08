@@ -114,15 +114,16 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
-      <main className="min-h-screen">
+      <main className="min-h-screen bg-gray-950 text-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 to-white py-20">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-gray-950 py-20">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
+        <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               {t('blog.title')}
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-gray-400 mb-8">
               {t('blog.subtitle')}
             </p>
 
@@ -134,11 +135,11 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                   name="q"
                   placeholder={t('blog.search')}
                   defaultValue={searchQuery}
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder:text-gray-500 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                  className="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
                 >
                   🔍
                 </button>
@@ -149,15 +150,15 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
       </section>
 
       {/* Category Filter */}
-      <section className="py-8 bg-white border-b">
+      <section className="py-6 bg-gray-950 border-b border-white/10">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-3">
             <Link
               href={`/${locale}/blog`}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 !categoryFilter && !searchQuery
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-sky-600 text-white'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
               }`}
             >
               {t('blog.latest')}
@@ -168,8 +169,8 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                 href={`/${locale}/blog?category=${category.key}`}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   categoryFilter === category.key
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-sky-600 text-white'
+                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
                 }`}
               >
                 {category.label}
@@ -181,24 +182,23 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
 
       {/* Featured Posts */}
       {featuredPosts.length > 0 && !searchQuery && !categoryFilter && (
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-gray-900">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl font-bold text-white mb-4">
                 {t('blog.featured')}
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {featuredPosts.slice(0, 2).map(post => (
-                <article key={post.slug} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                  <div className="aspect-video bg-gradient-to-br from-gray-200 to-gray-300 relative">
-                    {/* Placeholder for featured image */}
+                <article key={post.slug} className="bg-gray-950 rounded-xl border border-white/10 overflow-hidden hover:border-sky-500/40 transition-colors">
+                  <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 relative">
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-6xl opacity-30">📸</span>
+                      <span className="text-6xl opacity-20">📸</span>
                     </div>
                     <div className="absolute top-4 left-4">
-                      <span className="bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      <span className="bg-sky-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                         {t('blog.featured')}
                       </span>
                     </div>
@@ -211,23 +211,23 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                       <span>{post.readingTime} {t('blog.reading_time')}</span>
                     </div>
 
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                    <h3 className="text-xl font-bold text-white mb-3">
                       <Link
                         href={`/${locale}/blog/${post.slug}`}
-                        className="hover:text-primary-600 transition-colors"
+                        className="hover:text-sky-400 transition-colors"
                       >
                         {locale === 'es' ? post.titleEs : post.title}
                       </Link>
                     </h3>
 
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-400 mb-4">
                       {locale === 'es' ? post.excerptEs : post.excerpt}
                     </p>
 
                     <div className="flex items-center justify-between">
                       <div className="flex flex-wrap gap-2">
                         {post.tags.slice(0, 2).map(tag => (
-                          <span key={tag} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                          <span key={tag} className="bg-white/10 text-gray-400 px-2 py-1 rounded text-xs">
                             {tag}
                           </span>
                         ))}
@@ -235,7 +235,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
 
                       <Link
                         href={`/${locale}/blog/${post.slug}`}
-                        className="text-primary-600 hover:text-primary-700 font-medium"
+                        className="text-sky-400 hover:text-sky-300 font-medium"
                       >
                         {t('blog.read_more')} →
                       </Link>
@@ -249,14 +249,14 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
       )}
 
       {/* All Posts Grid */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-950">
         <div className="container mx-auto px-4">
           {searchQuery && (
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-white mb-2">
                 {t('blog.search')} &ldquo;{searchQuery}&rdquo;
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-400">
                 {filteredPosts.length} {filteredPosts.length === 1 ? 'result' : 'results'} found
               </p>
             </div>
@@ -264,10 +264,10 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
 
           {categoryFilter && (
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-white mb-2">
                 {categories.find(cat => cat.key === categoryFilter)?.label}
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-400">
                 {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
               </p>
             </div>
@@ -276,10 +276,10 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
           {filteredPosts.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-white mb-2">
                 {t('blog.no_results')}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-400 mb-6">
                 Try adjusting your search terms or browse all posts.
               </p>
               <Link
@@ -292,11 +292,10 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPosts.map(post => (
-                <article key={post.slug} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                  <div className="aspect-video bg-gradient-to-br from-gray-200 to-gray-300 relative">
-                    {/* Placeholder for post image */}
+                <article key={post.slug} className="bg-gray-900 rounded-xl border border-white/10 overflow-hidden hover:border-sky-500/40 transition-colors">
+                  <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 relative">
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-4xl opacity-30">
+                      <span className="text-4xl opacity-20">
                         {post.category === 'wedding' ? '💍' :
                          post.category === 'portrait' ? '👤' :
                          post.category === 'drone' ? '🚁' :
@@ -312,23 +311,23 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                       <span>{post.readingTime} {t('blog.reading_time')}</span>
                     </div>
 
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                    <h3 className="text-xl font-bold text-white mb-3">
                       <Link
                         href={`/${locale}/blog/${post.slug}`}
-                        className="hover:text-primary-600 transition-colors"
+                        className="hover:text-sky-400 transition-colors"
                       >
                         {locale === 'es' ? post.titleEs : post.title}
                       </Link>
                     </h3>
 
-                    <p className="text-gray-600 mb-4 line-clamp-3">
+                    <p className="text-gray-400 mb-4 line-clamp-3">
                       {locale === 'es' ? post.excerptEs : post.excerpt}
                     </p>
 
                     <div className="flex items-center justify-between">
                       <div className="flex flex-wrap gap-2">
                         {post.tags.slice(0, 2).map(tag => (
-                          <span key={tag} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                          <span key={tag} className="bg-white/10 text-gray-400 px-2 py-1 rounded text-xs">
                             {tag}
                           </span>
                         ))}
@@ -336,7 +335,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
 
                       <Link
                         href={`/${locale}/blog/${post.slug}`}
-                        className="text-primary-600 hover:text-primary-700 font-medium text-sm"
+                        className="text-sky-400 hover:text-sky-300 font-medium text-sm"
                       >
                         {t('blog.read_more')}
                       </Link>
@@ -350,12 +349,12 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
       </section>
 
       {/* Newsletter CTA */}
-      <section className="py-16 bg-primary-600 text-white">
+      <section className="py-16 bg-gray-900 border-t border-white/10">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-3xl font-bold text-white mb-4">
             {t('footer.newsletter.title')}
           </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          <p className="text-xl mb-8 text-gray-400 max-w-2xl mx-auto">
             {t('footer.newsletter.subtitle')}
           </p>
 
@@ -364,12 +363,12 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 px-4 py-3 rounded-lg text-gray-900"
+                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder:text-gray-500"
                 required
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-white text-primary-600 rounded-lg hover:bg-gray-100 transition-colors font-semibold"
+                className="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-semibold"
               >
                 Subscribe
               </button>
@@ -379,12 +378,12 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
       </section>
 
       {/* Contact CTA */}
-      <section className="py-16 bg-gray-900 text-white">
+      <section className="py-16 bg-gray-950 border-t border-white/10">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Work Together?
           </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          <p className="text-xl mb-8 text-gray-400 max-w-2xl mx-auto">
             Have questions about photography? Let&apos;s discuss your project and create something amazing.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -398,7 +397,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
             </a>
             <Link
               href={`/${locale}/contact`}
-              className="bg-primary-600 hover:bg-primary-700 px-8 py-4 rounded-lg font-semibold transition-colors"
+              className="bg-sky-600 hover:bg-sky-700 px-8 py-4 rounded-lg font-semibold transition-colors"
             >
               {t('contact.form.send')}
             </Link>

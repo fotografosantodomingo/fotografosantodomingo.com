@@ -197,15 +197,16 @@ export default async function ServicesPage({ params: { locale } }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(serviceListSchema)} />
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
-      <main className="min-h-screen">
+      <main className="min-h-screen bg-gray-950 text-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 to-white py-20">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-gray-950 py-20">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
+        <div className="relative container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               {locale === 'es' ? 'Nuestros Servicios Fotográficos' : 'Our Photography Services'}
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-gray-400 mb-8">
               {locale === 'es'
                 ? 'Fotografía profesional para cada momento especial de tu vida y negocio'
                 : 'Professional photography for every special moment in your life and business'
@@ -229,18 +230,18 @@ export default async function ServicesPage({ params: { locale } }: Props) {
       </section>
 
       {/* Services Grid */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {services.map((service, index) => (
               <div
                 key={service.id}
-                className={`bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ${
-                  service.popular ? 'ring-2 ring-primary-500 relative' : ''
+                className={`bg-gray-950 rounded-2xl border overflow-hidden hover:border-sky-500/40 transition-all duration-300 ${
+                  service.popular ? 'border-sky-500 ring-1 ring-sky-500/50 relative' : 'border-white/10'
                 }`}
               >
                 {service.popular && (
-                  <div className="absolute top-4 right-4 bg-primary-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                  <div className="absolute top-4 right-4 bg-sky-600 text-white px-3 py-1 rounded-full text-sm font-semibold z-10">
                     {locale === 'es' ? 'Más Popular' : 'Most Popular'}
                   </div>
                 )}
@@ -269,27 +270,27 @@ export default async function ServicesPage({ params: { locale } }: Props) {
 
                 <div className="p-8">
                   <div className="mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    <h3 className="text-2xl font-bold text-white mb-2">
                       {service.title}
                     </h3>
-                    <p className="text-primary-600 font-medium">
+                    <p className="text-sky-400 font-medium">
                       {service.subtitle}
                     </p>
                   </div>
 
-                  <p className="text-gray-600 mb-6 leading-relaxed">
+                  <p className="text-gray-400 mb-6 leading-relaxed">
                     {service.description}
                   </p>
 
                   {/* Features */}
                   <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">
+                    <h4 className="font-semibold text-white mb-3">
                       {locale === 'es' ? 'Incluye:' : 'Includes:'}
                     </h4>
                     <ul className="space-y-2">
                       {service.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start text-sm text-gray-600">
-                          <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <li key={featureIndex} className="flex items-start text-sm text-gray-300">
+                          <svg className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                           {feature}
@@ -299,10 +300,10 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                   </div>
 
                   {/* Pricing */}
-                  <div className="border-t pt-6">
+                  <div className="border-t border-gray-700 pt-6">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <div className="text-2xl font-bold text-primary-600">
+                        <div className="text-2xl font-bold text-sky-400">
                           {service.pricing.starting}
                         </div>
                         <div className="text-sm text-gray-500">
@@ -331,13 +332,13 @@ export default async function ServicesPage({ params: { locale } }: Props) {
       </section>
 
       {/* Process Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               {locale === 'es' ? 'Nuestro Proceso de Trabajo' : 'Our Work Process'}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               {locale === 'es'
                 ? 'Un proceso simple y transparente para resultados excepcionales'
                 : 'A simple and transparent process for exceptional results'
@@ -381,22 +382,17 @@ export default async function ServicesPage({ params: { locale } }: Props) {
               },
             ].map((step, index) => (
               <div key={index} className="text-center">
-                <div className="relative">
-                  <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">{step.icon}</span>
-                  </div>
-                  {index < 3 && (
-                    <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-primary-200" style={{ width: 'calc(100vw / 4 - 5rem)' }} />
-                  )}
+                <div className="w-20 h-20 bg-sky-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl">{step.icon}</span>
                 </div>
-                <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <div className="text-sm font-bold text-primary-600 mb-2">
+                <div className="bg-gray-900 rounded-lg p-6 border border-white/10">
+                  <div className="text-sm font-bold text-sky-400 mb-2">
                     {step.step}
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  <h3 className="text-lg font-semibold text-white mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-gray-400 text-sm">
                     {step.description}
                   </p>
                 </div>
@@ -407,12 +403,12 @@ export default async function ServicesPage({ params: { locale } }: Props) {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary-600 text-white">
+      <section className="py-20 bg-gray-900 border-t border-white/10">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             {locale === 'es' ? '¿Listo para comenzar tu proyecto?' : 'Ready to start your project?'}
           </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+          <p className="text-xl mb-8 max-w-2xl mx-auto text-gray-400">
             {locale === 'es'
               ? 'Contáctanos hoy para una consulta gratuita y comienza a planificar las fotos de tus sueños.'
               : 'Contact us today for a free consultation and start planning the photos of your dreams.'
@@ -423,7 +419,7 @@ export default async function ServicesPage({ params: { locale } }: Props) {
               href={BOOKING_LINKS.setmore}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              className="bg-white text-gray-950 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               📅 {locale === 'es' ? 'Reservar Sesión Online' : 'Book Session Online'}
             </a>

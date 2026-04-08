@@ -120,15 +120,16 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-gray-950 text-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 to-white py-20">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-gray-950 py-20">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
+        <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               {t('contact.title') || 'Contact Me'}
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-gray-400 mb-8">
               {t('contact.subtitle') || "Let's discuss your photography project and create something amazing together."}
             </p>
           </div>
@@ -136,12 +137,12 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Form & Info */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Contact Form */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              <h2 className="text-3xl font-bold text-white mb-8">
                 {t('contact.form.title') || 'Send me a message'}
               </h2>
 
@@ -170,7 +171,7 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                       {t('contact.form.name') || 'Full Name'} *
                     </label>
                     <input
@@ -179,8 +180,8 @@ export default function ContactPage() {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                        errors.name ? 'border-red-300' : 'border-gray-300'
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 ${
+                        errors.name ? '!border-red-500' : ''
                       }`}
                       placeholder={t('contact.form.namePlaceholder') || 'Your full name'}
                     />
@@ -188,7 +189,7 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                       {t('contact.form.email') || 'Email'} *
                     </label>
                     <input
@@ -197,8 +198,8 @@ export default function ContactPage() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                        errors.email ? 'border-red-300' : 'border-gray-300'
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 ${
+                        errors.email ? '!border-red-500' : ''
                       }`}
                       placeholder={t('contact.form.emailPlaceholder') || 'your@email.com'}
                     />
@@ -208,7 +209,7 @@ export default function ContactPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
                       {t('contact.form.phone') || 'Phone'} *
                     </label>
                     <input
@@ -217,8 +218,8 @@ export default function ContactPage() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                        errors.phone ? 'border-red-300' : 'border-gray-300'
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 ${
+                        errors.phone ? '!border-red-500' : ''
                       }`}
                       placeholder={t('contact.form.phonePlaceholder') || '+1 (809) 555-0123'}
                     />
@@ -226,7 +227,7 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="service" className="block text-sm font-medium text-gray-300 mb-2">
                       {t('contact.form.service.label') || 'Service Type'} *
                     </label>
                     <select
@@ -234,8 +235,8 @@ export default function ContactPage() {
                       name="service"
                       value={formData.service}
                       onChange={handleInputChange}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                        errors.service ? 'border-red-300' : 'border-gray-300'
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-gray-900 border-gray-700 text-white ${
+                        errors.service ? '!border-red-500' : ''
                       }`}
                     >
                       <option value="">
@@ -254,7 +255,7 @@ export default function ContactPage() {
                 {(formData.service === 'wedding' || formData.service === 'event') && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label htmlFor="eventDate" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="eventDate" className="block text-sm font-medium text-gray-300 mb-2">
                         {t('contact.form.eventDate') || 'Event Date'}
                       </label>
                       <input
@@ -263,12 +264,12 @@ export default function ContactPage() {
                         name="eventDate"
                         value={formData.eventDate}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-gray-900 text-white"
                       />
                     </div>
 
                     <div>
-                      <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="location" className="block text-sm font-medium text-gray-300 mb-2">
                         {t('contact.form.location') || 'Location'}
                       </label>
                       <input
@@ -277,7 +278,7 @@ export default function ContactPage() {
                         name="location"
                         value={formData.location}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-gray-900 text-white placeholder:text-gray-500"
                         placeholder={t('contact.form.locationPlaceholder') || 'Venue or location'}
                       />
                     </div>
@@ -285,7 +286,7 @@ export default function ContactPage() {
                 )}
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
                     {t('contact.form.message') || 'Message'} *
                   </label>
                   <textarea
@@ -294,8 +295,8 @@ export default function ContactPage() {
                     rows={6}
                     value={formData.message}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                      errors.message ? 'border-red-300' : 'border-gray-300'
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-gray-900 border-gray-700 text-white placeholder:text-gray-500 ${
+                      errors.message ? '!border-red-500' : ''
                     }`}
                     placeholder={t('contact.form.messagePlaceholder') || 'Tell me about your project, vision, and any specific requirements...'}
                   />
@@ -305,7 +306,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
+                  className="w-full bg-sky-600 hover:bg-sky-700 disabled:bg-gray-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
                 >
                   {isSubmitting ? (
                     <>
@@ -321,24 +322,24 @@ export default function ContactPage() {
 
             {/* Contact Information */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              <h2 className="text-3xl font-bold text-white mb-8">
                 {t('contact.info.title') || 'Get in touch'}
               </h2>
 
               <div className="space-y-8">
                 {/* Phone */}
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📞</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">
+                    <h3 className="font-semibold text-white mb-1">
                       {t('contact.info.phone') || 'Phone'}
                     </h3>
-                    <p className="text-gray-600">{CONTACT_INFO.phone}</p>
+                    <p className="text-gray-400">{CONTACT_INFO.phone}</p>
                     <a
                       href={`tel:${CONTACT_INFO.phone}`}
-                      className="text-primary-600 hover:text-primary-700 font-medium"
+                      className="text-sky-400 hover:text-sky-300 font-medium"
                     >
                       {t('contact.info.call') || 'Call me'}
                     </a>
@@ -347,17 +348,17 @@ export default function ContactPage() {
 
                 {/* Email */}
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">✉️</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">
+                    <h3 className="font-semibold text-white mb-1">
                       {t('contact.info.email') || 'Email'}
                     </h3>
-                    <p className="text-gray-600">{CONTACT_INFO.email}</p>
+                    <p className="text-gray-400">{CONTACT_INFO.email}</p>
                     <a
                       href={`mailto:${CONTACT_INFO.email}`}
-                      className="text-blue-600 hover:text-blue-700 font-medium"
+                      className="text-sky-400 hover:text-sky-300 font-medium"
                     >
                       {t('contact.info.sendEmail') || 'Send email'}
                     </a>
@@ -366,29 +367,29 @@ export default function ContactPage() {
 
                 {/* Location */}
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📍</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">
+                    <h3 className="font-semibold text-white mb-1">
                       {t('contact.info.location') || 'Location'}
                     </h3>
-                    <p className="text-gray-600">C. El Conde 142</p>
-                    <p className="text-gray-600">Santo Domingo 11111</p>
+                    <p className="text-gray-400">C. El Conde 142</p>
+                    <p className="text-gray-400">Santo Domingo 11111</p>
                     <p className="text-gray-500 text-sm">{t('contact.info.locationDetail')}</p>
                   </div>
                 </div>
 
                 {/* Booking */}
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📅</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">
+                    <h3 className="font-semibold text-white mb-1">
                       {t('contact.info.booking') || 'Book Consultation'}
                     </h3>
-                    <p className="text-gray-600 mb-2">
+                    <p className="text-gray-400 mb-2">
                       {t('contact.info.bookingDesc') || 'Schedule a free 30-minute consultation'}
                     </p>
                     <a
@@ -404,11 +405,11 @@ export default function ContactPage() {
               </div>
 
               {/* Response Time */}
-              <div className="mt-8 p-6 bg-primary-50 rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-2">
+              <div className="mt-8 p-6 bg-sky-500/10 border border-sky-500/20 rounded-lg">
+                <h3 className="font-semibold text-white mb-2">
                   {t('contact.info.response') || 'Response Time'}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   {t('contact.info.responseDetail') || 'I typically respond to messages within 2-4 hours during business days.'}
                 </p>
               </div>
@@ -418,7 +419,7 @@ export default function ContactPage() {
       </section>
 
       {/* Google Maps */}
-      <section className="bg-white pb-16">
+      <section className="bg-gray-950 pb-16">
         <div className="container mx-auto px-4">
           <iframe
             src="https://maps.google.com/maps?q=Calle+El+Conde+142+Santo+Domingo+Dominican+Republic&output=embed&hl=es"
@@ -434,14 +435,14 @@ export default function ContactPage() {
       </section>
 
       {/* Setmore Online Booking */}
-      <section className="py-20 bg-primary-600 text-white">
+      <section className="py-20 bg-gray-900 border-t border-white/10">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <div className="text-5xl mb-6">📅</div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               {t('contact.booking.title') || 'Reserve tu sesión online'}
             </h2>
-            <p className="text-xl opacity-90 mb-8">
+            <p className="text-xl text-gray-400 mb-8">
               {t('contact.booking.subtitle') || 'Elige el día y hora que mejor se adapte a tu agenda. Reserva en minutos, confirmación inmediata.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -449,7 +450,7 @@ export default function ContactPage() {
                 href={BOOKING_LINKS.setmore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-3 bg-white text-primary-600 hover:bg-gray-100 font-bold text-lg px-10 py-4 rounded-xl transition-colors shadow-lg"
+                className="inline-flex items-center justify-center gap-3 bg-white text-sky-600 hover:bg-gray-100 font-bold text-lg px-10 py-4 rounded-xl transition-colors shadow-lg"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -476,51 +477,51 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 {t('contact.faq.title') || 'Frequently Asked Questions'}
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-gray-400">
                 {t('contact.faq.subtitle') || 'Common questions about working together'}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="font-semibold text-gray-900 mb-3">
+              <div className="bg-gray-900 p-6 rounded-lg border border-white/10">
+                <h3 className="font-semibold text-white mb-3">
                   {t('contact.faq.q1') || 'How far in advance should I book?'}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   {t('contact.faq.a1') || 'For weddings and events, I recommend booking 6-12 months in advance. For portraits and smaller sessions, 2-4 weeks is usually sufficient.'}
                 </p>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="font-semibold text-gray-900 mb-3">
+              <div className="bg-gray-900 p-6 rounded-lg border border-white/10">
+                <h3 className="font-semibold text-white mb-3">
                   {t('contact.faq.q2') || 'Do you travel for shoots?'}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   {t('contact.faq.a2') || 'Yes! I serve Santo Domingo, Punta Cana, and surrounding areas. Travel fees may apply for locations outside the main service area.'}
                 </p>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="font-semibold text-gray-900 mb-3">
+              <div className="bg-gray-900 p-6 rounded-lg border border-white/10">
+                <h3 className="font-semibold text-white mb-3">
                   {t('contact.faq.q3') || 'What is your editing process?'}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   {t('contact.faq.a3') || 'I use professional editing software to enhance colors, lighting, and composition while maintaining authenticity. Delivery typically takes 2-4 weeks.'}
                 </p>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="font-semibold text-gray-900 mb-3">
+              <div className="bg-gray-900 p-6 rounded-lg border border-white/10">
+                <h3 className="font-semibold text-white mb-3">
                   {t('contact.faq.q4') || 'Do you offer payment plans?'}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-400 text-sm">
                   {t('contact.faq.a4') || 'Yes, I offer flexible payment plans for larger projects. A deposit is required to secure your date, with remaining balance due before delivery.'}
                 </p>
               </div>

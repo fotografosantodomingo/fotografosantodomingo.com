@@ -114,15 +114,16 @@ export default function AboutPage({ params: { locale } }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(personSchema)} />
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
-      <main className="min-h-screen">
+      <main className="min-h-screen bg-gray-950 text-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 to-white py-20">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-gray-950 py-20">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
+        <div className="relative container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               {locale === 'es' ? 'Sobre Babula Shots' : 'About Babula Shots'}
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-xl text-gray-400 mb-8">
               {locale === 'es'
                 ? 'Fotógrafo profesional especializado en capturar los momentos más importantes de tu vida con pasión y creatividad'
                 : 'Professional photographer specialized in capturing the most important moments of your life with passion and creativity'
@@ -133,15 +134,15 @@ export default function AboutPage({ params: { locale } }: Props) {
       </section>
 
       {/* Story Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Story Content */}
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
                 {locale === 'es' ? 'Mi Historia' : 'My Story'}
               </h2>
-              <div className="space-y-6 text-gray-600 leading-relaxed">
+              <div className="space-y-6 text-gray-400 leading-relaxed">
                 <p>
                   {locale === 'es'
                     ? 'Hola, soy Michal Babula — fotógrafo profesional con sede en la Zona Colonial de Santo Domingo. Llevo más de 10 años capturando historias auténticas con luz, emoción y detalle.'
@@ -216,9 +217,9 @@ export default function AboutPage({ params: { locale } }: Props) {
                 </a>
               </div>
               {/* Rating badge */}
-              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-white rounded-full shadow-lg px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-gray-900 border border-white/10 rounded-full px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                 <span className="text-yellow-400 text-lg">⭐</span>
-                <span className="font-bold text-gray-900">4.9</span>
+                <span className="font-bold text-white">4.9</span>
                 <span className="text-gray-500 text-sm">· 162+ reseñas</span>
               </div>
             </div>
@@ -227,13 +228,13 @@ export default function AboutPage({ params: { locale } }: Props) {
       </section>
 
       {/* Achievements Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               {locale === 'es' ? 'Logros y Experiencia' : 'Achievements & Experience'}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               {locale === 'es'
                 ? 'Más de una década capturando momentos inolvidables'
                 : 'Over a decade capturing unforgettable moments'
@@ -244,13 +245,13 @@ export default function AboutPage({ params: { locale } }: Props) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {achievements.map((achievement, index) => (
               <div key={index} className="text-center">
-                <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-20 h-20 bg-sky-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-3xl">{achievement.icon}</span>
                 </div>
-                <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
+                <div className="text-3xl md:text-4xl font-bold text-sky-400 mb-2">
                   {achievement.number}
                 </div>
-                <div className="text-gray-600 font-medium">
+                <div className="text-gray-400 font-medium">
                   {achievement.label}
                 </div>
               </div>
@@ -260,13 +261,13 @@ export default function AboutPage({ params: { locale } }: Props) {
       </section>
 
       {/* Services Overview */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               {locale === 'es' ? 'Especialidades' : 'Specialties'}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               {locale === 'es'
                 ? 'Servicios especializados para cada tipo de ocasión'
                 : 'Specialized services for every type of occasion'
@@ -319,12 +320,12 @@ export default function AboutPage({ params: { locale } }: Props) {
                 icon: '📸',
               },
             ].map((service, index) => (
-              <div key={index} className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
+              <div key={index} className="bg-gray-900 rounded-xl p-6 text-center border border-white/10 hover:border-sky-500/40 transition-colors duration-300">
                 <div className="text-4xl mb-4">{service.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                <h3 className="text-xl font-semibold text-white mb-3">
                   {service.title}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-400">
                   {service.description}
                 </p>
               </div>
@@ -334,13 +335,13 @@ export default function AboutPage({ params: { locale } }: Props) {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-primary-600 text-white">
+      <section className="py-20 bg-gray-900 border-t border-white/10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               {locale === 'es' ? 'Lo que dicen mis clientes' : 'What my clients say'}
             </h2>
-            <p className="text-xl opacity-90 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               {locale === 'es'
                 ? 'Historias de parejas, familias y empresas que confiaron en mí'
                 : 'Stories from couples, families, and businesses who trusted me'
@@ -370,49 +371,49 @@ export default function AboutPage({ params: { locale } }: Props) {
       </section>
 
       {/* Equipment & Approach */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Equipment */}
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
                 {locale === 'es' ? 'Equipo Profesional' : 'Professional Equipment'}
               </h2>
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📷</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Cámaras Profesionales</h3>
-                    <p className="text-gray-600">Sony A7R series con lentes de alta calidad</p>
+                    <h3 className="font-semibold text-white">Cámaras Profesionales</h3>
+                    <p className="text-gray-400">Sony A7R series con lentes de alta calidad</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">💡</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Iluminación Profesional</h3>
-                    <p className="text-gray-600">Sistema de iluminación continuo y flash</p>
+                    <h3 className="font-semibold text-white">Iluminación Profesional</h3>
+                    <p className="text-gray-400">Sistema de iluminación continuo y flash</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">🚁</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Dron Licenciado</h3>
-                    <p className="text-gray-600">DJI con licencia FAA para fotografía aérea</p>
+                    <h3 className="font-semibold text-white">Dron Licenciado</h3>
+                    <p className="text-gray-400">DJI con licencia FAA para fotografía aérea</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-sky-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">💻</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Post-producción</h3>
-                    <p className="text-gray-600">Adobe Lightroom y Photoshop para edición profesional</p>
+                    <h3 className="font-semibold text-white">Post-producción</h3>
+                    <p className="text-gray-400">Adobe Lightroom y Photoshop para edición profesional</p>
                   </div>
                 </div>
               </div>
@@ -420,15 +421,15 @@ export default function AboutPage({ params: { locale } }: Props) {
 
             {/* Approach */}
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
                 {locale === 'es' ? 'Mi Enfoque' : 'My Approach'}
               </h2>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-white mb-2">
                     {locale === 'es' ? 'Autenticidad' : 'Authenticity'}
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-400">
                     {locale === 'es'
                       ? 'Capturo momentos genuinos y emociones reales, no poses forzadas.'
                       : 'I capture genuine moments and real emotions, not forced poses.'
@@ -436,10 +437,10 @@ export default function AboutPage({ params: { locale } }: Props) {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-white mb-2">
                     {locale === 'es' ? 'Conexión Personal' : 'Personal Connection'}
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-400">
                     {locale === 'es'
                       ? 'Creo una relación de confianza para que te sientas cómodo durante la sesión.'
                       : 'I create a trusting relationship so you feel comfortable during the session.'
@@ -447,10 +448,10 @@ export default function AboutPage({ params: { locale } }: Props) {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-white mb-2">
                     {locale === 'es' ? 'Atención al Detalle' : 'Attention to Detail'}
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-400">
                     {locale === 'es'
                       ? 'Cada imagen es editada meticulosamente para resaltar lo mejor de cada momento.'
                       : 'Each image is meticulously edited to highlight the best of each moment.'
@@ -458,10 +459,10 @@ export default function AboutPage({ params: { locale } }: Props) {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-white mb-2">
                     {locale === 'es' ? 'Experiencia Local' : 'Local Experience'}
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-400">
                     {locale === 'es'
                       ? 'Conozco los mejores lugares de Santo Domingo y Punta Cana para sesiones inolvidables.'
                       : 'I know the best places in Santo Domingo and Punta Cana for unforgettable sessions.'
@@ -491,7 +492,7 @@ export default function AboutPage({ params: { locale } }: Props) {
               href={BOOKING_LINKS.setmore}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-primary-600 hover:bg-primary-700 px-8 py-4 rounded-lg font-semibold transition-colors"
+              className="bg-sky-600 hover:bg-sky-700 px-8 py-4 rounded-lg font-semibold transition-colors"
             >
               📅 {locale === 'es' ? 'Reservar Sesión' : 'Book a Session'}
             </a>
