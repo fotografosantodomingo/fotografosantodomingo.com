@@ -37,10 +37,81 @@
     }
   },
   "contact": {
+    "title": "Contact Us",
+    "subtitle": "Let's discuss your photography project and create something amazing together.",
+    "form": {
+      "title": "Send us a message",
+      "name": "Full name",
+      "namePlaceholder": "Your full name",
+      "email": "Email address",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone / WhatsApp",
+      "phonePlaceholder": "+1 (809) 720-9547",
+      "service": {
+        "label": "Service of interest",
+        "other": "Other / Not sure yet"
+      },
+      "servicePlaceholder": "Select a service",
+      "eventDate": "Event date",
+      "location": "Location",
+      "locationPlaceholder": "Venue or address",
+      "message": "Message",
+      "messagePlaceholder": "Tell us about your session — date, location, ideas...",
+      "send": "Send message",
+      "sending": "Sending...",
+      "success": "Message sent! We will get back to you within 24 hours.",
+      "error": "There was an error sending your message. Please contact us on WhatsApp.",
+      "errors": {
+        "name": "Name is required",
+        "email": "Email is required",
+        "emailInvalid": "Please enter a valid email",
+        "phone": "Phone is required",
+        "service": "Please select a service",
+        "message": "Message is required"
+      }
+    },
     "info": {
+      "title": "Contact information",
+      "phone": "Phone / WhatsApp",
+      "call": "Call or message on WhatsApp",
+      "email": "Email address",
+      "sendEmail": "Send an email",
+      "location": "Location",
+      "locationDetail": "Zona Colonial · Available every day",
+      "booking": "Online booking",
+      "bookingDesc": "Book your session and pay the 50% deposit directly online to secure your date.",
+      "bookNow": "Book now",
+      "response": "Response time",
+      "responseDetail": "We respond to all messages within 24 hours. For an immediate response write to us on WhatsApp.",
       "office": "Studio Location – Santo Domingo",
       "response_time": "Average response time: 2 hours"
+    },
+    "booking": {
+      "title": "Prefer to talk before booking?",
+      "subtitle": "Schedule a free 15-minute video call to tell us about your session, ask questions and coordinate all the details before confirming your booking.",
+      "cta": "Write on WhatsApp",
+      "note": "You can also write to us directly on WhatsApp and we will reply within minutes."
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "subtitle": "Answers to the most common questions before booking a session in Santo Domingo.",
+      "q1": "Is a deposit required to book?",
+      "a1": "Yes — we require a non-refundable deposit of 50% of the total cost upon booking confirmation. The remaining 50% is paid on the day of the session before we begin.",
+      "q2": "Can I change the date of my session?",
+      "a2": "Yes — we allow one date change up to 72 hours before the session, subject to availability and at no additional cost.",
+      "q3": "When do I receive the photos after the session?",
+      "a3": "Edited high-resolution photos are delivered within 48-72 hours through a private online gallery ready to download.",
+      "q4": "Do you work with international clients?",
+      "a4": "Yes — most of our wedding and Punta Cana session clients are international. We speak Spanish and English."
     }
+  },
+  "services": {
+    "wedding": { "title": "Wedding Photography" },
+    "corporate": { "title": "Corporate Photography" },
+    "drone": { "title": "Drone Photography" },
+    "event": { "title": "Event Coverage" },
+    "family": { "title": "Portraits & Family Session" },
+    "commercial": { "title": "Commercial & Fashion Photography" }
   },
   "blog": {
     "title": "Photography Blog",

@@ -2,8 +2,6 @@ import { Resend } from 'resend'
 
 // Resend API key — set RESEND_API_KEY in Vercel env vars
 // Domain fotografosantodomingo.com is verified in Resend — using real from address.
-// Once fotografosantodomingo.com is verified in Resend dashboard, change FROM to:
-//   'Babula Shots <info@fotografosantodomingo.com>'
 
 // Lazy getter — avoids "Missing API key" crash during Next.js build-time static render
 function getResend(): Resend | null {

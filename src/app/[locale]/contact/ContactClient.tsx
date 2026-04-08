@@ -227,7 +227,7 @@ export default function ContactPage() {
 
                   <div>
                     <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('contact.form.service') || 'Service Type'} *
+                      {t('contact.form.service.label') || 'Service Type'} *
                     </label>
                     <select
                       id="service"
@@ -375,7 +375,7 @@ export default function ContactPage() {
                     </h3>
                     <p className="text-gray-600">C. El Conde 142</p>
                     <p className="text-gray-600">Santo Domingo 11111</p>
-                    <p className="text-gray-500 text-sm">Zona Colonial · Czynne 24/7</p>
+                    <p className="text-gray-500 text-sm">{t('contact.info.locationDetail')}</p>
                   </div>
                 </div>
 

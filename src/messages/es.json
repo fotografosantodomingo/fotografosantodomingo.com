@@ -37,10 +37,81 @@
     }
   },
   "contact": {
+    "title": "Contáctanos",
+    "subtitle": "Hablemos de tu proyecto fotográfico y creemos algo increíble juntos.",
+    "form": {
+      "title": "Envíanos un mensaje",
+      "name": "Nombre completo",
+      "namePlaceholder": "Tu nombre completo",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "tu@email.com",
+      "phone": "Teléfono / WhatsApp",
+      "phonePlaceholder": "+1 (809) 720-9547",
+      "service": {
+        "label": "Servicio de interés",
+        "other": "Otro / No estoy seguro"
+      },
+      "servicePlaceholder": "Selecciona un servicio",
+      "eventDate": "Fecha del evento",
+      "location": "Ubicación",
+      "locationPlaceholder": "Lugar o dirección",
+      "message": "Mensaje",
+      "messagePlaceholder": "Cuéntanos sobre tu sesión — fecha, lugar, ideas...",
+      "send": "Enviar mensaje",
+      "sending": "Enviando...",
+      "success": "¡Mensaje enviado! Te respondemos en menos de 24 horas.",
+      "error": "Hubo un error al enviar el mensaje. Por favor escríbenos por WhatsApp.",
+      "errors": {
+        "name": "El nombre es obligatorio",
+        "email": "El email es obligatorio",
+        "emailInvalid": "Por favor ingresa un email válido",
+        "phone": "El teléfono es obligatorio",
+        "service": "Por favor selecciona un servicio",
+        "message": "El mensaje es obligatorio"
+      }
+    },
     "info": {
+      "title": "Información de contacto",
+      "phone": "Teléfono / WhatsApp",
+      "call": "Llamar o escribir por WhatsApp",
+      "email": "Correo electrónico",
+      "sendEmail": "Enviar un email",
+      "location": "Ubicación",
+      "locationDetail": "Zona Colonial · Disponible todos los días",
+      "booking": "Reserva online",
+      "bookingDesc": "Reserva tu sesión y paga el 50% de depósito directamente online para asegurar tu fecha.",
+      "bookNow": "Reservar ahora",
+      "response": "Tiempo de respuesta",
+      "responseDetail": "Respondemos todos los mensajes en menos de 24 horas. Para respuesta inmediata escríbenos por WhatsApp.",
       "office": "Ubicación del Estudio – Santo Domingo",
       "response_time": "Tiempo promedio de respuesta: 2 horas"
+    },
+    "booking": {
+      "title": "¿Prefieres hablar antes de reservar?",
+      "subtitle": "Agenda una videollamada gratuita de 15 minutos para contarnos sobre tu sesión, hacer preguntas y coordinar todos los detalles antes de confirmar tu reserva.",
+      "cta": "Escribir por WhatsApp",
+      "note": "También puedes escribirnos directamente por WhatsApp y te respondemos en minutos."
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "subtitle": "Las respuestas a las dudas más comunes antes de reservar una sesión en Santo Domingo.",
+      "q1": "¿Se requiere un depósito para reservar?",
+      "a1": "Sí — requerimos un depósito no reembolsable del 50% del costo total al confirmar la reserva. El 50% restante se paga el día de la sesión antes de comenzar.",
+      "q2": "¿Puedo cambiar la fecha de mi sesión?",
+      "a2": "Sí — permitimos un cambio de fecha hasta 72 horas antes de la sesión, sujeto a disponibilidad y sin costo adicional.",
+      "q3": "¿Cuándo recibo las fotos después de la sesión?",
+      "a3": "Las fotos editadas en alta resolución se entregan en 48-72 horas a través de una galería online privada lista para descargar.",
+      "q4": "¿Trabajan con clientes internacionales?",
+      "a4": "Sí — la mayoría de nuestros clientes de bodas y sesiones en Punta Cana son internacionales. Hablamos español e inglés."
     }
+  },
+  "services": {
+    "wedding": { "title": "Fotografía de Bodas" },
+    "corporate": { "title": "Fotografía Corporativa" },
+    "drone": { "title": "Fotografía con Drone" },
+    "event": { "title": "Cobertura de Eventos" },
+    "family": { "title": "Retratos y Sesión Familiar" },
+    "commercial": { "title": "Fotografía Comercial y Moda" }
   },
   "blog": {
     "title": "Blog de Fotografía",
