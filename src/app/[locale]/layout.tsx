@@ -5,8 +5,8 @@ import { getTranslations } from 'next-intl/server'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
-import GoogleAnalytics from '@/components/GoogleAnalytics'
 import GoogleTagManager from '@/components/GoogleTagManager'
+import CookieConsent from '@/components/CookieConsent'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
@@ -172,13 +172,13 @@ export default async function RootLayout({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(globalSchema) }}
       />
       {process.env.NEXT_PUBLIC_GTM_ID && <GoogleTagManager />}
-      {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && <GoogleAnalytics />}
       <ErrorBoundary>
         <Navigation />
         {children}
         <Footer />
       </ErrorBoundary>
       <WhatsAppButton />
+      <CookieConsent />
     </NextIntlClientProvider>
   )
 }
