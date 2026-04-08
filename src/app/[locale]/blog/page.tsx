@@ -7,6 +7,9 @@ import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 type Props = {
   params: { locale: string }
   searchParams: { [key: string]: string | string[] | undefined }

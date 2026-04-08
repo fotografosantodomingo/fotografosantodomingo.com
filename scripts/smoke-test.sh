@@ -202,6 +202,8 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 POST_ID=""
 BLOG_URL_ES=""
 BLOG_URL_EN=""
+BLOG_PATH_ES=""
+BLOG_PATH_EN=""
 
 HAPPY_PAYLOAD="$TMP_DIR/happy.json"
 INVALID_WEBP_PAYLOAD="$TMP_DIR/invalid-webp.json"
@@ -223,6 +225,8 @@ if [[ "$STATUS" == "201" ]] && \
   POST_ID="$(json_field "$BODY" '.post_id')"
   BLOG_URL_ES="$(json_field "$BODY" '.url_es')"
   BLOG_URL_EN="$(json_field "$BODY" '.url_en')"
+  BLOG_PATH_ES="${BLOG_URL_ES#${BASE_URL}}"
+  BLOG_PATH_EN="${BLOG_URL_EN#${BASE_URL}}"
   pass "create-post happy path returned 201 and captured post_id/blog URLs"
   echo "  ⏳ Waiting 8s for Vercel edge propagation before checking blog URLs..."
   sleep 8
@@ -323,9 +327,11 @@ else
 fi
 
 header "Test 11: GET /es/blog/ — blog listing includes new post"
+echo "  ⏳ Waiting 5s for listing propagation..."
+sleep 5
 BODY="$TMP_DIR/test11.html"
 STATUS="$(request GET "$BASE_URL/es/blog/" "$BODY" none)"
-if [[ "$STATUS" == "200" ]] && body_contains "$BODY" "$SLUG_ES"; then
+if [[ "$STATUS" == "200" ]] && { body_contains "$BODY" "$BLOG_PATH_ES" || body_contains "$BODY" "$SLUG_ES"; }; then
   pass "ES blog listing returned 200 and contains slug_es"
 else
   fail "ES blog listing test failed (HTTP $STATUS)"
@@ -334,7 +340,7 @@ fi
 header "Test 12: GET /en/blog/ — blog listing includes new post"
 BODY="$TMP_DIR/test12.html"
 STATUS="$(request GET "$BASE_URL/en/blog/" "$BODY" none)"
-if [[ "$STATUS" == "200" ]] && body_contains "$BODY" "$SLUG_EN"; then
+if [[ "$STATUS" == "200" ]] && { body_contains "$BODY" "$BLOG_PATH_EN" || body_contains "$BODY" "$SLUG_EN"; }; then
   pass "EN blog listing returned 200 and contains slug_en"
 else
   fail "EN blog listing test failed (HTTP $STATUS)"
