@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { getPostBySlug, getRelatedPosts } from '@/lib/blog/posts'
 import { getPostBySlugFromDb, getRelatedPostsFromDb } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
@@ -54,7 +54,7 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
 }
 
 export default async function BlogPostPage({ params: { locale, slug } }: Props) {
-  const t = useTranslations()
+  const t = await getTranslations({ locale })
 
   const post = await getPostBySlugFromDb(slug)
   const relatedPosts = post ? await getRelatedPostsFromDb(post, 3) : []

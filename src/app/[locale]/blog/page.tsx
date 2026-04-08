@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { getAllPosts } from '@/lib/blog/posts'
 import {
@@ -42,7 +42,7 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 }
 
 export default async function BlogPage({ params: { locale }, searchParams }: Props) {
-  const t = useTranslations()
+  const t = await getTranslations({ locale })
 
   // Get all posts and featured posts from DB (falls back to static)
   const [allPostsRaw, featuredPosts] = await Promise.all([
