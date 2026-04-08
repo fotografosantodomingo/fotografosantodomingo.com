@@ -1,7 +1,7 @@
 import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import NewsletterForm from './NewsletterForm'
-import { CONTACT_INFO, SOCIAL_LINKS, BOOKING_LINKS } from '@/lib/utils/constants'
+import { CONTACT_INFO, SOCIAL_LINKS } from '@/lib/utils/constants'
 
 export default function Footer() {
   const t = useTranslations('footer')
@@ -56,32 +56,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Booking */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">
-              {locale === 'es' ? 'Reservas' : 'Booking'}
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <a href={BOOKING_LINKS.setmore} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-sm px-4 py-2 rounded-lg transition-colors font-medium">
-                  📅 {locale === 'es' ? 'Reservar Sesión' : 'Book a Session'}
-                </a>
-              </li>
-              <li className="pt-2">
-                <a href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent('Hola! Me interesa una sesión de fotos.')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg transition-colors font-medium">
-                  💬 WhatsApp
-                </a>
-              </li>
-            </ul>
-
-            <div className="mt-6 p-3 bg-gray-800 rounded-lg text-xs text-gray-400">
-              <p className="font-medium text-gray-300 mb-1">
-                {locale === 'es' ? 'Área de Servicio' : 'Service Area'}
-              </p>
-              <p>Santo Domingo · Punta Cana</p>
-              <p>Santiago · La Romana · RD</p>
-            </div>
-          </div>
         </div>
 
         {/* Newsletter */}
