@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 import { sendNewsletterWelcome } from '@/lib/email/resend'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, name, interests, source } = body
+    const { email, name, interests, source, locale: bodyLocale } = body
 
     // Basic validation
     if (!email) {
@@ -30,10 +30,10 @@ export async function POST(request: NextRequest) {
                'unknown'
     const userAgent = request.headers.get('user-agent') || 'unknown'
     const referrer = request.headers.get('referer') || 'unknown'
-    const locale = request.headers.get('x-locale') || 'en'
+    const locale = bodyLocale || request.headers.get('x-locale') || 'es'
 
-    // Create Supabase client
-    const supabase = createSupabaseServerClient()
+    // Create Supabase service client (bypasses RLS for server-side writes)
+    const supabase = createServiceClient()
 
     // Check if email already exists
     const { data: existing } = await supabase
@@ -138,7 +138,7 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    const supabase = createSupabaseServerClient()
+    const supabase = createServiceClient()
 
     const { error } = await supabase
       .from('newsletter_subscriptions')
