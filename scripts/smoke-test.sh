@@ -344,7 +344,19 @@ fi
 warn "Requested GET auth test was adjusted to POST because /api/admin/log-automation is POST-only and GET returns 405 by design."
 
 header "Test 15: Cleanup — archive the test post"
-warn "Skipped cleanup: no archive/update-status admin endpoint exists yet for blog_posts."
+if [[ -n "$POST_ID" ]]; then
+  ARCHIVE_PAYLOAD="$TMP_DIR/archive.json"
+  echo "{\"id\": \"$POST_ID\", \"status\": \"archived\"}" > "$ARCHIVE_PAYLOAD"
+  BODY="$TMP_DIR/test15.json"
+  STATUS="$(request PATCH "$BASE_URL/api/admin/update-post" "$BODY" auth "$ARCHIVE_PAYLOAD")"
+  if [[ "$STATUS" == "200" ]] && json_contains "$BODY" '.status == "archived"'; then
+    pass "test post archived successfully — Supabase row status = archived"
+  else
+    fail "archive test post failed (HTTP $STATUS)"
+  fi
+else
+  warn "Skipped cleanup — POST_ID was not captured from Test 1 (Test 1 likely failed)"
+fi
 
 echo ""
 echo "════════════════════════════════════════"
