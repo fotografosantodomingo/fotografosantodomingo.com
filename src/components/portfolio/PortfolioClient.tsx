@@ -57,10 +57,11 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
   const featuredItems = images.filter((img) => img.featured)
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-gray-950 text-white">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-20">
-        <div className="container mx-auto px-4 text-center max-w-3xl mx-auto">
+      <section className="relative bg-gray-950 py-20">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
+        <div className="relative container mx-auto px-4 text-center max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             {locale === 'es' ? 'Nuestro Portafolio' : 'Our Portfolio'}
           </h1>
@@ -74,11 +75,11 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
               href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-lg font-semibold transition-colors"
+              className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-4 rounded-lg font-semibold transition-colors"
             >
               {locale === 'es' ? 'Solicitar Sesión' : 'Book a Session'}
             </a>
-            <Link href={`/${locale}/services`} className="bg-white text-gray-900 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <Link href={`/${locale}/services`} className="bg-white/10 text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/20 transition-colors">
               {locale === 'es' ? 'Ver Servicios' : 'View Services'}
             </Link>
           </div>
@@ -86,13 +87,13 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
       </section>
 
       {/* Featured Work */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-0 md:px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               {locale === 'es' ? 'Trabajos Destacados' : 'Featured Work'}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               {locale === 'es'
                 ? 'Una selección de nuestros proyectos más emblemáticos'
                 : 'A selection of our most emblematic projects'}
@@ -126,7 +127,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                       </div>
                     </div>
                     {/* Category badge */}
-                    <div className="absolute top-4 left-4 bg-white bg-opacity-90 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
+                    <div className="absolute top-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
                       {categories.find((c) => c.id === item.category)?.label}
                     </div>
                   </div>
@@ -143,7 +144,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
       </section>
 
       {/* Filter + Grid */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-gray-950">
         <div className="container mx-auto px-0 md:px-4">
           <div className="flex flex-wrap justify-center gap-4 mb-12 px-4 md:px-0">
             {categories.map((category) => (
@@ -152,8 +153,8 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                 onClick={() => setActiveFilter(category.id)}
                 className={`px-6 py-3 rounded-full font-medium transition-colors ${
                   activeFilter === category.id
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                    ? 'bg-sky-600 text-white'
+                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
                 }`}
               >
                 {category.label}
@@ -207,13 +208,13 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
       </section>
 
       {/* Stats */}
-      <section className="py-20 bg-primary-600 text-white">
+      <section className="py-20 bg-gray-900 border-t border-white/10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">500+</div><div className="text-primary-100">{locale === 'es' ? 'Bodas Cubiertas' : 'Weddings Covered'}</div></div>
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">10+</div><div className="text-primary-100">{locale === 'es' ? 'Años de Experiencia' : 'Years Experience'}</div></div>
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">20+</div><div className="text-primary-100">{locale === 'es' ? 'Ubicaciones' : 'Locations Served'}</div></div>
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">5★</div><div className="text-primary-100">{locale === 'es' ? 'Reseñas en Google' : 'Google Reviews'}</div></div>
+            <div><div className="text-4xl md:text-5xl font-bold mb-2">500+</div><div className="text-gray-400">{locale === 'es' ? 'Bodas Cubiertas' : 'Weddings Covered'}</div></div>
+            <div><div className="text-4xl md:text-5xl font-bold mb-2">10+</div><div className="text-gray-400">{locale === 'es' ? 'Años de Experiencia' : 'Years Experience'}</div></div>
+            <div><div className="text-4xl md:text-5xl font-bold mb-2">20+</div><div className="text-gray-400">{locale === 'es' ? 'Ubicaciones' : 'Locations Served'}</div></div>
+            <div><div className="text-4xl md:text-5xl font-bold mb-2">5★</div><div className="text-gray-400">{locale === 'es' ? 'Reseñas en Google' : 'Google Reviews'}</div></div>
           </div>
         </div>
       </section>
@@ -238,7 +239,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
             >
               WhatsApp: {CONTACT_INFO.phone}
             </a>
-            <Link href={`/${locale}/contact`} className="bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-lg font-semibold transition-colors">
+            <Link href={`/${locale}/contact`} className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-4 rounded-lg font-semibold transition-colors">
               {locale === 'es' ? 'Enviar Mensaje' : 'Send Message'}
             </Link>
           </div>
