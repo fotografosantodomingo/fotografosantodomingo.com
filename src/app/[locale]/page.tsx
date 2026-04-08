@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
-import HomeFaq, { getFaqData } from '@/components/HomeFaq'
+import HomeFaq from '@/components/HomeFaq'
+import { getFaqData } from '@/lib/faq-data'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
