@@ -1,59 +1,50 @@
 import { NextResponse } from 'next/server'
 import { getPortfolioImages } from '@/lib/supabase/images'
 
-const BASE_URL = 'https://fotografosantodomingo.com'
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+const BASE_URL = 'https://www.fotografosantodomingo.com'
+const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dwewurxla'
 
-function cloudinaryUrl(publicId: string, transforms = 'f_auto,q_auto') {
+function cloudinaryUrl(publicId: string, transforms = 'f_auto,q_auto,w_1200') {
   return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${transforms}/${publicId}`
 }
 
+// Pages where portfolio images appear, keyed by locale
+const IMAGE_PAGES = [
+  { path: '/es/portfolio', lang: 'es' },
+  { path: '/en/portfolio', lang: 'en' },
+  { path: '/es',           lang: 'es' },
+  { path: '/en',           lang: 'en' },
+]
+
 export async function GET() {
   const images = await getPortfolioImages()
-  const locales = ['es', 'en']
-
-  const pageImageGroups = locales.map((locale) => ({
-    pageUrl: `${BASE_URL}/${locale}/portfolio`,
-    images,
-  }))
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-${pageImageGroups
-  .map(
-    ({ pageUrl, images: imgs }) => `  <url>
-    <loc>${pageUrl}</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-${imgs
-  .map((img) => {
-    const title = img.title_es // Use Spanish as primary; both locales map to same image
-    const caption = img.caption || img.description_es
-    // Provide 3 aspect-ratio variants per image so Google can pick best for each context
-    const variants = [
-      cloudinaryUrl(img.public_id, `w_${img.width},h_${img.height},c_fill,g_auto,f_auto,q_90`),
-      cloudinaryUrl(img.public_id, `w_1200,h_900,c_fill,g_auto,f_auto,q_85`),   // 4:3
-      cloudinaryUrl(img.public_id, `w_1200,h_675,c_fill,g_auto,f_auto,q_85`),   // 16:9
-      cloudinaryUrl(img.public_id, `w_800,h_800,c_fill,g_auto,f_auto,q_85`),    // 1:1
-    ]
-    return variants
-      .map(
-        (url) => `    <image:image>
-      <image:loc>${url}</image:loc>
+${IMAGE_PAGES.map(({ path, lang }) => {
+    const isEs = lang === 'es'
+    const imageBlocks = images
+      .map((img) => {
+        const title   = isEs ? img.title_es   : img.title_en
+        const caption = isEs ? img.caption_es : img.caption_en
+        return `    <image:image>
+      <image:loc>${escapeXml(cloudinaryUrl(img.public_id))}</image:loc>
       <image:title>${escapeXml(title)}</image:title>
       <image:caption>${escapeXml(caption)}</image:caption>
       <image:geo_location>Santo Domingo, República Dominicana</image:geo_location>
-      <image:license>${BASE_URL}/terms</image:license>
     </image:image>`
-      )
+      })
       .join('\n')
-  })
-  .join('\n')}
+
+    return `  <url>
+    <loc>${BASE_URL}${path}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+${imageBlocks}
   </url>`
-  )
-  .join('\n')}
+  }).join('\n')}
 </urlset>`
 
   return new NextResponse(xml, {

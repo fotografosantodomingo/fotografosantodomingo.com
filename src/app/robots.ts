@@ -10,9 +10,9 @@ export default function robots(): MetadataRoute.Robots {
       }
     ],
     sitemap: [
-      'https://fotografosantodomingo.com/sitemap.xml',
-      'https://fotografosantodomingo.com/image-sitemap.xml',
-      'https://fotografosantodomingo.com/hreflang-sitemap.xml',
+      'https://www.fotografosantodomingo.com/sitemap.xml',
+      'https://www.fotografosantodomingo.com/image-sitemap.xml',
+      'https://www.fotografosantodomingo.com/hreflang-sitemap.xml',
     ]
   }
 }

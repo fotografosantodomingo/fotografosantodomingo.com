@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/blog/posts'
 
-const BASE_URL = 'https://fotografosantodomingo.com'
+const BASE_URL = 'https://www.fotografosantodomingo.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts()
