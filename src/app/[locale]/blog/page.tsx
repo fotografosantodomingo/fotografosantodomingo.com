@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { getAllPosts, getFeaturedPosts, getPostsByCategory, searchPosts } from '@/lib/blog/posts'
+import { getAllPosts } from '@/lib/blog/posts'
+import {
+  getAllPostsFromDb,
+  getFeaturedPostsFromDb,
+  getPostsByCategoryFromDb,
+  searchPostsFromDb,
+} from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 
 type Props = {
@@ -8,24 +14,28 @@ type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
-export default function BlogPage({ params: { locale }, searchParams }: Props) {
+export default async function BlogPage({ params: { locale }, searchParams }: Props) {
   const t = useTranslations()
 
-  // Get all posts and featured posts
-  const allPosts = getAllPosts()
-  const featuredPosts = getFeaturedPosts()
+  // Get all posts and featured posts from DB (falls back to static)
+  const [allPostsRaw, featuredPosts] = await Promise.all([
+    getAllPostsFromDb(),
+    getFeaturedPostsFromDb(),
+  ])
 
   // Handle search and filtering
   const searchQuery = typeof searchParams.q === 'string' ? searchParams.q : ''
   const categoryFilter = typeof searchParams.category === 'string' ? searchParams.category : ''
 
-  let filteredPosts = allPosts
+  let filteredPosts = allPostsRaw
 
   if (searchQuery) {
-    filteredPosts = searchPosts(searchQuery)
+    filteredPosts = await searchPostsFromDb(searchQuery)
   } else if (categoryFilter) {
-    filteredPosts = getPostsByCategory(categoryFilter)
+    filteredPosts = await getPostsByCategoryFromDb(categoryFilter)
   }
+
+  const allPosts = allPostsRaw
 
   const categories = [
     { key: 'wedding', label: t('blog.categories_list.wedding') },

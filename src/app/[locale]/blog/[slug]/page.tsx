@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { getPostBySlug, getRelatedPosts } from '@/lib/blog/posts'
+import { getPostBySlugFromDb, getRelatedPostsFromDb } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import type { Metadata } from 'next'
 
@@ -10,7 +11,7 @@ type Props = {
 }
 
 export async function generateMetadata({ params: { locale, slug } }: Props): Promise<Metadata> {
-  const post = getPostBySlug(slug)
+  const post = await getPostBySlugFromDb(slug)
 
   if (!post) {
     return {
@@ -42,11 +43,11 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
   }
 }
 
-export default function BlogPostPage({ params: { locale, slug } }: Props) {
+export default async function BlogPostPage({ params: { locale, slug } }: Props) {
   const t = useTranslations()
 
-  const post = getPostBySlug(slug)
-  const relatedPosts = post ? getRelatedPosts(post, 3) : []
+  const post = await getPostBySlugFromDb(slug)
+  const relatedPosts = post ? await getRelatedPostsFromDb(post, 3) : []
 
   if (!post) {
     notFound()

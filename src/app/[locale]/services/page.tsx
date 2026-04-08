@@ -212,9 +212,16 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                   </div>
                 )}
 
-                {/* Service Image Placeholder */}
-                <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                  <div className="text-6xl opacity-20">
+                {/* Service Card Header */}
+                <div className={`h-56 flex flex-col items-center justify-center relative overflow-hidden ${
+                  service.id === 'wedding'     ? 'bg-gradient-to-br from-rose-400 to-pink-600' :
+                  service.id === 'portrait'    ? 'bg-gradient-to-br from-blue-500 to-indigo-700' :
+                  service.id === 'drone'       ? 'bg-gradient-to-br from-sky-400 to-cyan-600' :
+                  service.id === 'event'       ? 'bg-gradient-to-br from-amber-400 to-orange-600' :
+                  service.id === 'family'      ? 'bg-gradient-to-br from-emerald-400 to-teal-600' :
+                                                 'bg-gradient-to-br from-violet-500 to-purple-700'
+                }`}>
+                  <div className="text-7xl mb-3 drop-shadow-lg">
                     {service.id === 'wedding' && '💍'}
                     {service.id === 'portrait' && '👔'}
                     {service.id === 'drone' && '🚁'}
@@ -222,6 +229,9 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                     {service.id === 'family' && '👨‍👩‍👧‍👦'}
                     {service.id === 'commercial' && '📸'}
                   </div>
+                  <span className="text-white/90 font-semibold text-sm tracking-widest uppercase">
+                    {service.subtitle}
+                  </span>
                 </div>
 
                 <div className="p-8">
@@ -377,20 +387,20 @@ export default async function ServicesPage({ params: { locale } }: Props) {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold transition-colors"
-            >
-              WhatsApp: {CONTACT_INFO.phone}
-            </a>
-            <a
-              href={BOOKING_LINKS.calendly}
+              href={BOOKING_LINKS.setmore}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
-              {locale === 'es' ? 'Agendar Consulta' : 'Schedule Consultation'}
+              📅 {locale === 'es' ? 'Reservar Sesión Online' : 'Book Session Online'}
+            </a>
+            <a
+              href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(locale === 'es' ? 'Hola! Quiero información sobre sus servicios fotográficos.' : 'Hello! I want information about your photography services.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold transition-colors"
+            >
+              💬 WhatsApp: {CONTACT_INFO.phone}
             </a>
           </div>
         </div>
