@@ -4,8 +4,9 @@ import Link from 'next/link'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import HomeFaq from '@/components/HomeFaq'
 import { getFaqData } from '@/lib/faq-data'
-import { getPortfolioImages } from '@/lib/supabase/images'
+import { getPortfolioImages, getReviewStats } from '@/lib/supabase/images'
 import CloudinaryImage from '@/components/CloudinaryImage'
+import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -20,6 +21,9 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     description: isEs
       ? 'Fotógrafo profesional en Santo Domingo especializado en bodas, sesiones pre-boda, quinceañeras, retratos y drone. Cubrimos Punta Cana y toda la República Dominicana.'
       : 'Professional photographer in Santo Domingo specializing in weddings, portraits and drone photography. Serving Punta Cana and all of Dominican Republic.',
+    keywords: isEs
+      ? 'fotografo santo domingo, fotografo bodas republica dominicana, fotografo drone punta cana, fotografo profesional RD, babula shots'
+      : 'photographer santo domingo, wedding photographer dominican republic, drone photographer punta cana, professional photographer DR, babula shots',
     alternates: {
       canonical: `${BASE_URL}/${locale}`,
       languages: {
@@ -29,24 +33,55 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
       },
     },
     openGraph: {
+      type: 'website',
+      siteName: 'Fotografo Santo Domingo | Babula Shots',
       title: isEs ? 'Fotógrafo Santo Domingo — Babula Shots' : 'Photographer Santo Domingo — Babula Shots',
       description: isEs
         ? 'Fotografía profesional de bodas, retratos y eventos en Santo Domingo, República Dominicana.'
         : 'Professional wedding, portrait and event photography in Santo Domingo, Dominican Republic.',
-      url: `${BASE_URL}/${locale}/`,
-      images: [{ url: `${BASE_URL}/api/og`, width: 1200, height: 630 }],
+      url: `${BASE_URL}/${locale}`,
+      images: [{ url: `${BASE_URL}/api/og`, width: 1200, height: 630, alt: isEs ? 'Fotógrafo Santo Domingo — Babula Shots' : 'Photographer Santo Domingo — Babula Shots' }],
+      locale: isEs ? 'es_DO' : 'en_US',
     },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@babulashots',
+      creator: '@babulashots',
+      title: isEs ? 'Fotógrafo Santo Domingo — Babula Shots' : 'Photographer Santo Domingo — Babula Shots',
+      description: isEs
+        ? 'Fotografía profesional de bodas, retratos y eventos en Santo Domingo, República Dominicana.'
+        : 'Professional wedding, portrait and event photography in Santo Domingo, Dominican Republic.',
+      images: [`${BASE_URL}/api/og`],
+    },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
 }
 
 export default async function HomePage({ params: { locale } }: Props) {
-  const [t, allImages] = await Promise.all([
+  const [t, allImages, reviewStats] = await Promise.all([
     getTranslations({ locale, namespace: 'hero' }),
     getPortfolioImages(),
+    getReviewStats(),
   ])
 
   const isEs = locale === 'es'
   const previewImages = allImages.slice(0, 6)
+
+  // ── JSON-LD schemas ──
+  const localBusinessSchema = schemaGenerators.localBusinessWithRating(reviewStats)
+  const webSiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${BASE_URL}/#website`,
+    name: 'Fotografo Santo Domingo | Babula Shots',
+    url: BASE_URL,
+    inLanguage: ['es', 'en'],
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${BASE_URL}/es/blog?q={search_term_string}` },
+      'query-input': 'required name=search_term_string',
+    },
+  }
 
   const testimonials = [
     {
@@ -327,6 +362,18 @@ export default async function HomePage({ params: { locale } }: Props) {
 
       {/* ── FAQ ── */}
       <HomeFaq locale={locale} />
+
+      {/* LocalBusiness JSON-LD — triggers star ratings in Google search */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={generateJsonLd(localBusinessSchema)}
+      />
+
+      {/* WebSite JSON-LD — enables Google Sitelinks Search Box */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
+      />
 
       {/* FAQ JSON-LD */}
       <script
