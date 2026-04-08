@@ -296,7 +296,10 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                     {post.author}
                   </h3>
                   <p className="text-gray-400 mb-4">
-                    Professional photographer specializing in weddings, portraits, and commercial photography in Santo Domingo, Dominican Republic. With over 10 years of experience, I help capture life&apos;s most precious moments with creativity and authenticity.
+                    {locale === 'es'
+                      ? 'Fotógrafo profesional especializado en bodas, retratos y fotografía comercial en Santo Domingo, República Dominicana. Con más de 10 años de experiencia, capturo los momentos más preciados de tu vida con creatividad y autenticidad.'
+                      : 'Professional photographer specializing in weddings, portraits, and commercial photography in Santo Domingo, Dominican Republic. With over 10 years of experience, I help capture life\'s most precious moments with creativity and authenticity.'
+                    }
                   </p>
 
                   <div className="flex gap-4">
@@ -304,7 +307,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                       href={`/${locale}/about`}
                       className="text-sky-400 hover:text-sky-300 font-medium"
                     >
-                      Learn More About Me →
+                      {locale === 'es' ? 'Más Sobre Mí →' : 'Learn More About Me →'}
                     </Link>
                     <a
                       href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
@@ -312,7 +315,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                       rel="noopener noreferrer"
                       className="text-green-400 hover:text-green-300 font-medium"
                     >
-                      Get in Touch →
+                      {locale === 'es' ? 'Contáctame →' : 'Get in Touch →'}
                     </a>
                   </div>
                 </div>
