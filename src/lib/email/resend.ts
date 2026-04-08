@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 
 // Resend API key — set RESEND_API_KEY in Vercel env vars
-// On the free plan, 'from' must use onboarding@resend.dev until the domain is verified.
+// Domain fotografosantodomingo.com is verified in Resend — using real from address.
 // Once fotografosantodomingo.com is verified in Resend dashboard, change FROM to:
 //   'Babula Shots <info@fotografosantodomingo.com>'
 
@@ -11,7 +11,7 @@ function getResend(): Resend | null {
   return new Resend(process.env.RESEND_API_KEY)
 }
 
-const FROM = 'Babula Shots <onboarding@resend.dev>'
+const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'homekrypto@gmail.com'
 
 export interface ContactData {
