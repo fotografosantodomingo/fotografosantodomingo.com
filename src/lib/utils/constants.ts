@@ -12,6 +12,10 @@ export const CONTACT_INFO = {
   phone: '+1 (809) 720-9547',
   whatsapp: '18097209547',
   whatsappMessage: 'Hola! Me interesa una sesión de fotos.',
+  address: 'C. El Conde 142, Santo Domingo 11111',
+  addressShort: 'Zona Colonial, Santo Domingo',
+  hours: '24/7',
+  photographerName: 'Michal Babula',
 }
 
 // Social media links

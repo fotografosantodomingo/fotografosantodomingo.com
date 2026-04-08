@@ -373,10 +373,9 @@ export default function ContactPage() {
                     <h3 className="font-semibold text-gray-900 mb-1">
                       {t('contact.info.location') || 'Location'}
                     </h3>
-                    <p className="text-gray-600">
-                      {t('contact.info.locationDetail') || 'Santo Domingo, Dominican Republic'}
-                    </p>
-
+                    <p className="text-gray-600">C. El Conde 142</p>
+                    <p className="text-gray-600">Santo Domingo 11111</p>
+                    <p className="text-gray-500 text-sm">Zona Colonial · Czynne 24/7</p>
                   </div>
                 </div>
 
@@ -422,14 +421,14 @@ export default function ContactPage() {
       <section className="bg-white pb-16">
         <div className="container mx-auto px-4">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d120960.31256939957!2d-70.02271!3d18.48607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eaf89ecf5f97d2f%3A0xf4be80f7ede2f8c8!2sSanto%20Domingo%2C%20Dominican%20Republic!5e0!3m2!1sen!2s!4v1712500000000!5m2!1sen!2s"
+            src="https://maps.google.com/maps?q=Calle+El+Conde+142+Santo+Domingo+Dominican+Republic&output=embed&hl=es"
             width="100%"
             height="400"
             style={{ border: 0, borderRadius: '16px' }}
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Fotógrafo Santo Domingo — Ubicación"
+            title="Fotografo en Santo Domingo — C. El Conde 142, Zona Colonial"
           />
         </div>
       </section>

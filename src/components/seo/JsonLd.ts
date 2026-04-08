@@ -1,6 +1,6 @@
 import { PortfolioImage, ReviewStats, resolveLocale } from '@/lib/types/portfolio'
 
-const BASE_URL = 'https://fotografosantodomingo.com'
+const BASE_URL = 'https://www.fotografosantodomingo.com'
 const CLOUDINARY_BASE = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
 
 export const schemaGenerators = {
@@ -10,9 +10,8 @@ export const schemaGenerators = {
     url: 'https://fotografosantodomingo.com', // UPDATED
     logo: 'https://fotografosantodomingo.com/images/logo.png', // UPDATED
     sameAs: [
-      'https://instagram.com/babulashots',
-      'https://facebook.com/babulashots',
-      'https://www.tiktok.com/@babulashots'
+      'https://www.instagram.com/babulashotsrd',
+      'https://babulashotsrd.com',
     ],
     contactPoint: {
       '@type': 'ContactPoint',
@@ -20,10 +19,12 @@ export const schemaGenerators = {
       contactType: 'customer service',
       availableLanguage: ['English', 'Spanish']
     },
-    address: { // Can add physical address here
+    address: {
       '@type': 'PostalAddress',
+      streetAddress: 'C. El Conde 142',
       addressLocality: 'Santo Domingo',
-      addressRegion: 'Nacional',
+      addressRegion: 'Distrito Nacional',
+      postalCode: '11111',
       addressCountry: 'DO'
     }
   }),
@@ -38,36 +39,32 @@ export const schemaGenerators = {
     email: 'info@fotografosantodomingo.com', // UPDATED
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '[Your Street Address]',
+      streetAddress: 'C. El Conde 142',
       addressLocality: 'Santo Domingo',
-      addressRegion: 'Nacional',
-      postalCode: '10100',
+      addressRegion: 'Distrito Nacional',
+      postalCode: '11111',
       addressCountry: 'DO'
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 18.4800,
-      longitude: -69.9000
+      latitude: 18.4727,
+      longitude: -69.8866
     },
     openingHoursSpecification: [
       {
         '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-        opens: '09:00',
-        closes: '18:00'
+        dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+        opens: '00:00',
+        closes: '23:59'
       },
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: 'Saturday',
-        opens: '10:00',
-        closes: '16:00'
-      }
     ],
     priceRange: '$$',
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '5.0',
-      reviewCount: '87'
+      ratingValue: '4.9',
+      reviewCount: '91',
+      bestRating: '5',
+      worstRating: '1'
     },
     areaServed: [
       { '@type': 'City', name: 'Santo Domingo' },
@@ -91,15 +88,15 @@ export const schemaGenerators = {
     email: 'info@fotografosantodomingo.com',
     address: {
       '@type': 'PostalAddress',
+      streetAddress: 'C. El Conde 142',
       addressLocality: 'Santo Domingo',
-      addressRegion: 'Nacional',
-      postalCode: '10100',
+      addressRegion: 'Distrito Nacional',
+      postalCode: '11111',
       addressCountry: 'DO',
     },
-    geo: { '@type': 'GeoCoordinates', latitude: 18.48, longitude: -69.9 },
+    geo: { '@type': 'GeoCoordinates', latitude: 18.4727, longitude: -69.8866 },
     openingHoursSpecification: [
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '09:00', closes: '18:00' },
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '10:00', closes: '16:00' },
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '00:00', closes: '23:59' },
     ],
     priceRange: '$$',
     areaServed: [
@@ -116,9 +113,8 @@ export const schemaGenerators = {
       worstRating: '1',
     },
     sameAs: [
-      'https://instagram.com/babulashots',
-      'https://facebook.com/babulashots',
-      'https://www.tiktok.com/@babulashots',
+      'https://www.instagram.com/babulashotsrd',
+      'https://babulashotsrd.com',
     ],
   }),
 

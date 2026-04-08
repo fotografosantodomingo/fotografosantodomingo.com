@@ -30,27 +30,27 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
 export default function AboutPage({ params: { locale } }: Props) {
   const testimonials = [
     {
-      name: 'María González',
-      role: locale === 'es' ? 'Novia' : 'Bride',
+      name: 'Kasia Sosenko',
+      role: locale === 'es' ? 'Cliente — Google Reviews' : 'Client — Google Reviews',
       content: locale === 'es'
-        ? 'Babula capturó perfectamente el día más importante de mi vida. Cada foto cuenta una historia hermosa de amor y alegría.'
-        : 'Babula perfectly captured the most important day of my life. Every photo tells a beautiful story of love and joy.',
+        ? 'Gran ojo fotográfico y siempre con energía positiva. Fotografía europea con el temperamento latino.'
+        : 'Great Eye, and always positive energy. European sense of photography with the Latin temper.',
       rating: 5,
     },
     {
-      name: 'Carlos Rodríguez',
-      role: locale === 'es' ? 'CEO, TechCorp' : 'CEO, TechCorp',
+      name: 'Alessio Dattola',
+      role: locale === 'es' ? 'Cliente — Google Reviews' : 'Client — Google Reviews',
       content: locale === 'es'
-        ? 'Las fotos corporativas superaron nuestras expectativas. Profesional, creativo y entregó exactamente lo que necesitábamos.'
-        : 'The corporate photos exceeded our expectations. Professional, creative, and delivered exactly what we needed.',
+        ? 'El mejor fotógrafo profesional que puedes encontrar en Santo Domingo. Su perspectiva única y atención al detalle son incomparables.'
+        : 'The Best professional photographer You can find in Santo Domingo. His unique perspective and attention to detail are unmatched.',
       rating: 5,
     },
     {
-      name: 'Ana Martínez',
-      role: locale === 'es' ? 'Madre de Familia' : 'Mother',
+      name: 'NET Z',
+      role: locale === 'es' ? 'Cliente — Google Reviews' : 'Client — Google Reviews',
       content: locale === 'es'
-        ? 'Nuestra sesión familiar fue increíble. Capturó los momentos más genuinos y naturales de nuestra familia.'
-        : 'Our family session was incredible. He captured the most genuine and natural moments of our family.',
+        ? 'Babula Shots es muy profesional y puntual. Trabaja eficientemente en cada proyecto y es comunicativo de inicio a fin.'
+        : 'Babula Shots is very professional and punctual. Works efficiently in every project and is communicative from start to finish.',
       rating: 5,
     },
   ]
@@ -72,8 +72,8 @@ export default function AboutPage({ params: { locale } }: Props) {
       icon: '📍',
     },
     {
-      number: '5★',
-      label: locale === 'es' ? 'Calificación en Google' : 'Google Rating',
+      number: '4.9★',
+      label: locale === 'es' ? '91 Reseñas en Google' : '91 Google Reviews',
       icon: '⭐',
     },
   ]
@@ -109,26 +109,26 @@ export default function AboutPage({ params: { locale } }: Props) {
               <div className="space-y-6 text-gray-600 leading-relaxed">
                 <p>
                   {locale === 'es'
-                    ? 'Desde niño, siempre me fascinó capturar momentos especiales con la cámara. Lo que comenzó como un hobby se convirtió en mi pasión profesional hace más de una década.'
-                    : 'Since I was a child, I was always fascinated by capturing special moments with the camera. What started as a hobby became my professional passion over a decade ago.'
+                    ? 'Hola, soy Michal Babula — fotógrafo profesional con sede en la Zona Colonial de Santo Domingo. Llevo más de 10 años capturando historias auténticas con luz, emoción y detalle.'
+                    : "Hi, I'm Michal Babula — professional photographer based in the Zona Colonial of Santo Domingo. For over 10 years I've been capturing authentic stories with light, emotion, and detail."
                   }
                 </p>
                 <p>
                   {locale === 'es'
-                    ? 'En 2013, decidí convertir mi pasión en mi carrera profesional. Comencé fotografiando eventos familiares y bodas locales, perfeccionando mi técnica y estilo único.'
-                    : 'In 2013, I decided to turn my passion into my professional career. I started photographing family events and local weddings, perfecting my technique and unique style.'
+                    ? 'Especializado en bodas, retratos, sesiones de estudio, fotografía corporativa y tomas aéreas con dron por toda República Dominicana. He trabajado en Punta Cana, Cap Cana, Casa de Campo, Santiago y más.'
+                    : 'Specialized in weddings, portraits, studio sessions, corporate photography and aerial drone shots across the Dominican Republic. I have worked in Punta Cana, Cap Cana, Casa de Campo, Santiago and more.'
                   }
                 </p>
                 <p>
                   {locale === 'es'
-                    ? 'Hoy, con más de 500 bodas fotografiadas y miles de momentos especiales capturados, me enorgullezco de ser el fotógrafo de referencia en Santo Domingo y Punta Cana.'
-                    : 'Today, with over 500 weddings photographed and thousands of special moments captured, I pride myself on being the reference photographer in Santo Domingo and Punta Cana.'
+                    ? 'Mi estilo combina la sensibilidad europea con la energía latina — una perspectiva única que mis clientes valoran. Trabajo con pasión, puntualidad y comunicación clara de inicio a fin.'
+                    : 'My style blends European sensitivity with Latin energy — a unique perspective my clients value. I work with passion, punctuality and clear communication from start to finish.'
                   }
                 </p>
                 <p>
                   {locale === 'es'
-                    ? 'Mi enfoque se basa en la autenticidad, la conexión emocional y la atención al detalle. Creo que cada historia merece ser contada de manera única y memorable.'
-                    : 'My approach is based on authenticity, emotional connection, and attention to detail. I believe every story deserves to be told in a unique and memorable way.'
+                    ? 'Con más de 500 bodas fotografiadas, 91+ reseñas 5 estrellas en Google y clientes que regresan una y otra vez — me enorgullece ser tu fotógrafo de confianza en Santo Domingo.'
+                    : 'With 500+ weddings photographed, 91+ five-star Google reviews and clients who return again and again — I am proud to be your trusted photographer in Santo Domingo.'
                   }
                 </p>
               </div>
