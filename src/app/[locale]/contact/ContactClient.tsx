@@ -345,25 +345,6 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* WhatsApp */}
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-xl">💬</span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">WhatsApp</h3>
-                    <p className="text-gray-600">{CONTACT_INFO.phone}</p>
-                    <a
-                      href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-green-600 hover:text-green-700 font-medium"
-                    >
-                      {t('contact.info.whatsapp') || 'Send message'}
-                    </a>
-                  </div>
-                </div>
-
                 {/* Email */}
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -395,9 +376,7 @@ export default function ContactPage() {
                     <p className="text-gray-600">
                       {t('contact.info.locationDetail') || 'Santo Domingo, Dominican Republic'}
                     </p>
-                    <p className="text-gray-600 text-sm mt-1">
-                      {t('contact.info.serviceArea') || 'Serving Punta Cana and surrounding areas'}
-                    </p>
+
                   </div>
                 </div>
 
