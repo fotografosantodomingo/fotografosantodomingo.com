@@ -1,25 +1,18 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
-import { getPostBySlug, getRelatedPosts, getAllSlugs } from '@/lib/supabase/blog'
+import { getPostBySlug, getRelatedPosts } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 import type { Metadata } from 'next'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 type Props = {
   params: { locale: string; slug: string }
-}
-
-export async function generateStaticParams() {
-  const slugs = await getAllSlugs()
-  return slugs
-    .flatMap(({ slug_es, slug_en }) => [
-      { locale: 'es', slug: slug_es },
-      { locale: 'en', slug: slug_en },
-    ])
-    .filter(({ slug }) => Boolean(slug))
 }
 
 export async function generateMetadata({ params: { locale, slug } }: Props): Promise<Metadata> {
