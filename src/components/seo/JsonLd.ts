@@ -6,11 +6,13 @@ const CLOUDINARY_BASE = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CL
 export const schemaGenerators = {
   organization: () => ({
     '@type': 'Organization',
-    name: 'Fotografo Santo Domingo | Babula Shots', // UPDATED
-    url: 'https://fotografosantodomingo.com', // UPDATED
-    logo: 'https://fotografosantodomingo.com/images/logo.png', // UPDATED
+    name: 'Fotografo Santo Domingo | Babula Shots',
+    url: BASE_URL,
+    logo: `${BASE_URL}/images/logo.png`,
     sameAs: [
       'https://www.instagram.com/babulashotsrd',
+      'https://www.facebook.com/babulashots',
+      'https://www.tiktok.com/@babulashots',
       'https://babulashotsrd.com',
     ],
     contactPoint: {
@@ -29,14 +31,16 @@ export const schemaGenerators = {
     }
   }),
 
-  localBusiness: () => ({ // Simplified - auto uses SD
-    '@type': 'LocalBusiness', // Or 'Photographer' if schema supports
-    '@id': 'https://fotografosantodomingo.com/#business', // UPDATED
-    name: 'Fotografo Santo Domingo - Babula Shots', // UPDATED
-    image: 'https://fotografosantodomingo.com/images/og-default.webp', // UPDATED
-    url: 'https://fotografosantodomingo.com', // UPDATED
+  localBusiness: () => ({
+    '@context': 'https://schema.org',
+    '@type': ['LocalBusiness', 'ProfessionalService'],
+    '@id': `${BASE_URL}/#business`,
+    name: 'Fotografo Santo Domingo',
+    alternateName: 'Babula Shots',
+    image: `${BASE_URL}/api/og`,
+    url: BASE_URL,
     telephone: '+1-809-720-9547',
-    email: 'info@fotografosantodomingo.com', // UPDATED
+    email: 'info@fotografosantodomingo.com',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'C. El Conde 142',
@@ -54,8 +58,8 @@ export const schemaGenerators = {
       {
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-        opens: '00:00',
-        closes: '23:59'
+        opens: '08:00',
+        closes: '22:00'
       },
     ],
     priceRange: '$$',
@@ -71,7 +75,13 @@ export const schemaGenerators = {
       { '@type': 'City', name: 'Punta Cana' },
       { '@type': 'City', name: 'Santiago' },
       { '@type': 'AdministrativeArea', name: 'República Dominicana' }
-    ]
+    ],
+    sameAs: [
+      'https://www.instagram.com/babulashotsrd',
+      'https://www.facebook.com/babulashots',
+      'https://www.tiktok.com/@babulashots',
+      'https://babulashotsrd.com',
+    ],
   }),
 
   // ----------------------------------------------------------
