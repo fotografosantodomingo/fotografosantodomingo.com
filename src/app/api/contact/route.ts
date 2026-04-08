@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 import { sendContactNotification, sendContactConfirmation } from '@/lib/email/resend'
 
 export async function POST(request: NextRequest) {
@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
       service,
       message,
       eventDate,
-      location
+      location,
+      locale: bodyLocale
     } = body
 
     // Basic validation
@@ -38,10 +39,10 @@ export async function POST(request: NextRequest) {
                'unknown'
     const userAgent = request.headers.get('user-agent') || 'unknown'
     const referrer = request.headers.get('referer') || 'unknown'
-    const locale = request.headers.get('x-locale') || 'en'
+    const locale = bodyLocale || request.headers.get('x-locale') || 'es'
 
-    // Create Supabase client
-    const supabase = createSupabaseServerClient()
+    // Create Supabase service client (bypasses RLS for server-side writes)
+    const supabase = createServiceClient()
 
     // Insert contact submission
     const { data, error } = await supabase
