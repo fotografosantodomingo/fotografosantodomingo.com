@@ -1,9 +1,33 @@
+import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
 
+const BASE_URL = 'https://www.fotografosantodomingo.com'
+
 type Props = {
   params: { locale: string }
+}
+
+export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+  const isEs = locale === 'es'
+  return {
+    title: isEs
+      ? 'Servicios de Fotografía — Bodas, Drone, Retratos | Fotógrafo Santo Domingo'
+      : 'Photography Services — Weddings, Drone, Portraits | Photographer Santo Domingo',
+    description: isEs
+      ? 'Servicios profesionales de fotografía en Santo Domingo: bodas, pre-boda, quinceañeras, retratos, moda, drone, eventos corporativos. Cotiza tu sesión hoy.'
+      : 'Professional photography services in Santo Domingo: weddings, pre-wedding, portraits, fashion, drone, corporate events. Get a quote today.',
+    alternates: {
+      canonical: `${BASE_URL}/${locale}/services`,
+      languages: { es: `${BASE_URL}/es/services`, en: `${BASE_URL}/en/services`, 'x-default': `${BASE_URL}/es/services` },
+    },
+    openGraph: {
+      title: isEs ? 'Servicios de Fotografía — Fotógrafo Santo Domingo' : 'Photography Services — Photographer Santo Domingo',
+      url: `${BASE_URL}/${locale}/services`,
+      images: [{ url: `${BASE_URL}/api/og?title=Servicios+de+Fotografía&subtitle=Bodas+·+Drone+·+Retratos+·+Santo+Domingo`, width: 1200, height: 630 }],
+    },
+  }
 }
 
 export default async function ServicesPage({ params: { locale } }: Props) {

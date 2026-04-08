@@ -1,8 +1,30 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
 
+const BASE_URL = 'https://www.fotografosantodomingo.com'
+
 type Props = {
   params: { locale: string }
+}
+
+export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+  const isEs = locale === 'es'
+  return {
+    title: isEs ? 'Sobre Mí — Fotógrafo Santo Domingo | Babula Shots' : 'About — Photographer Santo Domingo | Babula Shots',
+    description: isEs
+      ? 'Conoce a tu fotógrafo profesional en Santo Domingo. Más de 10 años de experiencia en bodas, retratos, eventos y fotografía drone en República Dominicana.'
+      : 'Meet your professional photographer in Santo Domingo. Over 10 years of experience in weddings, portraits, events and drone photography in Dominican Republic.',
+    alternates: {
+      canonical: `${BASE_URL}/${locale}/about`,
+      languages: { es: `${BASE_URL}/es/about`, en: `${BASE_URL}/en/about`, 'x-default': `${BASE_URL}/es/about` },
+    },
+    openGraph: {
+      title: isEs ? 'Sobre Mí — Fotógrafo Santo Domingo' : 'About — Photographer Santo Domingo',
+      url: `${BASE_URL}/${locale}/about`,
+      images: [{ url: `${BASE_URL}/api/og?title=Sobre+el+Fotógrafo&subtitle=Babula+Shots+·+Santo+Domingo`, width: 1200, height: 630 }],
+    },
+  }
 }
 
 export default function AboutPage({ params: { locale } }: Props) {

@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { sendContactNotification, sendContactConfirmation } from '@/lib/email/sendgrid'
+import { sendContactNotification, sendContactConfirmation } from '@/lib/email/resend'
 
 interface ContactFormData {
   fullName: string
@@ -59,11 +59,18 @@ export async function submitContactForm(formData: ContactFormData, locale: strin
     })
 
     // 3. Send confirmation email to client
-    const clientEmailSent = await sendContactConfirmation(
-      formData.email,
-      formData.fullName,
-      locale
-    )
+    const clientEmailSent = await sendContactConfirmation({
+      id: String(inquiry?.id ?? 'unknown'),
+      name: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      service: formData.serviceId,
+      location: formData.locationId,
+      message: formData.message,
+      eventDate: formData.preferredDate,
+      submittedAt: new Date().toISOString(),
+      locale,
+    })
 
     // 4. Revalidate contact page cache
     revalidatePath(`/${locale}/contact`)

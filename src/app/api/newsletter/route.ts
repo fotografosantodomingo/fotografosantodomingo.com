@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { sendNewsletterWelcome } from '@/lib/email/sendgrid'
+import { sendNewsletterWelcome } from '@/lib/email/resend'
 
 export async function POST(request: NextRequest) {
   try {

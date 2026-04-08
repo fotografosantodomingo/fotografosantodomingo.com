@@ -9,6 +9,68 @@ import GoogleAnalytics from '@/components/GoogleAnalytics'
 import GoogleTagManager from '@/components/GoogleTagManager'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 
+const BASE_URL = 'https://www.fotografosantodomingo.com'
+
+const globalSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': ['LocalBusiness', 'ProfessionalService'],
+      '@id': `${BASE_URL}/#business`,
+      name: 'Fotografo Santo Domingo',
+      alternateName: 'Babula Shots',
+      url: BASE_URL,
+      telephone: '+18097209547',
+      email: 'info@fotografosantodomingo.com',
+      image: `${BASE_URL}/api/og`,
+      priceRange: '$$',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Santo Domingo',
+        addressRegion: 'Distrito Nacional',
+        addressCountry: 'DO',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 18.4861,
+        longitude: -69.9312,
+      },
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+          opens: '09:00',
+          closes: '19:00',
+        },
+      ],
+      sameAs: [
+        'https://www.instagram.com/babulashotsrd',
+        'https://share.google/aJphPsrVL2VXH9EWH',
+      ],
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        reviewCount: '162',
+        bestRating: '5',
+        worstRating: '1',
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${BASE_URL}/#website`,
+      url: BASE_URL,
+      name: 'Fotografo Santo Domingo',
+      inLanguage: ['es', 'en'],
+      publisher: { '@id': `${BASE_URL}/#business` },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${BASE_URL}/es/portfolio?q={search_term_string}`,
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  ],
+}
+
 type Props = {
   children: React.ReactNode
   params: { locale: string }
@@ -28,33 +90,32 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'meta' })
   
-  const baseUrl = 'https://fotografosantodomingo.com'
-  
   return {
     title: {
       default: t('title'),
       template: `%s | ${locale === 'es' ? 'Fotógrafo SD' : 'Photographer SD'}`
     },
     description: t('description'),
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(BASE_URL),
     alternates: {
-      canonical: `/${locale}`,
+      canonical: `${BASE_URL}/${locale}`,
       languages: {
-        en: '/en',
-        es: '/es'
+        es: `${BASE_URL}/es`,
+        en: `${BASE_URL}/en`,
+        'x-default': `${BASE_URL}/es`,
       }
     },
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: `${baseUrl}/${locale}`,
+      url: `${BASE_URL}/${locale}`,
       siteName: 'Fotografo Santo Domingo | Babula Shots',
       locale: locale === 'es' ? 'es_DO' : 'en_US',
       type: 'website',
       images: [{
-        url: `${baseUrl}/images/og-default.webp`,
+        url: `${BASE_URL}/api/og?title=Fotógrafo+Profesional+Santo+Domingo&subtitle=República+Dominicana`,
         width: 1200,
-        height: 628,
+        height: 630,
         alt: 'Fotógrafo Profesional Santo Domingo'
       }]
     },
@@ -62,7 +123,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: t('title'),
       description: t('description'),
-      images: [`${baseUrl}/images/og-default.webp`],
+      images: [`${BASE_URL}/api/og`],
       creator: '@babulashots',
     },
     robots: {
@@ -77,7 +138,7 @@ export async function generateMetadata({
       },
     },
     verification: {
-      google: 'your-google-verification-code',
+      google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ?? '',
     },
   }
 }
@@ -104,6 +165,10 @@ export default async function RootLayout({
 
   return (
     <NextIntlClientProvider locale={normalizedLocale} messages={messages}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(globalSchema) }}
+      />
       {process.env.NEXT_PUBLIC_GTM_ID && <GoogleTagManager />}
       {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && <GoogleAnalytics />}
       <ErrorBoundary>

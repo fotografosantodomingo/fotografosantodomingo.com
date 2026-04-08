@@ -34,31 +34,24 @@ const nextConfig = {
       {
         source: '/(.*)',
         headers: [
-          {
-            key: 'X-Domain',
-            value: 'fotografosantodomingo.com',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          { key: 'X-Domain', value: 'fotografosantodomingo.com' },
+        ],
+      },
+      {
+        source: '/admin/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
       {
         source: '/api/(.*)',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-store, must-revalidate',
-          },
+          { key: 'Cache-Control', value: 'no-store, must-revalidate' },
         ],
       },
     ]
@@ -69,13 +62,12 @@ const nextConfig = {
   // =====================================================
   async redirects() {
     return [
-      // Redirect old babulashotsrd.com URLs to new domain
-      // (Only needed during migration period)
-      // {
-      //   source: '/wedding-photography-punta-cana',
-      //   destination: 'https://fotografosantodomingo.com/wedding-photography-punta-cana',
-      //   permanent: true,
-      // },
+      // Serve OG image from dynamic route (generates branded image)
+      {
+        source: '/images/og-default.webp',
+        destination: '/api/og',
+        permanent: false,
+      },
     ]
   },
 

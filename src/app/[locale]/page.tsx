@@ -1,9 +1,40 @@
+import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
 
+const BASE_URL = 'https://www.fotografosantodomingo.com'
+
 type Props = {
   params: { locale: string }
+}
+
+export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
+  const isEs = locale === 'es'
+  return {
+    title: isEs
+      ? 'Fotógrafo Santo Domingo — Bodas, Retratos & Drone | Babula Shots'
+      : 'Photographer Santo Domingo — Weddings, Portraits & Drone | Babula Shots',
+    description: isEs
+      ? 'Fotógrafo profesional en Santo Domingo especializado en bodas, sesiones pre-boda, quinceañeras, retratos y drone. Cubrimos Punta Cana y toda la República Dominicana.'
+      : 'Professional photographer in Santo Domingo specializing in weddings, portraits and drone photography. Serving Punta Cana and all of Dominican Republic.',
+    alternates: {
+      canonical: `${BASE_URL}/${locale}/`,
+      languages: {
+        es: `${BASE_URL}/es/`,
+        en: `${BASE_URL}/en/`,
+        'x-default': `${BASE_URL}/es/`,
+      },
+    },
+    openGraph: {
+      title: isEs ? 'Fotógrafo Santo Domingo — Babula Shots' : 'Photographer Santo Domingo — Babula Shots',
+      description: isEs
+        ? 'Fotografía profesional de bodas, retratos y eventos en Santo Domingo, República Dominicana.'
+        : 'Professional wedding, portrait and event photography in Santo Domingo, Dominican Republic.',
+      url: `${BASE_URL}/${locale}/`,
+      images: [{ url: `${BASE_URL}/api/og`, width: 1200, height: 630 }],
+    },
+  }
 }
 
 export default async function HomePage({ params: { locale } }: Props) {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { sendContactNotification } from '@/lib/email/sendgrid'
+import { sendContactNotification, sendContactConfirmation } from '@/lib/email/resend'
 
 export async function POST(request: NextRequest) {
   try {
@@ -73,6 +73,19 @@ export async function POST(request: NextRequest) {
     // Send notification email (async, don't wait for response)
     try {
       await sendContactNotification({
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        service: data.service,
+        message: data.message,
+        eventDate: data.event_date,
+        location: data.location,
+        submittedAt: data.created_at,
+        locale: data.locale
+      })
+      // Send confirmation to the user
+      await sendContactConfirmation({
         id: data.id,
         name: data.name,
         email: data.email,
