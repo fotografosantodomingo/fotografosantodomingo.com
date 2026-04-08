@@ -1,6 +1,7 @@
 import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import NewsletterForm from './NewsletterForm'
+import ThemeToggle from './ThemeToggle'
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/lib/utils/constants'
 
 export default function Footer() {
@@ -87,17 +88,18 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm">
             © {year} Fotografo Santo Domingo.
           </p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
+          <div className="flex items-center gap-6">
             <Link href={`/${locale}/privacy`} className="text-gray-400 hover:text-white text-sm transition-colors">
               {locale === 'es' ? 'Privacidad' : 'Privacy'}
             </Link>
             <Link href={`/${locale}/terms`} className="text-gray-400 hover:text-white text-sm transition-colors">
               {locale === 'es' ? 'Términos' : 'Terms'}
             </Link>
+            <ThemeToggle />
           </div>
         </div>
       </div>

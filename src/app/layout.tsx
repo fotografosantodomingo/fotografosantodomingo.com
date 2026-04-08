@@ -23,8 +23,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html>
-      <body className={inter.className}>{children}</body>
+    <html suppressHydrationWarning>
+      <body className={inter.className}>
+        {/* Anti-FOUC: read localStorage and apply theme class before first paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('light-mode');}catch(e){}})();`,
+          }}
+        />
+        {children}
+      </body>
     </html>
   )
 }
