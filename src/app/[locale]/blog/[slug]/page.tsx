@@ -175,16 +175,12 @@ function fallbackInternalLinks(locale: string): InternalLink[] {
   ]
 }
 
-function cloudinaryGallery(publicId: string | null | undefined, fallbackImages: string[]) {
-  if (!publicId) return fallbackImages.slice(0, 6)
-  return [
-    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_1600/${publicId}`,
-    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_1400/${publicId}`,
-    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_1200/${publicId}`,
-    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_1000/${publicId}`,
-    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_900/${publicId}`,
-    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_800/${publicId}`,
-  ]
+function originalCloudinaryImage(publicId: string | null | undefined, fallbackUrl: string | null | undefined) {
+  if (publicId) {
+    return `https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/${publicId}`
+  }
+
+  return fallbackUrl || null
 }
 
 export async function generateMetadata({ params: { locale, slug } }: Props): Promise<Metadata> {
@@ -264,12 +260,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const serviceOffers = SERVICE_OFFERS[serviceKey] || SERVICE_OFFERS.general
   const setmoreUrl = post.setmore_service_url || `${SETMORE_BASE_URL}${serviceOffers[0]?.path || 'reserva'}`
 
-  const fallbackImages = [
-    post.cover_image_url,
-    post.cover_image_thumbnail_url,
-    post.cover_image_placeholder_url,
-  ].filter(Boolean) as string[]
-  const galleryImages = cloudinaryGallery(post.cover_image_public_id, fallbackImages)
+  const galleryImageUrl = originalCloudinaryImage(post.cover_image_public_id, post.cover_image_url)
 
   let relatedPosts = [] as Awaited<ReturnType<typeof getRelatedPosts>>
   try {
@@ -437,25 +428,19 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
 
         <section className="container mx-auto px-4 pb-14">
           <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Galería de la sesión' : 'Session gallery'}</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {galleryImages.slice(0, 6).map((url, index) => (
-              <figure key={url + index} className="group overflow-hidden rounded-xl border border-white/10 bg-gray-900">
-                <div className="relative aspect-[4/3]">
-                  <Image
-                    src={url}
-                    alt={`${title} - ${isEs ? 'fotógrafo en' : 'photographer in'} ${locationLabel}`}
-                    fill
-                    loading={index === 0 ? 'eager' : 'lazy'}
-                    priority={index === 0}
-                    className="object-cover transition duration-500 group-hover:scale-[1.03]"
-                  />
-                </div>
-                <figcaption className="px-4 py-3 text-sm text-gray-300">
-                  {isEs ? `Sesión profesional en ${locationLabel}` : `Professional photo session in ${locationLabel}`}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          {galleryImageUrl && (
+            <figure className="overflow-hidden rounded-2xl border border-white/10 bg-gray-900 p-3 md:p-5">
+              <img
+                src={galleryImageUrl}
+                alt={`${title} - ${isEs ? 'fotógrafo en' : 'photographer in'} ${locationLabel}`}
+                className="h-auto max-h-[80vh] w-full rounded-xl object-contain"
+                loading="eager"
+              />
+              <figcaption className="px-2 pt-4 text-sm text-gray-300 md:text-base">
+                {isEs ? `Imagen original de la sesión en ${locationLabel}` : `Original session photo in ${locationLabel}`}
+              </figcaption>
+            </figure>
+          )}
           <div className="mt-6">
             <Link href={`/${locale}/portfolio`} className="inline-block rounded-full bg-sky-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-sky-500">
               {isEs ? 'Ver Galería Completa' : 'See Full Gallery'}
@@ -477,8 +462,8 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
             <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Guía completa de la sesión' : 'Complete session guide'}</h2>
             <div className="grid gap-4 md:grid-cols-2">
               {contentBlocks.slice(0, 6).map((block, index) => (
-                <article key={`content-block-${index}`} className="rounded-2xl border border-white/10 bg-slate-900/80 p-6">
-                  <h3 className="mb-3 text-xl font-bold text-sky-200">
+                <article key={`content-block-${index}`} className="rounded-2xl border border-white/10 bg-gray-900 p-6">
+                  <h3 className="mb-3 text-xl font-bold text-sky-300">
                     {isEs ? `Punto clave ${index + 1}` : `Key point ${index + 1}`}
                   </h3>
                   <p className="text-base leading-8 text-gray-200 md:text-lg">{block}</p>
