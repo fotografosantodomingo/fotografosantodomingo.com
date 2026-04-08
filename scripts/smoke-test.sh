@@ -224,13 +224,15 @@ if [[ "$STATUS" == "201" ]] && \
   BLOG_URL_ES="$(json_field "$BODY" '.url_es')"
   BLOG_URL_EN="$(json_field "$BODY" '.url_en')"
   pass "create-post happy path returned 201 and captured post_id/blog URLs"
+  echo "  ⏳ Waiting 8s for Vercel edge propagation before checking blog URLs..."
+  sleep 8
 else
   fail "create-post happy path failed (HTTP $STATUS)"
 fi
 
 header "Test 2: GET blog_url_es — confirm page is live"
 if [[ -z "$BLOG_URL_ES" ]]; then
-  fail "ES blog URL check skipped because Test 1 did not capture blog_url_es"
+  warn "Skipped — BLOG_URL_ES not captured (Test 1 failed)"
 else
   BODY="$TMP_DIR/test2.html"
   STATUS="$(request GET "$BLOG_URL_ES" "$BODY" none)"
@@ -243,7 +245,7 @@ fi
 
 header "Test 3: GET blog_url_en — confirm page is live"
 if [[ -z "$BLOG_URL_EN" ]]; then
-  fail "EN blog URL check skipped because Test 1 did not capture blog_url_en"
+  warn "Skipped — BLOG_URL_EN not captured (Test 1 failed)"
 else
   BODY="$TMP_DIR/test3.html"
   STATUS="$(request GET "$BLOG_URL_EN" "$BODY" none)"
