@@ -93,6 +93,25 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Also known as bar */}
+        <div className="border-t border-gray-800 mt-6 pt-6">
+          <p className="text-center text-xs text-gray-500">
+            {locale === 'es' ? 'También conocido como' : 'Also known as'}{' '}
+            <a
+              href="https://www.babulashotsrd.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors underline underline-offset-2 decoration-gray-600 hover:decoration-white"
+            >
+              Babula Shots RD
+            </a>
+            {' '}—{' '}
+            {locale === 'es'
+              ? 'el mismo fotógrafo profesional en Santo Domingo.'
+              : 'the same professional photographer in Santo Domingo.'}
+          </p>
+        </div>
+
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
