@@ -68,8 +68,8 @@ export default function TermsPage({ params: { locale } }: Props) {
           {/* 1 */}
           <Section title={isEs ? '1. Introducción y aceptación' : '1. Introduction and Acceptance'}>
             <p>{isEs
-              ? 'Estos Términos y Condiciones rigen el uso del sitio web fotografosantodomingo.com y los servicios fotográficos prestados por Fotografo Santo Domingo, también conocido como Babula Shots RD, con sede en Santo Domingo, República Dominicana.'
-              : 'These Terms and Conditions govern your use of the website fotografosantodomingo.com and any photography services provided by Fotografo Santo Domingo, also known as Babula Shots RD, based in Santo Domingo, Dominican Republic.'}
+              ? 'Estos Términos y Condiciones rigen el uso del sitio web fotografosantodomingo.com y los servicios fotográficos prestados por Fotografo Santo Domingo, con sede en Santo Domingo, República Dominicana.'
+              : 'These Terms and Conditions govern your use of the website fotografosantodomingo.com and any photography services provided by Fotografo Santo Domingo, based in Santo Domingo, Dominican Republic.'}
             </p>
             <p className="mt-3">{isEs
               ? 'Al acceder a este sitio web o contratar cualquier servicio fotográfico a través de él, confirmas que has leído, comprendido y aceptas estar vinculado por estos Términos y Condiciones en su totalidad. Si no estás de acuerdo con alguna parte de estos términos, por favor no utilices nuestro sitio web ni nuestros servicios.'
@@ -84,8 +84,8 @@ export default function TermsPage({ params: { locale } }: Props) {
           {/* 2 */}
           <Section title={isEs ? '2. Sobre nosotros' : '2. About Us'}>
             <p>{isEs
-              ? 'Fotografo Santo Domingo es un servicio de fotografía profesional operado por Babula Shots RD, con sede en Santo Domingo, Distrito Nacional, República Dominicana. Ofrecemos servicios de fotografía profesional en todo el país, incluyendo Santo Domingo, Punta Cana, Bávaro, Cap Cana, Isla Saona, Tortuga Bay, Casa de Campo, La Romana, Santiago, San Pedro de Macorís, Puerto Plata y cualquier otro lugar acordado con el cliente.'
-              : 'Fotografo Santo Domingo is a professional photography service operated by Babula Shots RD, based in Santo Domingo, Distrito Nacional, Dominican Republic. We provide professional photography services across the entire country including Santo Domingo, Punta Cana, Bávaro, Cap Cana, Isla Saona, Tortuga Bay, Casa de Campo, La Romana, Santiago, San Pedro de Macorís, Puerto Plata and any other location agreed upon with the client.'}
+              ? 'Fotografo Santo Domingo es un servicio de fotografía profesional con sede en Santo Domingo, Distrito Nacional, República Dominicana. Ofrecemos servicios de fotografía profesional en todo el país, incluyendo Santo Domingo, Punta Cana, Bávaro, Cap Cana, Isla Saona, Tortuga Bay, Casa de Campo, La Romana, Santiago, San Pedro de Macorís, Puerto Plata y cualquier otro lugar acordado con el cliente.'
+              : 'Fotografo Santo Domingo is a professional photography service based in Santo Domingo, Distrito Nacional, Dominican Republic. We provide professional photography services across the entire country including Santo Domingo, Punta Cana, Bávaro, Cap Cana, Isla Saona, Tortuga Bay, Casa de Campo, La Romana, Santiago, San Pedro de Macorís, Puerto Plata and any other location agreed upon with the client.'}
             </p>
             <p className="mt-3">{isEs
               ? <>Puedes contactarnos en <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</>
@@ -173,16 +173,16 @@ export default function TermsPage({ params: { locale } }: Props) {
           {/* 6 */}
           <Section title={isEs ? '6. Derechos de autor y derechos de imagen' : '6. Copyright and Image Rights'}>
             <p>{isEs
-              ? 'Todas las fotografías y el material audiovisual creado por Fotografo Santo Domingo durante cualquier sesión fotográfica están protegidos por las leyes de derechos de autor. Los derechos de propiedad intelectual de todas las imágenes producidas pertenecen exclusiva y permanentemente a Fotografo Santo Domingo — Babula Shots RD.'
-              : 'All photographs and audiovisual material created by Fotografo Santo Domingo during any photography session are protected by copyright law. The intellectual property rights of all images produced belong exclusively and permanently to Fotografo Santo Domingo — Babula Shots RD.'}
+              ? 'Todas las fotografías y el material audiovisual creado por Fotografo Santo Domingo durante cualquier sesión fotográfica están protegidos por las leyes de derechos de autor. Los derechos de propiedad intelectual de todas las imágenes producidas pertenecen exclusiva y permanentemente a Fotografo Santo Domingo.'
+              : 'All photographs and audiovisual material created by Fotografo Santo Domingo during any photography session are protected by copyright law. The intellectual property rights of all images produced belong exclusively and permanently to Fotografo Santo Domingo.'}
             </p>
             <p className="mt-3"><strong className="text-white">{isEs ? 'Derechos de uso del cliente:' : 'Client usage rights:'}</strong> {isEs
               ? 'Una vez realizado el pago completo del servicio acordado, el cliente recibe una licencia personal, no exclusiva e intransferible para utilizar las fotografías entregadas con fines personales, incluyendo impresión, publicación en redes sociales personales y conservación como recuerdos personales. Esta licencia no incluye el derecho de vender, licenciar o explotar comercialmente las imágenes sin el consentimiento previo y por escrito de Fotografo Santo Domingo.'
               : 'Upon full payment of the agreed service fee, the client receives a personal, non-exclusive, non-transferable license to use the delivered photographs for personal purposes including printing, sharing on personal social media, and keeping as personal memories. This license does not include the right to sell, license or commercially exploit the images without prior written consent from Fotografo Santo Domingo.'}
             </p>
             <p className="mt-3"><strong className="text-white">{isEs ? 'Derechos del fotógrafo:' : 'Photographer usage rights:'}</strong> {isEs
-              ? 'Fotografo Santo Domingo se reserva el derecho pleno, irrevocable e ilimitado de utilizar, reproducir, publicar, mostrar, distribuir y comunicar públicamente cualquier imagen creada durante la sesión para fines comerciales, promocionales, publicitarios y artísticos sin requerir autorización adicional ni notificación al cliente. Esto incluye, entre otros, el uso en nuestro sitio web fotografosantodomingo.com, babulashotsrd.com, plataformas de redes sociales, portafolios fotográficos, campañas publicitarias, contenido editorial y material educativo.'
-              : 'Fotografo Santo Domingo reserves the full, irrevocable and unlimited right to use, reproduce, publish, display, distribute and publicly communicate any images created during the session for commercial, promotional, advertising and artistic purposes without requiring additional authorization or notification to the client. This includes but is not limited to use on our official website fotografosantodomingo.com, babulashotsrd.com, social media platforms, photography portfolios, advertising campaigns, editorial content and educational material.'}
+              ? 'Fotografo Santo Domingo se reserva el derecho pleno, irrevocable e ilimitado de utilizar, reproducir, publicar, mostrar, distribuir y comunicar públicamente cualquier imagen creada durante la sesión para fines comerciales, promocionales, publicitarios y artísticos sin requerir autorización adicional ni notificación al cliente. Esto incluye, entre otros, el uso en nuestro sitio web fotografosantodomingo.com, plataformas de redes sociales, portafolios fotográficos, campañas publicitarias, contenido editorial y material educativo.'
+              : 'Fotografo Santo Domingo reserves the full, irrevocable and unlimited right to use, reproduce, publish, display, distribute and publicly communicate any images created during the session for commercial, promotional, advertising and artistic purposes without requiring additional authorization or notification to the client. This includes but is not limited to use on our official website fotografosantodomingo.com, social media platforms, photography portfolios, advertising campaigns, editorial content and educational material.'}
             </p>
             <p className="mt-3"><strong className="text-white">{isEs ? 'Exclusividad:' : 'Exclusivity:'}</strong> {isEs
               ? 'Si el cliente requiere derechos exclusivos sobre las imágenes o desea restringir la publicación pública por parte de Fotografo Santo Domingo, esto debe solicitarse por escrito antes de la sesión. Los acuerdos de exclusividad están sujetos a tarifas adicionales y deben acordarse por escrito antes de la fecha de la sesión.'
@@ -277,8 +277,8 @@ export default function TermsPage({ params: { locale } }: Props) {
           {/* 11 */}
           <Section title={isEs ? '11. Enlaces a terceros' : '11. Third-Party Links'}>
             <p>{isEs
-              ? 'Nuestro sitio web contiene enlaces a sitios web de terceros, incluidas plataformas de redes sociales, galerías en línea y nuestro sitio hermano babulashotsrd.com. Estos enlaces se proporcionan únicamente para tu comodidad. No tenemos control sobre el contenido de esos sitios y no aceptamos responsabilidad alguna por ellos ni por ninguna pérdida o daño que pueda derivarse de su uso.'
-              : 'Our website contains links to third-party websites including social media platforms, online galleries and our sister website babulashotsrd.com. These links are provided for your convenience only. We have no control over the content of those sites and accept no responsibility for them or for any loss or damage that may arise from your use of them.'}
+              ? 'Nuestro sitio web contiene enlaces a sitios web de terceros, incluidas plataformas de redes sociales y galerías en línea. Estos enlaces se proporcionan únicamente para tu comodidad. No tenemos control sobre el contenido de esos sitios y no aceptamos responsabilidad alguna por ellos ni por ninguna pérdida o daño que pueda derivarse de su uso.'
+              : 'Our website contains links to third-party websites including social media platforms and online galleries. These links are provided for your convenience only. We have no control over the content of those sites and accept no responsibility for them or for any loss or damage that may arise from your use of them.'}
             </p>
           </Section>
 
@@ -305,7 +305,7 @@ export default function TermsPage({ params: { locale } }: Props) {
               : 'For any questions, concerns or disputes regarding these Terms and Conditions, please contact us:'}
             </p>
             <address className="mt-4 not-italic text-gray-300 space-y-1">
-              <p className="font-semibold text-white">Fotografo Santo Domingo — Babula Shots RD</p>
+              <p className="font-semibold text-white">Fotografo Santo Domingo</p>
               <p>Santo Domingo, Distrito Nacional, República Dominicana</p>
               <p>Email: <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a></p>
               <p>WhatsApp: <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a></p>

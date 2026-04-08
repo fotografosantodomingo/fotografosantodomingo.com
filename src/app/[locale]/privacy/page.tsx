@@ -71,13 +71,13 @@ export default function PrivacyPage({ params: { locale } }: Props) {
               <>
                 <p>Bienvenido a fotografosantodomingo.com. Esta Política de Privacidad explica cómo recopilamos, usamos, almacenamos y protegemos tu información personal cuando visitas nuestro sitio web o nos contactas para contratar una sesión fotográfica en Santo Domingo, República Dominicana.</p>
                 <p className="mt-3">Al utilizar este sitio web aceptas los términos descritos en esta Política de Privacidad. Si no estás de acuerdo, por favor no utilices nuestro sitio web.</p>
-                <p className="mt-3">Este sitio web es operado por Fotografo Santo Domingo, un servicio de fotografía profesional con sede en Santo Domingo, República Dominicana, también conocido como Babula Shots RD. Para cualquier consulta relacionada con privacidad puedes contactarnos en <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</p>
+                <p className="mt-3">Este sitio web es operado por Fotografo Santo Domingo, un servicio de fotografía profesional con sede en Santo Domingo, República Dominicana. Para cualquier consulta relacionada con privacidad puedes contactarnos en <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</p>
               </>
             ) : (
               <>
                 <p>Welcome to fotografosantodomingo.com. This Privacy Policy explains how we collect, use, store and protect your personal information when you visit our website or contact us to book a photography session in Santo Domingo, Dominican Republic.</p>
                 <p className="mt-3">By using this website you agree to the terms described in this Privacy Policy. If you do not agree, please do not use our website.</p>
-                <p className="mt-3">This website is operated by Fotografo Santo Domingo, a professional photography service based in Santo Domingo, Dominican Republic, also known as Babula Shots RD. For any privacy-related questions you can contact us at <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</p>
+                <p className="mt-3">This website is operated by Fotografo Santo Domingo, a professional photography service based in Santo Domingo, Dominican Republic. For any privacy-related questions you can contact us at <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</p>
               </>
             )}
           </Section>
@@ -209,8 +209,8 @@ export default function PrivacyPage({ params: { locale } }: Props) {
           {/* 9 */}
           <Section title={isEs ? '9. Enlaces externos' : '9. External Links'}>
             <p>{isEs
-              ? 'Nuestro sitio web puede contener enlaces a sitios web de terceros, incluidos nuestros perfiles en redes sociales, galerías en pic-time y nuestro sitio hermano babulashotsrd.com. No somos responsables de las prácticas de privacidad de estos sitios externos y te recomendamos revisar sus respectivas políticas de privacidad antes de proporcionar cualquier información personal.'
-              : 'Our website may contain links to third-party websites including our social media profiles, online galleries on pic-time, and our sister website babulashotsrd.com. We are not responsible for the privacy practices of these external sites and encourage you to review their respective privacy policies before providing any personal information.'}
+              ? 'Nuestro sitio web puede contener enlaces a sitios web de terceros, incluidos nuestros perfiles en redes sociales y galerías en línea. No somos responsables de las prácticas de privacidad de estos sitios externos y te recomendamos revisar sus respectivas políticas de privacidad antes de proporcionar cualquier información personal.'
+              : 'Our website may contain links to third-party websites including our social media profiles and online galleries. We are not responsible for the privacy practices of these external sites and encourage you to review their respective privacy policies before providing any personal information.'}
             </p>
           </Section>
 
@@ -241,7 +241,7 @@ export default function PrivacyPage({ params: { locale } }: Props) {
               : 'If you have any questions, concerns or requests regarding this Privacy Policy or the way we handle your personal data, please contact us:'}
             </p>
             <address className="mt-4 not-italic text-gray-300 space-y-1">
-              <p className="font-semibold text-white">Fotografo Santo Domingo — Babula Shots RD</p>
+              <p className="font-semibold text-white">Fotografo Santo Domingo</p>
               <p>Santo Domingo, Distrito Nacional, República Dominicana</p>
               <p>Email: <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a></p>
               <p>WhatsApp: <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a></p>
