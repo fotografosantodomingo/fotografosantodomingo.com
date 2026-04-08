@@ -16,8 +16,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Servicios de Fotografía — Bodas, Drone, Retratos | Fotógrafo Santo Domingo'
     : 'Photography Services — Weddings, Drone, Portraits | Photographer Santo Domingo'
   const description = isEs
-    ? 'Servicios profesionales de fotografía en Santo Domingo: bodas, pre-boda, quinceañeras, retratos, moda, drone, eventos corporativos. Cotiza tu sesión hoy.'
-    : 'Professional photography services in Santo Domingo: weddings, pre-wedding, portraits, fashion, drone, corporate events. Get a quote today.'
+    ? 'Servicios de fotografía para bodas, retratos, drone, quinceañeras y fotografía comercial en Santo Domingo y Punta Cana. Reserva tu sesión con Babula Shots.'
+    : 'Wedding, portrait, drone, quinceañera and commercial photography services in Santo Domingo and Punta Cana. Book your session with Babula Shots.'
   return {
     title,
     description,

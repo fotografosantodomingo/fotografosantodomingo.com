@@ -12,8 +12,8 @@ export async function generateMetadata({ params: { locale } }: Props) {
     ? 'Portafolio | Fotografo Santo Domingo - Bodas, Retratos, Drones'
     : 'Portfolio | Santo Domingo Photographer - Weddings, Portraits, Drones'
   const description = isEs
-    ? 'Explora nuestro portafolio de fotografía profesional en Santo Domingo: bodas, retratos ejecutivos, drones, eventos y más.'
-    : 'Explore our professional photography portfolio in Santo Domingo: weddings, executive portraits, drones, events and more.'
+    ? 'Explora nuestro portafolio: bodas en Punta Cana, retratos en Santo Domingo, tomas con dron, sesiones de moda y eventos corporativos en República Dominicana.'
+    : 'Browse our photography portfolio: weddings in Punta Cana, portraits in Santo Domingo, drone shots, fashion sessions and corporate events across Dominican Republic.'
   return {
     title,
     description,
@@ -55,15 +55,12 @@ export async function generateMetadata({ params: { locale } }: Props) {
 }
 
 export default async function PortfolioPage({ params: { locale } }: Props) {
-  const [images, reviewStats] = await Promise.all([
-    getPortfolioImages(),
-    getReviewStats(),
-  ])
+  const images = await getPortfolioImages()
 
   const pageUrl = `${BASE_URL}/${locale}/portfolio`
 
   const gallerySchema = schemaGenerators.imageGallery(images, pageUrl, locale)
-  const businessSchema = schemaGenerators.localBusinessWithRating(reviewStats)
+  const businessSchema = schemaGenerators.professionalServiceReference()
   const breadcrumbSchema = schemaGenerators.breadcrumb([
     { name: locale === 'es' ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
     { name: locale === 'es' ? 'Portafolio' : 'Portfolio', url: pageUrl },
@@ -81,7 +78,7 @@ export default async function PortfolioPage({ params: { locale } }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={generateJsonLd(gallerySchema)}
       />
-      {/* LocalBusiness + AggregateRating JSON-LD — triggers star ratings in search */}
+      {/* ProfessionalService reference — points back to the homepage business entity */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={generateJsonLd(businessSchema)}

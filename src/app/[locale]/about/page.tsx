@@ -15,14 +15,14 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Sobre Mí — Fotógrafo Santo Domingo | Babula Shots'
     : 'About — Photographer Santo Domingo | Babula Shots'
   const description = isEs
-    ? 'Conoce a tu fotógrafo profesional en Santo Domingo. Más de 10 años de experiencia en bodas, retratos, eventos y fotografía drone en República Dominicana.'
-    : 'Meet your professional photographer in Santo Domingo. Over 10 years of experience in weddings, portraits, events and drone photography in Dominican Republic.'
+    ? 'Conoce a Michal Babula, fotógrafo profesional en Santo Domingo desde 2015. Más de 500 bodas cubiertas, 20+ locaciones y 91 reseñas cinco estrellas en Google.'
+    : 'Meet Michal Babula — professional photographer in Santo Domingo since 2015. Over 500 weddings covered, 20+ locations, and 91 five-star Google reviews.'
   return {
     title,
     description,
     keywords: isEs
-      ? 'fotógrafo profesional santo domingo, Michal Babula fotógrafo, babula shots RD, fotógrafo con experiencia bodas, retratos ejecutivos santo domingo'
-      : 'professional photographer santo domingo, Michal Babula photographer, babula shots DR, experienced wedding photographer, executive portraits santo domingo',
+      ? 'fotógrafo profesional santo domingo, Michal Babula fotógrafo, fotógrafo con experiencia en bodas, retratos ejecutivos santo domingo, fotógrafo dominicana'
+      : 'professional photographer santo domingo, Michal Babula photographer, experienced wedding photographer, executive portraits santo domingo, dominican republic photographer',
     alternates: {
       canonical: `${BASE_URL}/${locale}/about`,
       languages: { es: `${BASE_URL}/es/about`, en: `${BASE_URL}/en/about`, 'x-default': `${BASE_URL}/es/about` },

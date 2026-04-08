@@ -1,9 +1,16 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 
 export default function WhatsAppButton() {
-  const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(CONTACT_INFO.whatsappMessage || 'Hola! Me interesa una sesión de fotos.')}`
+  const pathname = usePathname()
+  const locale = pathname?.split('/')[1] === 'en' ? 'en' : 'es'
+  const defaultMessage = locale === 'en'
+    ? 'Hi! I am interested in a photo session.'
+    : 'Hola! Me interesa una sesión de fotos.'
+  const tooltipLabel = locale === 'en' ? 'Chat with us!' : '¡Chatea con nosotros!'
+  const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(CONTACT_INFO.whatsappMessage || defaultMessage)}`
 
   return (
     <a
@@ -24,7 +31,7 @@ export default function WhatsAppButton() {
 
       {/* Tooltip */}
       <div className="absolute bottom-full right-0 mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-        ¡Chatea con nosotros!
+        {tooltipLabel}
         <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
       </div>
     </a>
