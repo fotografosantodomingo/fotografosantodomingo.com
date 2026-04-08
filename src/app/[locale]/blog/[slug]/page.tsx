@@ -275,6 +275,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
 
   const pageUrl = `${BASE_URL}/${locale}/blog/${postSlug}/`
   const imageUrl = post.cover_image_url || `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
+  const heroImageUrl = originalCloudinaryImage(post.cover_image_public_id, post.cover_image_url) || imageUrl
 
   const jsonLdGraph = {
     '@context': 'https://schema.org',
@@ -403,16 +404,13 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                 </a>
               </div>
 
-              <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-black/30 shadow-2xl">
-                <div className="relative aspect-[1200/630]">
-                  <Image
-                    src={imageUrl}
-                    alt={isEs ? (post.cover_image_alt_es || title) : (post.cover_image_alt_en || title)}
-                    fill
-                    priority
-                    className="object-cover"
-                  />
-                </div>
+              <div className="overflow-hidden rounded-2xl border border-white/20 bg-black/30 p-3 shadow-2xl md:p-4">
+                <img
+                  src={heroImageUrl}
+                  alt={isEs ? (post.cover_image_alt_es || title) : (post.cover_image_alt_en || title)}
+                  className="h-auto max-h-[75vh] w-full rounded-xl object-contain"
+                  loading="eager"
+                />
               </div>
             </div>
           </div>
