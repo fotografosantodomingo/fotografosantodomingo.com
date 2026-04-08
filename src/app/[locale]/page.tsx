@@ -19,11 +19,11 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
       ? 'Fotógrafo profesional en Santo Domingo especializado en bodas, sesiones pre-boda, quinceañeras, retratos y drone. Cubrimos Punta Cana y toda la República Dominicana.'
       : 'Professional photographer in Santo Domingo specializing in weddings, portraits and drone photography. Serving Punta Cana and all of Dominican Republic.',
     alternates: {
-      canonical: `${BASE_URL}/${locale}/`,
+      canonical: `${BASE_URL}/${locale}`,
       languages: {
-        es: `${BASE_URL}/es/`,
-        en: `${BASE_URL}/en/`,
-        'x-default': `${BASE_URL}/es/`,
+        es: `${BASE_URL}/es`,
+        en: `${BASE_URL}/en`,
+        'x-default': `${BASE_URL}/es`,
       },
     },
     openGraph: {

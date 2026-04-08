@@ -6,6 +6,8 @@ import { getPostBySlugFromDb, getRelatedPostsFromDb } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import type { Metadata } from 'next'
 
+const BASE_URL = 'https://www.fotografosantodomingo.com'
+
 type Props = {
   params: { locale: string; slug: string }
 }
@@ -14,9 +16,7 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
   const post = await getPostBySlugFromDb(slug)
 
   if (!post) {
-    return {
-      title: 'Post Not Found'
-    }
+    return { title: 'Post Not Found' }
   }
 
   const title = locale === 'es' ? post.seo.titleEs : post.seo.title
@@ -27,13 +27,23 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
     title,
     description,
     keywords: keywords.join(', '),
+    alternates: {
+      canonical: `${BASE_URL}/${locale}/blog/${slug}`,
+      languages: {
+        es: `${BASE_URL}/es/blog/${slug}`,
+        en: `${BASE_URL}/en/blog/${slug}`,
+        'x-default': `${BASE_URL}/es/blog/${slug}`,
+      },
+    },
     openGraph: {
       title,
       description,
       type: 'article',
+      url: `${BASE_URL}/${locale}/blog/${slug}`,
       publishedTime: post.publishedAt,
       authors: [post.author],
       tags: post.tags,
+      images: [{ url: `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`, width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',

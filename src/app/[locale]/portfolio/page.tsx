@@ -2,7 +2,7 @@ import { getPortfolioImages, getReviewStats } from '@/lib/supabase/images'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 import PortfolioClient from '@/components/portfolio/PortfolioClient'
 
-const BASE_URL = 'https://fotografosantodomingo.com'
+const BASE_URL = 'https://www.fotografosantodomingo.com'
 
 type Props = { params: { locale: string } }
 
@@ -16,12 +16,16 @@ export async function generateMetadata({ params: { locale } }: Props) {
       : 'Explore our professional photography portfolio in Santo Domingo: weddings, executive portraits, drones, events and more.',
     alternates: {
       canonical: `${BASE_URL}/${locale}/portfolio`,
-      languages: { en: `${BASE_URL}/en/portfolio`, es: `${BASE_URL}/es/portfolio` },
+      languages: {
+        es: `${BASE_URL}/es/portfolio`,
+        en: `${BASE_URL}/en/portfolio`,
+        'x-default': `${BASE_URL}/es/portfolio`,
+      },
     },
     openGraph: {
       type: 'website',
       url: `${BASE_URL}/${locale}/portfolio`,
-      images: [{ url: `${BASE_URL}/images/og-default.webp`, width: 1200, height: 628 }],
+      images: [{ url: `${BASE_URL}/api/og?title=Portafolio&subtitle=Fotografía+Profesional+Santo+Domingo`, width: 1200, height: 630 }],
     },
   }
 }

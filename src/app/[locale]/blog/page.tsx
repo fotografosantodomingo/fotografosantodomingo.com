@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
+import type { Metadata } from 'next'
 import { getAllPosts } from '@/lib/blog/posts'
 import {
   getAllPostsFromDb,
@@ -9,9 +10,35 @@ import {
 } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 
+const BASE_URL = 'https://www.fotografosantodomingo.com'
+
 type Props = {
   params: { locale: string }
   searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+  const isEs = locale === 'es'
+  return {
+    title: isEs
+      ? 'Blog de Fotografía — Consejos, Bodas & Tendencias | Babula Shots'
+      : 'Photography Blog — Tips, Weddings & Trends | Babula Shots',
+    description: isEs
+      ? 'Artículos sobre fotografía profesional: consejos de bodas, sesiones familiares, drone y tendencias fotográficas en República Dominicana.'
+      : 'Photography articles: wedding tips, family sessions, drone and photography trends in the Dominican Republic.',
+    alternates: {
+      canonical: `${BASE_URL}/${locale}/blog`,
+      languages: {
+        es: `${BASE_URL}/es/blog`,
+        en: `${BASE_URL}/en/blog`,
+        'x-default': `${BASE_URL}/es/blog`,
+      },
+    },
+    openGraph: {
+      url: `${BASE_URL}/${locale}/blog`,
+      images: [{ url: `${BASE_URL}/api/og?title=Blog+de+Fotografía&subtitle=Consejos+·+Bodas+·+Tendencias`, width: 1200, height: 630 }],
+    },
+  }
 }
 
 export default async function BlogPage({ params: { locale }, searchParams }: Props) {

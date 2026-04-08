@@ -16,7 +16,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'fotografosantodomingo.com', // NEW DOMAIN
+        hostname: 'www.fotografosantodomingo.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fotografosantodomingo.com',
       },
       {
         protocol: 'https',
@@ -62,6 +66,13 @@ const nextConfig = {
   // =====================================================
   async redirects() {
     return [
+      // Non-www → www (canonical domain enforcement)
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'fotografosantodomingo.com' }],
+        destination: 'https://www.fotografosantodomingo.com/:path*',
+        permanent: true,
+      },
       // Serve OG image from dynamic route (generates branded image)
       {
         source: '/images/og-default.webp',
