@@ -1,15 +1,15 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
-import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
+import { CONTACT_INFO } from '@/lib/utils/constants'
 import HomeFaq from '@/components/HomeFaq'
 import { getFaqData } from '@/lib/faq-data'
+import { getPortfolioImages } from '@/lib/supabase/images'
+import CloudinaryImage from '@/components/CloudinaryImage'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
-type Props = {
-  params: { locale: string }
-}
+type Props = { params: { locale: string } }
 
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
   const isEs = locale === 'es'
@@ -40,259 +40,292 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
 }
 
 export default async function HomePage({ params: { locale } }: Props) {
-  const t = await getTranslations({ locale, namespace: 'hero' })
+  const [t, allImages] = await Promise.all([
+    getTranslations({ locale, namespace: 'hero' }),
+    getPortfolioImages(),
+  ])
+
+  const isEs = locale === 'es'
+  const previewImages = allImages.slice(0, 6)
+
+  const testimonials = [
+    {
+      name: 'Kasia Sosenko',
+      role: isEs ? 'Cliente — Google Reviews' : 'Client — Google Reviews',
+      text: isEs
+        ? 'Gran ojo fotográfico y siempre con energía positiva. Fotografía europea con el temperamento latino.'
+        : 'Great Eye, and always positive energy. European sense of photography with the Latin temper.',
+      rating: 5,
+    },
+    {
+      name: 'Alessio Dattola',
+      role: isEs ? 'Cliente — Google Reviews' : 'Client — Google Reviews',
+      text: isEs
+        ? 'El mejor fotógrafo profesional que puedes encontrar en Santo Domingo. Su perspectiva única y atención al detalle son incomparables.'
+        : 'The best professional photographer you can find in Santo Domingo. His unique perspective and attention to detail are unmatched.',
+      rating: 5,
+    },
+    {
+      name: 'NET Z',
+      role: isEs ? 'Cliente — Google Reviews' : 'Client — Google Reviews',
+      text: isEs
+        ? 'Babula Shots es muy profesional y puntual. Trabaja eficientemente en cada proyecto y es comunicativo de inicio a fin.'
+        : 'Babula Shots is very professional and punctual. Works efficiently in every project and is communicative from start to finish.',
+      rating: 5,
+    },
+  ]
+
+  const services = [
+    {
+      slug: 'wedding',
+      title: isEs ? 'Bodas & Pre-bodas' : 'Weddings & Pre-wedding',
+      desc: isEs ? 'Cobertura completa del día más importante de tu vida.' : 'Full coverage of the most important day of your life.',
+      icon: (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+        </svg>
+      ),
+    },
+    {
+      slug: 'portrait',
+      title: isEs ? 'Retratos & Corporativos' : 'Portraits & Corporate',
+      desc: isEs ? 'Sesiones ejecutivas, familiares y de moda con luz profésional.' : 'Executive, family and fashion sessions with professional light.',
+      icon: (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+        </svg>
+      ),
+    },
+    {
+      slug: 'drone',
+      title: isEs ? 'Drone & Aéreo' : 'Drone & Aerial',
+      desc: isEs ? 'Perspectivas únicas desde el cielo para eventos y propiedades.' : 'Unique sky-high perspectives for events and real estate.',
+      icon: (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+        </svg>
+      ),
+    },
+    {
+      slug: 'quinceañera',
+      title: isEs ? 'Quinceañeras' : 'Quinceañeras',
+      desc: isEs ? 'Celebra los 15 años con una sesión de película.' : 'Celebrate the 15th birthday with a cinematic session.',
+      icon: (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+        </svg>
+      ),
+    },
+    {
+      slug: 'commercial',
+      title: isEs ? 'Comercial & Producto' : 'Commercial & Product',
+      desc: isEs ? 'Fotografía para marcas, restaurantes, hoteles y comercios.' : 'Photography for brands, restaurants, hotels and businesses.',
+      icon: (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
+        </svg>
+      ),
+    },
+    {
+      slug: 'event',
+      title: isEs ? 'Eventos & Celebraciones' : 'Events & Celebrations',
+      desc: isEs ? 'Cumpleaños, bautizos, graduaciones y eventos corporativos.' : 'Birthdays, baptisms, graduations and corporate events.',
+      icon: (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+        </svg>
+      ),
+    },
+  ]
 
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-50 to-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
-        </div>
+    <main className="min-h-screen bg-gray-950 text-white">
 
-        <div className="relative container mx-auto px-4 py-20 lg:py-32">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Main Headline */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-              {t('title_main')}{' '}
-              <span className="text-primary-600 relative">
-                {t('title_highlight')}
-                {/* Decorative underline */}
-                <svg
-                  className="absolute -bottom-2 left-0 w-full h-3 text-primary-200"
-                  viewBox="0 0 100 12"
-                  preserveAspectRatio="none"
-                >
-                  <path
-                    d="M0,0 Q50,12 100,0"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                  />
-                </svg>
-              </span>
-            </h1>
+      {/* ── HERO ── */}
+      <section className="relative overflow-hidden bg-gray-950 pt-24 pb-20 lg:pt-32 lg:pb-28">
+        {/* subtle gradient blob */}
+        <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-sky-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-3xl" />
 
-            {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto">
-              {t('subtitle')}
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link
-                href={`/${locale}/portfolio`}
-                className="btn-primary text-lg px-8 py-4"
-              >
-                {t('cta_primary')}
-              </Link>
-              <a
-                href={BOOKING_LINKS.calendly}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary text-lg px-8 py-4"
-              >
-                {t('cta_secondary')}
-              </a>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
-                  {t('stats_weddings')}
-                </div>
-                <div className="text-sm text-gray-600 uppercase tracking-wide">
-                  {locale === 'es' ? 'Bodas Cubiertas' : 'Weddings Covered'}
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
-                  {t('stats_years')}
-                </div>
-                <div className="text-sm text-gray-600 uppercase tracking-wide">
-                  {locale === 'es' ? 'Años de Experiencia' : 'Years Experience'}
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
-                  {t('stats_locations')}
-                </div>
-                <div className="text-sm text-gray-600 uppercase tracking-wide">
-                  {locale === 'es' ? 'Ubicaciones' : 'Locations Served'}
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
-                  {t('stats_reviews')}
-                </div>
-                <div className="text-sm text-gray-600 uppercase tracking-wide">
-                  Google Reviews
-                </div>
-              </div>
-            </div>
+        <div className="relative container mx-auto px-4 text-center">
+          {/* badge */}
+          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 text-sm text-gray-300 mb-8">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            {isEs ? 'Disponible para nuevas reservas · Santo Domingo, RD' : 'Available for new bookings · Santo Domingo, DR'}
           </div>
 
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <svg
-              className="w-6 h-6 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+            {t('title_main')}{' '}
+            <span className="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
+              {t('title_highlight')}
+            </span>
+          </h1>
+
+          <p className="text-xl md:text-2xl text-gray-400 mb-10 leading-relaxed max-w-3xl mx-auto">
+            {t('subtitle')}
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Link
+              href={`/${locale}/portfolio`}
+              className="bg-sky-500 hover:bg-sky-400 text-white font-semibold text-lg px-8 py-4 rounded-xl transition-colors"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 14l-7 7m0 0l-7-7m7 7V3"
-              />
-            </svg>
+              {t('cta_primary')}
+            </Link>
+            <a
+              href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(isEs ? 'Hola, me gustaría reservar una sesión.' : 'Hi, I would like to book a session.')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold text-lg px-8 py-4 rounded-xl transition-colors"
+            >
+              {t('cta_secondary')}
+            </a>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
+            {[
+              { value: t('stats_weddings'), label: isEs ? 'Bodas cubiertas' : 'Weddings covered' },
+              { value: t('stats_years'),    label: isEs ? 'Años de experiencia' : 'Years experience' },
+              { value: t('stats_locations'),label: isEs ? 'Ubicaciones' : 'Locations served' },
+              { value: t('stats_reviews'),  label: isEs ? '91 reseñas en Google' : '91 Google reviews' },
+            ].map(({ value, label }) => (
+              <div key={label} className="bg-white/5 rounded-2xl p-4 border border-white/10">
+                <div className="text-3xl font-bold text-sky-400 mb-1">{value}</div>
+                <div className="text-xs text-gray-400 uppercase tracking-wider">{label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Services Preview Section */}
-      <section className="py-20 bg-white">
+      {/* ── PORTFOLIO PREVIEW ── */}
+      <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {locale === 'es' ? 'Nuestros Servicios' : 'Our Services'}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+              {isEs ? 'Nuestro Trabajo' : 'Our Work'}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              {locale === 'es'
-                ? 'Fotografía profesional para cada momento especial de tu vida'
-                : 'Professional photography for every special moment in your life'
-              }
+            <p className="text-gray-400 text-lg">
+              {isEs ? 'Algunos momentos recientes del lente de Michal Babula' : 'Some recent moments through Michal Babula\'s lens'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: locale === 'es' ? 'Fotografía de Bodas' : 'Wedding Photography',
-                description: locale === 'es'
-                  ? 'Capturamos los momentos más importantes de tu día especial'
-                  : 'We capture the most important moments of your special day',
-                icon: '💍',
-              },
-              {
-                title: locale === 'es' ? 'Retratos Corporativos' : 'Corporate Portraits',
-                description: locale === 'es'
-                  ? 'Imágenes profesionales para tu marca personal o empresa'
-                  : 'Professional images for your personal brand or company',
-                icon: '👔',
-              },
-              {
-                title: locale === 'es' ? 'Drones & Aéreos' : 'Drone & Aerial',
-                description: locale === 'es'
-                  ? 'Perspectivas únicas desde el cielo para eventos y propiedades'
-                  : 'Unique perspectives from the sky for events and properties',
-                icon: '🚁',
-              },
-            ].map((service, index) => (
-              <div
-                key={index}
-                className="bg-gray-50 rounded-xl p-8 text-center hover:shadow-lg transition-shadow duration-300"
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-10">
+            {previewImages.map((img, i) => (
+              <Link
+                key={img.id}
+                href={`/${locale}/portfolio`}
+                className="group relative aspect-square overflow-hidden rounded-xl bg-gray-800"
               >
-                <div className="text-4xl mb-4">{service.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {service.title}
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {service.description}
-                </p>
-                <Link
-                  href={`/${locale}/services`}
-                  className="text-primary-600 hover:text-primary-700 font-medium"
-                >
-                  {locale === 'es' ? 'Ver Más' : 'Learn More'} →
-                </Link>
+                <CloudinaryImage
+                  publicId={img.public_id}
+                  alt={isEs ? img.alt_es : img.alt_en}
+                  width={600}
+                  height={600}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  priority={i < 2}
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 rounded-xl" />
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href={`/${locale}/portfolio`}
+              className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white font-semibold px-8 py-4 rounded-xl transition-colors"
+            >
+              {isEs ? 'Ver portafolio completo' : 'View full portfolio'}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SERVICES ── */}
+      <section className="py-20 bg-gray-950">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+              {isEs ? 'Servicios' : 'Services'}
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              {isEs
+                ? 'Fotografía profesional para cada momento especial, en Santo Domingo y toda República Dominicana.'
+                : 'Professional photography for every special moment, in Santo Domingo and all of Dominican Republic.'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {services.map((svc) => (
+              <Link
+                key={svc.slug}
+                href={`/${locale}/services`}
+                className="group flex flex-col gap-4 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-sky-500/50 rounded-2xl p-6 transition-all duration-200"
+              >
+                <div className="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center group-hover:bg-sky-500/20 transition-colors">
+                  {svc.icon}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg text-white mb-1">{svc.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{svc.desc}</p>
+                </div>
+                <span className="text-sky-400 text-sm font-medium mt-auto">
+                  {isEs ? 'Ver detalles →' : 'Learn more →'}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ── */}
+      <section className="py-20 bg-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 mb-4">
+              <span className="text-2xl font-bold text-yellow-400">4.9</span>
+              <div className="flex text-yellow-400">{'★★★★★'}</div>
+              <span className="text-gray-400 text-sm">(91 {isEs ? 'reseñas' : 'reviews'})</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold">
+              {isEs ? 'Lo que dicen nuestros clientes' : 'What our clients say'}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            {testimonials.map((t) => (
+              <div key={t.name} className="bg-gray-950 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
+                <div className="flex text-yellow-400 text-lg">{'★'.repeat(t.rating)}</div>
+                <p className="text-gray-300 leading-relaxed flex-1">"{t.text}"</p>
+                <div>
+                  <p className="font-semibold text-white">{t.name}</p>
+                  <p className="text-xs text-gray-500">{t.role}</p>
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <Link
-              href={`/${locale}/services`}
-              className="btn-primary"
-            >
-              {locale === 'es' ? 'Ver Todos los Servicios' : 'View All Services'}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-primary-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            {locale === 'es' ? '¿Listo para capturar tus momentos?' : 'Ready to capture your moments?'}
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-            {locale === 'es'
-              ? 'Contáctanos hoy para discutir tu proyecto fotográfico y obtener una cotización personalizada.'
-              : 'Contact us today to discuss your photography project and get a personalized quote.'
-            }
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="text-center">
             <a
-              href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
+              href="https://g.page/r/babulashots/review"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold transition-colors"
+              className="inline-flex items-center gap-2 border border-gray-700 hover:border-sky-500 text-gray-300 hover:text-white font-medium px-6 py-3 rounded-xl transition-colors"
             >
-              WhatsApp: {CONTACT_INFO.phone}
-            </a>
-            <Link
-              href={`/${locale}/contact`}
-              className="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-            >
-              {locale === 'es' ? 'Enviar Mensaje' : 'Send Message'}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Instagram CTA */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            {/* Instagram icon */}
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white mb-6 shadow-lg">
-              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+              <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064 5.96 5.96 0 014.162 1.632l2.884-2.884A9.969 9.969 0 0012.545 2C7.021 2 2.543 6.477 2.543 12s4.478 10 10.002 10c8.396 0 10.249-7.85 9.426-11.748L12.545 10.24z"/>
               </svg>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {locale === 'es' ? 'Sigue nuestra historia' : 'Follow our story'}
-            </h2>
-            <p className="text-xl text-gray-500 mb-2">@babulashotsrd</p>
-            <p className="text-gray-600 mb-8">
-              {locale === 'es'
-                ? 'Detrás de cámaras, bodas, retratos y los mejores momentos de la República Dominicana.'
-                : 'Behind the scenes, weddings, portraits and the best moments from the Dominican Republic.'
-              }
-            </p>
-            <a
-              href="https://instagram.com/babulashotsrd"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white font-semibold text-lg px-8 py-4 rounded-xl hover:opacity-90 transition-opacity shadow-lg"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-              </svg>
-              {locale === 'es' ? 'Ver en Instagram' : 'Follow on Instagram'}
+              {isEs ? 'Dejar una reseña en Google' : 'Leave a Google review'}
             </a>
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* ── FAQ ── */}
       <HomeFaq locale={locale} />
 
       {/* FAQ JSON-LD */}
@@ -305,48 +338,54 @@ export default async function HomePage({ params: { locale } }: Props) {
             mainEntity: getFaqData(locale).map(item => ({
               '@type': 'Question',
               name: item.question,
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: item.answer,
-              },
+              acceptedAnswer: { '@type': 'Answer', text: item.answer },
             })),
           }),
         }}
       />
 
-      {/* Quick Booking CTA */}
-      <section className="py-16 bg-gray-900 text-white">
+      {/* ── BOOKING CTA ── */}
+      <section className="py-16 bg-gray-950 border-t border-gray-800">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                {locale === 'es' ? '¿Listo para reservar?' : 'Ready to book?'}
+                {isEs ? '¿Listo para reservar?' : 'Ready to book?'}
               </h2>
-              <p className="text-gray-300">
-                {locale === 'es' ? 'Confirma tu fecha en minutos.' : 'Confirm your date in minutes.'}
+              <p className="text-gray-400">
+                {isEs
+                  ? 'Respondo en menos de 4 horas. También puedes reservar directamente online.'
+                  : 'I reply within 4 hours. You can also book directly online.'}
               </p>
             </div>
-            <div className="flex gap-4 flex-shrink-0">
+            <div className="flex flex-wrap gap-3 shrink-0">
               <a
-                href={`https://babulashotsrd.setmore.com/reserva`}
+                href="https://babulashotsrd.setmore.com/reserva"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-primary-500 hover:bg-primary-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+                className="bg-sky-500 hover:bg-sky-400 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
               >
-                📅 {locale === 'es' ? 'Reservar Sesión' : 'Book a Session'}
+                {isEs ? 'Reservar sesión' : 'Book a session'}
               </a>
               <a
-                href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent('Hola! Quiero reservar una sesión fotográfica.')}`}
+                href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(isEs ? 'Hola, quiero reservar una sesión fotográfica.' : 'Hi, I would like to book a photography session.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-green-600 hover:bg-green-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+                className="bg-green-600 hover:bg-green-500 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
               >
-                💬 WhatsApp
+                WhatsApp
               </a>
+              <Link
+                href={`/${locale}/contact`}
+                className="bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+              >
+                {isEs ? 'Enviar mensaje' : 'Send message'}
+              </Link>
             </div>
           </div>
         </div>
       </section>
+
     </main>
   )
 }
