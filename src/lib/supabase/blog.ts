@@ -50,6 +50,18 @@ export type PublishedPostDetail = {
   service_type: string | null
   location: string | null
   cloudinary_folder: string | null
+  intro_es: string | null
+  intro_en: string | null
+  location_section_es: string | null
+  location_section_en: string | null
+  faq_es: Array<{ question: string; answer: string }> | null
+  faq_en: Array<{ question: string; answer: string }> | null
+  reviews_es: Array<{ author: string; rating: number; text: string; session_type?: string }> | null
+  reviews_en: Array<{ author: string; rating: number; text: string; session_type?: string }> | null
+  internal_links_es: Array<{ text: string; url: string; description?: string }> | null
+  internal_links_en: Array<{ text: string; url: string; description?: string }> | null
+  setmore_service_url: string | null
+  instagram_post_id: string | null
   published_at: string
   updated_at: string | null
   status: string

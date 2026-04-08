@@ -1,18 +1,190 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import type { Metadata } from 'next'
 import { getPostBySlug, getRelatedPosts } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
-import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
-import type { Metadata } from 'next'
+import { InstagramLazyEmbed } from '../../../../components/blog/InstagramLazyEmbed'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
+const GOOGLE_REVIEWS_URL = 'https://share.google/aJphPsrVL2VXH9EWH'
+const WHATSAPP_URL = `https://wa.me/${CONTACT_INFO.whatsapp}`
+const SETMORE_BASE_URL = 'https://babulashotsrd.setmore.com/'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 type Props = {
   params: { locale: string; slug: string }
+}
+
+type FaqItem = { question: string; answer: string }
+type ReviewItem = { author: string; rating: number; text: string; session_type?: string }
+type InternalLink = { text: string; url: string; description?: string }
+
+type ServiceOffer = {
+  nameEs: string
+  nameEn: string
+  descriptionEs: string
+  descriptionEn: string
+  price: string
+  path: string
+  icon: string
+}
+
+const SERVICE_OFFERS: Record<string, ServiceOffer[]> = {
+  wedding: [
+    {
+      nameEs: 'Wedding Essential',
+      nameEn: 'Wedding Essential',
+      descriptionEs: 'Cobertura de boda esencial para capturar la historia completa con estilo editorial.',
+      descriptionEn: 'Essential wedding coverage to capture the full story with an editorial style.',
+      price: 'Desde $499 USD',
+      path: 'services/449806f6-d719-40a4-abf7-81078df1667c',
+      icon: '💍',
+    },
+    {
+      nameEs: 'Wedding Signature',
+      nameEn: 'Wedding Signature',
+      descriptionEs: 'Dirección creativa y narrativa completa para parejas que quieren un resultado premium.',
+      descriptionEn: 'Creative direction and complete storytelling for couples who want a premium result.',
+      price: 'Desde $899 USD',
+      path: 'services/95520777-9dc8-4721-9dd3-f33d3bc78256',
+      icon: '✨',
+    },
+  ],
+  saona: [
+    {
+      nameEs: 'Sesión Isla Saona',
+      nameEn: 'Saona Island Session',
+      descriptionEs: 'Experiencia fotográfica en playa virgen con dirección ligera y resultados naturales.',
+      descriptionEn: 'Beach photography experience with light direction and natural results.',
+      price: 'Desde $390 USD',
+      path: 'services/ecff4d69-6861-4df3-b52b-407f1b117ff7',
+      icon: '🏝️',
+    },
+    {
+      nameEs: 'Pre-boda Premium',
+      nameEn: 'Pre-wedding Premium',
+      descriptionEs: 'Sesión romántica para parejas con look editorial y localizaciones exclusivas.',
+      descriptionEn: 'Romantic couple session with editorial style and exclusive locations.',
+      price: 'Desde $450 USD',
+      path: 'services/1506c6a5-1494-4d7d-bb5b-9f5b80a4d057',
+      icon: '📸',
+    },
+  ],
+  general: [
+    {
+      nameEs: 'Sesión Premium',
+      nameEn: 'Premium Session',
+      descriptionEs: 'Sesiones personalizadas para parejas, retratos y contenido de marca.',
+      descriptionEn: 'Custom sessions for couples, portraits, and brand content.',
+      price: 'Desde $290 USD',
+      path: 'reserva',
+      icon: '📷',
+    },
+    {
+      nameEs: 'Cobertura de Eventos',
+      nameEn: 'Event Coverage',
+      descriptionEs: 'Cobertura documental y elegante para eventos sociales y corporativos.',
+      descriptionEn: 'Documentary and elegant coverage for social and corporate events.',
+      price: 'Desde $350 USD',
+      path: 'products=76f13f08-20be-43f2-8dd4-4e8902a2bc43',
+      icon: '🎉',
+    },
+  ],
+}
+
+function normalizeUrl(url: string) {
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url
+  return `/${url}`
+}
+
+function splitParagraphs(text: string | null | undefined) {
+  if (!text) return []
+  const normalized = text
+    .replace(/\r\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+
+  return normalized
+    .split(/\n\n+|\n(?=[A-ZÁÉÍÓÚÑ0-9])/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+}
+
+function splitSentences(text: string | null | undefined) {
+  if (!text) return []
+  return text
+    .replace(/\s+/g, ' ')
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter((sentence) => sentence.length > 40)
+}
+
+function buildContentBlocks(paragraphs: string[]) {
+  if (paragraphs.length >= 3) return paragraphs
+  const combined = paragraphs.join(' ')
+  const sentences = splitSentences(combined)
+  const blocks: string[] = []
+  for (let i = 0; i < sentences.length; i += 2) {
+    blocks.push(sentences.slice(i, i + 2).join(' '))
+  }
+  return blocks.filter(Boolean)
+}
+
+function contextualFallbackFaq(locale: string, serviceType: string, location: string): FaqItem[] {
+  const isEs = locale === 'es'
+  const service = serviceType || (isEs ? 'sesión fotográfica' : 'photo session')
+
+  return isEs
+    ? [
+        { question: `¿Cuál es el mejor horario para una ${service} en ${location}?`, answer: 'La mejor luz suele ser temprano en la mañana o cerca del atardecer para tonos más cinematográficos.' },
+        { question: `¿Qué debo llevar para mi sesión en ${location}?`, answer: 'Recomendamos 2 cambios de ropa, agua, protector solar y accesorios simples que combinen con el entorno.' },
+        { question: '¿Cuánto tarda la entrega final?', answer: 'La entrega inicial llega rápido y la galería final editada se comparte en alta resolución.' },
+      ]
+    : [
+        { question: `What is the best time for a ${service} in ${location}?`, answer: 'Golden-hour light is usually best, either early morning or before sunset for a cinematic look.' },
+        { question: `What should I bring for my session in ${location}?`, answer: 'We recommend 2 outfit options, water, sun protection, and simple accessories that match the location.' },
+        { question: 'How long does final delivery take?', answer: 'A quick preview is delivered first, followed by a fully edited high-resolution gallery.' },
+      ]
+}
+
+function fallbackReviews(locale: string): ReviewItem[] {
+  if (locale === 'es') {
+    return [
+      { author: 'Ana P.', rating: 5, text: 'Nos encantó la experiencia. Dirección súper clara, fotos naturales y entrega impecable.', session_type: 'Boda en Punta Cana' },
+      { author: 'Michael R.', rating: 5, text: 'Desde la planificación hasta la entrega fue excelente. Muy recomendado para parejas destino.', session_type: 'Sesión de pareja' },
+      { author: 'Laura C.', rating: 5, text: 'El manejo de luz en playa fue increíble. Las fotos quedaron de revista.', session_type: 'Sesión en Isla Saona' },
+    ]
+  }
+
+  return [
+    { author: 'Ana P.', rating: 5, text: 'We loved the full experience. Clear direction, natural photos, and an excellent final delivery.', session_type: 'Punta Cana Wedding' },
+    { author: 'Michael R.', rating: 5, text: 'From planning to final delivery everything was excellent. Highly recommended for destination couples.', session_type: 'Couple Session' },
+    { author: 'Laura C.', rating: 5, text: 'The way they handled beach light was incredible. The final photos looked editorial.', session_type: 'Saona Island Session' },
+  ]
+}
+
+function fallbackInternalLinks(locale: string): InternalLink[] {
+  return [
+    { text: locale === 'es' ? 'Servicios de fotografía en República Dominicana' : 'Photography Services in the Dominican Republic', url: `/${locale}/services` },
+    { text: locale === 'es' ? 'Ver portafolio completo' : 'See full portfolio', url: `/${locale}/portfolio` },
+    { text: locale === 'es' ? 'Contactar al fotógrafo' : 'Contact the photographer', url: `/${locale}/contact` },
+    { text: locale === 'es' ? 'Guía de sesiones en playa' : 'Beach session guide', url: 'https://babulashotsrd.com/ceremonia-de-matrimonio-en-la-playa-como-preparar/' },
+  ]
+}
+
+function cloudinaryGallery(publicId: string | null | undefined, fallbackImages: string[]) {
+  if (!publicId) return fallbackImages.slice(0, 6)
+  return [
+    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_1600/${publicId}`,
+    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_1400/${publicId}`,
+    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_1200/${publicId}`,
+    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_1000/${publicId}`,
+    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_900/${publicId}`,
+    `https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_800/${publicId}`,
+  ]
 }
 
 export async function generateMetadata({ params: { locale, slug } }: Props): Promise<Metadata> {
@@ -23,60 +195,81 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
   }
 
   const isEs = locale === 'es'
-  const title = isEs ? (post.og_title_es ?? post.title_es) : (post.og_title_en ?? post.title_en)
-  const description = isEs
-    ? (post.meta_description_es ?? post.excerpt_es ?? '')
-    : (post.meta_description_en ?? post.excerpt_en ?? '')
-  const keywords = isEs
-    ? (post.primary_keyword_es ?? '')
-    : (post.primary_keyword_en ?? '')
   const canonicalSlug = isEs ? post.slug_es : post.slug_en
-  const image = post.cover_image_url ?? `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
+  const title = isEs ? (post.title_es || post.og_title_es || 'Blog') : (post.title_en || post.og_title_en || 'Blog')
+  const description = isEs
+    ? (post.meta_description_es || post.excerpt_es || '')
+    : (post.meta_description_en || post.excerpt_en || '')
+  const image = post.cover_image_url || `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
 
   return {
     title,
     description,
-    keywords,
     alternates: {
-      canonical: `${BASE_URL}/${locale}/blog/${canonicalSlug}`,
+      canonical: `${BASE_URL}/${locale}/blog/${canonicalSlug}/`,
       languages: {
-        es: `${BASE_URL}/es/blog/${post.slug_es}`,
-        en: `${BASE_URL}/en/blog/${post.slug_en}`,
-        'x-default': `${BASE_URL}/es/blog/${post.slug_es}`,
+        es: `${BASE_URL}/es/blog/${post.slug_es}/`,
+        en: `${BASE_URL}/en/blog/${post.slug_en}/`,
+        'x-default': `${BASE_URL}/es/blog/${post.slug_es}/`,
       },
     },
     openGraph: {
       type: 'article',
       siteName: 'Fotografo Santo Domingo | Babula Shots',
-      title,
+      title: isEs ? (post.og_title_es || post.title_es) : (post.og_title_en || post.title_en),
       description,
-      url: `${BASE_URL}/${locale}/blog/${canonicalSlug}`,
+      url: `${BASE_URL}/${locale}/blog/${canonicalSlug}/`,
       locale: isEs ? 'es_DO' : 'en_US',
       publishedTime: post.published_at,
       modifiedTime: post.updated_at ?? post.published_at,
-      authors: ['Babula Shots'],
-      images: [{ url: image, width: 1200, height: 630, alt: title }],
+      images: [{
+        url: image,
+        width: 1200,
+        height: 630,
+        alt: isEs ? (post.cover_image_alt_es || post.title_es) : (post.cover_image_alt_en || post.title_en),
+      }],
     },
     twitter: {
       card: 'summary_large_image',
-      site: '@babulashots',
-      creator: '@babulashots',
-      title,
+      title: isEs ? (post.og_title_es || post.title_es) : (post.og_title_en || post.title_en),
       description,
       images: [image],
     },
-    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
 }
 
 export default async function BlogPostPage({ params: { locale, slug } }: Props) {
-  const t = await getTranslations({ locale })
-
   const post = await getPostBySlug(slug)
 
-  if (!post) {
-    notFound()
-  }
+  if (!post) notFound()
+
+  const isEs = locale === 'es'
+  const postSlug = isEs ? post.slug_es : post.slug_en
+  const title = isEs ? post.title_es : post.title_en
+  const excerpt = (isEs ? post.excerpt_es : post.excerpt_en) || ''
+  const content = (isEs ? post.content_es : post.content_en) || ''
+  const introParagraphs = splitParagraphs(isEs ? post.intro_es : post.intro_en)
+  const locationParagraphs = splitParagraphs(isEs ? post.location_section_es : post.location_section_en)
+  const faq = ((isEs ? post.faq_es : post.faq_en) || []) as FaqItem[]
+  const reviews = ((isEs ? post.reviews_es : post.reviews_en) || []) as ReviewItem[]
+  const internalLinks = ((isEs ? post.internal_links_es : post.internal_links_en) || []) as InternalLink[]
+
+  const selectedFaq = faq.length > 0
+    ? faq
+    : contextualFallbackFaq(locale, post.service_type || '', post.location || post.geo_city || (isEs ? 'República Dominicana' : 'Dominican Republic'))
+  const selectedReviews = reviews.length > 0 ? reviews : fallbackReviews(locale)
+  const selectedLinks = internalLinks.length > 0 ? internalLinks : fallbackInternalLinks(locale)
+
+  const serviceKey = (post.service_type || '').toLowerCase().includes('saona') ? 'saona' : (post.service_type || 'general')
+  const serviceOffers = SERVICE_OFFERS[serviceKey] || SERVICE_OFFERS.general
+  const setmoreUrl = post.setmore_service_url || `${SETMORE_BASE_URL}${serviceOffers[0]?.path || 'reserva'}`
+
+  const fallbackImages = [
+    post.cover_image_url,
+    post.cover_image_thumbnail_url,
+    post.cover_image_placeholder_url,
+  ].filter(Boolean) as string[]
+  const galleryImages = cloudinaryGallery(post.cover_image_public_id, fallbackImages)
 
   let relatedPosts = [] as Awaited<ReturnType<typeof getRelatedPosts>>
   try {
@@ -85,307 +278,349 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
     console.error('related posts lookup failed:', error)
   }
 
-  const isEs = locale === 'es'
-  const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return ''
-    const date = new Date(dateString)
-    if (Number.isNaN(date.getTime())) return ''
-    return date.toLocaleDateString(isEs ? 'es-ES' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
-  }
+  const locationLabel = post.location || post.geo_city || (isEs ? 'República Dominicana' : 'Dominican Republic')
+  const articleParagraphs = splitParagraphs(content)
+  const contentBlocks = buildContentBlocks(articleParagraphs)
 
-  const content = (isEs ? post.content_es : post.content_en) ?? ''
-  const title = (isEs ? post.title_es : post.title_en) ?? (isEs ? 'Artículo' : 'Article')
-  const readingTime = Math.max(5, Math.ceil(content.split(/\s+/).length / 200))
+  const pageUrl = `${BASE_URL}/${locale}/blog/${postSlug}/`
+  const imageUrl = post.cover_image_url || `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
 
-  // Split content into paragraphs for better rendering
-  const paragraphs = content.split('\n\n').filter((p) => p.trim())
-
-  let articleSchema: unknown = null
-  let breadcrumbSchema: unknown = null
-  try {
-    articleSchema = schemaGenerators.article(post, locale)
-    breadcrumbSchema = schemaGenerators.breadcrumb([
-      { name: isEs ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
-      { name: 'Blog', url: `${BASE_URL}/${locale}/blog` },
-      { name: title, url: `${BASE_URL}/${locale}/blog/${slug}` },
-    ])
-  } catch (error) {
-    console.error('blog schema generation failed:', error)
+  const jsonLdGraph = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': pageUrl,
+        url: pageUrl,
+        name: title,
+        description: isEs ? (post.meta_description_es || excerpt) : (post.meta_description_en || excerpt),
+        inLanguage: locale,
+        primaryImageOfPage: { '@type': 'ImageObject', url: imageUrl },
+        breadcrumb: {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: isEs ? 'Inicio' : 'Home', item: `${BASE_URL}/${locale}/` },
+            { '@type': 'ListItem', position: 2, name: 'Blog', item: `${BASE_URL}/${locale}/blog/` },
+            { '@type': 'ListItem', position: 3, name: title, item: pageUrl },
+          ],
+        },
+      },
+      {
+        '@type': 'Article',
+        '@id': `${pageUrl}#article`,
+        headline: title,
+        description: isEs ? (post.meta_description_es || excerpt) : (post.meta_description_en || excerpt),
+        image: { '@type': 'ImageObject', url: imageUrl, width: 1200, height: 630 },
+        author: { '@id': `${BASE_URL}/#business` },
+        publisher: { '@id': `${BASE_URL}/#business` },
+        datePublished: post.published_at,
+        dateModified: post.updated_at ?? post.published_at,
+        inLanguage: locale,
+        mainEntityOfPage: pageUrl,
+      },
+      {
+        '@type': ['LocalBusiness', 'ProfessionalService'],
+        '@id': `${BASE_URL}/#business`,
+        name: 'Fotografo Santo Domingo',
+        url: BASE_URL,
+        telephone: '+1-809-720-9547',
+        email: 'info@fotografosantodomingo.com',
+        image: imageUrl,
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Santo Domingo',
+          addressRegion: 'Distrito Nacional',
+          addressCountry: 'DO',
+        },
+        sameAs: [
+          'https://www.instagram.com/babulashotsrd',
+          GOOGLE_REVIEWS_URL,
+          'https://www.babulashotsrd.com',
+        ],
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '4.9',
+          reviewCount: '162',
+          bestRating: '5',
+          worstRating: '1',
+        },
+      },
+      {
+        '@type': 'Service',
+        '@id': `${pageUrl}#service`,
+        name: isEs ? `${post.service_type || 'Fotografía Profesional'} en ${locationLabel}` : `${post.service_type || 'Professional Photography'} in ${locationLabel}`,
+        serviceType: post.schema_service_type || post.service_type || 'Photography',
+        provider: { '@id': `${BASE_URL}/#business` },
+        areaServed: [
+          { '@type': 'City', name: post.geo_city || locationLabel },
+          { '@type': 'Country', name: 'República Dominicana' },
+        ],
+        image: imageUrl,
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+          url: setmoreUrl,
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${pageUrl}#faq`,
+        mainEntity: selectedFaq.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: { '@type': 'Answer', text: item.answer },
+        })),
+      },
+      ...selectedReviews.slice(0, 3).map((review) => ({
+        '@type': 'Review',
+        author: { '@type': 'Person', name: review.author },
+        reviewRating: { '@type': 'Rating', ratingValue: review.rating, bestRating: 5 },
+        reviewBody: review.text,
+      })),
+    ],
   }
 
   return (
     <>
-      {articleSchema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(articleSchema)} />
-      )}
-      {breadcrumbSchema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
-      )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdGraph) }} />
       <main className="min-h-screen bg-gray-950 text-white">
-      {/* Hero Section with Post Info */}
-      <section className="relative bg-gray-950 pt-20 pb-12">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
-        <div className="relative container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            {/* Breadcrumb */}
-            <nav className="mb-8">
-              <Link
-                href={`/${locale}/blog`}
-                className="text-sky-400 hover:text-sky-300 font-medium"
-              >
-                ← {t('blog.back_to_blog')}
+        <section className="relative overflow-hidden border-b border-white/10">
+          <div className="absolute inset-0 bg-gradient-to-br from-sky-700/30 via-cyan-500/10 to-emerald-500/20" />
+          <div className="container relative mx-auto px-4 py-10 md:py-16">
+            <div className="mb-6">
+              <Link href={`/${locale}/blog`} className="text-sm font-semibold text-sky-300 hover:text-sky-200">
+                {isEs ? '← Volver al blog' : '← Back to blog'}
               </Link>
-            </nav>
+            </div>
 
-            {/* Post Header */}
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center gap-4 text-sm text-gray-500 mb-4">
-                <span>{formatDate(post.published_at)}</span>
-                <span>•</span>
-                <span>{readingTime} {t('blog.reading_time')}</span>
-                <span>•</span>
-                <span>{t('blog.by')} Babula Shots</span>
+            <div className="grid items-center gap-8 md:grid-cols-2">
+              <div>
+                <h1 className="mb-4 text-4xl font-black leading-tight md:text-5xl lg:text-6xl">{title}</h1>
+                {excerpt && <p className="mb-6 text-lg text-gray-200 md:text-xl">{excerpt}</p>}
+                <div className="flex flex-wrap gap-3">
+                  <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-3 text-sm font-bold text-gray-900 transition hover:bg-gray-200">
+                    {isEs ? 'Reservar Sesión' : 'Book Session'}
+                  </a>
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-400 bg-green-500/20 px-5 py-3 text-sm font-bold text-green-200 transition hover:bg-green-500/30">
+                    WhatsApp
+                  </a>
+                </div>
+                <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block text-sm font-semibold text-amber-300 hover:text-amber-200">
+                  ⭐ 4.9 / 162 {isEs ? 'reseñas en Google' : 'Google reviews'}
+                </a>
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                {title}
-              </h1>
-
-              {/* Tags */}
-              {post.service_type && (
-                <div className="flex flex-wrap justify-center gap-2 mb-6">
-                  <span className="bg-sky-500/20 text-sky-300 px-3 py-1 rounded-full text-sm">
-                    {post.service_type}
-                  </span>
-                  {post.location && (
-                    <span className="bg-sky-500/20 text-sky-300 px-3 py-1 rounded-full text-sm">
-                      {post.location}
-                    </span>
-                  )}
+              <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-black/30 shadow-2xl">
+                <div className="relative aspect-[1200/630]">
+                  <Image
+                    src={imageUrl}
+                    alt={isEs ? (post.cover_image_alt_es || title) : (post.cover_image_alt_en || title)}
+                    fill
+                    priority
+                    className="object-cover"
+                  />
                 </div>
-              )}
-            </div>
-
-            {/* Featured Image Placeholder */}
-            <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl mb-8 relative overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-8xl opacity-20">
-                  {post.service_type === 'wedding' ? '💍' :
-                   post.service_type === 'portrait' ? '👤' :
-                   post.service_type === 'drone' ? '🚁' :
-                   post.service_type === 'commercial' ? '📸' : '📝'}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Article Content */}
-      <section className="py-16 bg-gray-950">
-        <div className="container mx-auto px-4">
-          <article className="max-w-4xl mx-auto">
-            <div className="prose prose-lg prose-invert max-w-none">
-              {paragraphs.map((paragraph, index) => {
-                // Handle headings
-                if (paragraph.startsWith('# ')) {
-                  return (
-                    <h2 key={index} className="text-3xl font-bold text-white mt-12 mb-6 first:mt-0">
-                      {paragraph.replace('# ', '')}
-                    </h2>
-                  )
-                }
-
-                // Handle subheadings
-                if (paragraph.startsWith('## ')) {
-                  return (
-                    <h3 key={index} className="text-2xl font-semibold text-white mt-10 mb-4">
-                      {paragraph.replace('## ', '')}
-                    </h3>
-                  )
-                }
-
-                // Handle lists (basic implementation)
-                if (paragraph.startsWith('- ')) {
-                  const listItems = paragraph.split('\n').filter(item => item.trim())
-                  return (
-                    <ul key={index} className="list-disc list-inside space-y-2 my-6 text-gray-300">
-                      {listItems.map((item, itemIndex) => (
-                        <li key={itemIndex}>{item.replace('- ', '')}</li>
-                      ))}
-                    </ul>
-                  )
-                }
-
-                // Regular paragraphs
-                return (
-                  <p key={index} className="text-gray-300 leading-relaxed mb-6">
-                    {paragraph}
-                  </p>
-                )
-              })}
-            </div>
-
-            {/* Share Section */}
-            <div className="border-t border-gray-700 pt-8 mt-12">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <span className="text-gray-400 font-medium">{t('blog.share')}:</span>
-                  <div className="flex gap-2">
-                    <button className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
-                      <span className="text-sm">f</span>
-                    </button>
-                    <button className="w-10 h-10 bg-sky-500 text-white rounded-full flex items-center justify-center hover:bg-sky-600 transition-colors">
-                      <span className="text-sm">t</span>
-                    </button>
-                    <button className="w-10 h-10 bg-pink-600 text-white rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors">
-                      <span className="text-sm">📷</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="text-sm text-gray-500">
-                  {t('blog.published_on')} {formatDate(post.published_at)}
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      {/* Related Posts */}
-      {relatedPosts.length > 0 && (
-        <section className="py-16 bg-gray-900">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl font-bold text-white text-center mb-12">
-                {t('blog.related_posts')}
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {relatedPosts.map(relatedPost => (
-                  <article key={relatedPost.slug} className="bg-gray-950 rounded-xl border border-white/10 overflow-hidden hover:border-sky-500/40 transition-colors">
-                    <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 relative">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-4xl opacity-20">
-                          {relatedPost.service_type === 'wedding' ? '💍' :
-                           relatedPost.service_type === 'portrait' ? '👤' :
-                           relatedPost.service_type === 'drone' ? '🚁' :
-                           relatedPost.service_type === 'commercial' ? '📸' : '📝'}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-6">
-                      <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                        <span>{formatDate(relatedPost.published_at)}</span>
-                      </div>
-
-                      <h3 className="text-xl font-bold text-white mb-3">
-                        <Link
-                          href={`/${locale}/blog/${relatedPost.slug}`}
-                          className="hover:text-sky-400 transition-colors"
-                        >
-                          {relatedPost.title}
-                        </Link>
-                      </h3>
-
-                      <p className="text-gray-400 mb-4 line-clamp-2">
-                        {relatedPost.excerpt}
-                      </p>
-
-                      <Link
-                        href={`/${locale}/blog/${relatedPost.slug}`}
-                        className="text-sky-400 hover:text-sky-300 font-medium"
-                      >
-                        {t('blog.read_more')} →
-                      </Link>
-                    </div>
-                  </article>
-                ))}
               </div>
             </div>
           </div>
         </section>
-      )}
 
-      {/* Author Bio */}
-      <section className="py-16 bg-gray-950">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-900 rounded-xl border border-white/10 p-8">
-              <div className="flex items-start gap-6">
-                <div className="w-20 h-20 bg-gradient-to-br from-sky-500 to-sky-700 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl text-white">📸</span>
+        <section className="container mx-auto px-4 py-12">
+          <div className="mx-auto max-w-4xl space-y-6 text-lg leading-9 text-gray-200 md:text-xl">
+            {(introParagraphs.length > 0 ? introParagraphs : articleParagraphs.slice(0, 2)).map((paragraph, index) => (
+              <p key={`intro-${index}`}>{paragraph}</p>
+            ))}
+          </div>
+        </section>
+
+        <section className="container mx-auto px-4 pb-14">
+          <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Galería de la sesión' : 'Session gallery'}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {galleryImages.slice(0, 6).map((url, index) => (
+              <figure key={url + index} className="group overflow-hidden rounded-xl border border-white/10 bg-gray-900">
+                <div className="relative aspect-[4/3]">
+                  <Image
+                    src={url}
+                    alt={`${title} - ${isEs ? 'fotógrafo en' : 'photographer in'} ${locationLabel}`}
+                    fill
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    priority={index === 0}
+                    className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                  />
                 </div>
+                <figcaption className="px-4 py-3 text-sm text-gray-300">
+                  {isEs ? `Sesión profesional en ${locationLabel}` : `Professional photo session in ${locationLabel}`}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className="mt-6">
+            <Link href={`/${locale}/portfolio`} className="inline-block rounded-full bg-sky-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-sky-500">
+              {isEs ? 'Ver Galería Completa' : 'See Full Gallery'}
+            </Link>
+          </div>
+        </section>
 
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    Babula Shots
+        <section className="container mx-auto px-4 pb-14">
+          <h2 className="mb-6 text-3xl font-extrabold">{isEs ? `Por qué ${locationLabel} es especial para fotos` : `Why ${locationLabel} is special for photos`}</h2>
+          <div className="mx-auto max-w-4xl space-y-5 text-lg leading-9 text-gray-200 md:text-xl">
+            {(locationParagraphs.length > 0 ? locationParagraphs : articleParagraphs.slice(2, 6)).map((paragraph, index) => (
+              <p key={`location-${index}`}>{paragraph}</p>
+            ))}
+          </div>
+        </section>
+
+        {contentBlocks.length > 0 && (
+          <section className="container mx-auto px-4 pb-14">
+            <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Guía completa de la sesión' : 'Complete session guide'}</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {contentBlocks.slice(0, 6).map((block, index) => (
+                <article key={`content-block-${index}`} className="rounded-2xl border border-white/10 bg-slate-900/80 p-6">
+                  <h3 className="mb-3 text-xl font-bold text-sky-200">
+                    {isEs ? `Punto clave ${index + 1}` : `Key point ${index + 1}`}
                   </h3>
-                  <p className="text-gray-400 mb-4">
-                    {locale === 'es'
-                      ? 'Fotógrafo profesional especializado en bodas, retratos y fotografía comercial en Santo Domingo, República Dominicana. Con más de 10 años de experiencia, capturo los momentos más preciados de tu vida con creatividad y autenticidad.'
-                      : 'Professional photographer specializing in weddings, portraits, and commercial photography in Santo Domingo, Dominican Republic. With over 10 years of experience, I help capture life\'s most precious moments with creativity and authenticity.'
-                    }
-                  </p>
+                  <p className="text-base leading-8 text-gray-200 md:text-lg">{block}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
 
-                  <div className="flex gap-4">
-                    <Link
-                      href={`/${locale}/about`}
-                      className="text-sky-400 hover:text-sky-300 font-medium"
-                    >
-                      {locale === 'es' ? 'Más Sobre Mí →' : 'Learn More About Me →'}
-                    </Link>
-                    <a
-                      href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-green-400 hover:text-green-300 font-medium"
-                    >
-                      {locale === 'es' ? 'Contáctame →' : 'Get in Touch →'}
-                    </a>
-                  </div>
-                </div>
-              </div>
+        <section className="container mx-auto px-4 pb-14">
+          <h2 className="mb-6 text-3xl font-extrabold">{isEs ? `Servicios de Fotografía en ${locationLabel}` : `Photography Services in ${locationLabel}`}</h2>
+          <div className="grid gap-5 md:grid-cols-2">
+            {serviceOffers.map((offer) => (
+              <article key={offer.path} className="rounded-2xl border border-white/10 bg-gray-900 p-6">
+                <div className="mb-3 text-2xl">{offer.icon}</div>
+                <h3 className="mb-2 text-xl font-bold">{isEs ? offer.nameEs : offer.nameEn}</h3>
+                <p className="mb-4 text-gray-300">{isEs ? offer.descriptionEs : offer.descriptionEn}</p>
+                <p className="mb-4 text-sm font-semibold text-emerald-300">{offer.price}</p>
+                <a href={`${SETMORE_BASE_URL}${offer.path}`} target="_blank" rel="noopener noreferrer" className="inline-block rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:border-sky-300 hover:text-sky-300">
+                  {isEs ? 'Reservar este servicio' : 'Book this service'}
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="container mx-auto px-4 pb-14">
+          <div className="rounded-2xl border border-white/15 bg-gradient-to-r from-slate-900 via-cyan-950 to-slate-900 p-7 text-center">
+            <h2 className="mb-4 text-2xl font-extrabold">{isEs ? `¿Listo para tu sesión en ${locationLabel}?` : `Ready for your session in ${locationLabel}?`}</h2>
+            <div className="flex flex-wrap justify-center gap-3">
+              <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">{isEs ? 'Reservar ahora' : 'Book now'}</a>
+              <a href="https://calendly.com/info-vym7/video-llamada" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/30 px-5 py-2 text-sm font-bold">{isEs ? 'Videollamada' : 'Video call'}</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-400 px-5 py-2 text-sm font-bold text-green-200">WhatsApp</a>
+              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-amber-400 px-5 py-2 text-sm font-bold text-amber-200">Google</a>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Newsletter CTA */}
-      <section className="py-16 bg-gray-900 border-t border-white/10">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            {t('footer.newsletter.title')}
-          </h2>
-          <p className="text-xl mb-8 text-gray-400 max-w-2xl mx-auto">
-            {t('footer.newsletter.subtitle')}
-          </p>
-
-          <div className="max-w-md mx-auto">
-            <form className="flex gap-2">
-              <input
-                type="email"
-                placeholder="your@email.com"
-                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder:text-gray-500"
-                required
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-semibold"
-              >
-                Subscribe
-              </button>
-            </form>
+        <section className="container mx-auto px-4 pb-14">
+          <h2 className="mb-2 text-3xl font-extrabold">{isEs ? 'Lo Que Dicen Nuestros Clientes' : 'What Our Clients Say'}</h2>
+          <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mb-6 inline-block text-sm font-semibold text-amber-300">
+            ⭐⭐⭐⭐⭐ 4.9 de 5 (162 reseñas en Google)
+          </a>
+          <div className="grid gap-5 md:grid-cols-2">
+            {selectedReviews.slice(0, 3).map((review, index) => (
+              <article key={`${review.author}-${index}`} className="rounded-2xl border border-white/10 bg-gray-900 p-6">
+                <p className="mb-3 text-amber-300">{'⭐'.repeat(Math.max(1, Math.min(5, review.rating || 5)))}</p>
+                <p className="mb-4 text-gray-200">{review.text}</p>
+                <p className="text-sm font-semibold text-white">{review.author}</p>
+                {review.session_type && <p className="text-sm text-gray-400">{review.session_type}</p>}
+              </article>
+            ))}
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+
+        <section className="container mx-auto px-4 pb-14">
+          <div className="rounded-2xl p-8" style={{ background: 'linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)' }}>
+            <h2 className="mb-4 text-3xl font-extrabold">📸 @babulashotsrd en Instagram</h2>
+            <InstagramLazyEmbed instagramPostId={post.instagram_post_id} />
+            <a href="https://www.instagram.com/babulashotsrd" target="_blank" rel="noopener noreferrer" className="inline-block rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">
+              Ver Más en Instagram
+            </a>
+          </div>
+        </section>
+
+        <section className="container mx-auto px-4 pb-14">
+          <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Ver Más Trabajos' : 'See More Work'}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <a href={`/${locale}/portfolio`} className="rounded-xl border border-white/10 bg-gray-900 p-5 hover:border-sky-400">
+              <h3 className="mb-2 text-xl font-bold">{isEs ? 'Portafolio Principal' : 'Main Portfolio'}</h3>
+              <p className="text-gray-300">{isEs ? 'Explora bodas, parejas, retratos y sesiones en playa.' : 'Explore weddings, couples, portraits, and beach sessions.'}</p>
+            </a>
+            <a href="https://babulashotsprevievshots.pic-time.com/-fotografobodapuntacanard" target="_blank" rel="noopener noreferrer" className="rounded-xl border border-white/10 bg-gray-900 p-5 hover:border-sky-400">
+              <h3 className="mb-2 text-xl font-bold">{isEs ? 'Galería de Bodas' : 'Wedding Gallery'}</h3>
+              <p className="text-gray-300">{isEs ? 'Historias reales de bodas destino en República Dominicana.' : 'Real destination wedding stories in the Dominican Republic.'}</p>
+            </a>
+          </div>
+        </section>
+
+        <section className="container mx-auto px-4 pb-14">
+          <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Preguntas Frecuentes' : 'Frequently Asked Questions'}</h2>
+          <div className="space-y-3">
+            {selectedFaq.slice(0, 6).map((item, index) => (
+              <details key={`${item.question}-${index}`} className="rounded-xl border border-white/10 bg-gray-900 p-4">
+                <summary className="cursor-pointer text-lg font-semibold">{item.question}</summary>
+                <p className="mt-3 text-gray-300">{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section className="container mx-auto px-4 pb-14">
+          <h2 className="mb-4 text-2xl font-extrabold">{isEs ? 'Enlaces recomendados' : 'Recommended links'}</h2>
+          <p className="text-lg text-gray-300">
+            {selectedLinks.map((item, index) => (
+              <span key={`${item.url}-${index}`}>
+                <a href={normalizeUrl(item.url)} className="font-semibold text-sky-300 hover:text-sky-200">{item.text}</a>
+                {item.description ? ` — ${item.description}` : ''}
+                {index < selectedLinks.length - 1 ? ' · ' : ''}
+              </span>
+            ))}
+          </p>
+        </section>
+
+        <section className="container mx-auto px-4 pb-20">
+          <div className="rounded-2xl border border-white/15 bg-gradient-to-r from-slate-900 via-cyan-950 to-slate-900 p-7 text-center">
+            <h2 className="mb-4 text-2xl font-extrabold">{isEs ? 'Reserva tu fecha hoy mismo' : 'Book your date today'}</h2>
+            <div className="flex flex-wrap justify-center gap-3">
+              <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">{isEs ? 'Reservar ahora' : 'Book now'}</a>
+              <a href="https://calendly.com/info-vym7/video-llamada" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/30 px-5 py-2 text-sm font-bold">{isEs ? 'Videollamada' : 'Video call'}</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-400 px-5 py-2 text-sm font-bold text-green-200">WhatsApp</a>
+              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-amber-400 px-5 py-2 text-sm font-bold text-amber-200">Google</a>
+            </div>
+          </div>
+        </section>
+
+        {relatedPosts.length > 0 && (
+          <section className="container mx-auto border-t border-white/10 px-4 py-14">
+            <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Más artículos relacionados' : 'Related articles'}</h2>
+            <div className="grid gap-4 md:grid-cols-3">
+              {relatedPosts.map((relatedPost) => (
+                <article key={relatedPost.id} className="overflow-hidden rounded-xl border border-white/10 bg-gray-900">
+                  <div className="relative aspect-video">
+                    <Image
+                      src={relatedPost.cover_image_thumbnail_url || imageUrl}
+                      alt={relatedPost.cover_image_alt || relatedPost.title}
+                      fill
+                      loading="lazy"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="mb-2 text-lg font-bold">
+                      <Link href={`/${locale}/blog/${relatedPost.slug}`} className="hover:text-sky-300">{relatedPost.title}</Link>
+                    </h3>
+                    <p className="line-clamp-2 text-sm text-gray-300">{relatedPost.excerpt}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+      </main>
     </>
   )
 }

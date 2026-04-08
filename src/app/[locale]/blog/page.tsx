@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { getPublishedPosts } from '@/lib/supabase/blog'
@@ -222,15 +223,14 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPosts.map(post => (
                 <article key={post.slug} className="bg-gray-900 rounded-xl border border-white/10 overflow-hidden hover:border-sky-500/40 transition-colors">
-                  <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-4xl opacity-20">
-                        {post.service_type === 'wedding' ? '💍' :
-                         post.service_type === 'portrait' ? '👤' :
-                         post.service_type === 'drone' ? '🚁' :
-                         post.service_type === 'commercial' ? '📸' : '📝'}
-                      </span>
-                    </div>
+                  <div className="aspect-video relative">
+                    <Image
+                      src={post.cover_image_thumbnail_url || `${BASE_URL}/api/og?title=Babula+Shots`}
+                      alt={post.cover_image_alt || post.title}
+                      fill
+                      loading="lazy"
+                      className="object-cover"
+                    />
                   </div>
 
                   <div className="p-6">

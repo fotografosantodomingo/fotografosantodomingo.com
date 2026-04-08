@@ -5,6 +5,45 @@ import { CreatePostSchema } from '@/lib/automation/schemas'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
+function withSlugSuffix(base: string, suffixNumber: number) {
+  const suffix = `-${suffixNumber}`
+  const maxBaseLength = Math.max(1, 200 - suffix.length)
+  const trimmedBase = base.slice(0, maxBaseLength).replace(/-+$/g, '')
+  return `${trimmedBase}${suffix}`
+}
+
+async function resolveUniqueSlugs(
+  supabase: ReturnType<typeof createServiceClient>,
+  slugEs: string,
+  slugEn: string
+) {
+  let candidateEs = slugEs
+  let candidateEn = slugEn
+
+  for (let attempt = 1; attempt <= 200; attempt += 1) {
+    const { data: collision, error } = await supabase
+      .from('blog_posts')
+      .select('id')
+      .or(`slug_es.eq.${candidateEs},slug_en.eq.${candidateEn}`)
+      .limit(1)
+      .maybeSingle()
+
+    if (error) {
+      throw error
+    }
+
+    if (!collision) {
+      return { slugEs: candidateEs, slugEn: candidateEn }
+    }
+
+    const suffix = attempt + 1
+    candidateEs = withSlugSuffix(slugEs, suffix)
+    candidateEn = withSlugSuffix(slugEn, suffix)
+  }
+
+  throw new Error('Unable to generate a unique slug after 200 attempts')
+}
+
 function isAuthorized(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const expectedSecret = process.env.ADMIN_SECRET
@@ -27,47 +66,11 @@ export async function POST(request: NextRequest) {
     const body = CreatePostSchema.parse(rawBody)
     const supabase = createServiceClient()
 
-    const { data: existingEs } = await supabase
-      .from('blog_posts')
-      .select('id, slug_es')
-      .eq('slug_es', body.slug_es)
-      .limit(1)
-      .maybeSingle()
-
-    if (existingEs) {
-      return NextResponse.json(
-        {
-          error: 'Conflict',
-          message: 'A post with this slug already exists',
-          conflicting_field: 'slug_es',
-          existing_slug: existingEs.slug_es,
-        },
-        { status: 409 }
-      )
-    }
-
-    const { data: existingEn } = await supabase
-      .from('blog_posts')
-      .select('id, slug_en')
-      .eq('slug_en', body.slug_en)
-      .limit(1)
-      .maybeSingle()
-
-    if (existingEn) {
-      return NextResponse.json(
-        {
-          error: 'Conflict',
-          message: 'A post with this slug already exists',
-          conflicting_field: 'slug_en',
-          existing_slug: existingEn.slug_en,
-        },
-        { status: 409 }
-      )
-    }
+    const { slugEs, slugEn } = await resolveUniqueSlugs(supabase, body.slug_es, body.slug_en)
 
     const insertPayload = {
-      slug_es: body.slug_es,
-      slug_en: body.slug_en,
+      slug_es: slugEs,
+      slug_en: slugEn,
       title_es: body.title_es,
       title_en: body.title_en,
       content_es: body.content_es,
@@ -93,11 +96,23 @@ export async function POST(request: NextRequest) {
       service_type: body.service_type ?? null,
       location: body.location ?? null,
       cloudinary_folder: body.cloudinary_folder ?? null,
+      intro_es: body.intro_es ?? null,
+      intro_en: body.intro_en ?? null,
+      location_section_es: body.location_section_es ?? null,
+      location_section_en: body.location_section_en ?? null,
+      faq_es: body.faq_es,
+      faq_en: body.faq_en,
+      reviews_es: body.reviews_es,
+      reviews_en: body.reviews_en,
+      internal_links_es: body.internal_links_es,
+      internal_links_en: body.internal_links_en,
+      setmore_service_url: body.setmore_service_url ?? null,
+      instagram_post_id: body.instagram_post_id ?? null,
       status: body.status,
       published_at: body.published_at ?? new Date().toISOString(),
 
       // Compatibility projection for the current blog rendering layer.
-      slug: body.slug_en,
+      slug: slugEn,
       title: body.title_en,
       excerpt: body.excerpt_en ?? '',
       content: body.content_en,
