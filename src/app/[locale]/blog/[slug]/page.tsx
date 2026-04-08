@@ -374,6 +374,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
       },
       ...selectedReviews.slice(0, 3).map((review) => ({
         '@type': 'Review',
+        itemReviewed: { '@id': `${pageUrl}#service` },
         author: { '@type': 'Person', name: review.author },
         reviewRating: { '@type': 'Rating', ratingValue: review.rating, bestRating: 5 },
         reviewBody: review.text,
