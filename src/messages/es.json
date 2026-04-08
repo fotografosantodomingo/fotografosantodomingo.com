@@ -31,6 +31,12 @@
   },
   "footer": {
     "description": "Servicios de fotografía profesional en Santo Domingo y toda República Dominicana desde 2015. Bodas, retratos, drones, comerciales y más.",
+    "contact": {
+      "info": {
+        "office": "Ubicación del Estudio – Santo Domingo",
+        "response_time": "Tiempo promedio de respuesta: 2 horas"
+      }
+    },
     "newsletter": {
       "title": "Boletín Informativo",
       "subtitle": "Recibe tips de fotografía y ofertas exclusivas del mejor fotógrafo de Santo Domingo"

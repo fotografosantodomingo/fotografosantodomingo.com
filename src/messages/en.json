@@ -30,8 +30,12 @@
     "made_with_love": "Made with ❤️ in Santo Domingo, DR"
   },
   "footer": {
-    "description": "Professional photography services in Santo Domingo and the Dominican Republic since 2015. Weddings, portraits, drones, commercial & more.",
-    "newsletter": {
+    "description": "Professional photography services in Santo Domingo and the Dominican Republic since 2015. Weddings, portraits, drones, commercial & more.",    "contact": {
+      "info": {
+        "office": "Studio Location – Santo Domingo",
+        "response_time": "Average response time: 2 hours"
+      }
+    },    "newsletter": {
       "title": "Newsletter",
       "subtitle": "Get photography tips & exclusive offers from Santo Domingo's top photographer"
     }
