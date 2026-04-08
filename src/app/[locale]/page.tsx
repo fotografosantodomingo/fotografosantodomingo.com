@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
+import HomeFaq, { getFaqData } from '@/components/HomeFaq'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -289,6 +290,28 @@ export default async function HomePage({ params: { locale } }: Props) {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <HomeFaq locale={locale} />
+
+      {/* FAQ JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: getFaqData(locale).map(item => ({
+              '@type': 'Question',
+              name: item.question,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: item.answer,
+              },
+            })),
+          }),
+        }}
+      />
 
       {/* Quick Booking CTA */}
       <section className="py-16 bg-gray-900 text-white">
