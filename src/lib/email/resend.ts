@@ -1,14 +1,22 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
-let _resend: Resend | null = null
-function getResend(): Resend | null {
-  if (!process.env.RESEND_API_KEY) return null
-  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY)
-  return _resend
+const FROM_EMAIL = process.env.SMTP_FROM_EMAIL || 'info@fotografosantodomingo.com'
+const FROM = `Fotografo Santo Domingo <${FROM_EMAIL}>`
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || FROM_EMAIL
+
+function getTransporter() {
+  const pass = process.env.SMTP_PASSWORD
+  if (!pass) return null
+  return nodemailer.createTransport({
+    host: 'smtp.hostinger.com',
+    port: 465,
+    secure: true, // SSL
+    auth: {
+      user: FROM_EMAIL,
+      pass,
+    },
+  })
 }
-
-const FROM = 'Fotografo Santo Domingo <noreply@fotografosantodomingo.com>'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'info@fotografosantodomingo.com'
 
 export interface ContactData {
   id: string
@@ -24,9 +32,9 @@ export interface ContactData {
 }
 
 export async function sendContactNotification(data: ContactData) {
-  const resend = getResend()
-  if (!resend) {
-    console.warn('RESEND_API_KEY not set — email notification skipped')
+  const transporter = getTransporter()
+  if (!transporter) {
+    console.warn('SMTP_PASSWORD not set — email notification skipped')
     return
   }
 
@@ -34,7 +42,7 @@ export async function sendContactNotification(data: ContactData) {
     ? data.service.charAt(0).toUpperCase() + data.service.slice(1)
     : 'Not specified'
 
-  await resend.emails.send({
+  await transporter.sendMail({
     from: FROM,
     to: ADMIN_EMAIL,
     replyTo: data.email,
@@ -81,12 +89,12 @@ export async function sendContactNotification(data: ContactData) {
 }
 
 export async function sendContactConfirmation(data: ContactData) {
-  const resend = getResend()
-  if (!resend) return
+  const transporter = getTransporter()
+  if (!transporter) return
 
   const isEs = data.locale === 'es'
 
-  await resend.emails.send({
+  await transporter.sendMail({
     from: FROM,
     to: data.email,
     subject: isEs
@@ -132,13 +140,13 @@ export async function sendNewsletterWelcome(data: {
   name?: string
   locale?: string
 }) {
-  const resend = getResend()
-  if (!resend) return
+  const transporter = getTransporter()
+  if (!transporter) return
 
   const isEs = (data.locale ?? 'es') === 'es'
   const greeting = data.name ? (isEs ? `Hola ${data.name}` : `Hi ${data.name}`) : (isEs ? 'Hola' : 'Hi there')
 
-  await resend.emails.send({
+  await transporter.sendMail({
     from: FROM,
     to: data.email,
     subject: isEs

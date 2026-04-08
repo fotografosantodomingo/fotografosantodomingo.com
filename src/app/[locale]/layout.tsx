@@ -138,7 +138,7 @@ export async function generateMetadata({
       },
     },
     verification: {
-      google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ?? '',
+      google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION ?? 'Dnr12nhf50Akvud2jQDU4kA5ObExCJ3u9ddrf-dF5L4',
     },
   }
 }
