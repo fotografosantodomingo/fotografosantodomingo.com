@@ -13,7 +13,6 @@ export const schemaGenerators = {
       'https://www.instagram.com/babulashotsrd',
       'https://www.facebook.com/babulashots',
       'https://www.tiktok.com/@babulashots',
-      'https://babulashotsrd.com',
     ],
     contactPoint: {
       '@type': 'ContactPoint',
@@ -80,7 +79,6 @@ export const schemaGenerators = {
       'https://www.instagram.com/babulashotsrd',
       'https://www.facebook.com/babulashots',
       'https://www.tiktok.com/@babulashots',
-      'https://babulashotsrd.com',
     ],
   }),
 
@@ -127,8 +125,15 @@ export const schemaGenerators = {
       'https://www.instagram.com/babulashotsrd',
       'https://www.facebook.com/babulashots',
       'https://www.tiktok.com/@babulashots',
-      'https://babulashotsrd.com',
     ],
+  }),
+
+  professionalServiceReference: () => ({
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': `${BASE_URL}/#business`,
+    name: 'Babula Shots',
+    url: BASE_URL,
   }),
 
   // ----------------------------------------------------------
@@ -230,25 +235,32 @@ export const schemaGenerators = {
   // Enables Google Discover, article rich results, and sitelinks
   // ----------------------------------------------------------
   article: (post: {
-    slug: string
-    title: string
-    titleEs: string
-    excerpt: string
-    excerptEs: string
-    author: string
-    publishedAt: string
-    updatedAt?: string
-    tags: string[]
-    image?: string
-    seo: { title: string; titleEs: string; description: string; descriptionEs: string }
+    slug_es: string
+    slug_en: string
+    title_es: string
+    title_en: string
+    excerpt_es: string | null
+    excerpt_en: string | null
+    og_title_es?: string | null
+    og_title_en?: string | null
+    meta_description_es?: string | null
+    meta_description_en?: string | null
+    primary_keyword_es?: string | null
+    primary_keyword_en?: string | null
+    published_at: string
+    updated_at?: string | null
+    cover_image_url?: string | null
+    service_type?: string | null
+    location?: string | null
   }, locale: string) => {
-    const title = locale === 'es' ? post.titleEs : post.title
-    const description = locale === 'es' ? post.excerptEs : post.excerpt
-    const url = `${BASE_URL}/${locale}/blog/${post.slug}`
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-    const image = post.image && cloudName
-      ? `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_1200/${post.image}`
-      : `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
+    const isEs = locale === 'es'
+    const title = isEs ? (post.og_title_es ?? post.title_es) : (post.og_title_en ?? post.title_en)
+    const description = isEs
+      ? (post.meta_description_es ?? post.excerpt_es ?? '')
+      : (post.meta_description_en ?? post.excerpt_en ?? '')
+    const slug = isEs ? post.slug_es : post.slug_en
+    const url = `${BASE_URL}/${locale}/blog/${slug}`
+    const image = post.cover_image_url ?? `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
 
     return {
       '@context': 'https://schema.org',
@@ -259,7 +271,7 @@ export const schemaGenerators = {
       image: { '@type': 'ImageObject', url: image, width: 1200, height: 630 },
       author: {
         '@type': 'Person',
-        name: post.author,
+        name: 'Babula Shots',
         url: BASE_URL,
         sameAs: ['https://www.instagram.com/babulashotsrd'],
       },
@@ -269,12 +281,14 @@ export const schemaGenerators = {
         url: BASE_URL,
         logo: { '@type': 'ImageObject', url: `${BASE_URL}/images/logo.png`, width: 200, height: 60 },
       },
-      datePublished: post.publishedAt,
-      dateModified: post.updatedAt || post.publishedAt,
+      datePublished: post.published_at,
+      dateModified: post.updated_at ?? post.published_at,
       url,
       mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-      keywords: post.tags.join(', '),
-      inLanguage: locale === 'es' ? 'es-DO' : 'en-US',
+      keywords: [post.primary_keyword_es, post.primary_keyword_en, post.service_type, post.location]
+        .filter(Boolean)
+        .join(', '),
+      inLanguage: isEs ? 'es-DO' : 'en-US',
       isPartOf: { '@id': `${BASE_URL}/${locale}/blog` },
     }
   },
@@ -326,7 +340,6 @@ export const schemaGenerators = {
       : ['wedding photography', 'portrait photography', 'drone photography', 'event photography', 'commercial photography'],
     sameAs: [
       'https://www.instagram.com/babulashotsrd',
-      'https://babulashotsrd.com',
     ],
   }),
 

@@ -1,127 +1,172 @@
 /**
  * Supabase-backed blog helpers.
  *
- * Tries the DB first; falls back to the static hardcoded posts in
- * src/lib/blog/posts.ts so the site never breaks during maintenance.
- *
+ * All functions query the blog_posts table directly via the service role client.
  * NEVER import this file from client components.
  */
 
 import { createServiceClient } from './service'
-import type { BlogPost } from '@/lib/blog/posts'
-import { blogPosts } from '@/lib/blog/posts'
 
-// ── DB row → BlogPost ────────────────────────────────────────────────────────
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function dbToPost(row: Record<string, any>): BlogPost {
-  return {
-    slug: row.slug,
-    title: row.title,
-    titleEs: row.title_es,
-    excerpt: row.excerpt,
-    excerptEs: row.excerpt_es,
-    content: row.content,
-    contentEs: row.content_es,
-    author: row.author ?? 'Babula Shots',
-    publishedAt: row.published_at,
-    updatedAt: row.updated_at ?? undefined,
-    category: row.category,
-    tags: row.tags ?? [],
-    featured: row.featured ?? false,
-    image: row.image ?? '',
-    readingTime: row.reading_time ?? 5,
-    seo: {
-      title: row.seo_title || row.title,
-      titleEs: row.seo_title_es || row.title_es,
-      description: row.seo_description || row.excerpt,
-      descriptionEs: row.seo_description_es || row.excerpt_es,
-      keywords: row.seo_keywords ?? [],
-      keywordsEs: row.seo_keywords_es ?? [],
-    },
-  }
+export type PublishedPostListItem = {
+  id: string
+  slug: string
+  slug_es: string
+  slug_en: string
+  title: string
+  excerpt: string
+  cover_image_thumbnail_url: string | null
+  cover_image_alt: string | null
+  published_at: string
+  service_type: string | null
+  location: string | null
+}
+
+export type PublishedPostDetail = {
+  id: string
+  slug_es: string
+  slug_en: string
+  title_es: string
+  title_en: string
+  content_es: string
+  content_en: string
+  excerpt_es: string | null
+  excerpt_en: string | null
+  meta_description_es: string | null
+  meta_description_en: string | null
+  og_title_es: string | null
+  og_title_en: string | null
+  primary_keyword_es: string | null
+  primary_keyword_en: string | null
+  cover_image_url: string | null
+  cover_image_thumbnail_url: string | null
+  cover_image_placeholder_url: string | null
+  cover_image_alt_es: string | null
+  cover_image_alt_en: string | null
+  cover_image_format: string | null
+  cover_image_public_id: string | null
+  schema_service_type: string | null
+  geo_city: string | null
+  geo_country: string | null
+  service_type: string | null
+  location: string | null
+  cloudinary_folder: string | null
+  published_at: string
+  updated_at: string | null
+  status: string
 }
 
 // ── Public API ───────────────────────────────────────────────────────────────
 
-export async function getAllPostsFromDb(): Promise<BlogPost[]> {
-  try {
-    const supabase = createServiceClient()
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('status', 'published')
-      .order('published_at', { ascending: false })
-
-    if (error || !data || data.length === 0) return staticFallback()
-    return data.map(dbToPost)
-  } catch {
-    return staticFallback()
-  }
-}
-
-export async function getPostBySlugFromDb(slug: string): Promise<BlogPost | undefined> {
-  try {
-    const supabase = createServiceClient()
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('slug', slug)
-      .eq('status', 'published')
-      .single()
-
-    if (error || !data) return staticPostFallback(slug)
-    return dbToPost(data)
-  } catch {
-    return staticPostFallback(slug)
-  }
-}
-
-export async function getFeaturedPostsFromDb(): Promise<BlogPost[]> {
-  const posts = await getAllPostsFromDb()
-  return posts.filter((p) => p.featured)
-}
-
-export async function getPostsByCategoryFromDb(category: string): Promise<BlogPost[]> {
-  const posts = await getAllPostsFromDb()
-  return posts.filter((p) => p.category === category)
-}
-
-export async function getRelatedPostsFromDb(
-  post: BlogPost,
-  limit = 3
-): Promise<BlogPost[]> {
-  const posts = await getAllPostsFromDb()
-  return posts
-    .filter(
-      (p) =>
-        p.slug !== post.slug &&
-        (p.category === post.category || p.tags.some((t) => post.tags.includes(t)))
+export async function getPublishedPosts(locale: 'es' | 'en'): Promise<PublishedPostListItem[]> {
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select(
+      'id, slug_es, slug_en, title_es, title_en, excerpt_es, excerpt_en, cover_image_thumbnail_url, cover_image_alt_es, cover_image_alt_en, published_at, service_type, location'
     )
-    .slice(0, limit)
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+
+  if (error || !data) {
+    console.error('getPublishedPosts failed:', error)
+    return []
+  }
+
+  return data.map((post) => ({
+    id: post.id,
+    slug: locale === 'es' ? post.slug_es : post.slug_en,
+    slug_es: post.slug_es,
+    slug_en: post.slug_en,
+    title: locale === 'es' ? post.title_es : post.title_en,
+    excerpt: locale === 'es' ? post.excerpt_es : post.excerpt_en,
+    cover_image_thumbnail_url: post.cover_image_thumbnail_url,
+    cover_image_alt: locale === 'es' ? post.cover_image_alt_es : post.cover_image_alt_en,
+    published_at: post.published_at,
+    service_type: post.service_type,
+    location: post.location,
+  }))
 }
 
-export async function searchPostsFromDb(query: string): Promise<BlogPost[]> {
-  const posts = await getAllPostsFromDb()
-  const q = query.toLowerCase()
-  return posts.filter(
-    (p) =>
-      p.title.toLowerCase().includes(q) ||
-      p.titleEs.toLowerCase().includes(q) ||
-      p.excerpt.toLowerCase().includes(q) ||
-      p.excerptEs.toLowerCase().includes(q) ||
-      p.tags.some((t) => t.toLowerCase().includes(q)) ||
-      p.category.toLowerCase().includes(q)
-  )
+export async function getPostBySlug(slug: string): Promise<PublishedPostDetail | null> {
+  const supabase = createServiceClient()
+
+  const { data: postByEs } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq('slug_es', slug)
+    .eq('status', 'published')
+    .maybeSingle()
+
+  if (postByEs) {
+    return postByEs as PublishedPostDetail
+  }
+
+  const { data: postByEn, error } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq('slug_en', slug)
+    .eq('status', 'published')
+    .maybeSingle()
+
+  if (error) {
+    console.error('getPostBySlug failed:', error)
+  }
+
+  return (postByEn as PublishedPostDetail | null) ?? null
 }
 
-// ── Fallback helpers ─────────────────────────────────────────────────────────
+export async function getAllSlugs(): Promise<Array<{ slug_es: string; slug_en: string }>> {
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select('slug_es, slug_en')
+    .eq('status', 'published')
 
-function staticFallback(): BlogPost[] {
-  return [...blogPosts].sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  )
+  if (error || !data) {
+    console.error('getAllSlugs failed:', error)
+    return []
+  }
+
+  return data
 }
 
-function staticPostFallback(slug: string): BlogPost | undefined {
-  return blogPosts.find((p) => p.slug === slug)
+export async function getRelatedPosts(
+  serviceType: string,
+  excludeSlug: string,
+  locale: 'es' | 'en'
+): Promise<PublishedPostListItem[]> {
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select(
+      'id, slug_es, slug_en, title_es, title_en, excerpt_es, excerpt_en, cover_image_thumbnail_url, cover_image_alt_es, cover_image_alt_en, published_at, service_type, location'
+    )
+    .eq('status', 'published')
+    .eq('service_type', serviceType)
+    .order('published_at', { ascending: false })
+    .limit(4)
+
+  if (error || !data) {
+    console.error('getRelatedPosts failed:', error)
+    return []
+  }
+
+  return data
+    .filter((post) => post.slug_es !== excludeSlug && post.slug_en !== excludeSlug)
+    .slice(0, 3)
+    .map((post) => ({
+      id: post.id,
+      slug: locale === 'es' ? post.slug_es : post.slug_en,
+      slug_es: post.slug_es,
+      slug_en: post.slug_en,
+      title: locale === 'es' ? post.title_es : post.title_en,
+      excerpt: locale === 'es' ? post.excerpt_es : post.excerpt_en,
+      cover_image_thumbnail_url: post.cover_image_thumbnail_url,
+      cover_image_alt: locale === 'es' ? post.cover_image_alt_es : post.cover_image_alt_en,
+      published_at: post.published_at,
+      service_type: post.service_type,
+      location: post.location,
+    }))
 }
+
+// ── end of module ────────────────────────────────────────────────────────────

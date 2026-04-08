@@ -44,9 +44,14 @@ This will create all necessary tables, indexes, and Row Level Security policies.
 - Users can manage their own subscriptions
 
 ### blog_posts
-- Stores blog post data (for future CMS)
-- SEO metadata and content in both languages
-- Public read access for published posts
+- Stores published and draft SEO blog posts for the live site
+- Uses bilingual slugs, titles, content, excerpts, metadata, and Cloudinary image fields
+- Public read access for published posts; service role writes via admin automation routes
+
+### automation_logs
+- Stores pipeline execution status for idempotent Make.com runs
+- Tracks social posting status and any error message by `idempotency_key`
+- Supports safe retries without creating duplicate posts
 
 ### analytics_events
 - Tracks user interactions and events
@@ -65,12 +70,25 @@ This will create all necessary tables, indexes, and Row Level Security policies.
 - Handles unsubscribe via DELETE method
 - Sends welcome emails
 
+### POST /api/admin/create-post
+- Protected by `Authorization: Bearer <ADMIN_SECRET>`
+- Validates the request with `CreatePostSchema`
+- Rejects duplicate `slug_es` and `slug_en` with `409 Conflict`
+- Inserts a new row into `blog_posts` and returns localized URLs
+
+### POST /api/admin/log-automation
+- Protected by `Authorization: Bearer <ADMIN_SECRET>`
+- Validates the request with `LogAutomationSchema`
+- Upserts into `automation_logs` using `idempotency_key`
+- Always returns `200` so Make.com retries only when you explicitly choose to
+
 ## Security Features
 
 - Row Level Security (RLS) enabled on all tables
 - Input validation and sanitization
 - Rate limiting considerations (implement as needed)
 - CORS headers configured for API routes
+- `SUPABASE_SERVICE_ROLE_KEY` is required for server-side admin blog automation
 
 ## Testing
 
@@ -78,6 +96,11 @@ After setup, test the contact form and newsletter signup to ensure:
 1. Data is saved to Supabase
 2. Emails are sent via SendGrid
 3. No errors in application logs
+
+For blog automation, also verify:
+4. `POST /api/admin/create-post` returns `201` with `url_es` and `url_en`
+5. The new post appears in `/es/blog/...` and `/en/blog/...`
+6. `POST /api/admin/log-automation` upserts the same `idempotency_key` without duplicates
 
 ## Maintenance
 

@@ -50,6 +50,23 @@ src/
 
 The site supports English (`/en`) and Spanish (`/es`) with Spanish as the default locale.
 
+## 🤖 Blog Automation
+
+The blog is now database-backed and supports an admin automation flow for publishing bilingual posts.
+
+- `POST /api/admin/create-post` validates and inserts a localized blog post into Supabase.
+- `POST /api/admin/log-automation` records pipeline execution status using an idempotency key.
+- Blog pages, sitemap, and hreflang sitemap all read from `blog_posts` instead of static post files.
+
+Required environment variables for the automation flow:
+
+```env
+ADMIN_SECRET=your_admin_bearer_token
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dwewurxla
+```
+
 ## 🗄️ Database Schema
 
 Create these tables in Supabase:

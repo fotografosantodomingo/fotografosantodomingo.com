@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
-import { getPostBySlug, getRelatedPosts } from '@/lib/blog/posts'
-import { getPostBySlugFromDb, getRelatedPostsFromDb } from '@/lib/supabase/blog'
+import { getPostBySlug, getRelatedPosts, getAllSlugs } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 import type { Metadata } from 'next'
@@ -13,27 +12,44 @@ type Props = {
   params: { locale: string; slug: string }
 }
 
+export async function generateStaticParams() {
+  const slugs = await getAllSlugs()
+  return slugs
+    .flatMap(({ slug_es, slug_en }) => [
+      { locale: 'es', slug: slug_es },
+      { locale: 'en', slug: slug_en },
+    ])
+    .filter(({ slug }) => Boolean(slug))
+}
+
 export async function generateMetadata({ params: { locale, slug } }: Props): Promise<Metadata> {
-  const post = await getPostBySlugFromDb(slug)
+  const post = await getPostBySlug(slug)
 
   if (!post) {
     return { title: 'Post Not Found', robots: { index: false, follow: false } }
   }
 
-  const title = locale === 'es' ? post.seo.titleEs : post.seo.title
-  const description = locale === 'es' ? post.seo.descriptionEs : post.seo.description
-  const keywords = locale === 'es' ? post.seo.keywordsEs : post.seo.keywords
+  const isEs = locale === 'es'
+  const title = isEs ? (post.og_title_es ?? post.title_es) : (post.og_title_en ?? post.title_en)
+  const description = isEs
+    ? (post.meta_description_es ?? post.excerpt_es ?? '')
+    : (post.meta_description_en ?? post.excerpt_en ?? '')
+  const keywords = isEs
+    ? (post.primary_keyword_es ?? '')
+    : (post.primary_keyword_en ?? '')
+  const canonicalSlug = isEs ? post.slug_es : post.slug_en
+  const image = post.cover_image_url ?? `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
 
   return {
     title,
     description,
-    keywords: keywords.join(', '),
+    keywords,
     alternates: {
-      canonical: `${BASE_URL}/${locale}/blog/${slug}`,
+      canonical: `${BASE_URL}/${locale}/blog/${canonicalSlug}`,
       languages: {
-        es: `${BASE_URL}/es/blog/${slug}`,
-        en: `${BASE_URL}/en/blog/${slug}`,
-        'x-default': `${BASE_URL}/es/blog/${slug}`,
+        es: `${BASE_URL}/es/blog/${post.slug_es}`,
+        en: `${BASE_URL}/en/blog/${post.slug_en}`,
+        'x-default': `${BASE_URL}/es/blog/${post.slug_es}`,
       },
     },
     openGraph: {
@@ -41,13 +57,12 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
       siteName: 'Fotografo Santo Domingo | Babula Shots',
       title,
       description,
-      url: `${BASE_URL}/${locale}/blog/${slug}`,
-      locale: locale === 'es' ? 'es_DO' : 'en_US',
-      publishedTime: post.publishedAt,
-      modifiedTime: post.updatedAt || post.publishedAt,
-      authors: [post.author],
-      tags: post.tags,
-      images: [{ url: `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`, width: 1200, height: 630, alt: title }],
+      url: `${BASE_URL}/${locale}/blog/${canonicalSlug}`,
+      locale: isEs ? 'es_DO' : 'en_US',
+      publishedTime: post.published_at,
+      modifiedTime: post.updated_at ?? post.published_at,
+      authors: ['Babula Shots'],
+      images: [{ url: image, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -55,7 +70,7 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
       creator: '@babulashots',
       title,
       description,
-      images: [`${BASE_URL}/api/og?title=${encodeURIComponent(title)}`],
+      images: [image],
     },
     robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
@@ -64,30 +79,34 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
 export default async function BlogPostPage({ params: { locale, slug } }: Props) {
   const t = await getTranslations({ locale })
 
-  const post = await getPostBySlugFromDb(slug)
-  const relatedPosts = post ? await getRelatedPostsFromDb(post, 3) : []
+  const post = await getPostBySlug(slug)
+  const relatedPosts = post
+    ? await getRelatedPosts(post.service_type ?? 'general', slug, locale as 'es' | 'en')
+    : []
 
   if (!post) {
     notFound()
   }
 
+  const isEs = locale === 'es'
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+    return new Date(dateString).toLocaleDateString(isEs ? 'es-ES' : 'en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     })
   }
 
-  const content = locale === 'es' ? post.contentEs : post.content
-  const title = locale === 'es' ? post.titleEs : post.title
+  const content = isEs ? post.content_es : post.content_en
+  const title = isEs ? post.title_es : post.title_en
+  const readingTime = Math.max(5, Math.ceil(content.split(/\s+/).length / 200))
 
   // Split content into paragraphs for better rendering
-  const paragraphs = content.split('\n\n').filter(p => p.trim())
+  const paragraphs = content.split('\n\n').filter((p) => p.trim())
 
   const articleSchema = schemaGenerators.article(post, locale)
   const breadcrumbSchema = schemaGenerators.breadcrumb([
-    { name: locale === 'es' ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
+    { name: isEs ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
     { name: 'Blog', url: `${BASE_URL}/${locale}/blog` },
     { name: title, url: `${BASE_URL}/${locale}/blog/${slug}` },
   ])
@@ -115,11 +134,11 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
             {/* Post Header */}
             <div className="text-center mb-8">
               <div className="flex items-center justify-center gap-4 text-sm text-gray-500 mb-4">
-                <span>{formatDate(post.publishedAt)}</span>
+                <span>{formatDate(post.published_at)}</span>
                 <span>•</span>
-                <span>{post.readingTime} {t('blog.reading_time')}</span>
+                <span>{readingTime} {t('blog.reading_time')}</span>
                 <span>•</span>
-                <span>{t('blog.by')} {post.author}</span>
+                <span>{t('blog.by')} Babula Shots</span>
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
@@ -127,23 +146,28 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
               </h1>
 
               {/* Tags */}
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
-                {post.tags.map(tag => (
-                  <span key={tag} className="bg-sky-500/20 text-sky-300 px-3 py-1 rounded-full text-sm">
-                    {tag}
+              {post.service_type && (
+                <div className="flex flex-wrap justify-center gap-2 mb-6">
+                  <span className="bg-sky-500/20 text-sky-300 px-3 py-1 rounded-full text-sm">
+                    {post.service_type}
                   </span>
-                ))}
-              </div>
+                  {post.location && (
+                    <span className="bg-sky-500/20 text-sky-300 px-3 py-1 rounded-full text-sm">
+                      {post.location}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Featured Image Placeholder */}
             <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl mb-8 relative overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-8xl opacity-20">
-                  {post.category === 'wedding' ? '💍' :
-                   post.category === 'portrait' ? '👤' :
-                   post.category === 'drone' ? '🚁' :
-                   post.category === 'commercial' ? '📸' : '📝'}
+                  {post.service_type === 'wedding' ? '💍' :
+                   post.service_type === 'portrait' ? '👤' :
+                   post.service_type === 'drone' ? '🚁' :
+                   post.service_type === 'commercial' ? '📸' : '📝'}
                 </span>
               </div>
             </div>
@@ -215,7 +239,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                 </div>
 
                 <div className="text-sm text-gray-500">
-                  {t('blog.published_on')} {formatDate(post.publishedAt)}
+                  {t('blog.published_on')} {formatDate(post.published_at)}
                 </div>
               </div>
             </div>
@@ -238,19 +262,17 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                     <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 relative">
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-4xl opacity-20">
-                          {relatedPost.category === 'wedding' ? '💍' :
-                           relatedPost.category === 'portrait' ? '👤' :
-                           relatedPost.category === 'drone' ? '🚁' :
-                           relatedPost.category === 'commercial' ? '📸' : '📝'}
+                          {relatedPost.service_type === 'wedding' ? '💍' :
+                           relatedPost.service_type === 'portrait' ? '👤' :
+                           relatedPost.service_type === 'drone' ? '🚁' :
+                           relatedPost.service_type === 'commercial' ? '📸' : '📝'}
                         </span>
                       </div>
                     </div>
 
                     <div className="p-6">
                       <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                        <span>{formatDate(relatedPost.publishedAt)}</span>
-                        <span>•</span>
-                        <span>{relatedPost.readingTime} {t('blog.reading_time')}</span>
+                        <span>{formatDate(relatedPost.published_at)}</span>
                       </div>
 
                       <h3 className="text-xl font-bold text-white mb-3">
@@ -258,12 +280,12 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                           href={`/${locale}/blog/${relatedPost.slug}`}
                           className="hover:text-sky-400 transition-colors"
                         >
-                          {locale === 'es' ? relatedPost.titleEs : relatedPost.title}
+                          {relatedPost.title}
                         </Link>
                       </h3>
 
                       <p className="text-gray-400 mb-4 line-clamp-2">
-                        {locale === 'es' ? relatedPost.excerptEs : relatedPost.excerpt}
+                        {relatedPost.excerpt}
                       </p>
 
                       <Link
@@ -293,7 +315,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
 
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-white mb-2">
-                    {post.author}
+                    Babula Shots
                   </h3>
                   <p className="text-gray-400 mb-4">
                     {locale === 'es'

@@ -1,13 +1,7 @@
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
-import { getAllPosts } from '@/lib/blog/posts'
-import {
-  getAllPostsFromDb,
-  getFeaturedPostsFromDb,
-  getPostsByCategoryFromDb,
-  searchPostsFromDb,
-} from '@/lib/supabase/blog'
+import { getPublishedPosts } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 
@@ -24,8 +18,8 @@ export async function generateMetadata({ params: { locale } }: { params: { local
     ? 'Blog de Fotografía — Consejos, Bodas & Tendencias | Babula Shots'
     : 'Photography Blog — Tips, Weddings & Trends | Babula Shots'
   const description = isEs
-    ? 'Artículos sobre fotografía profesional: consejos de bodas, sesiones familiares, drone y tendencias fotográficas en República Dominicana.'
-    : 'Photography articles: wedding tips, family sessions, drone and photography trends in the Dominican Republic.'
+    ? 'Consejos de fotografía, guías de bodas y recomendaciones de locaciones en República Dominicana del fotógrafo profesional Michal Babula. Planifica tu sesión perfecta.'
+    : 'Photography tips, wedding guides, and DR location recommendations from professional photographer Michal Babula. Plan your perfect photo session.'
   return {
     title,
     description,
@@ -69,25 +63,23 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 export default async function BlogPage({ params: { locale }, searchParams }: Props) {
   const t = await getTranslations({ locale })
 
-  // Get all posts and featured posts from DB (falls back to static)
-  const [allPostsRaw, featuredPosts] = await Promise.all([
-    getAllPostsFromDb(),
-    getFeaturedPostsFromDb(),
-  ])
-
-  // Handle search and filtering
   const searchQuery = typeof searchParams.q === 'string' ? searchParams.q : ''
   const categoryFilter = typeof searchParams.category === 'string' ? searchParams.category : ''
 
-  let filteredPosts = allPostsRaw
+  const allPosts = await getPublishedPosts(locale as 'es' | 'en')
+  let filteredPosts = allPosts
 
   if (searchQuery) {
-    filteredPosts = await searchPostsFromDb(searchQuery)
+    const q = searchQuery.toLowerCase()
+    filteredPosts = allPosts.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.excerpt?.toLowerCase().includes(q) ||
+        p.service_type?.toLowerCase().includes(q)
+    )
   } else if (categoryFilter) {
-    filteredPosts = await getPostsByCategoryFromDb(categoryFilter)
+    filteredPosts = allPosts.filter((p) => p.service_type === categoryFilter)
   }
-
-  const allPosts = allPostsRaw
 
   const categories = [
     { key: 'wedding', label: t('blog.categories_list.wedding') },
@@ -180,73 +172,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
         </div>
       </section>
 
-      {/* Featured Posts */}
-      {featuredPosts.length > 0 && !searchQuery && !categoryFilter && (
-        <section className="py-16 bg-gray-900">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                {t('blog.featured')}
-              </h2>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {featuredPosts.slice(0, 2).map(post => (
-                <article key={post.slug} className="bg-gray-950 rounded-xl border border-white/10 overflow-hidden hover:border-sky-500/40 transition-colors">
-                  <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-6xl opacity-20">📸</span>
-                    </div>
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-sky-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        {t('blog.featured')}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                      <span>{formatDate(post.publishedAt)}</span>
-                      <span>•</span>
-                      <span>{post.readingTime} {t('blog.reading_time')}</span>
-                    </div>
-
-                    <h3 className="text-xl font-bold text-white mb-3">
-                      <Link
-                        href={`/${locale}/blog/${post.slug}`}
-                        className="hover:text-sky-400 transition-colors"
-                      >
-                        {locale === 'es' ? post.titleEs : post.title}
-                      </Link>
-                    </h3>
-
-                    <p className="text-gray-400 mb-4">
-                      {locale === 'es' ? post.excerptEs : post.excerpt}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-wrap gap-2">
-                        {post.tags.slice(0, 2).map(tag => (
-                          <span key={tag} className="bg-white/10 text-gray-400 px-2 py-1 rounded text-xs">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <Link
-                        href={`/${locale}/blog/${post.slug}`}
-                        className="text-sky-400 hover:text-sky-300 font-medium"
-                      >
-                        {t('blog.read_more')} →
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* All Posts Grid */}
       <section className="py-16 bg-gray-950">
@@ -296,19 +222,17 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                   <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-700 relative">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <span className="text-4xl opacity-20">
-                        {post.category === 'wedding' ? '💍' :
-                         post.category === 'portrait' ? '👤' :
-                         post.category === 'drone' ? '🚁' :
-                         post.category === 'commercial' ? '📸' : '📝'}
+                        {post.service_type === 'wedding' ? '💍' :
+                         post.service_type === 'portrait' ? '👤' :
+                         post.service_type === 'drone' ? '🚁' :
+                         post.service_type === 'commercial' ? '📸' : '📝'}
                       </span>
                     </div>
                   </div>
 
                   <div className="p-6">
                     <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                      <span>{formatDate(post.publishedAt)}</span>
-                      <span>•</span>
-                      <span>{post.readingTime} {t('blog.reading_time')}</span>
+                      <span>{formatDate(post.published_at)}</span>
                     </div>
 
                     <h3 className="text-xl font-bold text-white mb-3">
@@ -316,23 +240,15 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                         href={`/${locale}/blog/${post.slug}`}
                         className="hover:text-sky-400 transition-colors"
                       >
-                        {locale === 'es' ? post.titleEs : post.title}
+                        {post.title}
                       </Link>
                     </h3>
 
                     <p className="text-gray-400 mb-4 line-clamp-3">
-                      {locale === 'es' ? post.excerptEs : post.excerpt}
+                      {post.excerpt}
                     </p>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-wrap gap-2">
-                        {post.tags.slice(0, 2).map(tag => (
-                          <span key={tag} className="bg-white/10 text-gray-400 px-2 py-1 rounded text-xs">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
+                    <div className="flex items-center justify-end">
                       <Link
                         href={`/${locale}/blog/${post.slug}`}
                         className="text-sky-400 hover:text-sky-300 font-medium text-sm"

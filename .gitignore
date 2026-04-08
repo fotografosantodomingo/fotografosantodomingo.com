@@ -46,6 +46,10 @@ database/*.sqlite
 *.tmp
 *.temp
 
+# Tracked developer tools
+!scripts/
+!scripts/smoke-test.sh
+
 # Service account keys and secrets
 loyal-network-*.json
 # Ignore all JSON except project-required ones

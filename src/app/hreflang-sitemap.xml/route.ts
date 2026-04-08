@@ -9,7 +9,7 @@
  */
 
 import { NextResponse } from 'next/server'
-import { getAllPosts } from '@/lib/blog/posts'
+import { getAllSlugs } from '@/lib/supabase/blog'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const LOCALES = ['es', 'en'] as const
@@ -70,22 +70,35 @@ function buildEntry(page: HreflangPage, locale: string): string {
 }
 
 export async function GET() {
-  const posts = getAllPosts()
+  const slugs = await getAllSlugs()
 
-  // Add blog post pages dynamically
-  const blogPages: HreflangPage[] = posts.map((post) => ({
-    path: `blog/${post.slug}`,
-    changefreq: 'monthly',
-    priority: 0.7,
-  }))
-
-  const allPages = [...PAGES, ...blogPages]
+  // Blog post pages: each locale gets its own slug
+  const allPages = [...PAGES]
   const urlEntries: string[] = []
 
+  // Static pages — same path for both locales
   for (const page of allPages) {
     for (const locale of LOCALES) {
       urlEntries.push(buildEntry(page, locale))
     }
+  }
+
+  // Blog posts — locale-aware slugs (slug_es for /es, slug_en for /en)
+  for (const { slug_es, slug_en } of slugs) {
+    if (!slug_es || !slug_en) continue
+
+    const esUrl = `${BASE_URL}/es/blog/${slug_es}`
+    const enUrl = `${BASE_URL}/en/blog/${slug_en}`
+
+    // ES entry with cross-links
+    urlEntries.push(
+      `  <url>\n    <loc>${escapeXml(esUrl)}</loc>\n      <xhtml:link\n        rel="alternate"\n        hreflang="es"\n        href="${escapeXml(esUrl)}"/>\n      <xhtml:link\n        rel="alternate"\n        hreflang="en"\n        href="${escapeXml(enUrl)}"/>\n      <xhtml:link\n        rel="alternate"\n        hreflang="x-default"\n        href="${escapeXml(esUrl)}"/>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>`
+    )
+
+    // EN entry with cross-links
+    urlEntries.push(
+      `  <url>\n    <loc>${escapeXml(enUrl)}</loc>\n      <xhtml:link\n        rel="alternate"\n        hreflang="es"\n        href="${escapeXml(esUrl)}"/>\n      <xhtml:link\n        rel="alternate"\n        hreflang="en"\n        href="${escapeXml(enUrl)}"/>\n      <xhtml:link\n        rel="alternate"\n        hreflang="x-default"\n        href="${escapeXml(esUrl)}"/>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>`
+    )
   }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

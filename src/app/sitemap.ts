@@ -1,23 +1,23 @@
 import { MetadataRoute } from 'next'
-import { getAllPosts } from '@/lib/blog/posts'
+import { getAllSlugs } from '@/lib/supabase/blog'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getAllPosts()
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const slugs = await getAllSlugs()
 
-  const blogEntries: MetadataRoute.Sitemap = posts.flatMap(post => [
+  const blogEntries: MetadataRoute.Sitemap = slugs.flatMap(({ slug_es, slug_en }) => [
     {
-      url: `${BASE_URL}/en/blog/${post.slug}`,
-      lastModified: new Date(post.updatedAt || post.publishedAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
+      url: `${BASE_URL}/es/blog/${slug_es}`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.6,
     },
     {
-      url: `${BASE_URL}/es/blog/${post.slug}`,
-      lastModified: new Date(post.updatedAt || post.publishedAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
+      url: `${BASE_URL}/en/blog/${slug_en}`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.6,
     },
   ])
 
@@ -26,19 +26,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: BASE_URL,
       lastModified: new Date(),
       changeFrequency: 'yearly',
-      priority: 1,
+      priority: 0.5,
     },
     {
       url: `${BASE_URL}/en`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.8,
+      priority: 1,
     },
     {
       url: `${BASE_URL}/es`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.8,
+      priority: 1,
     },
     {
       url: `${BASE_URL}/en/services`,
