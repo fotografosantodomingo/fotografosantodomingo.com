@@ -16,7 +16,7 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
   const post = await getPostBySlugFromDb(slug)
 
   if (!post) {
-    return { title: 'Post Not Found' }
+    return { title: 'Post Not Found', robots: { index: false, follow: false } }
   }
 
   const title = locale === 'es' ? post.seo.titleEs : post.seo.title
@@ -50,6 +50,7 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
       title,
       description,
     },
+    robots: { index: true, follow: true },
   }
 }
 

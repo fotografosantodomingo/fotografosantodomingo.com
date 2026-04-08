@@ -35,9 +35,15 @@ export async function generateMetadata({ params: { locale } }: { params: { local
       },
     },
     openGraph: {
+      type: 'website',
+      title: isEs ? 'Blog de Fotografía — Babula Shots' : 'Photography Blog — Babula Shots',
+      description: isEs
+        ? 'Artículos sobre fotografía profesional: consejos de bodas, sesiones familiares, drone y tendencias fotográficas en República Dominicana.'
+        : 'Photography articles: wedding tips, family sessions, drone and photography trends in the Dominican Republic.',
       url: `${BASE_URL}/${locale}/blog`,
       images: [{ url: `${BASE_URL}/api/og?title=Blog+de+Fotografía&subtitle=Consejos+·+Bodas+·+Tendencias`, width: 1200, height: 630 }],
     },
+    robots: { index: true, follow: true },
   }
 }
 

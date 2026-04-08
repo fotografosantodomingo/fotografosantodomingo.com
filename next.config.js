@@ -79,6 +79,16 @@ const nextConfig = {
         destination: '/api/og',
         permanent: false,
       },
+      // Locale-less paths → default Spanish locale
+      // Prevents 404 when crawlers/Lighthouse hit /blog, /portfolio, etc.
+      { source: '/blog',        destination: '/es/blog',        permanent: false },
+      { source: '/blog/:slug',  destination: '/es/blog/:slug',  permanent: false },
+      { source: '/portfolio',   destination: '/es/portfolio',   permanent: false },
+      { source: '/services',    destination: '/es/services',    permanent: false },
+      { source: '/about',       destination: '/es/about',       permanent: false },
+      { source: '/contact',     destination: '/es/contact',     permanent: false },
+      { source: '/privacy',     destination: '/es/privacy',     permanent: false },
+      { source: '/terms',       destination: '/es/terms',       permanent: false },
     ]
   },
 
