@@ -80,41 +80,58 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const t = await getTranslations({ locale })
 
   const post = await getPostBySlug(slug)
-  const relatedPosts = post
-    ? await getRelatedPosts(post.service_type ?? 'general', slug, locale as 'es' | 'en')
-    : []
 
   if (!post) {
     notFound()
   }
 
+  let relatedPosts = [] as Awaited<ReturnType<typeof getRelatedPosts>>
+  try {
+    relatedPosts = await getRelatedPosts(post.service_type ?? 'general', slug, locale as 'es' | 'en')
+  } catch (error) {
+    console.error('related posts lookup failed:', error)
+  }
+
   const isEs = locale === 'es'
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(isEs ? 'es-ES' : 'en-US', {
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    if (Number.isNaN(date.getTime())) return ''
+    return date.toLocaleDateString(isEs ? 'es-ES' : 'en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     })
   }
 
-  const content = isEs ? post.content_es : post.content_en
-  const title = isEs ? post.title_es : post.title_en
+  const content = (isEs ? post.content_es : post.content_en) ?? ''
+  const title = (isEs ? post.title_es : post.title_en) ?? (isEs ? 'Artículo' : 'Article')
   const readingTime = Math.max(5, Math.ceil(content.split(/\s+/).length / 200))
 
   // Split content into paragraphs for better rendering
   const paragraphs = content.split('\n\n').filter((p) => p.trim())
 
-  const articleSchema = schemaGenerators.article(post, locale)
-  const breadcrumbSchema = schemaGenerators.breadcrumb([
-    { name: isEs ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
-    { name: 'Blog', url: `${BASE_URL}/${locale}/blog` },
-    { name: title, url: `${BASE_URL}/${locale}/blog/${slug}` },
-  ])
+  let articleSchema: unknown = null
+  let breadcrumbSchema: unknown = null
+  try {
+    articleSchema = schemaGenerators.article(post, locale)
+    breadcrumbSchema = schemaGenerators.breadcrumb([
+      { name: isEs ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
+      { name: 'Blog', url: `${BASE_URL}/${locale}/blog` },
+      { name: title, url: `${BASE_URL}/${locale}/blog/${slug}` },
+    ])
+  } catch (error) {
+    console.error('blog schema generation failed:', error)
+  }
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(articleSchema)} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
+      {articleSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(articleSchema)} />
+      )}
+      {breadcrumbSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
+      )}
       <main className="min-h-screen bg-gray-950 text-white">
       {/* Hero Section with Post Info */}
       <section className="relative bg-gray-950 pt-20 pb-12">

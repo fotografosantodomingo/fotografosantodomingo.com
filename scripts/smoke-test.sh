@@ -8,6 +8,9 @@ FOLDER="${FOLDER:-PUBLISH_Wedding_PuntaCana_ZoniAndCarlos_ES}"
 PUBLIC_ID="${PUBLIC_ID:-${FOLDER}/photo_001}"
 PUBLISHED_AT="${PUBLISHED_AT:-2026-04-07T12:00:00Z}"
 IDEMPOTENCY_KEY="${IDEMPOTENCY_KEY:-$(printf '%s|%s' "$PUBLIC_ID" "$PUBLISHED_AT" | shasum -a 256 | awk '{print $1}')}"
+RUN_ID="${RUN_ID:-$(date +%s)}"
+SLUG_ES="fotografia-boda-punta-cana-zoni-carlos-${RUN_ID}"
+SLUG_EN="wedding-photography-punta-cana-zoni-carlos-${RUN_ID}"
 
 # Counters
 PASS=0
@@ -60,6 +63,10 @@ request() {
     -w "%{http_code}"
   )
 
+  if [[ "$method" == "GET" || "$method" == "HEAD" ]]; then
+    curl_args+=( -L )
+  fi
+
   if [[ "$auth_mode" == "auth" ]]; then
     curl_args+=( -H "Authorization: Bearer $ADMIN_SECRET" )
   elif [[ "$auth_mode" == "wrong-auth" ]]; then
@@ -77,8 +84,8 @@ write_happy_payload() {
   local file="$1"
   cat > "$file" <<JSON
 {
-  "slug_es": "fotografia-boda-punta-cana-zoni-carlos",
-  "slug_en": "wedding-photography-punta-cana-zoni-carlos",
+  "slug_es": "${SLUG_ES}",
+  "slug_en": "${SLUG_EN}",
   "title_es": "Fotografía de Boda en Punta Cana — Zoni & Carlos",
   "title_en": "Wedding Photography in Punta Cana — Zoni & Carlos",
   "content_es": "Punta Cana ofrece uno de los escenarios más espectaculares del Caribe para una boda en la playa. Zoni y Carlos celebraron una ceremonia íntima al atardecer en Playa Macao, rodeados de luz cálida, brisa marina y un ambiente elegante que hizo que cada fotografía se sintiera natural y emotiva. Desde los preparativos en el resort hasta los retratos frente al mar, cada imagen fue trabajada con composición limpia, dirección ligera y atención total a los detalles reales de la pareja. En Babula Shots documentamos bodas en República Dominicana con un enfoque personalizado, pensado para parejas que valoran recuerdos auténticos y una estética profesional. Si estás planificando tu boda en Punta Cana y quieres una cobertura visual sólida, clara y emocional, podemos ayudarte a construir esa historia. WhatsApp +1 809 720 9547.",
@@ -114,8 +121,8 @@ write_invalid_webp_payload() {
   local source_file="$1"
   local output_file="$2"
   jq '
-    .slug_es = "fotografia-boda-punta-cana-zoni-carlos-webp-invalido" |
-    .slug_en = "wedding-photography-punta-cana-zoni-carlos-invalid-webp" |
+    .slug_es = env.SLUG_ES + "-webp-invalido" |
+    .slug_en = env.SLUG_EN + "-invalid-webp" |
     .cover_image_url = "https://res.cloudinary.com/dwewurxla/image/upload/photo_001.jpg"
   ' "$source_file" > "$output_file"
 }
@@ -222,21 +229,29 @@ else
 fi
 
 header "Test 2: GET blog_url_es — confirm page is live"
-BODY="$TMP_DIR/test2.html"
-STATUS="$(request GET "$BLOG_URL_ES" "$BODY" none)"
-if [[ "$STATUS" == "200" ]] && body_contains "$BODY" 'fotografia-boda-punta-cana-zoni-carlos'; then
-  pass "ES blog URL returned 200 and contains slug_es"
+if [[ -z "$BLOG_URL_ES" ]]; then
+  fail "ES blog URL check skipped because Test 1 did not capture blog_url_es"
 else
-  fail "ES blog URL did not return expected content (HTTP $STATUS)"
+  BODY="$TMP_DIR/test2.html"
+  STATUS="$(request GET "$BLOG_URL_ES" "$BODY" none)"
+  if [[ "$STATUS" == "200" ]] && body_contains "$BODY" "$SLUG_ES"; then
+    pass "ES blog URL returned 200 and contains slug_es"
+  else
+    fail "ES blog URL did not return expected content (HTTP $STATUS)"
+  fi
 fi
 
 header "Test 3: GET blog_url_en — confirm page is live"
-BODY="$TMP_DIR/test3.html"
-STATUS="$(request GET "$BLOG_URL_EN" "$BODY" none)"
-if [[ "$STATUS" == "200" ]] && body_contains "$BODY" 'wedding-photography-punta-cana-zoni-carlos'; then
-  pass "EN blog URL returned 200 and contains slug_en"
+if [[ -z "$BLOG_URL_EN" ]]; then
+  fail "EN blog URL check skipped because Test 1 did not capture blog_url_en"
 else
-  fail "EN blog URL did not return expected content (HTTP $STATUS)"
+  BODY="$TMP_DIR/test3.html"
+  STATUS="$(request GET "$BLOG_URL_EN" "$BODY" none)"
+  if [[ "$STATUS" == "200" ]] && body_contains "$BODY" "$SLUG_EN"; then
+    pass "EN blog URL returned 200 and contains slug_en"
+  else
+    fail "EN blog URL did not return expected content (HTTP $STATUS)"
+  fi
 fi
 
 header "Test 4: POST /api/admin/create-post — duplicate slug"
@@ -308,7 +323,7 @@ fi
 header "Test 11: GET /es/blog/ — blog listing includes new post"
 BODY="$TMP_DIR/test11.html"
 STATUS="$(request GET "$BASE_URL/es/blog/" "$BODY" none)"
-if [[ "$STATUS" == "200" ]] && body_contains "$BODY" 'fotografia-boda-punta-cana-zoni-carlos'; then
+if [[ "$STATUS" == "200" ]] && body_contains "$BODY" "$SLUG_ES"; then
   pass "ES blog listing returned 200 and contains slug_es"
 else
   fail "ES blog listing test failed (HTTP $STATUS)"
@@ -317,7 +332,7 @@ fi
 header "Test 12: GET /en/blog/ — blog listing includes new post"
 BODY="$TMP_DIR/test12.html"
 STATUS="$(request GET "$BASE_URL/en/blog/" "$BODY" none)"
-if [[ "$STATUS" == "200" ]] && body_contains "$BODY" 'wedding-photography-punta-cana-zoni-carlos'; then
+if [[ "$STATUS" == "200" ]] && body_contains "$BODY" "$SLUG_EN"; then
   pass "EN blog listing returned 200 and contains slug_en"
 else
   fail "EN blog listing test failed (HTTP $STATUS)"
