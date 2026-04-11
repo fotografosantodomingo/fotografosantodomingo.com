@@ -1,10 +1,26 @@
 import { MetadataRoute } from 'next'
 import { getAllSlugs } from '@/lib/supabase/blog'
+import { serviceLandingSlugs } from '@/lib/services/catalog'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const slugs = await getAllSlugs()
+
+  const serviceEntries: MetadataRoute.Sitemap = serviceLandingSlugs.flatMap((serviceSlug) => [
+    {
+      url: `${BASE_URL}/es/services/${serviceSlug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.75,
+    },
+    {
+      url: `${BASE_URL}/en/services/${serviceSlug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.75,
+    },
+  ])
 
   const blogEntries: MetadataRoute.Sitemap = slugs.flatMap(({ slug_es, slug_en }) => [
     {
@@ -100,6 +116,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
+    ...serviceEntries,
     ...blogEntries,
   ]
 }

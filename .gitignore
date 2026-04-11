@@ -61,3 +61,4 @@ loyal-network-*.json
 !vercel.json
 !src/messages/*.json
 !.eslintrc.json
+.env*.local

@@ -1,4 +1,5 @@
 import { PortfolioImage, ReviewStats, resolveLocale } from '@/lib/types/portfolio'
+import { getServiceCatalog, serviceSlugById } from '@/lib/services/catalog'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const CLOUDINARY_BASE = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
@@ -352,21 +353,14 @@ export const schemaGenerators = {
     '@type': 'ItemList',
     name: locale === 'es' ? 'Servicios Fotográficos — Babula Shots' : 'Photography Services — Babula Shots',
     url: `${BASE_URL}/${locale}/services`,
-    itemListElement: [
-      { id: 'wedding', nameEs: 'Fotografía de Bodas', nameEn: 'Wedding Photography', price: '$2,500' },
-      { id: 'portrait', nameEs: 'Retratos Corporativos', nameEn: 'Corporate Portraits', price: '$150' },
-      { id: 'drone', nameEs: 'Fotografía con Dron', nameEn: 'Drone Photography', price: '$500' },
-      { id: 'event', nameEs: 'Fotografía de Eventos', nameEn: 'Event Photography', price: '$300' },
-      { id: 'family', nameEs: 'Sesiones Familiares', nameEn: 'Family Sessions', price: '$200' },
-      { id: 'commercial', nameEs: 'Fotografía Comercial', nameEn: 'Commercial Photography', price: '$250' },
-    ].map((svc, index) => ({
+    itemListElement: getServiceCatalog(locale).map((svc, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       item: {
         '@type': 'Service',
-        '@id': `${BASE_URL}/${locale}/services#${svc.id}`,
-        name: locale === 'es' ? svc.nameEs : svc.nameEn,
-        url: `${BASE_URL}/${locale}/services#${svc.id}`,
+        '@id': `${BASE_URL}/${locale}/services/${serviceSlugById[svc.id]}`,
+        name: svc.title,
+        url: `${BASE_URL}/${locale}/services/${serviceSlugById[svc.id]}`,
         provider: {
           '@type': 'LocalBusiness',
           name: 'Fotografo Santo Domingo | Babula Shots',
@@ -378,7 +372,7 @@ export const schemaGenerators = {
         },
         offers: {
           '@type': 'Offer',
-          price: svc.price.replace('$', ''),
+          price: svc.pricing.starting.replace(/[^0-9.]/g, ''),
           priceCurrency: 'USD',
           availability: 'https://schema.org/InStock',
         },

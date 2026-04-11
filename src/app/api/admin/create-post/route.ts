@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ZodError } from 'zod'
 import { createServiceClient } from '@/lib/supabase/service'
 import { CreatePostSchema } from '@/lib/automation/schemas'
+import { generateBilingualCaptions, type GeneratedCaptions } from '@/lib/ai/caption-generator'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -38,6 +39,24 @@ function normalizePublicId(publicId: string) {
     .trim()
     .replace(/^\/+|\/+$/g, '')
     .replace(/\.(webp|jpg|jpeg|png|avif)$/i, '')
+}
+
+function ensureNonEmpty(value: string | null | undefined, fallback: string) {
+  const normalized = (value || '').trim()
+  return normalized || fallback
+}
+
+function buildKeywordContext(body: ReturnType<typeof CreatePostSchema.parse>) {
+  return [
+    body.primary_keyword_es,
+    body.primary_keyword_en,
+    body.service_type,
+    body.location,
+    body.geo_city,
+    body.geo_country,
+  ]
+    .filter(Boolean)
+    .join(', ')
 }
 
 function withSlugSuffix(base: string, suffixNumber: number) {
@@ -102,6 +121,40 @@ export async function POST(request: NextRequest) {
     const supabase = createServiceClient()
 
     const { slugEs, slugEn } = await resolveUniqueSlugs(supabase, body.slug_es, body.slug_en)
+    const portfolioCategory = normalizePortfolioCategory(body.service_type, body.schema_service_type)
+    const portfolioLocation = body.location || body.geo_city || 'República Dominicana'
+
+    let aiCaptions: GeneratedCaptions | null = null
+    const needsAiMetadata = !body.cover_image_alt_es || !body.cover_image_alt_en
+
+    if (needsAiMetadata) {
+      const model = process.env.OPENAI_VISION_MODEL
+      if (!model) {
+        console.warn('[create-post] OPENAI_VISION_MODEL not set; fallback model gpt-4o-mini will be used by caption generator')
+      }
+
+      try {
+        aiCaptions = await generateBilingualCaptions(body.cover_image_url, {
+          category: portfolioCategory,
+          location: portfolioLocation,
+          keywords: buildKeywordContext(body),
+          blogTitleEs: body.title_es,
+          blogTitleEn: body.title_en,
+        }, model || undefined)
+      } catch (error) {
+        console.error('[create-post] OpenAI metadata generation failed:', error)
+        return NextResponse.json(
+          {
+            error: 'OpenAI generation failed',
+            message: error instanceof Error ? error.message : 'Unknown OpenAI error',
+          },
+          { status: 502 }
+        )
+      }
+    }
+
+    const finalCoverAltEs = ensureNonEmpty(body.cover_image_alt_es ?? aiCaptions?.alt_es, body.title_es)
+    const finalCoverAltEn = ensureNonEmpty(body.cover_image_alt_en ?? aiCaptions?.alt_en, body.title_en)
 
     const insertPayload = {
       slug_es: slugEs,
@@ -121,8 +174,8 @@ export async function POST(request: NextRequest) {
       cover_image_url: body.cover_image_url,
       cover_image_thumbnail_url: body.cover_image_thumbnail_url,
       cover_image_placeholder_url: body.cover_image_placeholder_url,
-      cover_image_alt_es: body.cover_image_alt_es ?? null,
-      cover_image_alt_en: body.cover_image_alt_en ?? null,
+      cover_image_alt_es: finalCoverAltEs,
+      cover_image_alt_en: finalCoverAltEn,
       cover_image_format: body.cover_image_format,
       cover_image_public_id: body.cover_image_public_id,
       schema_service_type: body.schema_service_type ?? null,
@@ -181,8 +234,12 @@ export async function POST(request: NextRequest) {
 
     if (body.status === 'published') {
       const portfolioPublicId = normalizePublicId(body.cover_image_public_id)
-      const portfolioCategory = normalizePortfolioCategory(body.service_type, body.schema_service_type)
-      const portfolioLocation = body.location || body.geo_city || 'República Dominicana'
+      const portfolioTitleEs = aiCaptions?.title_es || body.title_es
+      const portfolioTitleEn = aiCaptions?.title_en || body.title_en
+      const portfolioCaptionEs = aiCaptions?.caption_es || body.excerpt_es || body.meta_description_es || body.title_es
+      const portfolioCaptionEn = aiCaptions?.caption_en || body.excerpt_en || body.meta_description_en || body.title_en
+      const portfolioDescriptionEs = aiCaptions?.description_es || body.meta_description_es || body.excerpt_es || body.title_es
+      const portfolioDescriptionEn = aiCaptions?.description_en || body.meta_description_en || body.excerpt_en || body.title_en
 
       const { data: existingPortfolioImage, error: existingPortfolioError } = await supabase
         .from('portfolio_images')
@@ -202,14 +259,14 @@ export async function POST(request: NextRequest) {
         const { error: updatePortfolioError } = await supabase
           .from('portfolio_images')
           .update({
-            alt_es: body.cover_image_alt_es || body.title_es,
-            alt_en: body.cover_image_alt_en || body.title_en,
-            caption_es: body.excerpt_es || body.meta_description_es || body.title_es,
-            caption_en: body.excerpt_en || body.meta_description_en || body.title_en,
-            title_es: body.title_es,
-            title_en: body.title_en,
-            description_es: body.meta_description_es || body.excerpt_es || body.title_es,
-            description_en: body.meta_description_en || body.excerpt_en || body.title_en,
+            alt_es: finalCoverAltEs,
+            alt_en: finalCoverAltEn,
+            caption_es: portfolioCaptionEs,
+            caption_en: portfolioCaptionEn,
+            title_es: portfolioTitleEs,
+            title_en: portfolioTitleEn,
+            description_es: portfolioDescriptionEs,
+            description_en: portfolioDescriptionEn,
             category: portfolioCategory,
             location: portfolioLocation,
             width: 1200,
@@ -246,14 +303,14 @@ export async function POST(request: NextRequest) {
           .from('portfolio_images')
           .insert({
             public_id: portfolioPublicId,
-            alt_es: body.cover_image_alt_es || body.title_es,
-            alt_en: body.cover_image_alt_en || body.title_en,
-            caption_es: body.excerpt_es || body.meta_description_es || body.title_es,
-            caption_en: body.excerpt_en || body.meta_description_en || body.title_en,
-            title_es: body.title_es,
-            title_en: body.title_en,
-            description_es: body.meta_description_es || body.excerpt_es || body.title_es,
-            description_en: body.meta_description_en || body.excerpt_en || body.title_en,
+            alt_es: finalCoverAltEs,
+            alt_en: finalCoverAltEn,
+            caption_es: portfolioCaptionEs,
+            caption_en: portfolioCaptionEn,
+            title_es: portfolioTitleEs,
+            title_en: portfolioTitleEn,
+            description_es: portfolioDescriptionEs,
+            description_en: portfolioDescriptionEn,
             category: portfolioCategory,
             location: portfolioLocation,
             featured: false,
@@ -270,14 +327,16 @@ export async function POST(request: NextRequest) {
           )
         }
       }
+
+      console.log(`[create-post] Portfolio sync OK for ${portfolioPublicId}`)
     }
 
     return NextResponse.json(
       {
         success: true,
         post_id: data.id,
-        url_es: `${BASE_URL}/es/blog/${data.slug_es}/`,
-        url_en: `${BASE_URL}/en/blog/${data.slug_en}/`,
+        url_es: `${BASE_URL}/es/blog/${data.slug_es}`,
+        url_en: `${BASE_URL}/en/blog/${data.slug_en}`,
       },
       { status: 201 }
     )

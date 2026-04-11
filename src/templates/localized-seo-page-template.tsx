@@ -11,6 +11,8 @@ type PageProps = {
 export async function generateMetadata({ params: { locale } }: PageProps): Promise<Metadata> {
   const isEs = locale === 'es'
   const slug = 'replace-me'
+  // Keep canonical and hreflang in the exact same URL format (no trailing slash)
+  // to avoid canonical/hreflang mismatch warnings in SEO validators.
   const title = isEs
     ? 'Primary ES Intent | Babula Shots'
     : 'Primary EN Intent | Babula Shots'

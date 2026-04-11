@@ -6,6 +6,11 @@
  *   Content-Type: application/json
  *
  * Slug rules: lowercase, hyphens only, no spaces — /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+ * SEO URL safety rules (important for canonical + hreflang):
+ * - slug_es must be the Spanish version, slug_en must be the English version.
+ * - Never copy slug_es into slug_en (or vice versa) unless both languages intentionally use the exact same phrase.
+ * - Store URLs without trailing slash in automation outputs: /es/blog/<slug_es> and /en/blog/<slug_en>
+ * - Canonical and hreflang must always reference locale-matching slugs.
  * cover_image_url must be a Cloudinary URL containing f_webp
  * cover_image_format must be 'webp'
  */

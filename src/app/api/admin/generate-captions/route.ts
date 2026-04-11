@@ -10,6 +10,8 @@
  *   keywords?: string          // Page-level SEO keywords to inject into prompt
  *   category?: string          // Override category (wedding|portrait|drone|event|commercial)
  *   location?: string          // Override location
+ *   blogTitleEs?: string       // Optional Spanish blog title context
+ *   blogTitleEn?: string       // Optional English blog title context
  *   model?:    string          // Override OpenAI model (default: gpt-4o-mini)
  * }
  *
@@ -46,6 +48,8 @@ export async function POST(req: NextRequest) {
     keywords?: string
     category?: string
     location?: string
+    blogTitleEs?: string
+    blogTitleEn?: string
     model?: string
   }
   try {
@@ -54,7 +58,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const { publicId, keywords, category, location, model } = body
+  const { publicId, keywords, category, location, blogTitleEs, blogTitleEn, model } = body
   if (!publicId || typeof publicId !== 'string') {
     return NextResponse.json({ error: 'publicId is required' }, { status: 400 })
   }
@@ -69,13 +73,25 @@ export async function POST(req: NextRequest) {
     category,
     location,
     keywords,
+    blogTitleEs,
+    blogTitleEn,
   }
 
   // --- Generate ---
   let captions: Awaited<ReturnType<typeof generateBilingualCaptions>>
   try {
+    if (!process.env.OPENAI_VISION_MODEL && !model) {
+      console.warn('[generate-captions] OPENAI_VISION_MODEL not set; caption generator will use fallback model gpt-4o-mini')
+    }
     captions = await generateBilingualCaptions(imageUrl, context, model)
   } catch (err: any) {
+    console.error('[generate-captions] OpenAI generation failed:', {
+      publicId,
+      category,
+      location,
+      model: model || process.env.OPENAI_VISION_MODEL || 'gpt-4o-mini',
+      error: err?.message ?? 'Unknown error',
+    })
     return NextResponse.json({ error: err?.message ?? 'AI generation failed' }, { status: 500 })
   }
 

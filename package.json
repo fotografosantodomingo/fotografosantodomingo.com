@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "seo:check:canonical": "node scripts/seo-canonical-hreflang-check.cjs",
+    "blog:count": "node scripts/blog-maintenance.cjs count",
+    "blog:archive:published": "node scripts/blog-maintenance.cjs archive --all-published",
+    "blog:restore": "node scripts/blog-maintenance.cjs restore"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.0",
@@ -39,6 +43,7 @@
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "daisyui": "^5.5.19",
     "eslint": "^8.0.0",
     "eslint-config-next": "^14.0.0",
     "prettier": "^3.0.0",

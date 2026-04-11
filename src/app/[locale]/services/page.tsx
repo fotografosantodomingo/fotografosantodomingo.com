@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
+import { getServiceCatalog } from '@/lib/services/catalog'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -16,13 +16,18 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Servicios de Fotografía — Bodas, Drone, Retratos | Fotógrafo Santo Domingo'
     : 'Photography Services — Weddings, Drone, Portraits | Photographer Santo Domingo'
   const description = isEs
-    ? 'Servicios de fotografía para bodas, retratos, drone, quinceañeras y fotografía comercial en Santo Domingo y Punta Cana. Reserva tu sesión con Babula Shots.'
-    : 'Wedding, portrait, drone, quinceañera and commercial photography services in Santo Domingo and Punta Cana. Book your session with Babula Shots.'
+    ? 'Servicios de fotografía para bodas, retratos, drone, eventos, sesiones familiares y fotografía comercial en Santo Domingo y Punta Cana. Reserva tu sesión con Babula Shots.'
+    : 'Wedding, portrait, drone, event, family, and commercial photography services in Santo Domingo and Punta Cana. Book your session with Babula Shots.'
+
+  const ogTitle = isEs ? 'Servicios+de+Fotografía' : 'Photography+Services'
+  const ogSubtitle = isEs
+    ? 'Bodas+·+Drone+·+Retratos+·+Santo+Domingo'
+    : 'Weddings+·+Drone+·+Portraits+·+Santo+Domingo'
   return {
     title,
     description,
     keywords: isEs
-      ? 'servicios fotografía santo domingo, fotógrafo bodas RD, fotografía drone república dominicana, sesiones retratos ejecutivos, quinceañeras fotografía'
+      ? 'servicios fotografia santo domingo, fotografo bodas RD, fotografia drone republica dominicana, retratos ejecutivos santo domingo, fotografia comercial punta cana'
       : 'photography services santo domingo, wedding photographer DR, drone photography dominican republic, executive portrait sessions, photography packages',
     alternates: {
       canonical: `${BASE_URL}/${locale}/services`,
@@ -36,7 +41,7 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
       url: `${BASE_URL}/${locale}/services`,
       locale: isEs ? 'es_DO' : 'en_US',
       images: [{
-        url: `${BASE_URL}/api/og?title=Servicios+de+Fotografía&subtitle=Bodas+·+Drone+·+Retratos+·+Santo+Domingo`,
+        url: `${BASE_URL}/api/og?title=${ogTitle}&subtitle=${ogSubtitle}`,
         width: 1200,
         height: 630,
         alt: isEs ? 'Servicios de Fotografía Santo Domingo — Babula Shots' : 'Photography Services Santo Domingo — Babula Shots',
@@ -48,144 +53,14 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
       creator: '@babulashots',
       title: isEs ? 'Servicios de Fotografía — Fotógrafo Santo Domingo' : 'Photography Services — Photographer Santo Domingo',
       description,
-      images: [`${BASE_URL}/api/og?title=Servicios+de+Fotografía&subtitle=Bodas+·+Drone+·+Retratos`],
+      images: [`${BASE_URL}/api/og?title=${ogTitle}&subtitle=${ogSubtitle}`],
     },
     robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
 }
 
 export default async function ServicesPage({ params: { locale } }: Props) {
-  const t = await getTranslations({ locale, namespace: 'services' })
-
-  const services = [
-    {
-      id: 'wedding',
-      title: locale === 'es' ? 'Fotografía de Bodas' : 'Wedding Photography',
-      subtitle: locale === 'es' ? 'El día más importante de tu vida' : 'Your most important day',
-      description: locale === 'es'
-        ? 'Capturamos cada momento mágico de tu boda con estilo artístico y atención al detalle. Desde la preparación hasta el último baile, documentamos la historia de amor única de tu pareja.'
-        : 'We capture every magical moment of your wedding with artistic style and attention to detail. From preparation to the last dance, we document your couple\'s unique love story.',
-      features: [
-        locale === 'es' ? 'Cobertura completa del día de la boda' : 'Full wedding day coverage',
-        locale === 'es' ? 'Sesión de compromiso incluida' : 'Engagement session included',
-        locale === 'es' ? 'Álbum profesional de alta calidad' : 'Professional high-quality album',
-        locale === 'es' ? 'Todas las fotos editadas en alta resolución' : 'All photos edited in high resolution',
-        locale === 'es' ? 'Galería online privada para compartir' : 'Private online gallery for sharing',
-        locale === 'es' ? 'Impresiones de regalo' : 'Complimentary prints',
-      ],
-      pricing: {
-        starting: locale === 'es' ? 'Desde $2,500' : 'Starting at $2,500',
-        includes: locale === 'es' ? '8 horas de cobertura + edición completa' : '8 hours coverage + full editing',
-      },
-      image: 'wedding-hero',
-      popular: true,
-    },
-    {
-      id: 'portrait',
-      title: locale === 'es' ? 'Retratos Corporativos' : 'Corporate Portraits',
-      subtitle: locale === 'es' ? 'Profesionalismo y elegancia' : 'Professionalism and elegance',
-      description: locale === 'es'
-        ? 'Fotografía ejecutiva y corporativa que refleja la personalidad y profesionalismo de tu marca. Ideal para LinkedIn, sitios web corporativos y material de marketing.'
-        : 'Executive and corporate photography that reflects your brand\'s personality and professionalism. Perfect for LinkedIn, corporate websites, and marketing materials.',
-      features: [
-        locale === 'es' ? 'Sesión en estudio o ubicación personalizada' : 'Studio session or custom location',
-        locale === 'es' ? 'Múltiples looks y estilos' : 'Multiple looks and styles',
-        locale === 'es' ? 'Edición profesional para redes sociales' : 'Professional editing for social media',
-        locale === 'es' ? 'Entrega rápida (24-48 horas)' : 'Fast delivery (24-48 hours)',
-        locale === 'es' ? 'Uso comercial autorizado' : 'Authorized commercial use',
-        locale === 'es' ? 'Archivos en alta resolución' : 'High-resolution files',
-      ],
-      pricing: {
-        starting: locale === 'es' ? 'Desde $150' : 'Starting at $150',
-        includes: locale === 'es' ? 'Por sesión individual' : 'Per individual session',
-      },
-      image: 'corporate-portrait',
-    },
-    {
-      id: 'drone',
-      title: locale === 'es' ? 'Fotografía con Dron' : 'Drone Photography',
-      subtitle: locale === 'es' ? 'Perspectivas únicas desde el cielo' : 'Unique perspectives from the sky',
-      description: locale === 'es'
-        ? 'Capturamos vistas aéreas espectaculares para bodas, eventos corporativos, propiedades inmobiliarias y proyectos comerciales. Licencia FAA certificada.'
-        : 'We capture spectacular aerial views for weddings, corporate events, real estate properties, and commercial projects. FAA certified license.',
-      features: [
-        locale === 'es' ? 'Licencia FAA certificada' : 'FAA certified license',
-        locale === 'es' ? 'Cobertura de hasta 500 acres' : 'Coverage up to 500 acres',
-        locale === 'es' ? 'Video 4K y fotos de alta resolución' : '4K video and high-resolution photos',
-        locale === 'es' ? 'Edición profesional incluida' : 'Professional editing included',
-        locale === 'es' ? 'Entrega digital completa' : 'Complete digital delivery',
-        locale === 'es' ? 'Permisos legales gestionados' : 'Legal permissions managed',
-      ],
-      pricing: {
-        starting: locale === 'es' ? 'Desde $500' : 'Starting at $500',
-        includes: locale === 'es' ? 'Por ubicación + edición' : 'Per location + editing',
-      },
-      image: 'drone-aerial',
-    },
-    {
-      id: 'event',
-      title: locale === 'es' ? 'Fotografía de Eventos' : 'Event Photography',
-      subtitle: locale === 'es' ? 'Capturamos el ambiente y la energía' : 'We capture the atmosphere and energy',
-      description: locale === 'es'
-        ? 'Documentación completa de eventos corporativos, fiestas privadas, bautizos, cumpleaños y celebraciones especiales. Capturamos no solo las personas, sino también el ambiente único de tu evento.'
-        : 'Complete documentation of corporate events, private parties, baptisms, birthdays, and special celebrations. We capture not only the people, but also the unique atmosphere of your event.',
-      features: [
-        locale === 'es' ? 'Cobertura completa del evento' : 'Full event coverage',
-        locale === 'es' ? 'Entrega el mismo día (opción express)' : 'Same-day delivery (express option)',
-        locale === 'es' ? 'Galería online para invitados' : 'Online gallery for guests',
-        locale === 'es' ? 'Fotos grupales organizadas' : 'Organized group photos',
-        locale === 'es' ? 'Edición de color y estilo consistente' : 'Consistent color and style editing',
-        locale === 'es' ? 'Paquete de impresiones disponible' : 'Print package available',
-      ],
-      pricing: {
-        starting: locale === 'es' ? 'Desde $300' : 'Starting at $300',
-        includes: locale === 'es' ? 'Por hora de cobertura' : 'Per hour of coverage',
-      },
-      image: 'event-coverage',
-    },
-    {
-      id: 'family',
-      title: locale === 'es' ? 'Sesiones Familiares' : 'Family Sessions',
-      subtitle: locale === 'es' ? 'Momentos preciosos para toda la vida' : 'Precious moments for life',
-      description: locale === 'es'
-        ? 'Sesiones fotográficas familiares naturales y divertidas. Capturamos la esencia de tu familia en locaciones hermosas alrededor de Santo Domingo y Punta Cana.'
-        : 'Natural and fun family photography sessions. We capture the essence of your family in beautiful locations around Santo Domingo and Punta Cana.',
-      features: [
-        locale === 'es' ? 'Sesión de 1-2 horas en locación' : '1-2 hour session on location',
-        locale === 'es' ? 'Hasta 10 personas incluidas' : 'Up to 10 people included',
-        locale === 'es' ? 'Múltiples locaciones disponibles' : 'Multiple locations available',
-        locale === 'es' ? 'Álbum familiar personalizado' : 'Custom family album',
-        locale === 'es' ? 'Fotos en alta resolución' : 'High-resolution photos',
-        locale === 'es' ? 'Sesión de recién nacido disponible' : 'Newborn session available',
-      ],
-      pricing: {
-        starting: locale === 'es' ? 'Desde $200' : 'Starting at $200',
-        includes: locale === 'es' ? 'Sesión + 20 fotos editadas' : 'Session + 20 edited photos',
-      },
-      image: 'family-session',
-    },
-    {
-      id: 'commercial',
-      title: locale === 'es' ? 'Fotografía Comercial' : 'Commercial Photography',
-      subtitle: locale === 'es' ? 'Para negocios y marcas' : 'For businesses and brands',
-      description: locale === 'es'
-        ? 'Fotografía publicitaria y comercial para restaurantes, hoteles, productos, arquitectura y branding. Creamos imágenes que venden y conectan con tu audiencia.'
-        : 'Advertising and commercial photography for restaurants, hotels, products, architecture, and branding. We create images that sell and connect with your audience.',
-      features: [
-        locale === 'es' ? 'Fotografía de productos y alimentos' : 'Product and food photography',
-        locale === 'es' ? 'Arquitectura e inmuebles' : 'Architecture and real estate',
-        locale === 'es' ? 'Branding y marketing visual' : 'Branding and visual marketing',
-        locale === 'es' ? 'Estudio profesional equipado' : 'Professional equipped studio',
-        locale === 'es' ? 'Derechos de uso comercial' : 'Commercial usage rights',
-        locale === 'es' ? 'Entrega rápida para deadlines' : 'Fast delivery for deadlines',
-      ],
-      pricing: {
-        starting: locale === 'es' ? 'Desde $250' : 'Starting at $250',
-        includes: locale === 'es' ? 'Por hora + edición' : 'Per hour + editing',
-      },
-      image: 'commercial-product',
-    },
-  ]
+  const services = getServiceCatalog(locale)
 
   const serviceListSchema = schemaGenerators.serviceList(locale)
   const breadcrumbSchema = schemaGenerators.breadcrumb([
@@ -233,9 +108,10 @@ export default async function ServicesPage({ params: { locale } }: Props) {
       <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {services.map((service, index) => (
+            {services.map((service) => (
               <div
                 key={service.id}
+                id={`service-${service.id}`}
                 className={`bg-gray-950 rounded-2xl border overflow-hidden hover:border-sky-500/40 transition-all duration-300 ${
                   service.popular ? 'border-sky-500 ring-1 ring-sky-500/50 relative' : 'border-white/10'
                 }`}
@@ -247,21 +123,9 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                 )}
 
                 {/* Service Card Header */}
-                <div className={`h-56 flex flex-col items-center justify-center relative overflow-hidden ${
-                  service.id === 'wedding'     ? 'bg-gradient-to-br from-rose-400 to-pink-600' :
-                  service.id === 'portrait'    ? 'bg-gradient-to-br from-blue-500 to-indigo-700' :
-                  service.id === 'drone'       ? 'bg-gradient-to-br from-sky-400 to-cyan-600' :
-                  service.id === 'event'       ? 'bg-gradient-to-br from-amber-400 to-orange-600' :
-                  service.id === 'family'      ? 'bg-gradient-to-br from-emerald-400 to-teal-600' :
-                                                 'bg-gradient-to-br from-violet-500 to-purple-700'
-                }`}>
+                <div className={`h-56 flex flex-col items-center justify-center relative overflow-hidden ${service.gradientClass}`}>
                   <div className="text-7xl mb-3 drop-shadow-lg">
-                    {service.id === 'wedding' && '💍'}
-                    {service.id === 'portrait' && '👔'}
-                    {service.id === 'drone' && '🚁'}
-                    {service.id === 'event' && '🎉'}
-                    {service.id === 'family' && '👨‍👩‍👧‍👦'}
-                    {service.id === 'commercial' && '📸'}
+                    {service.icon}
                   </div>
                   <span className="text-white/90 font-semibold text-sm tracking-widest uppercase">
                     {service.subtitle}

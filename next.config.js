@@ -26,6 +26,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.supabase.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'scontent.cdninstagram.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lookaside.instagram.com',
+      },
     ],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days cache
   },
@@ -89,6 +97,18 @@ const nextConfig = {
       { source: '/contact',     destination: '/es/contact',     permanent: false },
       { source: '/privacy',     destination: '/es/privacy',     permanent: false },
       { source: '/terms',       destination: '/es/terms',       permanent: false },
+      { source: '/services/wedding-photography', destination: '/es/services/wedding-photography', permanent: false },
+      { source: '/services/portrait-photography', destination: '/es/services/portrait-photography', permanent: false },
+      { source: '/services/event-photography', destination: '/es/services/event-photography', permanent: false },
+      { source: '/services/commercial-photography', destination: '/es/services/commercial-photography', permanent: false },
+      { source: '/services/family-photography', destination: '/es/services/family-photography', permanent: false },
+      { source: '/services/drone-services-photography-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: false },
+      { source: '/drone-services-photography-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: false },
+      { source: '/es/drone-services-photography-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: true },
+      { source: '/en/drone-services-photography-punta-cana', destination: '/en/services/drone-services-photography-punta-cana', permanent: true },
+      { source: '/servicios-dron-fotografia-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: true },
+      { source: '/es/servicios-dron-fotografia-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: true },
+      { source: '/en/servicios-dron-fotografia-punta-cana', destination: '/en/services/drone-services-photography-punta-cana', permanent: true },
     ]
   },
 

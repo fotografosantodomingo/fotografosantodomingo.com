@@ -1,10 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getPostBySlug, getRelatedPosts } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
-import { InstagramLazyEmbed } from '../../../../components/blog/InstagramLazyEmbed'
+import { InstagramPhoneFeed } from '@/components/instagram/InstagramPhoneFeed'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const GOOGLE_REVIEWS_URL = 'https://share.google/aJphPsrVL2VXH9EWH'
@@ -176,11 +176,15 @@ function fallbackInternalLinks(locale: string): InternalLink[] {
 }
 
 function originalCloudinaryImage(publicId: string | null | undefined, fallbackUrl: string | null | undefined) {
+  if (fallbackUrl) {
+    return fallbackUrl
+  }
+
   if (publicId) {
     return `https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/${publicId}`
   }
 
-  return fallbackUrl || null
+  return null
 }
 
 export async function generateMetadata({ params: { locale, slug } }: Props): Promise<Metadata> {
@@ -202,11 +206,11 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
     title,
     description,
     alternates: {
-      canonical: `${BASE_URL}/${locale}/blog/${canonicalSlug}/`,
+      canonical: `${BASE_URL}/${locale}/blog/${canonicalSlug}`,
       languages: {
-        es: `${BASE_URL}/es/blog/${post.slug_es}/`,
-        en: `${BASE_URL}/en/blog/${post.slug_en}/`,
-        'x-default': `${BASE_URL}/es/blog/${post.slug_es}/`,
+        es: `${BASE_URL}/es/blog/${post.slug_es}`,
+        en: `${BASE_URL}/en/blog/${post.slug_en}`,
+        'x-default': `${BASE_URL}/es/blog/${post.slug_es}`,
       },
     },
     openGraph: {
@@ -214,7 +218,7 @@ export async function generateMetadata({ params: { locale, slug } }: Props): Pro
       siteName: 'Fotografo Santo Domingo | Babula Shots',
       title: isEs ? (post.og_title_es || post.title_es) : (post.og_title_en || post.title_en),
       description,
-      url: `${BASE_URL}/${locale}/blog/${canonicalSlug}/`,
+      url: `${BASE_URL}/${locale}/blog/${canonicalSlug}`,
       locale: isEs ? 'es_DO' : 'en_US',
       publishedTime: post.published_at,
       modifiedTime: post.updated_at ?? post.published_at,
@@ -241,6 +245,11 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
 
   const isEs = locale === 'es'
   const postSlug = isEs ? post.slug_es : post.slug_en
+
+  if (slug !== postSlug) {
+    permanentRedirect(`/${locale}/blog/${postSlug}`)
+  }
+
   const title = isEs ? post.title_es : post.title_en
   const excerpt = (isEs ? post.excerpt_es : post.excerpt_en) || ''
   const content = (isEs ? post.content_es : post.content_en) || ''
@@ -273,7 +282,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const articleParagraphs = splitParagraphs(content)
   const contentBlocks = buildContentBlocks(articleParagraphs)
 
-  const pageUrl = `${BASE_URL}/${locale}/blog/${postSlug}/`
+  const pageUrl = `${BASE_URL}/${locale}/blog/${postSlug}`
   const imageUrl = post.cover_image_url || `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
   const heroImageUrl = originalCloudinaryImage(post.cover_image_public_id, post.cover_image_url) || imageUrl
 
@@ -366,7 +375,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
       },
       ...selectedReviews.slice(0, 3).map((review) => ({
         '@type': 'Review',
-        itemReviewed: { '@id': `${pageUrl}#service` },
+        itemReviewed: { '@id': `${BASE_URL}/#business` },
         author: { '@type': 'Person', name: review.author },
         reviewRating: { '@type': 'Rating', ratingValue: review.rating, bestRating: 5 },
         reviewBody: review.text,
@@ -517,15 +526,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           </div>
         </section>
 
-        <section className="container mx-auto px-4 pb-14">
-          <div className="rounded-2xl p-8" style={{ background: 'linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)' }}>
-            <h2 className="mb-4 text-3xl font-extrabold">📸 @babulashotsrd en Instagram</h2>
-            <InstagramLazyEmbed instagramPostId={post.instagram_post_id} />
-            <a href="https://www.instagram.com/babulashotsrd" target="_blank" rel="noopener noreferrer" className="inline-block rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">
-              Ver Más en Instagram
-            </a>
-          </div>
-        </section>
+        <InstagramPhoneFeed locale={locale} currentSlug={postSlug} />
 
         <section className="container mx-auto px-4 pb-14">
           <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Ver Más Trabajos' : 'See More Work'}</h2>

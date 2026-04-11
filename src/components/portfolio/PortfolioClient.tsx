@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import type { PortfolioImage } from '@/lib/types/portfolio'
 import { resolveLocale } from '@/lib/types/portfolio'
@@ -21,6 +22,7 @@ interface PortfolioClientProps {
 }
 
 export default function PortfolioClient({ images, locale }: PortfolioClientProps) {
+  const searchParams = useSearchParams()
   const [activeFilter, setActiveFilter] = useState('all')
   const [lightbox, setLightbox] = useState<PortfolioImage | null>(null)
 
@@ -49,6 +51,16 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
   const categoryEmoji: Record<string, string> = {
     wedding: '💍', portrait: '👤', drone: '🚁', event: '🎉', commercial: '📸',
   }
+
+  useEffect(() => {
+    const category = searchParams.get('category')
+    const valid = ['wedding', 'portrait', 'drone', 'event', 'commercial']
+    if (category && valid.includes(category)) {
+      setActiveFilter(category)
+      return
+    }
+    setActiveFilter('all')
+  }, [searchParams])
 
   const filteredItems = activeFilter === 'all'
     ? images

@@ -31,6 +31,9 @@ export interface CaptionContext {
   keywords?: string
   /** Cloudinary auto-tags (from Google Auto-Tagging add-on if enabled) */
   cloudinaryTags?: string[]
+  /** Optional blog title context to align metadata with article intent */
+  blogTitleEs?: string
+  blogTitleEn?: string
 }
 
 export interface GeneratedCaptions {
@@ -82,6 +85,12 @@ alt_en, alt_es, title_en, title_es, caption_en, caption_es, description_en, desc
 function buildUserPrompt(context?: CaptionContext): string {
   const parts: string[] = ['Analyze this image and generate the required metadata.']
 
+  if (context?.blogTitleEs || context?.blogTitleEn) {
+    parts.push(
+      `Blog title context (keep metadata semantically aligned): ES="${context?.blogTitleEs ?? ''}", EN="${context?.blogTitleEn ?? ''}"`,
+    )
+  }
+
   if (context?.category) {
     const labels: Record<string, string> = {
       wedding:    'Wedding photography',
@@ -112,6 +121,38 @@ function buildUserPrompt(context?: CaptionContext): string {
   return parts.join('\n\n')
 }
 
+const MAX_ALT_LENGTH = 125
+
+function normalizeText(value: string) {
+  return value.replace(/\s+/g, ' ').trim()
+}
+
+function clampAltText(value: string) {
+  const normalized = normalizeText(value)
+  if (normalized.length <= MAX_ALT_LENGTH) return normalized
+  return normalized.slice(0, MAX_ALT_LENGTH).replace(/[\s,;:.!?-]+$/g, '').trim()
+}
+
+function classifyOpenAiError(err: unknown) {
+  const message = err instanceof Error ? err.message : String(err)
+  const lowered = message.toLowerCase()
+
+  if (lowered.includes('timeout') || lowered.includes('timed out') || lowered.includes('etimedout')) {
+    return 'OpenAI Timeout'
+  }
+  if (lowered.includes('invalid api key') || lowered.includes('incorrect api key') || lowered.includes('unauthorized')) {
+    return 'Invalid API Key'
+  }
+  if (lowered.includes('rate limit') || lowered.includes('429')) {
+    return 'OpenAI Rate Limit'
+  }
+  if (lowered.includes('model') && lowered.includes('not')) {
+    return 'Invalid/OpenAI Model'
+  }
+
+  return 'OpenAI Error'
+}
+
 // ---------------------------------------------------------------------------
 // Core generator
 // ---------------------------------------------------------------------------
@@ -139,23 +180,34 @@ export async function generateBilingualCaptions(
   context?: CaptionContext,
   model = process.env.OPENAI_VISION_MODEL ?? 'gpt-4o-mini',
 ): Promise<GeneratedCaptions> {
+  if (!process.env.OPENAI_VISION_MODEL && !model) {
+    console.warn('[AI captions] OPENAI_VISION_MODEL not set; using default model gpt-4o-mini')
+  }
+
   const client = getClient()
 
-  const response = await client.chat.completions.create({
-    model,
-    max_tokens: 1024,
-    response_format: { type: 'json_object' },
-    messages: [
-      { role: 'system', content: SYSTEM_PROMPT },
-      {
-        role: 'user',
-        content: [
-          { type: 'text', text: buildUserPrompt(context) },
-          { type: 'image_url', image_url: { url: imageUrl, detail: 'low' } },
-        ],
-      },
-    ],
-  })
+  let response: Awaited<ReturnType<typeof client.chat.completions.create>>
+  try {
+    response = await client.chat.completions.create({
+      model,
+      max_tokens: 1024,
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: buildUserPrompt(context) },
+            { type: 'image_url', image_url: { url: imageUrl, detail: 'low' } },
+          ],
+        },
+      ],
+    })
+  } catch (err) {
+    const classified = classifyOpenAiError(err)
+    const rawMessage = err instanceof Error ? err.message : String(err)
+    throw new Error(`${classified}: ${rawMessage}`)
+  }
 
   const raw = response.choices[0]?.message?.content ?? '{}'
 
@@ -180,13 +232,13 @@ export async function generateBilingualCaptions(
   }
 
   return {
-    alt_en:         parsed.alt_en,
-    alt_es:         parsed.alt_es,
-    title_en:       parsed.title_en,
-    title_es:       parsed.title_es,
-    caption_en:     parsed.caption_en,
-    caption_es:     parsed.caption_es,
-    description_en: parsed.description_en,
-    description_es: parsed.description_es,
+    alt_en:         clampAltText(parsed.alt_en),
+    alt_es:         clampAltText(parsed.alt_es),
+    title_en:       normalizeText(parsed.title_en),
+    title_es:       normalizeText(parsed.title_es),
+    caption_en:     normalizeText(parsed.caption_en),
+    caption_es:     normalizeText(parsed.caption_es),
+    description_en: normalizeText(parsed.description_en),
+    description_es: normalizeText(parsed.description_es),
   }
 }
