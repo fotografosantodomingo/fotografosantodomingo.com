@@ -258,12 +258,12 @@ export default function Navigation() {
   }, [isMenuOpen])
 
   return (
-    <nav className="bg-gray-950/95 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
+    <nav className="bg-white/95 text-gray-900 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-950/95 dark:text-white dark:border-white/10">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16 gap-2">
           {/* Logo */}
           <Link href={`/${locale}`} className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-white">
+            <span className="text-xl font-bold text-gray-900 dark:text-white">
               Fotografo Santo Domingo
             </span>
           </Link>
@@ -278,8 +278,8 @@ export default function Navigation() {
                 aria-current={isHrefActive(item.href) ? 'page' : undefined}
                 className={`text-sm transition-colors px-3 py-2 rounded-lg ${
                   isHrefActive(item.href)
-                    ? 'text-sky-400 font-semibold bg-sky-500/10'
-                    : 'text-gray-300 hover:text-sky-400 hover:bg-white/5'
+                    ? 'text-sky-500 dark:text-sky-400 font-semibold bg-sky-500/10'
+                    : 'text-gray-700 hover:text-sky-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-sky-400 dark:hover:bg-white/5'
                 }`}
               >
                 {item.label}
@@ -302,8 +302,8 @@ export default function Navigation() {
                     role="menuitem"
                     className={`inline-flex items-center gap-2 text-sm transition-colors px-3 py-2 rounded-lg ${
                       isActive || isOpen
-                        ? 'text-sky-400 font-semibold bg-sky-500/10'
-                        : 'text-gray-300 hover:text-sky-400 hover:bg-white/5'
+                        ? 'text-sky-500 dark:text-sky-400 font-semibold bg-sky-500/10'
+                        : 'text-gray-700 hover:text-sky-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-sky-400 dark:hover:bg-white/5'
                     }`}
                     data-menu-category={category.key}
                     aria-expanded={isOpen}
@@ -335,7 +335,7 @@ export default function Navigation() {
                     role="menu"
                     aria-label={t(category.labelKey)}
                   >
-                    <div className="rounded-2xl border border-white/10 bg-gray-900/95 backdrop-blur-md shadow-2xl p-6">
+                    <div className="rounded-2xl border border-gray-200 bg-white/95 backdrop-blur-md shadow-2xl p-6 dark:border-white/10 dark:bg-gray-900/95">
                       <div className="grid grid-cols-4 gap-4">
                         {getColumns(category.items).map((column, colIndex) => (
                           <div key={`${category.key}-col-${colIndex}`} className="space-y-2">
@@ -347,15 +347,15 @@ export default function Navigation() {
                                 data-menu-category={category.key}
                                 data-menu-panel-category={category.key}
                                 aria-current={isHrefActive(item.href) ? 'page' : undefined}
-                                className="block rounded-xl px-3 py-2.5 min-h-[44px] transition-colors hover:bg-white/5"
+                                className="block rounded-xl px-3 py-2.5 min-h-[44px] transition-colors hover:bg-gray-100 dark:hover:bg-white/5"
                                 onClick={() => setOpenDesktopCategory(null)}
                                 onKeyDown={(event) => handlePanelItemKeyDown(event, category.key)}
                               >
-                                <p className="text-sm font-semibold text-gray-100 hover:text-sky-300">
+                                <p className="text-sm font-semibold text-gray-900 hover:text-sky-700 dark:text-gray-100 dark:hover:text-sky-300">
                                   {t(item.labelKey)}
                                 </p>
                                 {item.descriptionKey && (
-                                  <p className="text-xs text-gray-400 mt-1 leading-snug">
+                                  <p className="text-xs text-gray-600 mt-1 leading-snug dark:text-gray-400">
                                     {t(item.descriptionKey)}
                                   </p>
                                 )}
@@ -375,7 +375,7 @@ export default function Navigation() {
           <div className="hidden md:flex items-center space-x-3">
             <Link
               href={switchPath}
-              className="text-sm text-gray-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20"
+              className="text-sm text-gray-600 hover:text-gray-900 transition-colors px-3 py-1.5 rounded-lg border border-gray-300 hover:border-gray-400 dark:text-gray-400 dark:hover:text-white dark:border-white/10 dark:hover:border-white/20"
             >
               {t('language_switch')}
             </Link>
@@ -391,7 +391,7 @@ export default function Navigation() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-gray-300"
+            className="md:hidden p-2 text-gray-700 dark:text-gray-300"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
@@ -409,7 +409,7 @@ export default function Navigation() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div id="mobile-main-menu" ref={mobileMenuRef} className="md:hidden py-5 border-t border-white/10" role="dialog" aria-modal="true" aria-label={t('services')}>
+          <div id="mobile-main-menu" ref={mobileMenuRef} className="md:hidden py-5 border-t border-gray-200 dark:border-white/10" role="dialog" aria-modal="true" aria-label={t('services')}>
             <div className="flex flex-col space-y-2">
               {baseNavItems.map((item) => (
                 <Link
@@ -418,8 +418,8 @@ export default function Navigation() {
                   aria-current={isHrefActive(item.href) ? 'page' : undefined}
                   className={`px-3 py-2.5 rounded-lg transition-colors ${
                     isHrefActive(item.href)
-                      ? 'bg-sky-500/10 text-sky-400 font-semibold'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -431,10 +431,10 @@ export default function Navigation() {
                 const isOpen = !!openMobileCategories[category.key]
 
                 return (
-                  <div key={category.key} className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+                  <div key={category.key} className="rounded-xl border border-gray-200 bg-gray-50 overflow-hidden dark:border-white/10 dark:bg-white/5">
                     <button
                       type="button"
-                      className="w-full min-h-[44px] px-3 py-3 text-left flex items-center justify-between text-gray-200"
+                      className="w-full min-h-[44px] px-3 py-3 text-left flex items-center justify-between text-gray-800 dark:text-gray-200"
                       onClick={() => toggleMobileCategory(category.key)}
                       aria-expanded={isOpen}
                       aria-controls={`mobile-category-${category.key}`}
@@ -467,7 +467,7 @@ export default function Navigation() {
                               href={getLocalizedHref(item.href)}
                               data-menu-category={category.key}
                               aria-current={isHrefActive(item.href) ? 'page' : undefined}
-                              className="block min-h-[44px] rounded-lg px-3 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+                              className="block min-h-[44px] rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white"
                               onClick={() => setIsMenuOpen(false)}
                             >
                               {t(item.labelKey)}
@@ -480,7 +480,7 @@ export default function Navigation() {
                 )
               })}
 
-              <div className="flex flex-col gap-2 pt-4 border-t border-white/10 mt-2">
+              <div className="flex flex-col gap-2 pt-4 border-t border-gray-200 mt-2 dark:border-white/10">
                 <a
                   href="https://wa.me/18097209547"
                   target="_blank"
@@ -492,14 +492,14 @@ export default function Navigation() {
                 </a>
                 <Link
                   href={getLocalizedHref('/contact')}
-                  className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-center px-4 py-3 rounded-lg transition-colors"
+                  className="bg-white hover:bg-gray-50 border border-gray-300 text-gray-900 font-semibold text-center px-4 py-3 rounded-lg transition-colors dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 dark:text-white"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {t('book_now')}
                 </Link>
                 <Link
                   href={switchPath}
-                  className="text-center text-gray-400 hover:text-white transition-colors py-2"
+                  className="text-center text-gray-600 hover:text-gray-900 transition-colors py-2 dark:text-gray-400 dark:hover:text-white"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {t('language_switch')}
