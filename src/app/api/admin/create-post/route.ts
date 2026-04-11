@@ -5,6 +5,41 @@ import { CreatePostSchema } from '@/lib/automation/schemas'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
+function normalizePortfolioCategory(serviceType?: string | null, schemaServiceType?: string | null) {
+  const value = `${serviceType || ''} ${schemaServiceType || ''}`.toLowerCase()
+
+  if (value.includes('wedding') || value.includes('boda')) return 'wedding'
+  if (value.includes('drone') || value.includes('dron')) return 'drone'
+  if (value.includes('event') || value.includes('evento')) return 'event'
+  if (
+    value.includes('portrait') ||
+    value.includes('retrato') ||
+    value.includes('couple') ||
+    value.includes('pareja') ||
+    value.includes('famil')
+  ) {
+    return 'portrait'
+  }
+  if (
+    value.includes('commercial') ||
+    value.includes('comercial') ||
+    value.includes('fashion') ||
+    value.includes('producto') ||
+    value.includes('brand')
+  ) {
+    return 'commercial'
+  }
+
+  return 'other'
+}
+
+function normalizePublicId(publicId: string) {
+  return publicId
+    .trim()
+    .replace(/^\/+|\/+$/g, '')
+    .replace(/\.(webp|jpg|jpeg|png|avif)$/i, '')
+}
+
 function withSlugSuffix(base: string, suffixNumber: number) {
   const suffix = `-${suffixNumber}`
   const maxBaseLength = Math.max(1, 200 - suffix.length)
@@ -142,6 +177,99 @@ export async function POST(request: NextRequest) {
         { error: 'Internal server error', message: 'DB insert failed' },
         { status: 500 }
       )
+    }
+
+    if (body.status === 'published') {
+      const portfolioPublicId = normalizePublicId(body.cover_image_public_id)
+      const portfolioCategory = normalizePortfolioCategory(body.service_type, body.schema_service_type)
+      const portfolioLocation = body.location || body.geo_city || 'República Dominicana'
+
+      const { data: existingPortfolioImage, error: existingPortfolioError } = await supabase
+        .from('portfolio_images')
+        .select('id')
+        .eq('public_id', portfolioPublicId)
+        .maybeSingle()
+
+      if (existingPortfolioError) {
+        console.error('portfolio image lookup failed:', existingPortfolioError)
+        return NextResponse.json(
+          { error: 'Internal server error', message: 'Portfolio sync failed' },
+          { status: 500 }
+        )
+      }
+
+      if (existingPortfolioImage?.id) {
+        const { error: updatePortfolioError } = await supabase
+          .from('portfolio_images')
+          .update({
+            alt_es: body.cover_image_alt_es || body.title_es,
+            alt_en: body.cover_image_alt_en || body.title_en,
+            caption_es: body.excerpt_es || body.meta_description_es || body.title_es,
+            caption_en: body.excerpt_en || body.meta_description_en || body.title_en,
+            title_es: body.title_es,
+            title_en: body.title_en,
+            description_es: body.meta_description_es || body.excerpt_es || body.title_es,
+            description_en: body.meta_description_en || body.excerpt_en || body.title_en,
+            category: portfolioCategory,
+            location: portfolioLocation,
+            width: 1200,
+            height: 630,
+          })
+          .eq('id', existingPortfolioImage.id)
+
+        if (updatePortfolioError) {
+          console.error('portfolio image update failed:', updatePortfolioError)
+          return NextResponse.json(
+            { error: 'Internal server error', message: 'Portfolio sync failed' },
+            { status: 500 }
+          )
+        }
+      } else {
+        const { data: maxSortRow, error: maxSortError } = await supabase
+          .from('portfolio_images')
+          .select('sort_order')
+          .order('sort_order', { ascending: false })
+          .limit(1)
+          .maybeSingle()
+
+        if (maxSortError) {
+          console.error('portfolio max sort lookup failed:', maxSortError)
+          return NextResponse.json(
+            { error: 'Internal server error', message: 'Portfolio sync failed' },
+            { status: 500 }
+          )
+        }
+
+        const nextSortOrder = (maxSortRow?.sort_order ?? 0) + 1
+
+        const { error: insertPortfolioError } = await supabase
+          .from('portfolio_images')
+          .insert({
+            public_id: portfolioPublicId,
+            alt_es: body.cover_image_alt_es || body.title_es,
+            alt_en: body.cover_image_alt_en || body.title_en,
+            caption_es: body.excerpt_es || body.meta_description_es || body.title_es,
+            caption_en: body.excerpt_en || body.meta_description_en || body.title_en,
+            title_es: body.title_es,
+            title_en: body.title_en,
+            description_es: body.meta_description_es || body.excerpt_es || body.title_es,
+            description_en: body.meta_description_en || body.excerpt_en || body.title_en,
+            category: portfolioCategory,
+            location: portfolioLocation,
+            featured: false,
+            sort_order: nextSortOrder,
+            width: 1200,
+            height: 630,
+          })
+
+        if (insertPortfolioError) {
+          console.error('portfolio image insert failed:', insertPortfolioError)
+          return NextResponse.json(
+            { error: 'Internal server error', message: 'Portfolio sync failed' },
+            { status: 500 }
+          )
+        }
+      }
     }
 
     return NextResponse.json(
