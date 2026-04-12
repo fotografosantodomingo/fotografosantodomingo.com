@@ -127,11 +127,11 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
                     className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute left-3 top-3 flex items-center gap-2">
-                    <span className="rounded-full bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold text-white dark:bg-white/12 dark:backdrop-blur">
+                    <span className="rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm dark:bg-white/12 dark:text-white dark:backdrop-blur">
                       {copy.fromInstagram}
                     </span>
                     {mediaBadge(item.media_type) && (
-                      <span className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-semibold text-white">
+                      <span className="rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm dark:bg-black/70 dark:text-white">
                         {mediaBadge(item.media_type)}
                       </span>
                     )}
@@ -159,11 +159,11 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
                     className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute left-3 top-3 flex items-center gap-2">
-                    <span className="rounded-full bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold text-white dark:bg-white/12 dark:backdrop-blur">
+                    <span className="rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm dark:bg-white/12 dark:text-white dark:backdrop-blur">
                       {copy.fromBlog}
                     </span>
                     {post.published_at && (
-                      <span className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-semibold text-white">
+                      <span className="rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm dark:bg-black/70 dark:text-white">
                         {formatPublishedAt(post.published_at, normalizedLocale)}
                       </span>
                     )}

@@ -525,13 +525,13 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         </section>
 
         <section className="container mx-auto px-4 pb-14">
-          <div className="rounded-2xl border border-white/15 bg-gradient-to-r from-slate-900 via-cyan-950 to-slate-900 p-7 text-center">
-            <h2 className="mb-4 text-2xl font-extrabold">{isEs ? `¿Listo para tu sesión en ${locationLabel}?` : `Ready for your session in ${locationLabel}?`}</h2>
+          <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-100 via-cyan-50 to-slate-100 p-7 text-center dark:border-white/15 dark:bg-gradient-to-r dark:from-slate-900 dark:via-cyan-950 dark:to-slate-900">
+            <h2 className="mb-4 text-2xl font-extrabold text-slate-900 dark:text-white">{isEs ? `¿Listo para tu sesión en ${locationLabel}?` : `Ready for your session in ${locationLabel}?`}</h2>
             <div className="flex flex-wrap justify-center gap-3">
               <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">{isEs ? 'Reservar ahora' : 'Book now'}</a>
-              <a href="https://calendly.com/info-vym7/video-llamada" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/30 px-5 py-2 text-sm font-bold">{isEs ? 'Videollamada' : 'Video call'}</a>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-400 px-5 py-2 text-sm font-bold text-green-200">WhatsApp</a>
-              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-amber-400 px-5 py-2 text-sm font-bold text-amber-200">Google</a>
+              <a href="https://calendly.com/info-vym7/video-llamada" target="_blank" rel="noopener noreferrer" className="rounded-full border border-slate-300 px-5 py-2 text-sm font-bold text-slate-700 dark:border-white/30 dark:text-white">{isEs ? 'Videollamada' : 'Video call'}</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-500 px-5 py-2 text-sm font-bold text-green-700 dark:border-green-400 dark:text-green-200">WhatsApp</a>
+              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-amber-500 px-5 py-2 text-sm font-bold text-amber-700 dark:border-amber-400 dark:text-amber-200">Google</a>
             </div>
           </div>
         </section>
@@ -595,13 +595,13 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         </section>
 
         <section className="container mx-auto px-4 pb-20">
-          <div className="rounded-2xl border border-white/15 bg-gradient-to-r from-slate-900 via-cyan-950 to-slate-900 p-7 text-center">
-            <h2 className="mb-4 text-2xl font-extrabold">{isEs ? 'Reserva tu fecha hoy mismo' : 'Book your date today'}</h2>
+          <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-100 via-cyan-50 to-slate-100 p-7 text-center dark:border-white/15 dark:bg-gradient-to-r dark:from-slate-900 dark:via-cyan-950 dark:to-slate-900">
+            <h2 className="mb-4 text-2xl font-extrabold text-slate-900 dark:text-white">{isEs ? 'Reserva tu fecha hoy mismo' : 'Book your date today'}</h2>
             <div className="flex flex-wrap justify-center gap-3">
               <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">{isEs ? 'Reservar ahora' : 'Book now'}</a>
-              <a href="https://calendly.com/info-vym7/video-llamada" target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/30 px-5 py-2 text-sm font-bold">{isEs ? 'Videollamada' : 'Video call'}</a>
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-400 px-5 py-2 text-sm font-bold text-green-200">WhatsApp</a>
-              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-amber-400 px-5 py-2 text-sm font-bold text-amber-200">Google</a>
+              <a href="https://calendly.com/info-vym7/video-llamada" target="_blank" rel="noopener noreferrer" className="rounded-full border border-slate-300 px-5 py-2 text-sm font-bold text-slate-700 dark:border-white/30 dark:text-white">{isEs ? 'Videollamada' : 'Video call'}</a>
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-500 px-5 py-2 text-sm font-bold text-green-700 dark:border-green-400 dark:text-green-200">WhatsApp</a>
+              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-amber-500 px-5 py-2 text-sm font-bold text-amber-700 dark:border-amber-400 dark:text-amber-200">Google</a>
             </div>
           </div>
         </section>
