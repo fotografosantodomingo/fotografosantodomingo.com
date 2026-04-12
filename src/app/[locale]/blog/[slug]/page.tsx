@@ -607,26 +607,28 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         </section>
 
         {relatedPosts.length > 0 && (
-          <section className="container mx-auto border-t border-white/10 px-4 py-14">
-            <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Más artículos relacionados' : 'Related articles'}</h2>
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <section className="container mx-auto border-t border-slate-200 px-4 py-14 dark:border-white/10">
+            <h2 className="mb-6 text-3xl font-extrabold text-slate-900 dark:text-white">{isEs ? 'Más artículos relacionados' : 'Related articles'}</h2>
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {relatedPosts.map((relatedPost) => (
-                <article key={relatedPost.id} className="flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-gray-900">
-                  <div className="relative aspect-[4/3] border-b border-white/10 bg-black/40">
-                    <Image
-                      src={relatedPost.cover_image_thumbnail_url || imageUrl}
-                      alt={relatedPost.cover_image_alt || relatedPost.title}
-                      fill
-                      loading="lazy"
-                      className="object-contain p-3"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col p-4">
-                    <h3 className="mb-2 line-clamp-2 min-h-[3.5rem] text-lg font-bold leading-7">
-                      <Link href={`/${locale}/blog/${relatedPost.slug}`} className="hover:text-sky-300">{relatedPost.title}</Link>
-                    </h3>
-                    <p className="line-clamp-3 text-sm text-gray-300">{relatedPost.excerpt}</p>
+                <article key={relatedPost.id} className="rounded-xl border border-slate-200 bg-white p-3 transition-colors hover:border-sky-300 dark:border-white/10 dark:bg-gray-900 dark:hover:border-sky-400">
+                  <div className="flex items-start gap-3">
+                    <div className="relative h-[72px] w-[96px] shrink-0 overflow-hidden rounded-md border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-black/30">
+                      <Image
+                        src={relatedPost.cover_image_thumbnail_url || relatedPost.cover_image_url || imageUrl}
+                        alt={relatedPost.cover_image_alt || relatedPost.title}
+                        fill
+                        loading="lazy"
+                        className="object-cover"
+                        sizes="96px"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="mb-1 line-clamp-2 text-base font-bold leading-6 text-slate-900 dark:text-white">
+                        <Link href={`/${locale}/blog/${relatedPost.slug}`} className="hover:text-sky-600 dark:hover:text-sky-300">{relatedPost.title}</Link>
+                      </h3>
+                      <p className="line-clamp-2 text-sm text-slate-600 dark:text-gray-300">{relatedPost.excerpt}</p>
+                    </div>
                   </div>
                 </article>
               ))}
