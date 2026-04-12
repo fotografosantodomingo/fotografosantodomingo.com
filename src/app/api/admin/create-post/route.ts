@@ -125,7 +125,14 @@ export async function POST(request: NextRequest) {
     const portfolioLocation = body.location || body.geo_city || 'República Dominicana'
 
     let aiCaptions: GeneratedCaptions | null = null
-    const needsAiMetadata = !body.cover_image_alt_es || !body.cover_image_alt_en
+    const needsAiMetadata = !body.cover_image_alt_es ||
+      !body.cover_image_alt_en ||
+      !body.cover_image_title_es ||
+      !body.cover_image_title_en ||
+      !body.cover_image_caption_es ||
+      !body.cover_image_caption_en ||
+      !body.cover_image_description_es ||
+      !body.cover_image_description_en
 
     if (needsAiMetadata) {
       const model = process.env.OPENAI_VISION_MODEL
@@ -155,6 +162,12 @@ export async function POST(request: NextRequest) {
 
     const finalCoverAltEs = ensureNonEmpty(body.cover_image_alt_es ?? aiCaptions?.alt_es, body.title_es)
     const finalCoverAltEn = ensureNonEmpty(body.cover_image_alt_en ?? aiCaptions?.alt_en, body.title_en)
+    const finalCoverTitleEs = ensureNonEmpty(body.cover_image_title_es ?? aiCaptions?.title_es, body.title_es)
+    const finalCoverTitleEn = ensureNonEmpty(body.cover_image_title_en ?? aiCaptions?.title_en, body.title_en)
+    const finalCoverCaptionEs = ensureNonEmpty(body.cover_image_caption_es ?? aiCaptions?.caption_es, body.excerpt_es ?? body.title_es)
+    const finalCoverCaptionEn = ensureNonEmpty(body.cover_image_caption_en ?? aiCaptions?.caption_en, body.excerpt_en ?? body.title_en)
+    const finalCoverDescriptionEs = ensureNonEmpty(body.cover_image_description_es ?? aiCaptions?.description_es, body.meta_description_es ?? body.excerpt_es ?? body.title_es)
+    const finalCoverDescriptionEn = ensureNonEmpty(body.cover_image_description_en ?? aiCaptions?.description_en, body.meta_description_en ?? body.excerpt_en ?? body.title_en)
 
     const insertPayload = {
       slug_es: slugEs,
@@ -176,6 +189,12 @@ export async function POST(request: NextRequest) {
       cover_image_placeholder_url: body.cover_image_placeholder_url,
       cover_image_alt_es: finalCoverAltEs,
       cover_image_alt_en: finalCoverAltEn,
+      cover_image_title_es: finalCoverTitleEs,
+      cover_image_title_en: finalCoverTitleEn,
+      cover_image_caption_es: finalCoverCaptionEs,
+      cover_image_caption_en: finalCoverCaptionEn,
+      cover_image_description_es: finalCoverDescriptionEs,
+      cover_image_description_en: finalCoverDescriptionEn,
       cover_image_format: body.cover_image_format,
       cover_image_public_id: body.cover_image_public_id,
       schema_service_type: body.schema_service_type ?? null,
@@ -234,12 +253,12 @@ export async function POST(request: NextRequest) {
 
     if (body.status === 'published') {
       const portfolioPublicId = normalizePublicId(body.cover_image_public_id)
-      const portfolioTitleEs = aiCaptions?.title_es || body.title_es
-      const portfolioTitleEn = aiCaptions?.title_en || body.title_en
-      const portfolioCaptionEs = aiCaptions?.caption_es || body.excerpt_es || body.meta_description_es || body.title_es
-      const portfolioCaptionEn = aiCaptions?.caption_en || body.excerpt_en || body.meta_description_en || body.title_en
-      const portfolioDescriptionEs = aiCaptions?.description_es || body.meta_description_es || body.excerpt_es || body.title_es
-      const portfolioDescriptionEn = aiCaptions?.description_en || body.meta_description_en || body.excerpt_en || body.title_en
+      const portfolioTitleEs = finalCoverTitleEs
+      const portfolioTitleEn = finalCoverTitleEn
+      const portfolioCaptionEs = finalCoverCaptionEs
+      const portfolioCaptionEn = finalCoverCaptionEn
+      const portfolioDescriptionEs = finalCoverDescriptionEs
+      const portfolioDescriptionEn = finalCoverDescriptionEn
 
       const { data: existingPortfolioImage, error: existingPortfolioError } = await supabase
         .from('portfolio_images')

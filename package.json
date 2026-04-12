@@ -9,6 +9,8 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "seo:check:canonical": "node scripts/seo-canonical-hreflang-check.cjs",
+    "seo:check:blog-image-metadata": "node scripts/blog-image-seo-audit.cjs",
+    "seo:check:blog-image-metadata:all": "node scripts/blog-image-seo-audit.cjs --status=all",
     "blog:count": "node scripts/blog-maintenance.cjs count",
     "blog:archive:published": "node scripts/blog-maintenance.cjs archive --all-published",
     "blog:restore": "node scripts/blog-maintenance.cjs restore"

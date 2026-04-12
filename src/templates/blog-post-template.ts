@@ -62,6 +62,12 @@ End with a contextual CTA pointing to the relevant service, portfolio, or contac
   cover_image_placeholder_url: 'https://res.cloudinary.com/dwewurxla/image/upload/f_webp,q_auto,w_40/blog/replace-public-id',
   cover_image_alt_es: 'Descripción alt de la imagen en español',
   cover_image_alt_en: 'English alt text for the cover image',
+  cover_image_title_es: 'Título SEO de imagen en español',
+  cover_image_title_en: 'English image SEO title',
+  cover_image_caption_es: 'Leyenda breve orientada al servicio y ubicación.',
+  cover_image_caption_en: 'Short caption aligned with service and location intent.',
+  cover_image_description_es: 'Descripción ampliada en español con contexto de servicio fotográfico y ubicación.',
+  cover_image_description_en: 'Extended English description with service and location context.',
   cover_image_format: 'webp' as const,
   cover_image_public_id: 'blog/replace-public-id',
 

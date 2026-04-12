@@ -285,6 +285,16 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const pageUrl = `${BASE_URL}/${locale}/blog/${postSlug}`
   const imageUrl = post.cover_image_url || `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
   const heroImageUrl = originalCloudinaryImage(post.cover_image_public_id, post.cover_image_url) || imageUrl
+  const coverImageAlt = isEs ? (post.cover_image_alt_es || title) : (post.cover_image_alt_en || title)
+  const coverImageTitle = isEs
+    ? (post.cover_image_title_es || post.cover_image_alt_es || title)
+    : (post.cover_image_title_en || post.cover_image_alt_en || title)
+  const coverImageCaption = isEs
+    ? (post.cover_image_caption_es || excerpt || title)
+    : (post.cover_image_caption_en || excerpt || title)
+  const coverImageDescription = isEs
+    ? (post.cover_image_description_es || excerpt || title)
+    : (post.cover_image_description_en || excerpt || title)
 
   const jsonLdGraph = {
     '@context': 'https://schema.org',
@@ -296,7 +306,13 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         name: title,
         description: isEs ? (post.meta_description_es || excerpt) : (post.meta_description_en || excerpt),
         inLanguage: locale,
-        primaryImageOfPage: { '@type': 'ImageObject', url: imageUrl },
+        primaryImageOfPage: {
+          '@type': 'ImageObject',
+          url: imageUrl,
+          name: coverImageTitle,
+          caption: coverImageCaption,
+          description: coverImageDescription,
+        },
         breadcrumb: {
           '@type': 'BreadcrumbList',
           itemListElement: [
@@ -311,7 +327,15 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         '@id': `${pageUrl}#article`,
         headline: title,
         description: isEs ? (post.meta_description_es || excerpt) : (post.meta_description_en || excerpt),
-        image: { '@type': 'ImageObject', url: imageUrl, width: 1200, height: 630 },
+        image: {
+          '@type': 'ImageObject',
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          name: coverImageTitle,
+          caption: coverImageCaption,
+          description: coverImageDescription,
+        },
         author: { '@id': `${BASE_URL}/#business` },
         publisher: { '@id': `${BASE_URL}/#business` },
         datePublished: post.published_at,
@@ -416,7 +440,8 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
               <div className="overflow-hidden rounded-2xl border border-white/20 bg-black/30 p-3 shadow-2xl md:p-4">
                 <img
                   src={heroImageUrl}
-                  alt={isEs ? (post.cover_image_alt_es || title) : (post.cover_image_alt_en || title)}
+                  alt={coverImageAlt}
+                  title={coverImageTitle}
                   className="h-auto max-h-[75vh] w-full rounded-xl object-contain"
                   loading="eager"
                 />
@@ -439,12 +464,14 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
             <figure className="overflow-hidden rounded-2xl border border-white/10 bg-gray-900 p-3 md:p-5">
               <img
                 src={galleryImageUrl}
-                alt={`${title} - ${isEs ? 'fotógrafo en' : 'photographer in'} ${locationLabel}`}
+                alt={coverImageAlt}
+                title={coverImageTitle}
                 className="h-auto max-h-[80vh] w-full rounded-xl object-contain"
                 loading="eager"
               />
               <figcaption className="px-2 pt-4 text-sm text-gray-300 md:text-base">
-                {isEs ? `Imagen original de la sesión en ${locationLabel}` : `Original session photo in ${locationLabel}`}
+                {coverImageCaption}
+                <span className="mt-1 block text-xs text-gray-400 md:text-sm">{coverImageDescription}</span>
               </figcaption>
             </figure>
           )}
@@ -582,23 +609,24 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         {relatedPosts.length > 0 && (
           <section className="container mx-auto border-t border-white/10 px-4 py-14">
             <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Más artículos relacionados' : 'Related articles'}</h2>
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {relatedPosts.map((relatedPost) => (
-                <article key={relatedPost.id} className="overflow-hidden rounded-xl border border-white/10 bg-gray-900">
-                  <div className="relative aspect-video">
+                <article key={relatedPost.id} className="flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-gray-900">
+                  <div className="relative aspect-[4/3] border-b border-white/10 bg-black/40">
                     <Image
                       src={relatedPost.cover_image_thumbnail_url || imageUrl}
                       alt={relatedPost.cover_image_alt || relatedPost.title}
                       fill
                       loading="lazy"
-                      className="object-cover"
+                      className="object-contain p-3"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     />
                   </div>
-                  <div className="p-4">
-                    <h3 className="mb-2 text-lg font-bold">
+                  <div className="flex flex-1 flex-col p-4">
+                    <h3 className="mb-2 line-clamp-2 min-h-[3.5rem] text-lg font-bold leading-7">
                       <Link href={`/${locale}/blog/${relatedPost.slug}`} className="hover:text-sky-300">{relatedPost.title}</Link>
                     </h3>
-                    <p className="line-clamp-2 text-sm text-gray-300">{relatedPost.excerpt}</p>
+                    <p className="line-clamp-3 text-sm text-gray-300">{relatedPost.excerpt}</p>
                   </div>
                 </article>
               ))}

@@ -223,13 +223,14 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPosts.map(post => (
                 <article key={post.slug} className="bg-gray-900 rounded-xl border border-white/10 overflow-hidden hover:border-sky-500/40 transition-colors">
-                  <div className="aspect-video relative">
+                  <div className="relative aspect-video bg-black/40">
                     <Image
                       src={post.cover_image_thumbnail_url || `${BASE_URL}/api/og?title=Babula+Shots`}
                       alt={post.cover_image_alt || post.title}
                       fill
                       loading="lazy"
-                      className="object-cover"
+                      className="object-contain p-2"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
 

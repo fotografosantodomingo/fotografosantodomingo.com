@@ -42,6 +42,12 @@ export type PublishedPostDetail = {
   cover_image_placeholder_url: string | null
   cover_image_alt_es: string | null
   cover_image_alt_en: string | null
+  cover_image_title_es: string | null
+  cover_image_title_en: string | null
+  cover_image_caption_es: string | null
+  cover_image_caption_en: string | null
+  cover_image_description_es: string | null
+  cover_image_description_en: string | null
   cover_image_format: string | null
   cover_image_public_id: string | null
   schema_service_type: string | null
