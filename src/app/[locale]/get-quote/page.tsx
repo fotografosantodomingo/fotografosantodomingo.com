@@ -68,7 +68,7 @@ export default function GetQuotePage({ params: { locale } }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
-      <main className="min-h-screen bg-slate-50 py-10 md:py-14">
+      <main className="min-h-screen bg-slate-50 py-10 md:py-14 dark:bg-gray-950">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-5xl">
             <GetQuoteWizard locale={locale} />

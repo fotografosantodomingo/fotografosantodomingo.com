@@ -187,3 +187,112 @@ export async function sendNewsletterWelcome(data: {
     `,
   })
 }
+
+type QuoteEmailPayload = {
+  id: string
+  locale: string
+  serviceType: string
+  eventDate: string
+  country: string
+  state: string
+  city: string
+  fullName: string
+  email: string
+  whatsappPhone: string
+  preferredContactMethod: string
+  callbackTimePreference?: string | null
+  description: string
+}
+
+function formatServiceLabel(serviceType: string, locale: string) {
+  const labels: Record<string, { es: string; en: string }> = {
+    WEDDINGS: { es: 'Bodas', en: 'Weddings' },
+    ENGAGEMENT_SESSION: { es: 'Sesion de compromiso', en: 'Engagement Session' },
+    QUINCEANERAS: { es: 'Quinceaneras', en: 'Quinceaneras' },
+    MATERNITY: { es: 'Maternidad', en: 'Maternity' },
+    FAMILY: { es: 'Familiar', en: 'Family' },
+    BIRTHDAY_PARTY: { es: 'Fiesta de cumpleanos', en: 'Birthday Party' },
+    BAPTISMS: { es: 'Bautizos', en: 'Baptisms' },
+    GRADUATION: { es: 'Graduacion', en: 'Graduation' },
+    CHILDRENS_SESSIONS: { es: 'Sesiones infantiles', en: "Children's Sessions" },
+    ARCHITECTURE: { es: 'Arquitectura', en: 'Architecture' },
+    PORTRAITS: { es: 'Retratos', en: 'Portraits' },
+    CORPORATE_EVENTS: { es: 'Eventos corporativos', en: 'Corporate Events' },
+    CORPORATE_PORTRAITS: { es: 'Retratos corporativos', en: 'Corporate Portraits' },
+    FOOD_AND_BEVERAGE: { es: 'Alimentos y bebidas', en: 'Food and Beverage' },
+    VIDEO_PRODUCTION: { es: 'Produccion de video', en: 'Video Production' },
+    DRONE_AERIAL: { es: 'Drone aereo', en: 'Drone Aerial' },
+  }
+
+  const fallback = serviceType.replace(/_/g, ' ')
+  if (!labels[serviceType]) return fallback
+  return locale === 'es' ? labels[serviceType].es : labels[serviceType].en
+}
+
+export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
+  const client = getResend()
+  if (!client) {
+    console.warn('RESEND_API_KEY not set — quote admin notification skipped')
+    return
+  }
+
+  const serviceLabel = formatServiceLabel(data.serviceType, data.locale)
+
+  await client.emails.send({
+    from: FROM,
+    to: ADMIN_EMAIL,
+    reply_to: data.email,
+    subject: `Nueva solicitud de presupuesto: ${data.fullName} - ${serviceLabel}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
+        <h2 style="color:#0f172a;border-bottom:2px solid #0ea5e9;padding-bottom:10px">Nueva Solicitud de Presupuesto</h2>
+        <table style="width:100%;border-collapse:collapse">
+          <tr><td style="padding:8px 0;color:#64748b;width:170px">ID</td><td style="padding:8px 0;font-weight:600">${data.id}</td></tr>
+          <tr><td style="padding:8px 0;color:#64748b">Nombre</td><td style="padding:8px 0">${data.fullName}</td></tr>
+          <tr><td style="padding:8px 0;color:#64748b">Email</td><td style="padding:8px 0"><a href="mailto:${data.email}">${data.email}</a></td></tr>
+          <tr><td style="padding:8px 0;color:#64748b">WhatsApp</td><td style="padding:8px 0">${data.whatsappPhone}</td></tr>
+          <tr><td style="padding:8px 0;color:#64748b">Servicio</td><td style="padding:8px 0">${serviceLabel}</td></tr>
+          <tr><td style="padding:8px 0;color:#64748b">Fecha evento</td><td style="padding:8px 0">${data.eventDate}</td></tr>
+          <tr><td style="padding:8px 0;color:#64748b">Ubicacion</td><td style="padding:8px 0">${data.city}, ${data.state}, ${data.country}</td></tr>
+          <tr><td style="padding:8px 0;color:#64748b">Metodo preferido</td><td style="padding:8px 0">${data.preferredContactMethod}</td></tr>
+          ${data.callbackTimePreference ? `<tr><td style="padding:8px 0;color:#64748b">Horario llamada</td><td style="padding:8px 0">${data.callbackTimePreference}</td></tr>` : ''}
+        </table>
+
+        <div style="background:#f8fafc;border-left:4px solid #0ea5e9;padding:16px;margin-top:18px;border-radius:4px">
+          <p style="margin:0;color:#0f172a;white-space:pre-wrap">${data.description}</p>
+        </div>
+      </div>
+    `,
+  })
+}
+
+export async function sendQuoteSubmissionConfirmation(data: QuoteEmailPayload) {
+  const client = getResend()
+  if (!client) {
+    console.warn('RESEND_API_KEY not set — quote customer confirmation skipped')
+    return
+  }
+
+  const isEs = data.locale === 'es'
+  const serviceLabel = formatServiceLabel(data.serviceType, data.locale)
+
+  await client.emails.send({
+    from: FROM,
+    to: data.email,
+    subject: isEs ? 'Recibimos tu solicitud de presupuesto' : 'We received your quote request',
+    html: `
+      <div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
+        <h2 style="color:#0f172a">${isEs ? `Hola ${data.fullName},` : `Hi ${data.fullName},`}</h2>
+        <p style="color:#374151;line-height:1.6">
+          ${isEs
+            ? 'Gracias por tu solicitud. Estamos revisando tu proyecto y pronto te enviaremos un presupuesto personalizado.'
+            : 'Thank you for your request. We are reviewing your project and will send your personalized quote soon.'}
+        </p>
+        <div style="background:#f0f9ff;border-left:4px solid #0ea5e9;padding:16px;border-radius:4px;margin:20px 0">
+          <p style="margin:0;color:#0f172a"><strong>${isEs ? 'Servicio' : 'Service'}:</strong> ${serviceLabel}</p>
+          <p style="margin:8px 0 0;color:#0f172a"><strong>${isEs ? 'Fecha del evento' : 'Event date'}:</strong> ${data.eventDate}</p>
+        </div>
+      </div>
+    `,
+  })
+}
