@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { getLocale } from 'next-intl/server'
 import './globals.css'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 
@@ -18,13 +19,23 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://www.fotografosantodomingo.com'),
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  let locale = 'es'
+
+  try {
+    const detectedLocale = await getLocale()
+    locale = detectedLocale === 'en' ? 'en' : 'es'
+  } catch {
+    // Keep a safe default for non-localized routes (e.g. /admin)
+    locale = 'es'
+  }
+
   return (
-    <html suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
