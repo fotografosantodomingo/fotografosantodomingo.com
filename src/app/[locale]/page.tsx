@@ -193,14 +193,12 @@ export default async function HomePage({ params: { locale } }: Props) {
             >
               {t('cta_primary')}
             </Link>
-            <a
-              href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(isEs ? 'Hola, me gustaría reservar una sesión.' : 'Hi, I would like to book a session.')}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={`/${locale}/get-quote`}
               className="bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold text-lg px-8 py-4 rounded-xl transition-colors"
             >
               {t('cta_secondary')}
-            </a>
+            </Link>
           </div>
 
           {/* Stats */}
@@ -424,10 +422,10 @@ export default async function HomePage({ params: { locale } }: Props) {
                 WhatsApp
               </a>
               <Link
-                href={`/${locale}/contact`}
+                href={`/${locale}/get-quote`}
                 className="bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
               >
-                {isEs ? 'Enviar mensaje' : 'Send message'}
+                {isEs ? 'Solicitar presupuesto' : 'Get quote'}
               </Link>
             </div>
           </div>

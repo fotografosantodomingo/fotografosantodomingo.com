@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 import { getServiceCatalog } from '@/lib/services/catalog'
 
@@ -88,14 +87,9 @@ export default async function ServicesPage({ params: { locale } }: Props) {
               }
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href={BOOKING_LINKS.calendly}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary"
-              >
-                {locale === 'es' ? 'Reservar Consulta Gratuita' : 'Book Free Consultation'}
-              </a>
+              <Link href={`/${locale}/get-quote`} className="btn-primary">
+                {locale === 'es' ? 'Solicitar Presupuesto' : 'Request a Quote'}
+              </Link>
               <Link href={`/${locale}/portfolio`} className="btn-secondary">
                 {locale === 'es' ? 'Ver Nuestro Trabajo' : 'View Our Work'}
               </Link>
@@ -174,18 +168,9 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                           {service.pricing.includes}
                         </div>
                       </div>
-                      <a
-                        href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(
-                          locale === 'es'
-                            ? `Hola! Me interesa información sobre ${service.title}`
-                            : `Hello! I'm interested in information about ${service.title}`
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-primary"
-                      >
+                      <Link href={`/${locale}/get-quote`} className="btn-primary">
                         {locale === 'es' ? 'Cotizar' : 'Get Quote'}
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -279,22 +264,12 @@ export default async function ServicesPage({ params: { locale } }: Props) {
             }
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={BOOKING_LINKS.setmore}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white text-gray-950 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-            >
-              📅 {locale === 'es' ? 'Reservar Sesión Online' : 'Book Session Online'}
-            </a>
-            <a
-              href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(locale === 'es' ? 'Hola! Quiero información sobre sus servicios fotográficos.' : 'Hello! I want information about your photography services.')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold transition-colors"
-            >
-              💬 WhatsApp: {CONTACT_INFO.phone}
-            </a>
+            <Link href={`/${locale}/get-quote`} className="bg-white text-gray-950 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              {locale === 'es' ? 'Solicitar Presupuesto' : 'Request a Quote'}
+            </Link>
+            <Link href={`/${locale}/contact`} className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold transition-colors">
+              {locale === 'es' ? 'Hablar con el equipo' : 'Talk to the team'}
+            </Link>
           </div>
         </div>
       </section>

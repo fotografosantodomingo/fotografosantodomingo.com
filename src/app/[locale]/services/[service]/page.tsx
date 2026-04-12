@@ -633,7 +633,7 @@ const SERVICE_INTERNAL_LINKS: Record<string, ServiceInternalLink[]> = {
       description: { es: 'Revisa cobertura completa de bodas destino en Punta Cana y Cap Cana.', en: 'Review full destination wedding coverage in Punta Cana and Cap Cana.' },
     },
     {
-      href: '/contact',
+      href: '/get-quote',
       label: { es: 'Solicitar disponibilidad de fecha', en: 'Check date availability' },
       description: { es: 'Agenda una consulta para asegurar tu fecha de boda en RD.', en: 'Book a consultation to secure your wedding date in the DR.' },
     },
@@ -645,7 +645,7 @@ const SERVICE_INTERNAL_LINKS: Record<string, ServiceInternalLink[]> = {
       description: { es: 'Mira ejemplos de retratos corporativos y personales.', en: 'See examples of corporate and personal portraits.' },
     },
     {
-      href: '/contact',
+      href: '/get-quote',
       label: { es: 'Coordinar sesion de retrato', en: 'Schedule a portrait session' },
       description: { es: 'Definimos estilo, locacion y objetivos de imagen.', en: 'We define style, location, and image goals.' },
     },
@@ -657,7 +657,7 @@ const SERVICE_INTERNAL_LINKS: Record<string, ServiceInternalLink[]> = {
       description: { es: 'Ejemplos de contenido drone para hoteles, villas y eventos.', en: 'Examples of drone content for hotels, villas, and events.' },
     },
     {
-      href: '/contact',
+      href: '/get-quote',
       label: { es: 'Cotizar produccion con dron', en: 'Request a drone production quote' },
       description: { es: 'Comparte locacion, fecha y objetivo de grabacion.', en: 'Share location, date, and production objective.' },
     },
@@ -669,7 +669,7 @@ const SERVICE_INTERNAL_LINKS: Record<string, ServiceInternalLink[]> = {
       description: { es: 'Casos de eventos corporativos y sociales en distintas ciudades.', en: 'Examples of corporate and social events across multiple cities.' },
     },
     {
-      href: '/contact',
+      href: '/get-quote',
       label: { es: 'Planificar cobertura de evento', en: 'Plan event coverage' },
       description: { es: 'Definimos cronograma, entregables y plan de cobertura.', en: 'We define timeline, deliverables, and coverage plan.' },
     },
@@ -681,7 +681,7 @@ const SERVICE_INTERNAL_LINKS: Record<string, ServiceInternalLink[]> = {
       description: { es: 'Descubre estilos naturales para familia, maternidad y pareja.', en: 'Discover natural styles for family, maternity, and couples.' },
     },
     {
-      href: '/contact',
+      href: '/get-quote',
       label: { es: 'Reservar sesion familiar', en: 'Book a family session' },
       description: { es: 'Elige ciudad, locacion y horario ideal para tu familia.', en: 'Choose city, location, and ideal schedule for your family.' },
     },
@@ -693,7 +693,7 @@ const SERVICE_INTERNAL_LINKS: Record<string, ServiceInternalLink[]> = {
       description: { es: 'Trabajo visual para marcas, productos y hospitalidad.', en: 'Visual work for brands, products, and hospitality.' },
     },
     {
-      href: '/contact',
+      href: '/get-quote',
       label: { es: 'Solicitar propuesta comercial', en: 'Request a commercial proposal' },
       description: { es: 'Creamos alcance y entregables segun objetivos de negocio.', en: 'We define scope and deliverables around business goals.' },
     },
@@ -886,14 +886,14 @@ const SERVICE_TRUST_CONFIG: Record<string, ServiceTrustSignal> = {
 const SERVICE_CONVERSION_CONFIG: Record<string, ServiceConversionConfig> = {
   'wedding-photography': {
     primaryCta: { label: { es: 'Ver Bodas Reales en Portafolio', en: 'View Real Weddings Portfolio' }, href: '/portfolio?category=wedding' },
-    secondaryCta: { label: { es: 'Consultar Disponibilidad 2026', en: 'Check 2026 Availability' }, href: '/contact' },
+    secondaryCta: { label: { es: 'Consultar Disponibilidad 2026', en: 'Check 2026 Availability' }, href: '/get-quote' },
     leadMagnet: {
       title: { es: 'Guia de Timeline para Boda en Punta Cana', en: 'Punta Cana Wedding Timeline Guide' },
       value: { es: 'Plantilla practica para planificar foto y momentos clave.', en: 'Practical template to plan photography and key moments.' },
     },
   },
   'portrait-photography': {
-    primaryCta: { label: { es: 'Reservar Sesion de Branding', en: 'Book Your Branding Session' }, href: '/contact' },
+    primaryCta: { label: { es: 'Reservar Sesion de Branding', en: 'Book Your Branding Session' }, href: '/get-quote' },
     secondaryCta: { label: { es: 'Ver Ejemplos de Headshots', en: 'See Executive Headshot Examples' }, href: '/portfolio?category=portrait' },
     leadMagnet: {
       title: { es: 'Checklist de Imagen Profesional para LinkedIn', en: 'LinkedIn Professional Photo Checklist' },
@@ -901,7 +901,7 @@ const SERVICE_CONVERSION_CONFIG: Record<string, ServiceConversionConfig> = {
     },
   },
   'drone-services-photography-punta-cana': {
-    primaryCta: { label: { es: 'Solicitar Cotizacion Aerea', en: 'Request Aerial Quote' }, href: '/contact' },
+    primaryCta: { label: { es: 'Solicitar Cotizacion Aerea', en: 'Request Aerial Quote' }, href: '/get-quote' },
     secondaryCta: { label: { es: 'Ver Reel de Tomas Drone', en: 'Watch Sample Drone Reel' }, href: '/portfolio?category=drone' },
     leadMagnet: {
       title: { es: 'Mapa Base de Zonas de Vuelo en RD', en: 'DR Flight Zone Starter Map' },
@@ -909,7 +909,7 @@ const SERVICE_CONVERSION_CONFIG: Record<string, ServiceConversionConfig> = {
     },
   },
   'event-photography': {
-    primaryCta: { label: { es: 'Planificar Cobertura del Evento', en: 'Plan Your Event Coverage' }, href: '/contact' },
+    primaryCta: { label: { es: 'Planificar Cobertura del Evento', en: 'Plan Your Event Coverage' }, href: '/get-quote' },
     secondaryCta: { label: { es: 'Ver Casos de Eventos', en: 'See Event Coverage Examples' }, href: '/portfolio?category=event' },
     leadMagnet: {
       title: { es: 'Plantilla de Shot List para Eventos Corporativos', en: 'Corporate Event Shot List Template' },
@@ -917,7 +917,7 @@ const SERVICE_CONVERSION_CONFIG: Record<string, ServiceConversionConfig> = {
     },
   },
   'family-photography': {
-    primaryCta: { label: { es: 'Reservar Sesion Familiar', en: 'Book Your Family Session' }, href: '/contact' },
+    primaryCta: { label: { es: 'Reservar Sesion Familiar', en: 'Book Your Family Session' }, href: '/get-quote' },
     secondaryCta: { label: { es: 'Ver Retratos de Familia', en: 'See Family Portrait Examples' }, href: '/portfolio?category=portrait' },
     leadMagnet: {
       title: { es: 'Lista de Preparacion para Sesion Familiar en Playa', en: 'Beach Family Session Packing List' },
@@ -925,7 +925,7 @@ const SERVICE_CONVERSION_CONFIG: Record<string, ServiceConversionConfig> = {
     },
   },
   'commercial-photography': {
-    primaryCta: { label: { es: 'Solicitar Propuesta Comercial', en: 'Request Commercial Proposal' }, href: '/contact' },
+    primaryCta: { label: { es: 'Solicitar Propuesta Comercial', en: 'Request Commercial Proposal' }, href: '/get-quote' },
     secondaryCta: { label: { es: 'Ver Casos de Marca y Hotel', en: 'See Brand and Hotel Examples' }, href: '/portfolio?category=commercial' },
     leadMagnet: {
       title: { es: 'Template de Brief Creativo para Produccion Foto', en: 'Creative Brief Template for Photo Production' },
@@ -2262,7 +2262,7 @@ export default function ServiceLandingPage({ params: { locale, service } }: Prop
                   <p className="font-semibold text-white">{isEs ? 'Conoce Nuestra Experiencia' : 'Learn About Our Experience'}</p>
                   <p className="text-sm text-gray-400 mt-2">{isEs ? 'Revisa expertise local, metodologia y estandar de calidad.' : 'Review local expertise, methodology, and quality standards.'}</p>
                 </Link>
-                <Link href={`/${locale}/contact`} className="rounded-xl border border-white/10 bg-gray-900 p-5 hover:border-sky-400/60 transition-colors">
+                <Link href={`/${locale}/get-quote`} className="rounded-xl border border-white/10 bg-gray-900 p-5 hover:border-sky-400/60 transition-colors">
                   <p className="font-semibold text-white">{isEs ? 'Solicitar Propuesta' : 'Request a Proposal'}</p>
                   <p className="text-sm text-gray-400 mt-2">{isEs ? 'Recibe una propuesta clara por alcance y fecha.' : 'Get a clear proposal based on scope and date.'}</p>
                 </Link>

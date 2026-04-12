@@ -12,11 +12,22 @@ export default function WhatsAppButton() {
   const tooltipLabel = locale === 'en' ? 'Chat with us!' : '¡Chatea con nosotros!'
   const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(CONTACT_INFO.whatsappMessage || defaultMessage)}`
 
+  const handleClick = () => {
+    if (typeof window !== 'undefined') {
+      window.dataLayer = window.dataLayer || []
+      window.dataLayer.push({
+        event: 'whatsapp_click_floating',
+        locale,
+      })
+    }
+  }
+
   return (
     <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
       className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-50 group"
       aria-label="Contact us on WhatsApp"
     >

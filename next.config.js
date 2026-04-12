@@ -95,6 +95,7 @@ const nextConfig = {
       { source: '/services',    destination: '/es/services',    permanent: false },
       { source: '/about',       destination: '/es/about',       permanent: false },
       { source: '/contact',     destination: '/es/contact',     permanent: false },
+      { source: '/get-quote',   destination: '/es/get-quote',   permanent: false },
       { source: '/privacy',     destination: '/es/privacy',     permanent: false },
       { source: '/terms',       destination: '/es/terms',       permanent: false },
       { source: '/services/wedding-photography', destination: '/es/services/wedding-photography', permanent: false },

@@ -491,7 +491,7 @@ export default function Navigation() {
                   {t('whatsapp')}
                 </a>
                 <Link
-                  href={getLocalizedHref('/contact')}
+                  href={getLocalizedHref('/get-quote')}
                   className="bg-white hover:bg-gray-50 border border-gray-300 text-gray-900 font-semibold text-center px-4 py-3 rounded-lg transition-colors dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 dark:text-white"
                   onClick={() => setIsMenuOpen(false)}
                 >
