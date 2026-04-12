@@ -592,7 +592,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           </div>
         </section>
 
-        <InstagramPhoneFeed locale={locale} currentSlug={postSlug} />
+        <InstagramPhoneFeed locale={locale} limit={3} currentSlug={postSlug} />
 
         <section className="container mx-auto px-4 pb-14">
           <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Ver Más Trabajos' : 'See More Work'}</h2>

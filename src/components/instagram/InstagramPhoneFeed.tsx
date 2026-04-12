@@ -27,7 +27,6 @@ function t(locale: string) {
     liveNow: isEs ? 'Feed activo' : 'Live feed',
     recentStories: isEs ? 'Sesiones recientes' : 'Recent sessions',
     fromInstagram: isEs ? 'Desde Instagram' : 'From Instagram',
-    fromBlog: isEs ? 'Desde el blog' : 'From the blog',
   }
 }
 
@@ -65,6 +64,7 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
   ])
   const fallbackPosts = recentPosts.filter((post) => post.slug !== currentSlug).slice(0, limit)
   const hasInstagram = items.length > 0
+  const visibleCount = Math.max(1, Math.min(limit, 6))
 
   function captionText(caption?: string) {
     return shortCaption(caption) || copy.fallbackCaption
@@ -115,7 +115,7 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
 
       {hasInstagram ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {items.slice(0, 6).map((item) => (
+          {items.slice(0, visibleCount).map((item) => (
             <article key={item.id} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-gray-900">
               <a href={item.permalink} target="_blank" rel="noopener noreferrer" className="block">
                 <div className="relative h-56 overflow-hidden border-b border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-black/30">
@@ -127,11 +127,11 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
                     className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute left-3 top-3 flex items-center gap-2">
-                    <span className="rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm dark:bg-white/12 dark:text-white dark:backdrop-blur">
+                    <span className="rounded-full border border-white/20 bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm backdrop-blur">
                       {copy.fromInstagram}
                     </span>
                     {mediaBadge(item.media_type) && (
-                      <span className="rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm dark:bg-black/70 dark:text-white">
+                      <span className="rounded-full border border-white/20 bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm backdrop-blur">
                         {mediaBadge(item.media_type)}
                       </span>
                     )}
@@ -147,7 +147,7 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
         </div>
       ) : fallbackPosts.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {fallbackPosts.slice(0, 6).map((post) => (
+          {fallbackPosts.slice(0, visibleCount).map((post) => (
             <article key={post.id} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-gray-900">
               <Link href={`/${normalizedLocale}/blog/${post.slug}`} className="block">
                 <div className="relative h-56 overflow-hidden border-b border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-black/30">
@@ -159,11 +159,8 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
                     className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute left-3 top-3 flex items-center gap-2">
-                    <span className="rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm dark:bg-white/12 dark:text-white dark:backdrop-blur">
-                      {copy.fromBlog}
-                    </span>
                     {post.published_at && (
-                      <span className="rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm dark:bg-black/70 dark:text-white">
+                      <span className="rounded-full border border-white/20 bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm backdrop-blur">
                         {formatPublishedAt(post.published_at, normalizedLocale)}
                       </span>
                     )}
