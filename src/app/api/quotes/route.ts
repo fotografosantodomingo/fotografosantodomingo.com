@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { sendQuoteSubmissionConfirmation, sendQuoteSubmissionNotification } from '@/lib/email/resend'
-import type { QuoteContactMethod, QuoteServiceType } from '@/lib/quotes/constants'
+import { DRONE_ADDON_ELIGIBLE_SERVICES, type QuoteContactMethod, type QuoteServiceType } from '@/lib/quotes/constants'
 
 type QuoteMode = 'draft' | 'final'
 
@@ -11,6 +11,8 @@ type QuotePayload = {
   locale?: string
   formStepReached?: number
   serviceType?: QuoteServiceType | null
+  participantsCount?: number | string | null
+  addDrone?: boolean | null
   country?: string | null
   state?: string | null
   city?: string | null
@@ -31,9 +33,22 @@ function clean(value?: string | null) {
   return trimmed.length > 0 ? trimmed : null
 }
 
+function parseParticipantsCount(value?: number | string | null) {
+  if (typeof value === 'number' && Number.isInteger(value) && value > 0) return value
+  if (typeof value === 'string' && value.trim()) {
+    const parsed = Number(value)
+    if (Number.isInteger(parsed) && parsed > 0) return parsed
+  }
+  return null
+}
+
 function validateFinalPayload(payload: QuotePayload) {
+  const participantsCount = parseParticipantsCount(payload.participantsCount)
+  const addDrone = payload.addDrone === true
+
   const required = {
     serviceType: payload.serviceType,
+    participantsCount,
     country: clean(payload.country),
     state: clean(payload.state),
     city: clean(payload.city),
@@ -57,6 +72,10 @@ function validateFinalPayload(payload: QuotePayload) {
     return 'callbackTimePreference is required for PHONE_CALL method'
   }
 
+  if (addDrone && !DRONE_ADDON_ELIGIBLE_SERVICES.includes(required.serviceType!)) {
+    return 'Drone add-on is not available for selected service'
+  }
+
   return null
 }
 
@@ -76,11 +95,15 @@ export async function POST(request: NextRequest) {
     }
 
     const locale = body.locale === 'en' ? 'en' : 'es'
-    const formStepReached = Math.min(Math.max(body.formStepReached ?? 1, 1), 5)
+    const formStepReached = Math.min(Math.max(body.formStepReached ?? 1, 1), 6)
+    const participantsCount = parseParticipantsCount(body.participantsCount)
+    const addDrone = body.addDrone === true
 
     const payload = {
       locale,
       service_type: body.serviceType || null,
+      participants_count: participantsCount,
+      add_drone: addDrone,
       event_date: clean(body.eventDate),
       country: clean(body.country),
       state: clean(body.state),
@@ -91,7 +114,7 @@ export async function POST(request: NextRequest) {
       preferred_contact_method: body.preferredContactMethod || null,
       callback_time_preference: clean(body.callbackTimePreference),
       description: clean(body.description),
-      form_step_reached: body.mode === 'final' ? 5 : formStepReached,
+      form_step_reached: body.mode === 'final' ? 6 : formStepReached,
       status: 'PENDING_REVIEW' as const,
     }
 
@@ -133,6 +156,8 @@ export async function POST(request: NextRequest) {
         id: quoteId,
         locale,
         serviceType: payload.service_type!,
+        participantsCount: payload.participants_count!,
+        addDrone: payload.add_drone,
         eventDate: payload.event_date!,
         country: payload.country!,
         state: payload.state!,

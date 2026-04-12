@@ -15,6 +15,7 @@ export type QuoteServiceType =
   | 'FOOD_AND_BEVERAGE'
   | 'VIDEO_PRODUCTION'
   | 'DRONE_AERIAL'
+  | 'OTHER'
 
 export type QuoteContactMethod = 'EMAIL' | 'WHATSAPP' | 'PHONE_CALL'
 
@@ -40,6 +41,20 @@ export const QUOTE_SERVICE_TYPES: Array<{
   { value: 'FOOD_AND_BEVERAGE', icon: '🍽️', labelEs: 'Alimentos y bebidas', labelEn: 'Food and Beverage' },
   { value: 'VIDEO_PRODUCTION', icon: '🎬', labelEs: 'Produccion de video', labelEn: 'Video Production' },
   { value: 'DRONE_AERIAL', icon: '🚁', labelEs: 'Drone aereo', labelEn: 'Drone Aerial' },
+  { value: 'OTHER', icon: '✨', labelEs: 'Otro', labelEn: 'Other' },
+]
+
+export const DRONE_ADDON_ELIGIBLE_SERVICES: QuoteServiceType[] = [
+  'WEDDINGS',
+  'ENGAGEMENT_SESSION',
+  'QUINCEANERAS',
+  'BIRTHDAY_PARTY',
+  'BAPTISMS',
+  'GRADUATION',
+  'ARCHITECTURE',
+  'CORPORATE_EVENTS',
+  'VIDEO_PRODUCTION',
+  'OTHER',
 ]
 
 export const QUOTE_CONTACT_METHODS: Array<{

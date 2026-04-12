@@ -192,6 +192,8 @@ type QuoteEmailPayload = {
   id: string
   locale: string
   serviceType: string
+  participantsCount: number
+  addDrone: boolean
   eventDate: string
   country: string
   state: string
@@ -222,6 +224,7 @@ function formatServiceLabel(serviceType: string, locale: string) {
     FOOD_AND_BEVERAGE: { es: 'Alimentos y bebidas', en: 'Food and Beverage' },
     VIDEO_PRODUCTION: { es: 'Produccion de video', en: 'Video Production' },
     DRONE_AERIAL: { es: 'Drone aereo', en: 'Drone Aerial' },
+    OTHER: { es: 'Otro', en: 'Other' },
   }
 
   const fallback = serviceType.replace(/_/g, ' ')
@@ -252,6 +255,8 @@ export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
           <tr><td style="padding:8px 0;color:#64748b">Email</td><td style="padding:8px 0"><a href="mailto:${data.email}">${data.email}</a></td></tr>
           <tr><td style="padding:8px 0;color:#64748b">WhatsApp</td><td style="padding:8px 0">${data.whatsappPhone}</td></tr>
           <tr><td style="padding:8px 0;color:#64748b">Servicio</td><td style="padding:8px 0">${serviceLabel}</td></tr>
+          <tr><td style="padding:8px 0;color:#64748b">Personas</td><td style="padding:8px 0">${data.participantsCount}</td></tr>
+          <tr><td style="padding:8px 0;color:#64748b">Drone</td><td style="padding:8px 0">${data.addDrone ? 'Si' : 'No'}</td></tr>
           <tr><td style="padding:8px 0;color:#64748b">Fecha evento</td><td style="padding:8px 0">${data.eventDate}</td></tr>
           <tr><td style="padding:8px 0;color:#64748b">Ubicacion</td><td style="padding:8px 0">${data.city}, ${data.state}, ${data.country}</td></tr>
           <tr><td style="padding:8px 0;color:#64748b">Metodo preferido</td><td style="padding:8px 0">${data.preferredContactMethod}</td></tr>
@@ -290,6 +295,8 @@ export async function sendQuoteSubmissionConfirmation(data: QuoteEmailPayload) {
         </p>
         <div style="background:#f0f9ff;border-left:4px solid #0ea5e9;padding:16px;border-radius:4px;margin:20px 0">
           <p style="margin:0;color:#0f172a"><strong>${isEs ? 'Servicio' : 'Service'}:</strong> ${serviceLabel}</p>
+          <p style="margin:8px 0 0;color:#0f172a"><strong>${isEs ? 'Personas' : 'People'}:</strong> ${data.participantsCount}</p>
+          <p style="margin:8px 0 0;color:#0f172a"><strong>${isEs ? 'Drone' : 'Drone'}:</strong> ${data.addDrone ? (isEs ? 'Si' : 'Yes') : (isEs ? 'No' : 'No')}</p>
           <p style="margin:8px 0 0;color:#0f172a"><strong>${isEs ? 'Fecha del evento' : 'Event date'}:</strong> ${data.eventDate}</p>
         </div>
       </div>

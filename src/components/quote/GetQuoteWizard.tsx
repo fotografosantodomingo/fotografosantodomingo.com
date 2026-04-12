@@ -2,7 +2,14 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { QUOTE_CALLBACK_WINDOWS, QUOTE_CONTACT_METHODS, QUOTE_SERVICE_TYPES, type QuoteContactMethod, type QuoteServiceType } from '@/lib/quotes/constants'
+import {
+  DRONE_ADDON_ELIGIBLE_SERVICES,
+  QUOTE_CALLBACK_WINDOWS,
+  QUOTE_CONTACT_METHODS,
+  QUOTE_SERVICE_TYPES,
+  type QuoteContactMethod,
+  type QuoteServiceType,
+} from '@/lib/quotes/constants'
 
 type Props = {
   locale: string
@@ -10,6 +17,8 @@ type Props = {
 
 type FormState = {
   serviceType: QuoteServiceType | ''
+  participantsCount: string
+  addDrone: boolean
   country: '' | 'US' | 'DO'
   state: string
   city: string
@@ -24,6 +33,8 @@ type FormState = {
 
 const INITIAL_STATE: FormState = {
   serviceType: '',
+  participantsCount: '',
+  addDrone: false,
   country: '',
   state: '',
   city: '',
@@ -46,7 +57,7 @@ export default function GetQuoteWizard({ locale }: Props) {
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState<FormState>(INITIAL_STATE)
 
-  const maxStep = 5
+  const maxStep = 6
   const progress = Math.round((step / maxStep) * 100)
 
   const minDate = useMemo(() => {
@@ -67,12 +78,21 @@ export default function GetQuoteWizard({ locale }: Props) {
     }
 
     if (step === 2) {
+      const participants = Number(form.participantsCount)
+      if (!form.participantsCount.trim()) {
+        stepErrors.push(isEs ? 'Indica cuantas personas incluye el servicio.' : 'Please provide how many people are included.')
+      } else if (!Number.isInteger(participants) || participants < 1) {
+        stepErrors.push(isEs ? 'El numero de personas debe ser un entero mayor o igual a 1.' : 'People count must be an integer greater than or equal to 1.')
+      }
+    }
+
+    if (step === 3) {
       if (!form.country) stepErrors.push(isEs ? 'Selecciona un pais.' : 'Please select a country.')
       if (!form.state) stepErrors.push(isEs ? 'Selecciona un estado/provincia.' : 'Please select a state/province.')
       if (!form.city) stepErrors.push(isEs ? 'Selecciona una ciudad.' : 'Please select a city.')
     }
 
-    if (step === 3) {
+    if (step === 4) {
       if (!form.eventDate) {
         stepErrors.push(isEs ? 'Selecciona una fecha de evento.' : 'Please choose an event date.')
       } else if (form.eventDate < minDate) {
@@ -84,13 +104,13 @@ export default function GetQuoteWizard({ locale }: Props) {
       }
     }
 
-    if (step === 4) {
+    if (step === 5) {
       if (!form.fullName.trim()) stepErrors.push(isEs ? 'Nombre completo es obligatorio.' : 'Full name is required.')
       if (!form.email.trim()) stepErrors.push(isEs ? 'Email es obligatorio.' : 'Email is required.')
       if (!form.whatsappPhone.trim()) stepErrors.push(isEs ? 'WhatsApp es obligatorio.' : 'WhatsApp number is required.')
     }
 
-    if (step === 5) {
+    if (step === 6) {
       if (!form.preferredContactMethod) stepErrors.push(isEs ? 'Selecciona metodo de contacto.' : 'Choose a contact method.')
       if (form.preferredContactMethod === 'PHONE_CALL' && !form.callbackTimePreference) {
         stepErrors.push(isEs ? 'Selecciona horario para llamada.' : 'Choose a callback window.')
@@ -101,6 +121,9 @@ export default function GetQuoteWizard({ locale }: Props) {
     setErrors(stepErrors)
     return stepErrors.length === 0
   }
+
+  const droneEligible =
+    form.serviceType !== '' && DRONE_ADDON_ELIGIBLE_SERVICES.includes(form.serviceType)
 
   async function syncDraft(targetStep: number) {
     setSavingDraft(true)
@@ -116,6 +139,8 @@ export default function GetQuoteWizard({ locale }: Props) {
           locale,
           formStepReached: targetStep,
           serviceType: form.serviceType || null,
+          participantsCount: form.participantsCount ? Number(form.participantsCount) : null,
+          addDrone: form.addDrone,
           country: form.country || null,
           state: form.state || null,
           city: form.city || null,
@@ -177,8 +202,10 @@ export default function GetQuoteWizard({ locale }: Props) {
           mode: 'final',
           quoteId,
           locale,
-          formStepReached: 5,
+          formStepReached: 6,
           serviceType: form.serviceType,
+          participantsCount: Number(form.participantsCount),
+          addDrone: form.addDrone,
           country: form.country,
           state: form.state,
           city: form.city,
@@ -285,7 +312,13 @@ export default function GetQuoteWizard({ locale }: Props) {
                 <button
                   key={item.value}
                   type="button"
-                  onClick={() => update('serviceType', item.value)}
+                  onClick={() => {
+                    setForm((prev) => ({
+                      ...prev,
+                      serviceType: item.value,
+                      addDrone: DRONE_ADDON_ELIGIBLE_SERVICES.includes(item.value) ? prev.addDrone : false,
+                    }))
+                  }}
                   className={`rounded-xl border p-4 text-left transition ${active ? 'border-sky-500 bg-sky-50 dark:bg-sky-400/10' : 'border-slate-200 hover:border-slate-300 dark:border-white/10 dark:hover:border-white/30'}`}
                 >
                   <div className="text-2xl">{item.icon}</div>
@@ -298,6 +331,47 @@ export default function GetQuoteWizard({ locale }: Props) {
       )}
 
       {step === 2 && (
+        <div className="space-y-5">
+          <div>
+            <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">
+              {isEs ? 'Cuantas personas incluye el servicio' : 'How many people are included in the service'}
+            </label>
+            <input
+              type="number"
+              min={1}
+              step={1}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 md:max-w-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+              value={form.participantsCount}
+              onChange={(e) => update('participantsCount', e.target.value)}
+              placeholder={isEs ? 'Ejemplo: 40' : 'Example: 40'}
+            />
+          </div>
+
+          <div className="rounded-xl border border-slate-200 p-4 dark:border-white/10">
+            <p className="text-sm font-semibold text-slate-800 dark:text-gray-200">
+              {isEs ? 'Extras opcionales' : 'Optional extras'}
+            </p>
+            {droneEligible ? (
+              <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm text-slate-700 dark:text-gray-200">
+                <input
+                  type="checkbox"
+                  checked={form.addDrone}
+                  onChange={(e) => update('addDrone', e.target.checked)}
+                />
+                <span>{isEs ? 'Agregar cobertura con drone' : 'Add drone coverage'}</span>
+              </label>
+            ) : (
+              <p className="mt-3 text-sm text-slate-600 dark:text-gray-300">
+                {isEs
+                  ? 'Este servicio no incluye opcion de drone.'
+                  : 'This service does not include a drone option.'}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {step === 3 && (
         <div className="grid gap-4 md:grid-cols-3">
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Pais' : 'Country'}</label>
@@ -318,14 +392,14 @@ export default function GetQuoteWizard({ locale }: Props) {
         </div>
       )}
 
-      {step === 3 && (
+      {step === 4 && (
         <div>
           <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Fecha del evento' : 'Event date'}</label>
           <input type="date" min={minDate} className="w-full rounded-lg border border-slate-300 px-3 py-2 md:max-w-sm dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.eventDate} onChange={(e) => update('eventDate', e.target.value)} />
         </div>
       )}
 
-      {step === 4 && (
+      {step === 5 && (
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Nombre completo' : 'Full name'}</label>
@@ -342,7 +416,7 @@ export default function GetQuoteWizard({ locale }: Props) {
         </div>
       )}
 
-      {step === 5 && (
+      {step === 6 && (
         <div className="space-y-4">
           <div>
             <p className="mb-2 text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Metodo de contacto preferido' : 'Preferred contact method'}</p>
