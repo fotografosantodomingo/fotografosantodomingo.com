@@ -133,6 +133,40 @@ function buildContentBlocks(paragraphs: string[]) {
   return blocks.filter(Boolean)
 }
 
+function buildContentBlockTitle(
+  index: number,
+  locale: string,
+  keyword: string,
+  serviceType: string,
+  location: string,
+) {
+  const isEs = locale === 'es'
+  const safeKeyword = keyword.trim()
+  const safeService = serviceType.trim() || (isEs ? 'sesion fotografica' : 'photo session')
+  const safeLocation = location.trim() || (isEs ? 'Republica Dominicana' : 'Dominican Republic')
+
+  const titlesEs = [
+    `${safeKeyword}: que lo hace especial`,
+    `${safeKeyword}: mejor momento para reservar`,
+    `${safeKeyword}: claves para obtener mejores fotos`,
+    `${safeService} en ${safeLocation}: como prepararte`,
+    `${safeKeyword}: direccion y estilo durante la sesion`,
+    `${safeKeyword}: resultados y entrega final`,
+  ]
+
+  const titlesEn = [
+    `${safeKeyword}: what makes it stand out`,
+    `${safeKeyword}: best time to book`,
+    `${safeKeyword}: keys to getting better photos`,
+    `${safeService} in ${safeLocation}: how to prepare`,
+    `${safeKeyword}: direction and style during the session`,
+    `${safeKeyword}: final results and delivery`,
+  ]
+
+  const source = isEs ? titlesEs : titlesEn
+  return source[index % source.length]
+}
+
 function contextualFallbackFaq(locale: string, serviceType: string, location: string): FaqItem[] {
   const isEs = locale === 'es'
   const service = serviceType || (isEs ? 'sesión fotográfica' : 'photo session')
@@ -269,7 +303,10 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const serviceOffers = SERVICE_OFFERS[serviceKey] || SERVICE_OFFERS.general
   const setmoreUrl = post.setmore_service_url || `${SETMORE_BASE_URL}${serviceOffers[0]?.path || 'reserva'}`
 
-  const galleryImageUrl = originalCloudinaryImage(post.cover_image_public_id, post.cover_image_url)
+  // For gallery we prefer the source built from public_id to avoid inherited crop transforms.
+  const galleryImageUrl = post.cover_image_public_id
+    ? `https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/${post.cover_image_public_id}`
+    : originalCloudinaryImage(post.cover_image_public_id, post.cover_image_url)
 
   let relatedPosts = [] as Awaited<ReturnType<typeof getRelatedPosts>>
   try {
@@ -281,6 +318,8 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const locationLabel = post.location || post.geo_city || (isEs ? 'República Dominicana' : 'Dominican Republic')
   const articleParagraphs = splitParagraphs(content)
   const contentBlocks = buildContentBlocks(articleParagraphs)
+  const primaryKeyword = (isEs ? post.primary_keyword_es : post.primary_keyword_en) || title || (isEs ? 'fotografia profesional' : 'professional photography')
+  const serviceLabel = post.service_type || (isEs ? 'sesion fotografica' : 'photo session')
 
   const pageUrl = `${BASE_URL}/${locale}/blog/${postSlug}`
   const imageUrl = post.cover_image_url || `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
@@ -498,7 +537,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
               {contentBlocks.slice(0, 6).map((block, index) => (
                 <article key={`content-block-${index}`} className="rounded-2xl border border-white/10 bg-gray-900 p-6">
                   <h3 className="mb-3 text-xl font-bold text-sky-300">
-                    {isEs ? `Punto clave ${index + 1}` : `Key point ${index + 1}`}
+                    {buildContentBlockTitle(index, locale, primaryKeyword, serviceLabel, locationLabel)}
                   </h3>
                   <p className="text-base leading-8 text-gray-200 md:text-lg">{block}</p>
                 </article>
