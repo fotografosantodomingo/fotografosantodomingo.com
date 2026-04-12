@@ -63,9 +63,7 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
     getInstagramFeed(limit),
     getPublishedPosts(normalizedLocale),
   ])
-  const [featured, ...gridItems] = items
   const fallbackPosts = recentPosts.filter((post) => post.slug !== currentSlug).slice(0, limit)
-  const [featuredFallback, ...fallbackGridItems] = fallbackPosts
   const hasInstagram = items.length > 0
 
   function captionText(caption?: string) {
@@ -84,20 +82,20 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
 
   return (
     <section className="container mx-auto px-4 pb-14">
-      <div className="mb-6 flex flex-col gap-4 rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.18),_transparent_34%),linear-gradient(135deg,_rgba(15,23,42,0.98),_rgba(3,7,18,0.96))] p-6 md:flex-row md:items-center md:justify-between">
+      <div className="mb-6 flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-slate-50 p-6 dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.18),_transparent_34%),linear-gradient(135deg,_rgba(15,23,42,0.98),_rgba(3,7,18,0.96))] md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 via-rose-500 to-amber-400 text-lg font-black text-white">
             IG
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-3xl font-extrabold">{copy.title}</h2>
-              <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
+              <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">{copy.title}</h2>
+              <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:border-emerald-400/30 dark:bg-emerald-400/10 dark:text-emerald-200">
                 {hasInstagram ? copy.liveNow : copy.recentStories}
               </span>
             </div>
-            <p className="mt-2 text-sm text-gray-300">{copy.subtitle}</p>
-            <p className="mt-2 text-sm font-semibold text-white">@babulashotsrd</p>
+            <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">{copy.subtitle}</p>
+            <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">@babulashotsrd</p>
           </div>
         </div>
 
@@ -112,127 +110,72 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
       </div>
 
       {!hasInstagram && fallbackPosts.length > 0 && (
-        <p className="mb-5 text-sm text-gray-300">{copy.empty}</p>
+        <p className="mb-5 text-sm text-slate-600 dark:text-gray-300">{copy.empty}</p>
       )}
 
       {hasInstagram ? (
-        <div className="grid gap-4 md:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-          {featured && (
-            <article className="group overflow-hidden rounded-[28px] border border-white/10 bg-gray-950">
-              <a href={featured.permalink} target="_blank" rel="noopener noreferrer" className="block">
-                <div className="relative aspect-[4/5] overflow-hidden">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {items.slice(0, 6).map((item) => (
+            <article key={item.id} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-gray-900">
+              <a href={item.permalink} target="_blank" rel="noopener noreferrer" className="block">
+                <div className="relative h-56 overflow-hidden border-b border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-black/30">
                   <Image
-                    src={featured.media_url || ''}
-                    alt={featured.caption || copy.fallbackCaption}
+                    src={item.media_url || ''}
+                    alt={item.caption || copy.fallbackCaption}
                     fill
-                    sizes="(max-width: 768px) 100vw, 52vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
-                  <div className="absolute left-4 top-4 flex items-center gap-2">
-                    <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-semibold text-white backdrop-blur">
+                  <div className="absolute left-3 top-3 flex items-center gap-2">
+                    <span className="rounded-full bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold text-white dark:bg-white/12 dark:backdrop-blur">
                       {copy.fromInstagram}
                     </span>
-                    {mediaBadge(featured.media_type) && (
-                      <span className="rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
-                        {mediaBadge(featured.media_type)}
+                    {mediaBadge(item.media_type) && (
+                      <span className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-semibold text-white">
+                        {mediaBadge(item.media_type)}
                       </span>
                     )}
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                    <p className="max-w-xl text-lg font-semibold leading-7 md:text-xl">{captionText(featured.caption)}</p>
-                    <p className="mt-3 text-sm font-medium text-white/80">{copy.viewPost}</p>
-                  </div>
+                </div>
+                <div className="p-4">
+                  <p className="line-clamp-2 text-sm font-semibold leading-5 text-slate-900 dark:text-white">{captionText(item.caption)}</p>
+                  <p className="mt-2 text-xs font-medium text-slate-600 dark:text-white/80">{copy.viewPost}</p>
                 </div>
               </a>
             </article>
-          )}
-
-          <div className="grid grid-cols-2 gap-4">
-            {gridItems.slice(0, 4).map((item) => (
-              <article key={item.id} className="group overflow-hidden rounded-3xl border border-white/10 bg-gray-900">
-                <a href={item.permalink} target="_blank" rel="noopener noreferrer" className="block">
-                  <div className="relative aspect-square overflow-hidden">
-                    <Image
-                      src={item.media_url || ''}
-                      alt={item.caption || copy.fallbackCaption}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 26vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
-                    <div className="absolute left-3 top-3">
-                      {mediaBadge(item.media_type) && (
-                        <span className="rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white">
-                          {mediaBadge(item.media_type)}
-                        </span>
-                      )}
-                    </div>
-                    <div className="absolute inset-x-0 bottom-0 p-3 text-white">
-                      <p className="line-clamp-2 text-sm font-semibold leading-5">{captionText(item.caption)}</p>
-                    </div>
-                  </div>
-                </a>
-              </article>
-            ))}
-          </div>
+          ))}
         </div>
       ) : fallbackPosts.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-          {featuredFallback && (
-            <article className="group overflow-hidden rounded-[28px] border border-white/10 bg-gray-950">
-              <Link href={`/${normalizedLocale}/blog/${featuredFallback.slug}`} className="block">
-                <div className="relative aspect-[4/5] overflow-hidden">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {fallbackPosts.slice(0, 6).map((post) => (
+            <article key={post.id} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-gray-900">
+              <Link href={`/${normalizedLocale}/blog/${post.slug}`} className="block">
+                <div className="relative h-56 overflow-hidden border-b border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-black/30">
                   <Image
-                    src={featuredFallback.cover_image_thumbnail_url || '/images/og-default.webp'}
-                    alt={featuredFallback.cover_image_alt || featuredFallback.title}
+                    src={post.cover_image_thumbnail_url || post.cover_image_url || '/images/og-default.webp'}
+                    alt={post.cover_image_alt || post.title}
                     fill
-                    sizes="(max-width: 768px) 100vw, 52vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
-                  <div className="absolute left-4 top-4 flex items-center gap-2">
-                    <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-semibold text-white backdrop-blur">
+                  <div className="absolute left-3 top-3 flex items-center gap-2">
+                    <span className="rounded-full bg-slate-900/80 px-2.5 py-1 text-[11px] font-semibold text-white dark:bg-white/12 dark:backdrop-blur">
                       {copy.fromBlog}
                     </span>
-                    {featuredFallback.published_at && (
-                      <span className="rounded-full bg-black/60 px-3 py-1 text-xs font-semibold text-white">
-                        {formatPublishedAt(featuredFallback.published_at, normalizedLocale)}
+                    {post.published_at && (
+                      <span className="rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-semibold text-white">
+                        {formatPublishedAt(post.published_at, normalizedLocale)}
                       </span>
                     )}
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                    <p className="max-w-xl text-xl font-semibold leading-8">{featuredFallback.title}</p>
-                    <p className="mt-2 line-clamp-2 text-sm text-white/80">{featuredFallback.excerpt}</p>
-                    <p className="mt-3 text-sm font-medium text-white/90">{copy.viewCaseStudy}</p>
-                  </div>
+                </div>
+                <div className="p-4">
+                  <p className="line-clamp-2 text-sm font-semibold leading-5 text-slate-900 dark:text-white">{post.title}</p>
+                  <p className="mt-1 text-[11px] text-slate-600 dark:text-white/75">{postMeta(post.service_type, post.location) || copy.viewCaseStudy}</p>
                 </div>
               </Link>
             </article>
-          )}
-
-          <div className="grid grid-cols-2 gap-4">
-            {fallbackGridItems.slice(0, 4).map((post) => (
-              <article key={post.id} className="group overflow-hidden rounded-3xl border border-white/10 bg-gray-900">
-                <Link href={`/${normalizedLocale}/blog/${post.slug}`} className="block">
-                  <div className="relative aspect-square overflow-hidden">
-                    <Image
-                      src={post.cover_image_thumbnail_url || '/images/og-default.webp'}
-                      alt={post.cover_image_alt || post.title}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 26vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 p-3 text-white">
-                      <p className="line-clamp-2 text-sm font-semibold leading-5">{post.title}</p>
-                      <p className="mt-1 text-[11px] text-white/75">{postMeta(post.service_type, post.location) || copy.viewCaseStudy}</p>
-                    </div>
-                  </div>
-                </Link>
-              </article>
-            ))}
-          </div>
+          ))}
         </div>
       ) : null}
     </section>
