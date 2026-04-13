@@ -104,3 +104,35 @@
 - [ ] Update content based on performance
 - [ ] Scale infrastructure as needed
 - [ ] Add advanced features (booking system, etc.)
+
+## Get Quote Plan (Current Database Only)
+
+### Rule
+- [x] Use only the existing Supabase project and current database.
+- [x] Do not create a new database.
+
+### Completed
+- [x] Public page created: `src/app/[locale]/get-quote/page.tsx`.
+- [x] Multi-step wizard created: `src/components/quote/GetQuoteWizard.tsx`.
+- [x] API route created with service client: `src/app/api/quotes/route.ts`.
+- [x] Quote schema migrations added in current DB migrations:
+	- `supabase/migrations/20260412_006_create_quotes_system.sql`
+	- `supabase/migrations/20260412_007_quote_participants_drone_step.sql`
+- [x] Email notification + confirmation wired through Resend.
+- [x] Verified current DB table works (`quotes` endpoint returns 200 with latest columns).
+
+### Next Execution Steps
+- [ ] Build internal admin quotes inbox page (`/admin/quotes`) to list/filter/update quote status.
+- [ ] Add quote detail panel for internal notes, final price, and proposal expiration.
+- [ ] Add status transition actions (`PENDING_REVIEW` -> `SENT_TO_CUSTOMER` -> `ACCEPTED/REJECTED`).
+- [ ] Add server-side validation for phone format and stricter date checks.
+- [ ] Add anti-spam controls (rate limit + honeypot field).
+- [ ] Add analytics funnel events per step (`step_1_completed` ... `step_6_submitted`).
+- [ ] Add integration tests for API route (`draft` and `final` payload paths).
+- [ ] Add backoffice export endpoint (CSV) for accepted/rejected quote reporting.
+
+### Final Validation Checklist
+- [ ] Submit test quote in ES and EN.
+- [ ] Confirm quote row is created/updated in current `quotes` table.
+- [ ] Confirm admin and customer emails are delivered.
+- [ ] Confirm no migration attempts target any external/new database.
