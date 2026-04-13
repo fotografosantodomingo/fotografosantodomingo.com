@@ -9,6 +9,7 @@ import type { PortfolioImage } from '@/lib/types/portfolio'
 import { resolveLocale } from '@/lib/types/portfolio'
 
 const CLOUD = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? 'dwewurxla'
+const FALLBACK_IMAGE = `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto/samples/landscapes/nature-mountains`
 function cloudUrl(publicId: string) {
   return `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto/${publicId}`
 }
@@ -25,8 +26,18 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
   const searchParams = useSearchParams()
   const [activeFilter, setActiveFilter] = useState('all')
   const [lightbox, setLightbox] = useState<PortfolioImage | null>(null)
+  const [failedImages, setFailedImages] = useState<Record<string, true>>({})
 
   const closeLightbox = useCallback(() => setLightbox(null), [])
+  const markFailed = useCallback((id: string) => {
+    setFailedImages((prev) => (prev[id] ? prev : { ...prev, [id]: true }))
+  }, [])
+  const getThumbSrc = useCallback((item: PortfolioImage) => {
+    return failedImages[item.id] ? FALLBACK_IMAGE : cloudUrl(item.public_id)
+  }, [failedImages])
+  const getLargeSrc = useCallback((item: PortfolioImage) => {
+    return failedImages[item.id] ? FALLBACK_IMAGE : cloudUrlLarge(item.public_id)
+  }, [failedImages])
 
   useEffect(() => {
     if (!lightbox) return
@@ -119,13 +130,14 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                 <figure key={item.id} className="group cursor-pointer m-0" onClick={() => setLightbox(item)}>
                   <div className="relative overflow-hidden md:rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <Image
-                      src={cloudUrl(item.public_id)}
+                      src={getThumbSrc(item)}
                       alt={loc.alt}
                       title={loc.title}
                       width={item.width || 1200}
                       height={item.height || 800}
                       className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
                       priority
+                      onError={() => markFailed(item.id)}
                     />
                     {/* Overlay */}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-all duration-300 flex items-center justify-center">
@@ -183,7 +195,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                 <figure key={item.id} className="group cursor-pointer m-0" onClick={() => setLightbox(item)}>
                   <div className="relative overflow-hidden md:rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <Image
-                      src={cloudUrl(item.public_id)}
+                      src={getThumbSrc(item)}
                       alt={loc.alt}
                       title={loc.title}
                       width={item.width || 1200}
@@ -191,6 +203,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                       className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
                       loading={isPriority ? 'eager' : 'lazy'}
                       priority={isPriority}
+                      onError={() => markFailed(item.id)}
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-end">
                       <div className="text-white p-4 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -299,13 +312,14 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
               onClick={closeLightbox}
             >
               <Image
-                src={cloudUrlLarge(lightbox.public_id)}
+                src={getLargeSrc(lightbox)}
                 alt={loc.alt}
                 title={loc.title}
                 width={lightbox.width || 2400}
                 height={lightbox.height || 1600}
                 className="max-w-full max-h-full object-contain"
                 priority
+                onError={() => markFailed(lightbox.id)}
                 onClick={(e) => e.stopPropagation()}
               />
             </div>
