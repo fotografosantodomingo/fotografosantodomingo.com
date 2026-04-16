@@ -141,6 +141,24 @@ html.light-mode .prose-invert {
   --tw-prose-td-borders:    #f1f5f9;
 }
 
+/* --- When light-mode is active, neutralize common dark:* utilities --- */
+html.light-mode .dark\:bg-gray-950 { background-color: #f8fafc !important; }
+html.light-mode .dark\:bg-gray-900 { background-color: #ffffff !important; }
+html.light-mode .dark\:bg-gray-900\/60 { background-color: rgb(255 255 255 / 0.8) !important; }
+html.light-mode .dark\:bg-black\/30 { background-color: rgb(241 245 249 / 0.9) !important; }
+
+html.light-mode .dark\:text-white { color: #0f172a !important; }
+html.light-mode .dark\:text-gray-300 { color: #475569 !important; }
+html.light-mode .dark\:text-emerald-200 { color: #047857 !important; }
+
+html.light-mode .dark\:border-white\/10 { border-color: rgba(0, 0, 0, 0.08) !important; }
+html.light-mode .dark\:border-white\/15 { border-color: rgba(0, 0, 0, 0.12) !important; }
+html.light-mode .dark\:border-white\/30 { border-color: rgba(0, 0, 0, 0.2) !important; }
+
+html.light-mode .dark\:from-slate-900 { --tw-gradient-from: #e2e8f0 var(--tw-gradient-from-position) !important; }
+html.light-mode .dark\:via-cyan-950 { --tw-gradient-to: rgb(236 254 255 / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), #ecfeff var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
+html.light-mode .dark\:to-slate-900 { --tw-gradient-to: #e2e8f0 var(--tw-gradient-to-position) !important; }
+
 /* Mobile photo rule: preserve original ratio and avoid crop on small screens. */
 @media (max-width: 767px) {
   img.object-cover {
