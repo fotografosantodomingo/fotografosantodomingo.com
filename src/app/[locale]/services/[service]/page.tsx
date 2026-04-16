@@ -8,6 +8,35 @@ import NewsletterForm from '@/components/NewsletterForm'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
+const DRONE_WIDE_IMAGES = [
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369539/servicio_foto_y_video_con_drone_en_republica_dominicana_bfwpjt.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369534/servicio_foto_video_con_drone_en_republica_dominicana_para_boodas_jukqf3.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369536/servicio_foto_video_con_drone_inspectiones_ebv8zp.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369502/piloto_con_drone_en_santo_domingo_kbpyt3.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369528/servicio_drone_republica_dominicana_gpxs00.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369531/servicio_drone_santo_domingo_kdbdt7.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369528/servicio_drone_republica_dominicana_gpxs00.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369524/santo_domingo_servicio_piloto_drone_fotografia_pjcjjc.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369521/santo_domingo_piloto_drone_servicio_profesional_aazr1c.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369518/Santo_Domingo_districto_nacional_piloto_de_drone_jucsif.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369511/punta_cana_servicio_piloto_drone_foto_y_video_profesional_uve37f.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369508/punta_cana_piloto._drone_servicio_profesional_xmupd3.webp',
+  'https://res.cloudinary.com/dwewurxla/image/upload/v1776369506/Piloto_drone_samana_servicio_profesinal_fzaiu4.webp',
+]
+
+function buildAltFromCloudinaryFilename(url: string): string {
+  const fileName = url.split('/').pop() || ''
+  const noExtension = fileName.replace(/\.[a-zA-Z0-9]+$/, '')
+  const noRandomSuffix = noExtension.replace(/_[a-z0-9]{6,}$/i, '')
+  return noRandomSuffix
+    .replace(/boodas/gi, 'bodas')
+    .replace(/inspectiones/gi, 'inspecciones')
+    .replace(/profesinal/gi, 'profesional')
+    .replace(/[._-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 type Props = {
   params: { locale: string; service: string }
 }
@@ -2079,6 +2108,10 @@ export default function ServiceLandingPage({ params: { locale, service } }: Prop
   }
 
   const relatedServices = serviceLandingSlugs.filter((slug) => slug !== service).slice(0, 3)
+  const isDroneWideGalleryPage = service === 'drone-services-photography-punta-cana'
+  const droneGalleryTop = DRONE_WIDE_IMAGES.slice(0, 3)
+  const droneGalleryMiddle = DRONE_WIDE_IMAGES.slice(3, 6)
+  const droneGalleryBottom = DRONE_WIDE_IMAGES.slice(6)
   const breadcrumbSchema = schemaGenerators.breadcrumb([
     { name: locale === 'es' ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
     { name: locale === 'es' ? 'Servicios' : 'Services', url: `${BASE_URL}/${locale}/services` },
@@ -2116,6 +2149,26 @@ export default function ServiceLandingPage({ params: { locale, service } }: Prop
             </div>
           </div>
         </section>
+
+        {isDroneWideGalleryPage && (
+          <section className="py-0">
+            {droneGalleryTop.map((imageUrl, index) => {
+              const altText = buildAltFromCloudinaryFilename(imageUrl)
+              return (
+                <figure key={`drone-top-${index}`} className="w-full border-t border-white/10 bg-gray-900/50 first:border-t-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={imageUrl}
+                    alt={altText}
+                    title={altText}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    className="block w-full h-auto"
+                  />
+                </figure>
+              )
+            })}
+          </section>
+        )}
 
         <section className="py-16 border-y border-white/10 bg-gray-900/50">
           <div className="container mx-auto px-4 max-w-6xl">
@@ -2191,6 +2244,26 @@ export default function ServiceLandingPage({ params: { locale, service } }: Prop
             </ol>
           </div>
         </section>
+
+        {isDroneWideGalleryPage && (
+          <section className="py-0">
+            {droneGalleryMiddle.map((imageUrl, index) => {
+              const altText = buildAltFromCloudinaryFilename(imageUrl)
+              return (
+                <figure key={`drone-middle-${index}`} className="w-full border-t border-white/10 bg-gray-900/50 first:border-t-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={imageUrl}
+                    alt={altText}
+                    title={altText}
+                    loading="lazy"
+                    className="block w-full h-auto"
+                  />
+                </figure>
+              )
+            })}
+          </section>
+        )}
 
         {longFormContent && (
           <section className="py-16 border-b border-white/10 bg-gray-900/30">
@@ -2464,6 +2537,26 @@ export default function ServiceLandingPage({ params: { locale, service } }: Prop
             )}
           </div>
         </section>
+
+        {isDroneWideGalleryPage && (
+          <section className="py-0">
+            {droneGalleryBottom.map((imageUrl, index) => {
+              const altText = buildAltFromCloudinaryFilename(imageUrl)
+              return (
+                <figure key={`drone-bottom-${index}`} className="w-full border-t border-white/10 bg-gray-900/50 first:border-t-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={imageUrl}
+                    alt={altText}
+                    title={altText}
+                    loading="lazy"
+                    className="block w-full h-auto"
+                  />
+                </figure>
+              )
+            })}
+          </section>
+        )}
       </main>
     </>
   )
