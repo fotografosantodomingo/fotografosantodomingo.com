@@ -101,6 +101,27 @@ export default async function ServicesPage({ params: { locale } }: Props) {
       {/* Services Grid */}
       <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
+          <div className="mb-10 rounded-2xl border border-amber-300/30 bg-gradient-to-r from-amber-400/10 via-orange-300/10 to-rose-300/10 p-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-300">
+                  {locale === 'es' ? 'Nuevo servicio especializado' : 'New specialized service'}
+                </p>
+                <h2 className="mt-2 text-2xl font-bold text-white md:text-3xl">
+                  {locale === 'es' ? 'Fotografo de Cumpleanos en Santo Domingo y Punta Cana' : 'Birthday Photographer in Santo Domingo and Punta Cana'}
+                </h2>
+                <p className="mt-2 text-gray-300">
+                  {locale === 'es'
+                    ? 'Cobertura para smash cake, cumpleanos en playa, estudio, fiestas infantiles y quinceaneras.'
+                    : 'Coverage for smash cake, beach birthdays, studio sessions, kids parties, and quinceaneras.'}
+                </p>
+              </div>
+              <Link href={`/${locale}/services/birthday-photographer`} className="inline-flex rounded-full bg-amber-400 px-6 py-3 text-sm font-bold text-gray-950 hover:bg-amber-300">
+                {locale === 'es' ? 'Ver servicio de cumpleaños' : 'View birthday service'}
+              </Link>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {services.map((service) => (
               <div

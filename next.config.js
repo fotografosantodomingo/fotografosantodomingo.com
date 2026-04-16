@@ -104,6 +104,8 @@ const nextConfig = {
       { source: '/services/commercial-photography', destination: '/es/services/commercial-photography', permanent: false },
       { source: '/services/family-photography', destination: '/es/services/family-photography', permanent: false },
       { source: '/services/drone-services-photography-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: false },
+      { source: '/services/birthday-photographer', destination: '/es/services/birthday-photographer', permanent: false },
+      { source: '/services/fotografo-de-cumpleanos', destination: '/es/services/birthday-photographer', permanent: true },
       { source: '/drone-services-photography-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: false },
       { source: '/es/drone-services-photography-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: true },
       { source: '/en/drone-services-photography-punta-cana', destination: '/en/services/drone-services-photography-punta-cana', permanent: true },
