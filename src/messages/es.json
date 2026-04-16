@@ -19,6 +19,7 @@
     "info": "Informacion",
     "items": {
       "weddingPhotography": "Fotografia de bodas",
+      "birthdayPhotography": "Fotografo de cumpleanos",
       "portraitPhotography": "Fotografia de retrato",
       "eventPhotography": "Fotografia de eventos",
       "commercialPhotography": "Fotografia comercial",
@@ -34,6 +35,7 @@
       "workCommercialProjects": "Proyectos comerciales",
       "workHighlights": "Lo mejor / Highlights",
       "galleryWeddings": "Bodas",
+      "galleryBirthdays": "Cumpleanos",
       "galleryPortraits": "Retratos",
       "galleryEvents": "Eventos",
       "galleryRealEstate": "Inmobiliaria",
@@ -45,6 +47,7 @@
     },
     "descriptions": {
       "weddingPhotography": "Cobertura completa de ceremonia, recepcion y bodas destino.",
+      "birthdayPhotography": "Cobertura de cumpleanos infantiles, adultos y quinceaneras con estilo documental.",
       "portraitPhotography": "Sesiones de pareja, embarazo, lifestyle y marca personal.",
       "eventPhotography": "Cobertura de congresos, celebraciones privadas y eventos sociales.",
       "commercialPhotography": "Imagenes para campanas, productos y contenido de marca.",
@@ -60,6 +63,7 @@
       "workCommercialProjects": "Proyectos visuales comerciales y direccion creativa.",
       "workHighlights": "Una seleccion curada de los mejores proyectos.",
       "galleryWeddings": "Galerias de bodas en Santo Domingo y Punta Cana.",
+      "galleryBirthdays": "Fiestas de cumpleanos y quinceaneras capturadas con energia y emocion.",
       "galleryPortraits": "Colecciones de retratos con direccion natural.",
       "galleryEvents": "Imagenes de eventos con energia y precision documental.",
       "galleryRealEstate": "Muestras de fotografia para inmuebles y hoteleria.",

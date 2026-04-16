@@ -32,6 +32,7 @@ export default function Navigation() {
   const megaMenuCategories: MenuCategory[] = useMemo(() => {
     const serviceItems = [
       { href: '/services/wedding-photography', labelKey: 'items.weddingPhotography', descriptionKey: 'descriptions.weddingPhotography' },
+      { href: '/services/birthday-photographer', labelKey: 'items.birthdayPhotography', descriptionKey: 'descriptions.birthdayPhotography' },
       { href: '/services/portrait-photography', labelKey: 'items.portraitPhotography', descriptionKey: 'descriptions.portraitPhotography' },
       { href: '/services/event-photography', labelKey: 'items.eventPhotography', descriptionKey: 'descriptions.eventPhotography' },
       { href: '/services/commercial-photography', labelKey: 'items.commercialPhotography', descriptionKey: 'descriptions.commercialPhotography' },
@@ -52,6 +53,7 @@ export default function Navigation() {
 
     const portfolioItems = [
       { href: '/portfolio?category=wedding', labelKey: 'items.galleryWeddings', descriptionKey: 'descriptions.galleryWeddings' },
+      { href: '/portfolio?category=birthday', labelKey: 'items.galleryBirthdays', descriptionKey: 'descriptions.galleryBirthdays' },
       { href: '/portfolio?category=portrait', labelKey: 'items.galleryPortraits', descriptionKey: 'descriptions.galleryPortraits' },
       { href: '/portfolio?category=event', labelKey: 'items.galleryEvents', descriptionKey: 'descriptions.galleryEvents' },
       { href: '/portfolio?category=drone', labelKey: 'items.galleryRealEstate', descriptionKey: 'descriptions.galleryRealEstate' },

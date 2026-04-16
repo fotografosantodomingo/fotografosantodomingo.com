@@ -19,6 +19,7 @@
     "info": "Info",
     "items": {
       "weddingPhotography": "Wedding Photography",
+      "birthdayPhotography": "Birthday Photography",
       "portraitPhotography": "Portrait Photography",
       "eventPhotography": "Event Photography",
       "commercialPhotography": "Commercial Photography",
@@ -34,6 +35,7 @@
       "workCommercialProjects": "Commercial Projects",
       "workHighlights": "Best Of / Highlights",
       "galleryWeddings": "Weddings",
+      "galleryBirthdays": "Birthdays",
       "galleryPortraits": "Portraits",
       "galleryEvents": "Events",
       "galleryRealEstate": "Real Estate",
@@ -45,6 +47,7 @@
     },
     "descriptions": {
       "weddingPhotography": "Ceremony, reception, and destination wedding storytelling.",
+      "birthdayPhotography": "Birthday and quinceanera coverage with candid storytelling and vibrant moments.",
       "portraitPhotography": "Couples, maternity, personal branding, and lifestyle portraits.",
       "eventPhotography": "Conferences, private parties, and cultural events coverage.",
       "commercialPhotography": "Campaign visuals, product content, and brand assets.",
@@ -60,6 +63,7 @@
       "workCommercialProjects": "Brand campaigns and visual direction work.",
       "workHighlights": "A curated selection of standout client projects.",
       "galleryWeddings": "Elegant wedding galleries from Santo Domingo and Punta Cana.",
+      "galleryBirthdays": "Birthday and quinceanera galleries full of color, family, and celebration.",
       "galleryPortraits": "Refined portrait collections with natural direction.",
       "galleryEvents": "High-energy event images with documentary precision.",
       "galleryRealEstate": "Luxury properties and hospitality photography samples.",
