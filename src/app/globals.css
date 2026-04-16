@@ -140,3 +140,10 @@ html.light-mode .prose-invert {
   --tw-prose-th-borders:    #e2e8f0;
   --tw-prose-td-borders:    #f1f5f9;
 }
+
+/* Mobile photo rule: preserve original ratio and avoid crop on small screens. */
+@media (max-width: 767px) {
+  img.object-cover {
+    object-fit: contain !important;
+  }
+}

@@ -114,7 +114,7 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
       )}
 
       {hasInstagram ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {items.slice(0, visibleCount).map((item) => (
             <article key={item.id} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-gray-900">
               <a href={item.permalink} target="_blank" rel="noopener noreferrer" className="block">
@@ -146,7 +146,7 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
           ))}
         </div>
       ) : fallbackPosts.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {fallbackPosts.slice(0, visibleCount).map((post) => (
             <article key={post.id} className="group overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-gray-900">
               <Link href={`/${normalizedLocale}/blog/${post.slug}`} className="block">

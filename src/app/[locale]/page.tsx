@@ -230,20 +230,20 @@ export default async function HomePage({ params: { locale } }: Props) {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-10">
             {previewImages.map((img, i) => (
               <Link
                 key={img.id}
                 href={`/${locale}/portfolio`}
-                className="group relative aspect-square overflow-hidden rounded-xl bg-gray-800"
+                className="group relative overflow-hidden rounded-xl bg-gray-800"
               >
                 <CloudinaryImage
                   publicId={img.public_id}
                   alt={isEs ? img.alt_es : img.alt_en}
                   title={isEs ? img.title_es : img.title_en}
-                  width={600}
-                  height={600}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  width={img.width || 1200}
+                  height={img.height || 800}
+                  className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-500"
                   priority={i < 2}
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 rounded-xl" />

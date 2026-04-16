@@ -503,19 +503,17 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
               <article key={scenario.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-gray-900 md:p-7">
                 <h3 className="text-2xl font-bold">{isEs ? scenario.title.es : scenario.title.en}</h3>
                 <p className="mt-3 text-slate-600 dark:text-gray-300">{isEs ? scenario.description.es : scenario.description.en}</p>
-                <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {scenario.images.map((image, index) => (
                     <figure key={`${scenario.id}-${index}`} className="overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-black/30">
-                      <div className="relative aspect-[4/3]">
-                        <Image
-                          src={image.url}
-                          alt={isEs ? image.alt.es : image.alt.en}
-                          title={isEs ? image.title.es : image.title.en}
-                          fill
-                          className="object-contain"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                      </div>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={image.url}
+                        alt={isEs ? image.alt.es : image.alt.en}
+                        title={isEs ? image.title.es : image.title.en}
+                        loading="lazy"
+                        className="block w-full h-auto"
+                      />
                       <figcaption className="px-3 py-2 text-xs text-slate-600 dark:text-gray-300">
                         {isEs ? image.title.es : image.title.en}
                       </figcaption>

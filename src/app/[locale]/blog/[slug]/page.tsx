@@ -651,7 +651,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         {relatedPosts.length > 0 && (
           <section className="container mx-auto border-t border-slate-200 px-4 py-14 dark:border-white/10">
             <h2 className="mb-6 text-3xl font-extrabold text-slate-900 dark:text-white">{isEs ? 'Más artículos relacionados' : 'Related articles'}</h2>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {relatedPosts.map((relatedPost) => (
                 <article key={relatedPost.id} className="rounded-xl border border-slate-200 bg-white p-3 transition-colors hover:border-sky-300 dark:border-white/10 dark:bg-gray-900 dark:hover:border-sky-400">
                   <div className="flex items-start gap-3">
@@ -662,7 +662,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                         title={relatedPost.cover_image_title || relatedPost.cover_image_alt || relatedPost.title}
                         fill
                         loading="lazy"
-                        className="object-cover"
+                        className="object-contain"
                         sizes="96px"
                       />
                     </div>
