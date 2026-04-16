@@ -542,6 +542,11 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
                 <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
                   {isEs ? 'Servicio general para cumpleaños infantiles, escolares y familiares. Reserva con 50% para asegurar fecha.' : 'General service for kids, school, and family birthdays. 50% booking deposit to secure your date.'}
                 </p>
+                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600 dark:text-gray-300">
+                  <li>{isEs ? 'Cobertura documental de momentos clave, retratos grupales y detalles de decoracion.' : 'Documentary coverage of key moments, group portraits, and decor details.'}</li>
+                  <li>{isEs ? 'Entrega digital editada para compartir con familia e invitados.' : 'Edited digital delivery ready to share with family and guests.'}</li>
+                  <li>{isEs ? 'Reserva 50% para confirmar fecha y horario.' : '50% booking deposit required to lock date and time.'}</li>
+                </ul>
                 <a href={bookingLinks.event3h} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">
                   {isEs ? 'Reservar cobertura de evento' : 'Book event coverage'}
                 </a>
@@ -552,6 +557,12 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
                 <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
                   {isEs ? '1 hora, maquillaje incluido, asesoría de vestuario y 10 fotos premium editadas.' : '1 hour, makeup included, wardrobe guidance, and 10 premium edited photos.'}
                 </p>
+                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600 dark:text-gray-300">
+                  <li>{isEs ? 'Sesion de 1 hora en estudio o locacion exterior.' : '1-hour session in studio or outdoor location.'}</li>
+                  <li>{isEs ? 'Maquillaje y peinado basico con acabado natural.' : 'Basic makeup and hairstyling with a natural finish.'}</li>
+                  <li>{isEs ? 'Direccion experta de pose y expresion para estilo elegante.' : 'Expert pose and expression direction for an elegant style.'}</li>
+                  <li>{isEs ? 'Albun digital listo para compartir con familia y amigos.' : 'Digital album ready to share with family and friends.'}</li>
+                </ul>
                 <a href={bookingLinks.quincenara10} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500">
                   {isEs ? 'Reservar Esencial 10' : 'Book Essential 10'}
                 </a>
@@ -562,6 +573,12 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
                 <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
                   {isEs ? '1 hora, maquillaje incluido, dirección de pose y 15 fotos premium con look moderno y atemporal.' : '1 hour, makeup included, pose direction, and 15 premium photos with a modern timeless style.'}
                 </p>
+                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600 dark:text-gray-300">
+                  <li>{isEs ? '15 fotografias premium editadas con acabado profesional.' : '15 premium edited photos with professional finishing.'}</li>
+                  <li>{isEs ? 'Asesoria de vestuario, colores y accesorios.' : 'Wardrobe, color, and accessories guidance.'}</li>
+                  <li>{isEs ? 'Sesion orientada a imagen moderna, fresca y atemporal.' : 'Session designed for a modern, fresh, and timeless visual style.'}</li>
+                  <li>{isEs ? 'Reserva del 50% para asegurar fecha de sesion.' : '50% booking deposit required to secure your session date.'}</li>
+                </ul>
                 <a href={bookingLinks.quincenara15} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500">
                   {isEs ? 'Reservar Esencial 15' : 'Book Essential 15'}
                 </a>
@@ -572,6 +589,12 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
                 <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
                   {isEs ? '20 fotos premium, experiencia extendida, maquillaje y peinado profesional, atención VIP y entregables de lujo.' : '20 premium photos, extended experience, professional makeup/hair, VIP support, and luxury deliverables.'}
                 </p>
+                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600 dark:text-gray-300">
+                  <li>{isEs ? 'Sesion extendida para multiples looks y locaciones.' : 'Extended session for multiple looks and locations.'}</li>
+                  <li>{isEs ? '20 fotos premium + impresiones fisicas seleccionadas.' : '20 premium photos plus selected physical prints.'}</li>
+                  <li>{isEs ? 'Maquillaje y peinado profesional completo con trato VIP.' : 'Full professional makeup and hairstyling with VIP treatment.'}</li>
+                  <li>{isEs ? 'Inversion referencial: USD 600 + ITBIS (18%), reserva 50%.' : 'Reference investment: USD 600 + 18% tax, with 50% booking deposit.'}</li>
+                </ul>
                 <a href={bookingLinks.quincenaraVip} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block rounded-full bg-amber-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-amber-400">
                   {isEs ? 'Reservar VIP Quinceañera' : 'Book VIP Quinceañera'}
                 </a>
