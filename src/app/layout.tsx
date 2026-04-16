@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
+import Script from 'next/script'
 import './globals.css'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 
@@ -46,6 +47,19 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('light-mode');}catch(e){}})();`,
           }}
+        />
+        <Script
+          id="tawkto-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: 'var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();',
+          }}
+        />
+        <Script
+          id="tawkto-widget"
+          strategy="afterInteractive"
+          src="https://embed.tawk.to/662b0680a0c6737bd1308ff1/1hsc12p8m"
+          crossOrigin="anonymous"
         />
         {process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics />
