@@ -537,7 +537,7 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
             </p>
 
             <div className="mt-8 grid gap-5 lg:grid-cols-2">
-              <article className="rounded-2xl border border-white bg-white p-6 shadow-sm dark:border-white/10 dark:bg-gray-900">
+              <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-gray-900">
                 <h3 className="text-xl font-bold">{isEs ? 'Cobertura de Evento - 3 horas' : 'Event Coverage - 3 hours'}</h3>
                 <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
                   {isEs ? 'Servicio general para cumpleaños infantiles, escolares y familiares. Reserva con 50% para asegurar fecha.' : 'General service for kids, school, and family birthdays. 50% booking deposit to secure your date.'}
@@ -552,7 +552,7 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
                 </a>
               </article>
 
-              <article className="rounded-2xl border border-white bg-white p-6 shadow-sm dark:border-white/10 dark:bg-gray-900">
+              <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-gray-900">
                 <h3 className="text-xl font-bold">{isEs ? 'Quinceañera: Paquete Esencial (10 fotos)' : 'Quinceañera: Essential Package (10 photos)'}</h3>
                 <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
                   {isEs ? '1 hora, maquillaje incluido, asesoría de vestuario y 10 fotos premium editadas.' : '1 hour, makeup included, wardrobe guidance, and 10 premium edited photos.'}
@@ -568,7 +568,7 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
                 </a>
               </article>
 
-              <article className="rounded-2xl border border-white bg-white p-6 shadow-sm dark:border-white/10 dark:bg-gray-900">
+              <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-gray-900">
                 <h3 className="text-xl font-bold">{isEs ? 'Quinceañera: Paquete Esencial (15 fotos)' : 'Quinceañera: Essential Package (15 photos)'}</h3>
                 <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
                   {isEs ? '1 hora, maquillaje incluido, dirección de pose y 15 fotos premium con look moderno y atemporal.' : '1 hour, makeup included, pose direction, and 15 premium photos with a modern timeless style.'}
@@ -629,10 +629,10 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
               <a href={bookingLinks.event3h} target="_blank" rel="noopener noreferrer" className="rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500">
                 {isEs ? 'Reservar ahora' : 'Book now'}
               </a>
-              <Link href={`/${locale}/get-quote`} className="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-bold text-slate-700 dark:border-white/30 dark:text-white">
+              <Link href={`/${locale}/get-quote`} className="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-100 dark:border-white/30 dark:bg-transparent dark:text-white dark:hover:bg-white/10">
                 {isEs ? 'Solicitar presupuesto' : 'Request quote'}
               </Link>
-              <Link href={`/${locale}/services/event-photography`} className="rounded-full border border-emerald-500 px-5 py-2.5 text-sm font-bold text-emerald-700 dark:text-emerald-200">
+              <Link href={`/${locale}/services/event-photography`} className="rounded-full border border-emerald-500 bg-white px-5 py-2.5 text-sm font-bold text-emerald-700 hover:bg-emerald-50 dark:bg-transparent dark:text-emerald-200 dark:hover:bg-emerald-500/10">
                 {isEs ? 'Ver cobertura de eventos' : 'See event coverage'}
               </Link>
             </div>
