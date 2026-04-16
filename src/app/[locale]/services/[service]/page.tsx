@@ -2227,25 +2227,25 @@ export default function ServiceLandingPage({ params: { locale, service } }: Prop
                 ))}
               </div>
 
-              <div className="mt-10 rounded-2xl border border-white/10 bg-gray-900 p-6 md:p-8">
-                <h3 className="text-2xl font-bold text-white mb-6">
+              <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6 md:p-8 dark:border-white/10 dark:bg-gray-900">
+                <h3 className="text-2xl font-bold text-slate-900 mb-6 dark:text-white">
                   {isEs ? longFormContent.timeline.title.es : longFormContent.timeline.title.en}
                 </h3>
-                <div className="overflow-x-auto rounded-xl border border-white/10">
+                <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10">
                   <table className="min-w-full text-sm">
-                    <thead className="bg-gray-950">
+                    <thead className="bg-slate-100 dark:bg-gray-950">
                       <tr>
-                        <th className="text-left px-4 py-3 text-sky-300">{isEs ? 'Fase' : 'Phase'}</th>
-                        <th className="text-left px-4 py-3 text-sky-300">{isEs ? 'Momento' : 'Timing'}</th>
-                        <th className="text-left px-4 py-3 text-sky-300">{isEs ? 'Notas' : 'Notes'}</th>
+                        <th className="text-left px-4 py-3 text-sky-700 dark:text-sky-300">{isEs ? 'Fase' : 'Phase'}</th>
+                        <th className="text-left px-4 py-3 text-sky-700 dark:text-sky-300">{isEs ? 'Momento' : 'Timing'}</th>
+                        <th className="text-left px-4 py-3 text-sky-700 dark:text-sky-300">{isEs ? 'Notas' : 'Notes'}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {longFormContent.timeline.rows.map((row) => (
-                        <tr key={isEs ? row.phase.es : row.phase.en} className="border-t border-white/10 bg-gray-900/40">
-                          <td className="px-4 py-3 font-semibold text-white">{isEs ? row.phase.es : row.phase.en}</td>
-                          <td className="px-4 py-3 text-gray-300">{isEs ? row.timing.es : row.timing.en}</td>
-                          <td className="px-4 py-3 text-gray-300">{isEs ? row.notes.es : row.notes.en}</td>
+                        <tr key={isEs ? row.phase.es : row.phase.en} className="border-t border-slate-200 bg-white dark:border-white/10 dark:bg-gray-900/40">
+                          <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">{isEs ? row.phase.es : row.phase.en}</td>
+                          <td className="px-4 py-3 text-slate-700 dark:text-gray-300">{isEs ? row.timing.es : row.timing.en}</td>
+                          <td className="px-4 py-3 text-slate-700 dark:text-gray-300">{isEs ? row.notes.es : row.notes.en}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -2291,32 +2291,32 @@ export default function ServiceLandingPage({ params: { locale, service } }: Prop
           </div>
         </section>
 
-        <section className="py-16 bg-gray-900/40 border-y border-white/10">
+        <section className="py-16 bg-slate-100/70 border-y border-slate-200 dark:bg-gray-900/40 dark:border-white/10">
           <div className="container mx-auto px-4 max-w-6xl">
             <h2 className="text-3xl font-bold mb-6 text-center">
               {isEs ? `Base de Locaciones para ${serviceData.title} en RD` : `${serviceData.title} Location Database in the DR`}
             </h2>
-            <div className="overflow-x-auto rounded-xl border border-white/10">
+            <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10">
               <table className="min-w-full text-left text-sm">
-                <thead className="bg-gray-900">
+                <thead className="bg-slate-100 dark:bg-gray-900">
                   <tr>
-                    <th className="px-4 py-3 text-sky-300">{isEs ? 'Locacion' : 'Venue'}</th>
-                    <th className="px-4 py-3 text-sky-300">{isEs ? 'Zona' : 'Area'}</th>
-                    <th className="px-4 py-3 text-sky-300">{isEs ? 'Estilo' : 'Style'}</th>
-                    <th className="px-4 py-3 text-sky-300">{isEs ? 'Mejor Luz' : 'Best Light'}</th>
-                    <th className="px-4 py-3 text-sky-300">{isEs ? 'Detalle' : 'Details'}</th>
+                    <th className="px-4 py-3 text-sky-700 dark:text-sky-300">{isEs ? 'Locacion' : 'Venue'}</th>
+                    <th className="px-4 py-3 text-sky-700 dark:text-sky-300">{isEs ? 'Zona' : 'Area'}</th>
+                    <th className="px-4 py-3 text-sky-700 dark:text-sky-300">{isEs ? 'Estilo' : 'Style'}</th>
+                    <th className="px-4 py-3 text-sky-700 dark:text-sky-300">{isEs ? 'Mejor Luz' : 'Best Light'}</th>
+                    <th className="px-4 py-3 text-sky-700 dark:text-sky-300">{isEs ? 'Detalle' : 'Details'}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {locationRecords.map((item) => (
-                    <tr key={`${item.venue}-${item.area}`} className="border-t border-white/10 bg-gray-950/40">
-                      <td className="px-4 py-3 font-semibold text-white">
-                        <Link href={`/${locale}${item.href}`} className="hover:text-sky-300 transition-colors">{item.venue}</Link>
+                    <tr key={`${item.venue}-${item.area}`} className="border-t border-slate-200 bg-white dark:border-white/10 dark:bg-gray-950/40">
+                      <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">
+                        <Link href={`/${locale}${item.href}`} className="hover:text-sky-700 transition-colors dark:hover:text-sky-300">{item.venue}</Link>
                       </td>
-                      <td className="px-4 py-3 text-gray-300">{item.area}</td>
-                      <td className="px-4 py-3 text-gray-300">{isEs ? item.style.es : item.style.en}</td>
-                      <td className="px-4 py-3 text-gray-300">{isEs ? item.bestLight.es : item.bestLight.en}</td>
-                      <td className="px-4 py-3 text-gray-300">{isEs ? item.detail.es : item.detail.en}</td>
+                      <td className="px-4 py-3 text-slate-700 dark:text-gray-300">{item.area}</td>
+                      <td className="px-4 py-3 text-slate-700 dark:text-gray-300">{isEs ? item.style.es : item.style.en}</td>
+                      <td className="px-4 py-3 text-slate-700 dark:text-gray-300">{isEs ? item.bestLight.es : item.bestLight.en}</td>
+                      <td className="px-4 py-3 text-slate-700 dark:text-gray-300">{isEs ? item.detail.es : item.detail.en}</td>
                     </tr>
                   ))}
                 </tbody>
