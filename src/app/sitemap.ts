@@ -4,6 +4,8 @@ import { serviceLandingSlugs } from '@/lib/services/catalog'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
+export const revalidate = 0
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const slugs = await getAllSlugs()
 
