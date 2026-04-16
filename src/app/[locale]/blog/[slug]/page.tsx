@@ -1,10 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
 import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getPostBySlug, getRelatedPosts } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
-import { InstagramPhoneFeed } from '@/components/instagram/InstagramPhoneFeed'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const GOOGLE_REVIEWS_URL = 'https://share.google/aJphPsrVL2VXH9EWH'
@@ -592,7 +592,15 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           </div>
         </section>
 
-        <InstagramPhoneFeed locale={locale} limit={3} currentSlug={postSlug} />
+        <section className="container mx-auto px-4 pb-14">
+          <div className="embedsocial-hashtag" data-ref="96976acc2bbc0a6debbfd7318ab8b3ed5aa68ed6" data-lazyload="yes">
+            <a className="feed-powered-by-es feed-powered-by-es-feed-img es-widget-branding" href="https://embedsocial.com/instagram-widget/" target="_blank" title="Instagram widget" rel="noopener noreferrer">
+              <img src="https://embedsocial.com/cdn/icon/embedsocial-logo.webp" alt="EmbedSocial" />
+              <div className="es-widget-branding-text">Instagram widget</div>
+            </a>
+          </div>
+          <Script id="EmbedSocialHashtagScript" src="https://embedsocial.com/cdn/ht.js" strategy="afterInteractive" />
+        </section>
 
         <section className="container mx-auto px-4 pb-14">
           <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Ver Más Trabajos' : 'See More Work'}</h2>
