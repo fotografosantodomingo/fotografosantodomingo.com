@@ -25,10 +25,22 @@ interface PortfolioClientProps {
 export default function PortfolioClient({ images, locale }: PortfolioClientProps) {
   const searchParams = useSearchParams()
   const [activeFilter, setActiveFilter] = useState('all')
-  const [lightbox, setLightbox] = useState<PortfolioImage | null>(null)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [failedImages, setFailedImages] = useState<Record<string, true>>({})
 
-  const closeLightbox = useCallback(() => setLightbox(null), [])
+  const closeLightbox = useCallback(() => setLightboxIndex(null), [])
+  const openLightbox = useCallback((item: PortfolioImage) => {
+    const idx = images.findIndex((img) => img.id === item.id)
+    setLightboxIndex(idx >= 0 ? idx : null)
+  }, [images])
+  const showPrev = useCallback(() => {
+    if (lightboxIndex === null || images.length === 0) return
+    setLightboxIndex((lightboxIndex - 1 + images.length) % images.length)
+  }, [lightboxIndex, images.length])
+  const showNext = useCallback(() => {
+    if (lightboxIndex === null || images.length === 0) return
+    setLightboxIndex((lightboxIndex + 1) % images.length)
+  }, [lightboxIndex, images.length])
   const markFailed = useCallback((id: string) => {
     setFailedImages((prev) => (prev[id] ? prev : { ...prev, [id]: true }))
   }, [])
@@ -39,16 +51,22 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
     return failedImages[item.id] ? FALLBACK_IMAGE : cloudUrlLarge(item.public_id)
   }, [failedImages])
 
+  const lightbox = lightboxIndex !== null ? images[lightboxIndex] ?? null : null
+
   useEffect(() => {
-    if (!lightbox) return
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeLightbox() }
+    if (lightboxIndex === null) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeLightbox()
+      if (e.key === 'ArrowLeft') showPrev()
+      if (e.key === 'ArrowRight') showNext()
+    }
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
     return () => {
       window.removeEventListener('keydown', onKey)
       document.body.style.overflow = ''
     }
-  }, [lightbox, closeLightbox])
+  }, [lightboxIndex, closeLightbox, showPrev, showNext])
 
   const categories = [
     { id: 'all',        label: locale === 'es' ? 'Todos'     : 'All' },
@@ -81,15 +99,15 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
   const featuredItems = images.filter((img) => img.featured)
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white">
+    <main className="min-h-screen bg-slate-50 text-slate-900 dark:bg-gray-950 dark:text-white">
       {/* Hero */}
-      <section className="relative bg-gray-950 py-20">
+      <section className="relative bg-white py-20 dark:bg-gray-950">
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
         <div className="relative container mx-auto px-4 text-center max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             {locale === 'es' ? 'Nuestro Portafolio' : 'Our Portfolio'}
           </h1>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className="text-xl text-slate-600 dark:text-gray-300 mb-8">
             {locale === 'es'
               ? 'Descubre nuestra colección de momentos capturados con pasión y profesionalismo'
               : 'Discover our collection of moments captured with passion and professionalism'}
@@ -103,7 +121,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
             >
               {locale === 'es' ? 'Solicitar Sesión' : 'Book a Session'}
             </a>
-            <Link href={`/${locale}/services`} className="bg-white/10 text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/20 transition-colors">
+            <Link href={`/${locale}/services`} className="bg-slate-200 text-slate-900 px-8 py-4 rounded-lg font-semibold hover:bg-slate-300 transition-colors dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
               {locale === 'es' ? 'Ver Servicios' : 'View Services'}
             </Link>
           </div>
@@ -111,13 +129,13 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
       </section>
 
       {/* Featured Work */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-20 bg-slate-100 dark:bg-gray-900">
         <div className="container mx-auto px-0 md:px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
               {locale === 'es' ? 'Trabajos Destacados' : 'Featured Work'}
             </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-600 dark:text-gray-400 max-w-2xl mx-auto">
               {locale === 'es'
                 ? 'Una selección de nuestros proyectos más emblemáticos'
                 : 'A selection of our most emblematic projects'}
@@ -128,7 +146,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
             {featuredItems.map((item) => {
               const loc = resolveLocale(item, locale)
               return (
-                <figure key={item.id} className="group cursor-pointer m-0" onClick={() => setLightbox(item)}>
+                <figure key={item.id} className="group cursor-pointer m-0" onClick={() => openLightbox(item)}>
                   <div className="relative overflow-hidden md:rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <Image
                       src={getThumbSrc(item)}
@@ -157,7 +175,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                     </div>
                   </div>
                   {loc.caption && (
-                    <figcaption className="text-sm text-gray-500 mt-2 italic px-1 hidden md:block">
+                    <figcaption className="text-sm text-slate-600 dark:text-gray-500 mt-2 italic px-1 hidden md:block">
                       {loc.caption}
                     </figcaption>
                   )}
@@ -169,7 +187,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
       </section>
 
       {/* Filter + Grid */}
-      <section className="py-12 bg-gray-950">
+      <section className="py-12 bg-white dark:bg-gray-950">
         <div className="container mx-auto px-0 md:px-4">
           <div className="flex flex-wrap justify-center gap-4 mb-12 px-4 md:px-0">
             {categories.map((category) => (
@@ -179,7 +197,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                 className={`px-6 py-3 rounded-full font-medium transition-colors ${
                   activeFilter === category.id
                     ? 'bg-sky-600 text-white'
-                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                    : 'bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-white/10 dark:text-gray-300 dark:hover:bg-white/20'
                 }`}
               >
                 {category.label}
@@ -193,7 +211,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
               // First 2 items are above the fold — no lazy loading (better LCP)
               const isPriority = index < 2
               return (
-                <figure key={item.id} className="group cursor-pointer m-0" onClick={() => setLightbox(item)}>
+                <figure key={item.id} className="group cursor-pointer m-0" onClick={() => openLightbox(item)}>
                   <div className="relative overflow-hidden md:rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                     <Image
                       src={getThumbSrc(item)}
@@ -214,7 +232,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                     </div>
                   </div>
                   {loc.caption && (
-                    <figcaption className="text-xs text-gray-500 mt-1 italic px-1 hidden md:block">
+                    <figcaption className="text-xs text-slate-600 dark:text-gray-500 mt-1 italic px-1 hidden md:block">
                       {loc.caption}
                     </figcaption>
                   )}
@@ -225,7 +243,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
 
           {filteredItems.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">
+              <p className="text-slate-500 dark:text-gray-500 text-lg">
                 {locale === 'es' ? 'No hay trabajos en esta categoría aún.' : 'No work in this category yet.'}
               </p>
             </div>
@@ -234,19 +252,19 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
       </section>
 
       {/* Stats */}
-      <section className="py-20 bg-gray-900 border-t border-white/10">
+      <section className="py-20 bg-slate-100 border-t border-slate-200 dark:bg-gray-900 dark:border-white/10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">500+</div><div className="text-gray-400">{locale === 'es' ? 'Bodas Cubiertas' : 'Weddings Covered'}</div></div>
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">10+</div><div className="text-gray-400">{locale === 'es' ? 'Años de Experiencia' : 'Years Experience'}</div></div>
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">20+</div><div className="text-gray-400">{locale === 'es' ? 'Ubicaciones' : 'Locations Served'}</div></div>
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">5★</div><div className="text-gray-400">{locale === 'es' ? 'Reseñas en Google' : 'Google Reviews'}</div></div>
+            <div><div className="text-4xl md:text-5xl font-bold mb-2">500+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Bodas Cubiertas' : 'Weddings Covered'}</div></div>
+            <div><div className="text-4xl md:text-5xl font-bold mb-2">10+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Años de Experiencia' : 'Years Experience'}</div></div>
+            <div><div className="text-4xl md:text-5xl font-bold mb-2">20+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Ubicaciones' : 'Locations Served'}</div></div>
+            <div><div className="text-4xl md:text-5xl font-bold mb-2">5★</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Reseñas en Google' : 'Google Reviews'}</div></div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gray-900 text-white">
+      <section className="py-20 bg-slate-100 text-slate-900 dark:bg-gray-900 dark:text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             {locale === 'es' ? '¿Te gusta lo que ves?' : 'Like what you see?'}
@@ -277,30 +295,33 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
         const loc = resolveLocale(lightbox, locale)
         return (
           <div
-            className="fixed inset-0 z-50 bg-black flex flex-col"
+            className="fixed inset-0 z-50 bg-black/95 flex flex-col"
             onClick={closeLightbox}
           >
             {/* Top bar */}
             <div
-              className="flex items-center justify-between px-4 py-3 bg-black bg-opacity-80 flex-shrink-0"
+              className="flex items-center justify-between px-4 py-3 bg-white/95 dark:bg-black/80 border-b border-slate-200 dark:border-white/10 flex-shrink-0"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={closeLightbox}
-                className="flex items-center gap-2 text-white hover:text-gray-300 transition-colors font-medium text-sm"
+                className="flex items-center gap-2 text-slate-900 hover:text-slate-700 dark:text-white dark:hover:text-gray-300 transition-colors font-medium text-sm"
               >
                 <span className="text-xl leading-none">←</span>
                 {locale === 'es' ? 'Volver al portafolio' : 'Back to portfolio'}
               </button>
-              <div className="text-white text-center flex-1 mx-4">
+              <div className="text-slate-900 dark:text-white text-center flex-1 mx-4">
                 <p className="font-semibold text-sm truncate">{loc.title}</p>
                 {lightbox.location && (
-                  <p className="text-xs text-gray-400">{lightbox.location}</p>
+                  <p className="text-xs text-slate-500 dark:text-gray-400">{lightbox.location}</p>
                 )}
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+                  {(lightboxIndex ?? 0) + 1} / {images.length}
+                </p>
               </div>
               <button
                 onClick={closeLightbox}
-                className="text-white hover:text-gray-300 transition-colors text-2xl leading-none w-8 h-8 flex items-center justify-center"
+                className="text-slate-900 hover:text-slate-700 dark:text-white dark:hover:text-gray-300 transition-colors text-2xl leading-none w-8 h-8 flex items-center justify-center"
                 aria-label="Close"
               >
                 ✕
@@ -312,6 +333,16 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
               className="flex-1 flex items-center justify-center overflow-hidden"
               onClick={closeLightbox}
             >
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  showPrev()
+                }}
+                className="absolute left-3 md:left-6 z-10 h-11 w-11 rounded-full bg-white/90 text-slate-900 hover:bg-white dark:bg-black/60 dark:text-white dark:hover:bg-black/80 flex items-center justify-center text-2xl shadow-lg"
+                aria-label={locale === 'es' ? 'Foto anterior' : 'Previous photo'}
+              >
+                ‹
+              </button>
               <Image
                 src={getLargeSrc(lightbox)}
                 alt={loc.alt}
@@ -323,6 +354,16 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                 onError={() => markFailed(lightbox.id)}
                 onClick={(e) => e.stopPropagation()}
               />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  showNext()
+                }}
+                className="absolute right-3 md:right-6 z-10 h-11 w-11 rounded-full bg-white/90 text-slate-900 hover:bg-white dark:bg-black/60 dark:text-white dark:hover:bg-black/80 flex items-center justify-center text-2xl shadow-lg"
+                aria-label={locale === 'es' ? 'Siguiente foto' : 'Next photo'}
+              >
+                ›
+              </button>
             </div>
           </div>
         )
