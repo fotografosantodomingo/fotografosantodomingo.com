@@ -29,7 +29,7 @@ export function getCloudinaryUrl(
     height,
     quality = 'auto',
     format = 'auto',
-    crop = 'fill',
+    crop = 'fit',
     gravity = 'auto',
     effect,
   } = options
@@ -68,7 +68,7 @@ export const IMAGE_TRANSFORMS = {
     height: 300,
     quality: 'auto' as const,
     format: 'auto' as const,
-    crop: 'fill' as const,
+    crop: 'fit' as const,
     gravity: 'auto' as const,
   },
 
@@ -78,7 +78,7 @@ export const IMAGE_TRANSFORMS = {
     height: 400,
     quality: 'auto' as const,
     format: 'auto' as const,
-    crop: 'fill' as const,
+    crop: 'fit' as const,
     gravity: 'auto' as const,
   },
 
