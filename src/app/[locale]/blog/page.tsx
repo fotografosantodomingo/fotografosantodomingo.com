@@ -227,6 +227,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                     <Image
                       src={post.cover_image_thumbnail_url || `${BASE_URL}/api/og?title=Babula+Shots`}
                       alt={post.cover_image_alt || post.title}
+                      title={post.cover_image_title || post.cover_image_alt || post.title}
                       fill
                       loading="lazy"
                       className="object-contain p-2"

@@ -656,6 +656,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                       <Image
                         src={relatedPost.cover_image_thumbnail_url || relatedPost.cover_image_url || imageUrl}
                         alt={relatedPost.cover_image_alt || relatedPost.title}
+                        title={relatedPost.cover_image_title || relatedPost.cover_image_alt || relatedPost.title}
                         fill
                         loading="lazy"
                         className="object-cover"

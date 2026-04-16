@@ -154,6 +154,7 @@ export async function InstagramPhoneFeed({ locale, limit = 12, currentSlug }: Pr
                   <Image
                     src={post.cover_image_thumbnail_url || post.cover_image_url || '/images/og-default.webp'}
                     alt={post.cover_image_alt || post.title}
+                    title={post.cover_image_title || post.cover_image_alt || post.title}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"

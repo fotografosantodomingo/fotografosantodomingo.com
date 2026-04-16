@@ -240,6 +240,7 @@ export default async function HomePage({ params: { locale } }: Props) {
                 <CloudinaryImage
                   publicId={img.public_id}
                   alt={isEs ? img.alt_es : img.alt_en}
+                  title={isEs ? img.title_es : img.title_en}
                   width={600}
                   height={600}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

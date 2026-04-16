@@ -14,8 +14,12 @@ export type PublishedPostListItem = {
   slug_en: string
   title: string
   excerpt: string
+  cover_image_url: string | null
   cover_image_thumbnail_url: string | null
   cover_image_alt: string | null
+  cover_image_title: string | null
+  cover_image_caption: string | null
+  cover_image_description: string | null
   published_at: string
   service_type: string | null
   location: string | null
@@ -80,7 +84,7 @@ export async function getPublishedPosts(locale: 'es' | 'en'): Promise<PublishedP
   const { data, error } = await supabase
     .from('blog_posts')
     .select(
-      'id, slug_es, slug_en, title_es, title_en, excerpt_es, excerpt_en, cover_image_thumbnail_url, cover_image_alt_es, cover_image_alt_en, published_at, service_type, location'
+      'id, slug_es, slug_en, title_es, title_en, excerpt_es, excerpt_en, cover_image_url, cover_image_thumbnail_url, cover_image_alt_es, cover_image_alt_en, cover_image_title_es, cover_image_title_en, cover_image_caption_es, cover_image_caption_en, cover_image_description_es, cover_image_description_en, published_at, service_type, location'
     )
     .eq('status', 'published')
     .order('published_at', { ascending: false })
@@ -97,8 +101,12 @@ export async function getPublishedPosts(locale: 'es' | 'en'): Promise<PublishedP
     slug_en: post.slug_en,
     title: locale === 'es' ? post.title_es : post.title_en,
     excerpt: locale === 'es' ? post.excerpt_es : post.excerpt_en,
+    cover_image_url: post.cover_image_url,
     cover_image_thumbnail_url: post.cover_image_thumbnail_url,
     cover_image_alt: locale === 'es' ? post.cover_image_alt_es : post.cover_image_alt_en,
+    cover_image_title: locale === 'es' ? post.cover_image_title_es : post.cover_image_title_en,
+    cover_image_caption: locale === 'es' ? post.cover_image_caption_es : post.cover_image_caption_en,
+    cover_image_description: locale === 'es' ? post.cover_image_description_es : post.cover_image_description_en,
     published_at: post.published_at,
     service_type: post.service_type,
     location: post.location,
@@ -157,7 +165,7 @@ export async function getRelatedPosts(
   const { data, error } = await supabase
     .from('blog_posts')
     .select(
-      'id, slug_es, slug_en, title_es, title_en, excerpt_es, excerpt_en, cover_image_thumbnail_url, cover_image_alt_es, cover_image_alt_en, published_at, service_type, location'
+      'id, slug_es, slug_en, title_es, title_en, excerpt_es, excerpt_en, cover_image_url, cover_image_thumbnail_url, cover_image_alt_es, cover_image_alt_en, cover_image_title_es, cover_image_title_en, cover_image_caption_es, cover_image_caption_en, cover_image_description_es, cover_image_description_en, published_at, service_type, location'
     )
     .eq('status', 'published')
     .eq('service_type', serviceType)
@@ -179,8 +187,12 @@ export async function getRelatedPosts(
       slug_en: post.slug_en,
       title: locale === 'es' ? post.title_es : post.title_en,
       excerpt: locale === 'es' ? post.excerpt_es : post.excerpt_en,
+      cover_image_url: post.cover_image_url,
       cover_image_thumbnail_url: post.cover_image_thumbnail_url,
       cover_image_alt: locale === 'es' ? post.cover_image_alt_es : post.cover_image_alt_en,
+      cover_image_title: locale === 'es' ? post.cover_image_title_es : post.cover_image_title_en,
+      cover_image_caption: locale === 'es' ? post.cover_image_caption_es : post.cover_image_caption_en,
+      cover_image_description: locale === 'es' ? post.cover_image_description_es : post.cover_image_description_en,
       published_at: post.published_at,
       service_type: post.service_type,
       location: post.location,
