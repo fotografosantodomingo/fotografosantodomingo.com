@@ -593,12 +593,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         </section>
 
         <section className="container mx-auto px-4 pb-14">
-          <div className="embedsocial-hashtag" data-ref="96976acc2bbc0a6debbfd7318ab8b3ed5aa68ed6" data-lazyload="yes">
-            <a className="feed-powered-by-es feed-powered-by-es-feed-img es-widget-branding" href="https://embedsocial.com/instagram-widget/" target="_blank" title="Instagram widget" rel="noopener noreferrer">
-              <img src="https://embedsocial.com/cdn/icon/embedsocial-logo.webp" alt="EmbedSocial" />
-              <div className="es-widget-branding-text">Instagram widget</div>
-            </a>
-          </div>
+          <div className="embedsocial-hashtag min-h-[520px]" data-ref="96976acc2bbc0a6debbfd7318ab8b3ed5aa68ed6" data-lazyload="no" />
           <Script id="EmbedSocialHashtagScript" src="https://embedsocial.com/cdn/ht.js" strategy="afterInteractive" />
         </section>
 
