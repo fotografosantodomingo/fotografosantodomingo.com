@@ -10,7 +10,12 @@ function getResend(): Resend | null {
 }
 
 const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'homekrypto@gmail.com'
+const PRIMARY_ADMIN_EMAIL = 'info@fotografosantodomingo.com'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL
+
+function getAdminRecipients() {
+  return Array.from(new Set([PRIMARY_ADMIN_EMAIL, ADMIN_EMAIL].map((email) => email.trim()).filter(Boolean)))
+}
 
 export interface ContactData {
   id: string
@@ -38,7 +43,7 @@ export async function sendContactNotification(data: ContactData) {
 
   await client.emails.send({
     from: FROM,
-    to: ADMIN_EMAIL,
+    to: getAdminRecipients(),
     reply_to: data.email,
     subject: `📸 Nueva consulta de ${data.name} — ${serviceLabel}`,
     html: `
@@ -95,35 +100,50 @@ export async function sendContactConfirmation(data: ContactData) {
       ? '✅ Recibimos tu mensaje — Fotógrafo Santo Domingo'
       : '✅ We received your message — Photographer Santo Domingo',
     html: `
-      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
-        <h2 style="color:#0f172a">
-          ${isEs ? `Hola ${data.name},` : `Hi ${data.name},`}
-        </h2>
-        <p style="color:#374151;line-height:1.6">
-          ${isEs
-            ? 'Gracias por contactarme. Recibí tu mensaje y te responderé en las próximas 2-4 horas.'
-            : 'Thank you for reaching out. I received your message and will reply within 2-4 hours.'}
-        </p>
-        <div style="background:#f0f9ff;border-left:4px solid #0ea5e9;padding:16px;border-radius:4px;margin:20px 0">
-          <p style="margin:0;color:#0f172a;white-space:pre-wrap">${data.message}</p>
+      <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#f8fafc;padding:24px 12px">
+        <div style="max-width:620px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#0ea5e9,#0369a1);padding:24px 22px">
+            <p style="margin:0;color:#e0f2fe;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700">Babula Shots</p>
+            <h2 style="margin:8px 0 0;color:#ffffff;font-size:24px;line-height:1.2">${isEs ? 'Recibimos tu consulta' : 'We received your inquiry'}</h2>
+            <p style="margin:10px 0 0;color:#e0f2fe;font-size:14px">${isEs ? `Hola ${data.name}, gracias por escribirnos.` : `Hi ${data.name}, thank you for reaching out.`}</p>
+          </div>
+
+          <div style="padding:22px">
+            <p style="margin:0;color:#334155;line-height:1.65;font-size:15px">
+              ${isEs
+                ? 'Tu mensaje ya está en nuestra bandeja y te responderemos en un plazo aproximado de 2 a 4 horas con los próximos pasos.'
+                : 'Your message is in our inbox and we will respond within approximately 2 to 4 hours with next steps.'}
+            </p>
+
+            <div style="margin:18px 0 0;padding:14px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px">
+              <p style="margin:0 0 8px;color:#0f172a;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">${isEs ? 'Resumen de tu mensaje' : 'Message summary'}</p>
+              <p style="margin:0;color:#334155;white-space:pre-wrap;line-height:1.6">${data.message}</p>
+            </div>
+
+            <div style="margin-top:18px">
+              <a href="https://wa.me/18097209547"
+                 style="display:inline-block;background:#22c55e;color:#ffffff;padding:12px 18px;border-radius:8px;text-decoration:none;font-weight:700">
+                ${isEs ? 'WhatsApp directo: +1 (809) 720-9547' : 'Direct WhatsApp: +1 (809) 720-9547'}
+              </a>
+            </div>
+          </div>
+
+          <div style="padding:16px 22px;border-top:1px solid #e2e8f0;background:#f8fafc">
+            <p style="margin:0 0 8px;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">${isEs ? 'Enlaces rápidos' : 'Quick links'}</p>
+            <p style="margin:0;font-size:13px;line-height:1.8">
+              <a href="https://www.fotografosantodomingo.com/${isEs ? 'es' : 'en'}" style="color:#0284c7;text-decoration:none;font-weight:600">${isEs ? 'Inicio' : 'Home'}</a>
+              &nbsp;·&nbsp;
+              <a href="https://www.fotografosantodomingo.com/${isEs ? 'es' : 'en'}/portfolio" style="color:#0284c7;text-decoration:none;font-weight:600">${isEs ? 'Portafolio' : 'Portfolio'}</a>
+              &nbsp;·&nbsp;
+              <a href="https://www.fotografosantodomingo.com/${isEs ? 'es' : 'en'}/services" style="color:#0284c7;text-decoration:none;font-weight:600">${isEs ? 'Servicios' : 'Services'}</a>
+              &nbsp;·&nbsp;
+              <a href="https://www.fotografosantodomingo.com/${isEs ? 'es' : 'en'}/contact" style="color:#0284c7;text-decoration:none;font-weight:600">${isEs ? 'Contacto' : 'Contact'}</a>
+            </p>
+            <p style="margin:10px 0 0;color:#94a3b8;font-size:12px">
+              Fotógrafo Santo Domingo — Babula Shots · Santo Domingo, República Dominicana
+            </p>
+          </div>
         </div>
-        <p style="color:#374151">
-          ${isEs
-            ? 'Si necesitas una respuesta más rápida, escríbeme directamente por WhatsApp:'
-            : 'For a faster response, message me directly on WhatsApp:'}
-        </p>
-        <p>
-          <a href="https://wa.me/18097209547"
-             style="background:#22c55e;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600">
-            WhatsApp: +1 (809) 720-9547
-          </a>
-        </p>
-        <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0"/>
-        <p style="color:#94a3b8;font-size:13px">
-          Fotógrafo Santo Domingo — Babula Shots<br/>
-          Santo Domingo, República Dominicana<br/>
-          <a href="https://www.fotografosantodomingo.com" style="color:#0ea5e9">fotografosantodomingo.com</a>
-        </p>
       </div>
     `,
   })
@@ -243,7 +263,7 @@ export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
 
   await client.emails.send({
     from: FROM,
-    to: ADMIN_EMAIL,
+    to: getAdminRecipients(),
     reply_to: data.email,
     subject: `Nueva solicitud de presupuesto: ${data.fullName} - ${serviceLabel}`,
     html: `
