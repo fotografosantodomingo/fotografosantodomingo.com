@@ -53,6 +53,13 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
         : 'Professional wedding, portrait and event photography in Santo Domingo, Dominican Republic.',
       images: [`${BASE_URL}/api/og`],
     },
+    ...(isEs
+      ? {
+          other: {
+            'p:domain_verify': '56a531ff79ed1871bf40b084b8df668f',
+          },
+        }
+      : {}),
     robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
 }
