@@ -47,41 +47,64 @@ export async function sendContactNotification(data: ContactData) {
     reply_to: data.email,
     subject: `📸 Nueva consulta de ${data.name} — ${serviceLabel}`,
     html: `
-      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px">
-        <h2 style="color:#0f172a;border-bottom:2px solid #0ea5e9;padding-bottom:12px">
-          Nueva Consulta — Fotógrafo Santo Domingo
-        </h2>
-        <table style="width:100%;border-collapse:collapse">
-          <tr><td style="padding:8px 0;color:#64748b;width:140px">Nombre</td>
-              <td style="padding:8px 0;font-weight:600">${data.name}</td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">Email</td>
-              <td style="padding:8px 0"><a href="mailto:${data.email}">${data.email}</a></td></tr>
-          ${data.phone ? `<tr><td style="padding:8px 0;color:#64748b">Teléfono</td>
-              <td style="padding:8px 0"><a href="tel:${data.phone}">${data.phone}</a></td></tr>` : ''}
-          <tr><td style="padding:8px 0;color:#64748b">Servicio</td>
-              <td style="padding:8px 0">${serviceLabel}</td></tr>
-          ${data.eventDate ? `<tr><td style="padding:8px 0;color:#64748b">Fecha evento</td>
-              <td style="padding:8px 0">${data.eventDate}</td></tr>` : ''}
-          ${data.location ? `<tr><td style="padding:8px 0;color:#64748b">Ubicación</td>
-              <td style="padding:8px 0">${data.location}</td></tr>` : ''}
-        </table>
-        <div style="background:#f8fafc;border-left:4px solid #0ea5e9;padding:16px;margin-top:16px;border-radius:4px">
-          <p style="margin:0;color:#0f172a;white-space:pre-wrap">${data.message}</p>
+      <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#f8fafc;padding:24px 12px">
+        <div style="max-width:680px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#0ea5e9,#0369a1);padding:22px 24px">
+            <p style="margin:0;color:#e0f2fe;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700">Admin Alert</p>
+            <h2 style="margin:8px 0 0;color:#ffffff;font-size:22px;line-height:1.2">Nueva consulta recibida</h2>
+            <p style="margin:10px 0 0;color:#e0f2fe;font-size:14px">${data.name} · ${serviceLabel}</p>
+          </div>
+
+          <div style="padding:20px 24px">
+            <table style="width:100%;border-collapse:collapse;font-size:14px">
+              <tr>
+                <td style="padding:8px 0;color:#64748b;width:140px">Nombre</td>
+                <td style="padding:8px 0;font-weight:700;color:#0f172a">${data.name}</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0;color:#64748b">Email</td>
+                <td style="padding:8px 0"><a href="mailto:${data.email}" style="color:#0284c7;text-decoration:none">${data.email}</a></td>
+              </tr>
+              ${data.phone ? `<tr>
+                <td style="padding:8px 0;color:#64748b">Teléfono</td>
+                <td style="padding:8px 0"><a href="tel:${data.phone}" style="color:#0284c7;text-decoration:none">${data.phone}</a></td>
+              </tr>` : ''}
+              <tr>
+                <td style="padding:8px 0;color:#64748b">Servicio</td>
+                <td style="padding:8px 0;color:#334155">${serviceLabel}</td>
+              </tr>
+              ${data.eventDate ? `<tr>
+                <td style="padding:8px 0;color:#64748b">Fecha evento</td>
+                <td style="padding:8px 0;color:#334155">${data.eventDate}</td>
+              </tr>` : ''}
+              ${data.location ? `<tr>
+                <td style="padding:8px 0;color:#64748b">Ubicación</td>
+                <td style="padding:8px 0;color:#334155">${data.location}</td>
+              </tr>` : ''}
+            </table>
+
+            <div style="margin-top:16px;padding:14px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px">
+              <p style="margin:0 0 8px;color:#0f172a;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700">Mensaje</p>
+              <p style="margin:0;color:#334155;white-space:pre-wrap;line-height:1.6">${data.message}</p>
+            </div>
+
+            <div style="margin-top:18px">
+              <a href="mailto:${data.email}?subject=Re: su consulta fotográfica"
+                 style="display:inline-block;background:#0ea5e9;color:#ffffff;padding:11px 16px;border-radius:8px;text-decoration:none;font-weight:700">
+                Responder por email
+              </a>
+              ${data.phone ? `&nbsp;
+              <a href="https://wa.me/1${data.phone.replace(/\D/g, '')}"
+                 style="display:inline-block;background:#22c55e;color:#ffffff;padding:11px 16px;border-radius:8px;text-decoration:none;font-weight:700">
+                Abrir WhatsApp
+              </a>` : ''}
+            </div>
+          </div>
+
+          <div style="padding:14px 24px;border-top:1px solid #e2e8f0;background:#f8fafc">
+            <p style="margin:0;color:#94a3b8;font-size:12px">Enviado el ${new Date(data.submittedAt).toLocaleString('es-DO')} · ID: ${data.id}</p>
+          </div>
         </div>
-        <p style="margin-top:24px">
-          <a href="mailto:${data.email}?subject=Re: su consulta fotográfica"
-             style="background:#0ea5e9;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600">
-            Responder ahora
-          </a>
-          &nbsp;
-          <a href="https://wa.me/1${data.phone?.replace(/\D/g, '') || ''}"
-             style="background:#22c55e;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600">
-            WhatsApp
-          </a>
-        </p>
-        <p style="color:#94a3b8;font-size:12px;margin-top:24px">
-          Enviado el ${new Date(data.submittedAt).toLocaleString('es-DO')} · ID: ${data.id}
-        </p>
       </div>
     `,
   })
@@ -267,24 +290,46 @@ export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
     reply_to: data.email,
     subject: `Nueva solicitud de presupuesto: ${data.fullName} - ${serviceLabel}`,
     html: `
-      <div style="font-family:sans-serif;max-width:640px;margin:0 auto;padding:24px">
-        <h2 style="color:#0f172a;border-bottom:2px solid #0ea5e9;padding-bottom:10px">Nueva Solicitud de Presupuesto</h2>
-        <table style="width:100%;border-collapse:collapse">
-          <tr><td style="padding:8px 0;color:#64748b;width:170px">ID</td><td style="padding:8px 0;font-weight:600">${data.id}</td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">Nombre</td><td style="padding:8px 0">${data.fullName}</td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">Email</td><td style="padding:8px 0"><a href="mailto:${data.email}">${data.email}</a></td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">WhatsApp</td><td style="padding:8px 0">${data.whatsappPhone}</td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">Servicio</td><td style="padding:8px 0">${serviceLabel}</td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">Personas</td><td style="padding:8px 0">${data.participantsCount}</td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">Drone</td><td style="padding:8px 0">${data.addDrone ? 'Si' : 'No'}</td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">Fecha evento</td><td style="padding:8px 0">${data.eventDate}</td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">Ubicacion</td><td style="padding:8px 0">${data.city}, ${data.state}, ${data.country}</td></tr>
-          <tr><td style="padding:8px 0;color:#64748b">Metodo preferido</td><td style="padding:8px 0">${data.preferredContactMethod}</td></tr>
-          ${data.callbackTimePreference ? `<tr><td style="padding:8px 0;color:#64748b">Horario llamada</td><td style="padding:8px 0">${data.callbackTimePreference}</td></tr>` : ''}
-        </table>
+      <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#f8fafc;padding:24px 12px">
+        <div style="max-width:700px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
+          <div style="background:linear-gradient(135deg,#0ea5e9,#0369a1);padding:22px 24px">
+            <p style="margin:0;color:#e0f2fe;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700">Admin Alert</p>
+            <h2 style="margin:8px 0 0;color:#ffffff;font-size:22px;line-height:1.2">Nueva solicitud de presupuesto</h2>
+            <p style="margin:10px 0 0;color:#e0f2fe;font-size:14px">${data.fullName} · ${serviceLabel}</p>
+          </div>
 
-        <div style="background:#f8fafc;border-left:4px solid #0ea5e9;padding:16px;margin-top:18px;border-radius:4px">
-          <p style="margin:0;color:#0f172a;white-space:pre-wrap">${data.description}</p>
+          <div style="padding:20px 24px">
+            <table style="width:100%;border-collapse:collapse;font-size:14px">
+              <tr><td style="padding:8px 0;color:#64748b;width:170px">ID</td><td style="padding:8px 0;font-weight:700;color:#0f172a">${data.id}</td></tr>
+              <tr><td style="padding:8px 0;color:#64748b">Nombre</td><td style="padding:8px 0;color:#334155">${data.fullName}</td></tr>
+              <tr><td style="padding:8px 0;color:#64748b">Email</td><td style="padding:8px 0"><a href="mailto:${data.email}" style="color:#0284c7;text-decoration:none">${data.email}</a></td></tr>
+              <tr><td style="padding:8px 0;color:#64748b">WhatsApp</td><td style="padding:8px 0;color:#334155">${data.whatsappPhone}</td></tr>
+              <tr><td style="padding:8px 0;color:#64748b">Servicio</td><td style="padding:8px 0;color:#334155">${serviceLabel}</td></tr>
+              <tr><td style="padding:8px 0;color:#64748b">Personas</td><td style="padding:8px 0;color:#334155">${data.participantsCount}</td></tr>
+              <tr><td style="padding:8px 0;color:#64748b">Drone</td><td style="padding:8px 0;color:#334155">${data.addDrone ? 'Si' : 'No'}</td></tr>
+              <tr><td style="padding:8px 0;color:#64748b">Fecha evento</td><td style="padding:8px 0;color:#334155">${data.eventDate}</td></tr>
+              <tr><td style="padding:8px 0;color:#64748b">Ubicacion</td><td style="padding:8px 0;color:#334155">${data.city}, ${data.state}, ${data.country}</td></tr>
+              <tr><td style="padding:8px 0;color:#64748b">Metodo preferido</td><td style="padding:8px 0;color:#334155">${data.preferredContactMethod}</td></tr>
+              ${data.callbackTimePreference ? `<tr><td style="padding:8px 0;color:#64748b">Horario llamada</td><td style="padding:8px 0;color:#334155">${data.callbackTimePreference}</td></tr>` : ''}
+            </table>
+
+            <div style="margin-top:16px;padding:14px 16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px">
+              <p style="margin:0 0 8px;color:#0f172a;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700">Detalles del proyecto</p>
+              <p style="margin:0;color:#334155;white-space:pre-wrap;line-height:1.6">${data.description}</p>
+            </div>
+
+            <div style="margin-top:18px">
+              <a href="mailto:${data.email}?subject=Re: tu solicitud de presupuesto"
+                 style="display:inline-block;background:#0ea5e9;color:#ffffff;padding:11px 16px;border-radius:8px;text-decoration:none;font-weight:700">
+                Responder por email
+              </a>
+              &nbsp;
+              <a href="https://wa.me/${data.whatsappPhone.replace(/\D/g, '')}"
+                 style="display:inline-block;background:#22c55e;color:#ffffff;padding:11px 16px;border-radius:8px;text-decoration:none;font-weight:700">
+                Abrir WhatsApp
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     `,
