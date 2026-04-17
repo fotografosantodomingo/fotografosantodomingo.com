@@ -23,7 +23,7 @@ export const SOCIAL_LINKS = {
   instagram: 'https://instagram.com/babulashotsrd',
   facebook: 'https://facebook.com/babulashots',
   tiktok: 'https://www.tiktok.com/@babulashots',
-  linkedin: 'https://linkedin.com/company/babula-shots',
+  linkedin: 'https://www.linkedin.com/company/fotografo-santo-domingo',
   youtube: 'https://youtube.com/@babulashots',
   twitter: 'https://twitter.com/babulashots',
 }
