@@ -13,8 +13,11 @@ const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
 const PRIMARY_ADMIN_EMAIL = 'info@fotografosantodomingo.com'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL
 
-function getAdminRecipients() {
-  return Array.from(new Set([PRIMARY_ADMIN_EMAIL, ADMIN_EMAIL].map((email) => email.trim()).filter(Boolean)))
+function getAdminSecondaryRecipient() {
+  const normalizedPrimary = PRIMARY_ADMIN_EMAIL.trim().toLowerCase()
+  const normalizedAdmin = ADMIN_EMAIL.trim().toLowerCase()
+  if (!normalizedAdmin || normalizedAdmin === normalizedPrimary) return undefined
+  return ADMIN_EMAIL.trim()
 }
 
 export interface ContactData {
@@ -43,7 +46,8 @@ export async function sendContactNotification(data: ContactData) {
 
   await client.emails.send({
     from: FROM,
-    to: getAdminRecipients(),
+    to: PRIMARY_ADMIN_EMAIL,
+    ...(getAdminSecondaryRecipient() ? { bcc: getAdminSecondaryRecipient() } : {}),
     reply_to: data.email,
     subject: `📸 Nueva consulta de ${data.name} — ${serviceLabel}`,
     html: `
@@ -286,7 +290,8 @@ export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
 
   await client.emails.send({
     from: FROM,
-    to: getAdminRecipients(),
+    to: PRIMARY_ADMIN_EMAIL,
+    ...(getAdminSecondaryRecipient() ? { bcc: getAdminSecondaryRecipient() } : {}),
     reply_to: data.email,
     subject: `Nueva solicitud de presupuesto: ${data.fullName} - ${serviceLabel}`,
     html: `
