@@ -6,8 +6,8 @@ export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(true) // default dark
 
   useEffect(() => {
-    // Sync with current class state (set by the FOUC-prevention script)
-    setIsDark(!document.documentElement.classList.contains('light-mode'))
+    // Sync with class state (set by the early theme-init script in <head>)
+    setIsDark(document.documentElement.classList.contains('dark'))
   }, [])
 
   const toggle = () => {
@@ -16,19 +16,14 @@ export default function ThemeToggle() {
     // Add transitioning attribute so CSS can apply smooth transitions
     // only during the switch (avoids messing with hover transitions)
     html.setAttribute('data-theme-transitioning', '')
-    const cleanup = setTimeout(() => html.removeAttribute('data-theme-transitioning'), 350)
+    setTimeout(() => html.removeAttribute('data-theme-transitioning'), 350)
 
-    if (html.classList.contains('light-mode')) {
-      html.classList.remove('light-mode')
-      localStorage.setItem('theme', 'dark')
-      setIsDark(true)
-    } else {
-      html.classList.add('light-mode')
-      localStorage.setItem('theme', 'light')
-      setIsDark(false)
-    }
-
-    return () => clearTimeout(cleanup)
+    const nextIsDark = !html.classList.contains('dark')
+    html.classList.toggle('dark', nextIsDark)
+    html.classList.toggle('light-mode', !nextIsDark)
+    html.style.colorScheme = nextIsDark ? 'dark' : 'light'
+    localStorage.setItem('theme', nextIsDark ? 'dark' : 'light')
+    setIsDark(nextIsDark)
   }
 
   return (

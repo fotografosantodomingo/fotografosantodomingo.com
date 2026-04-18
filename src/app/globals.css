@@ -8,6 +8,10 @@
     color-scheme: dark;
   }
 
+  html.dark {
+    color-scheme: dark;
+  }
+
   html.light-mode {
     color-scheme: light;
   }
