@@ -171,7 +171,7 @@ export default async function HomePage({ params: { locale } }: Props) {
     <main className="min-h-screen bg-gray-950 text-white">
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden min-h-screen bg-gray-950 pt-24 pb-20 lg:pt-32 lg:pb-28 flex items-start lg:items-center">
+      <section className="relative overflow-hidden min-h-screen bg-gray-950 pt-0 md:pt-24 pb-20 lg:pt-32 lg:pb-28 flex items-start lg:items-center">
         <Image
           src="https://res.cloudinary.com/dwewurxla/image/upload/v1776527725/Photographer_In_Santo_Domingo_Dominican_Republic_ienr6u.webp"
           alt={isEs
