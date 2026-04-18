@@ -84,8 +84,17 @@ export default function Footer() {
                 data-style-width="100%"
                 data-theme="light"
               >
-                <a href="https://trustpilot.com" target="_blank" rel="noopener noreferrer">Trustpilot</a>
+                <a href={SOCIAL_LINKS.trustpilot} target="_blank" rel="noopener noreferrer">Trustpilot</a>
               </div>
+              <a
+                href={SOCIAL_LINKS.trustpilot}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex items-center gap-2 rounded-md border border-[#00B67A]/50 bg-[#00B67A]/15 px-3 py-2 text-xs font-semibold text-[#00B67A] hover:bg-[#00B67A]/25 transition-colors"
+              >
+                <span aria-hidden="true" className="tracking-[0.18em]">★★★★★</span>
+                <span>{locale === 'es' ? 'Ver perfil público' : 'View public profile'}</span>
+              </a>
             </div>
           </div>
 
