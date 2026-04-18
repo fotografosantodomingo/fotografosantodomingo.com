@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
+import Image from 'next/image'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import HomeFaq from '@/components/HomeFaq'
 import { getFaqData } from '@/lib/faq-data'
@@ -16,14 +17,14 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
   const isEs = locale === 'es'
   return {
     title: isEs
-      ? 'Fotógrafo Santo Domingo — Bodas, Retratos & Drone | Babula Shots'
-      : 'Photographer Santo Domingo — Weddings, Portraits & Drone | Babula Shots',
+      ? 'Fotógrafo en Santo Domingo, República Dominicana | Sesión de Fotos — Babula Shots'
+      : 'Photographer in Santo Domingo, Dominican Republic | Photo Session — Babula Shots',
     description: isEs
-      ? 'Fotógrafo profesional en Santo Domingo especializado en bodas, sesiones pre-boda, quinceañeras, retratos y drone. Cubrimos Punta Cana y toda la República Dominicana.'
-      : 'Professional photographer in Santo Domingo specializing in weddings, portraits and drone photography. Serving Punta Cana and all of Dominican Republic.',
+      ? 'Fotógrafo profesional en Santo Domingo, República Dominicana para sesión de fotos, bodas, retratos, eventos y drone. Reserva tu sesión personalizada en RD.'
+      : 'Professional photographer in Santo Domingo, Dominican Republic for photo sessions, weddings, portraits, events, and drone. Book your custom session in DR.',
     keywords: isEs
-      ? 'fotografo santo domingo, fotografo bodas republica dominicana, fotografo drone punta cana, fotografo profesional RD, babula shots'
-      : 'photographer santo domingo, wedding photographer dominican republic, drone photographer punta cana, professional photographer DR, babula shots',
+      ? 'fotografo en santo domingo republica dominicana, sesion de fotos en santo domingo, fotografo profesional en republica dominicana, fotografo para eventos santo domingo, babula shots'
+      : 'photographer in santo domingo dominican republic, photo session santo domingo, professional photographer dominican republic, event photographer santo domingo, babula shots',
     alternates: {
       canonical: `${BASE_URL}/${locale}`,
       languages: {
@@ -170,10 +171,19 @@ export default async function HomePage({ params: { locale } }: Props) {
     <main className="min-h-screen bg-gray-950 text-white">
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden bg-gray-950 pt-24 pb-20 lg:pt-32 lg:pb-28">
-        {/* subtle gradient blob */}
-        <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-sky-500/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-indigo-500/10 blur-3xl" />
+      <section className="relative overflow-hidden min-h-screen bg-gray-950 pt-24 pb-20 lg:pt-32 lg:pb-28 flex items-center">
+        <Image
+          src="https://res.cloudinary.com/dwewurxla/image/upload/v1776527725/Photographer_In_Santo_Domingo_Dominican_Republic_ienr6u.webp"
+          alt={isEs
+            ? 'Fotógrafo en Santo Domingo República Dominicana en sesión de fotos profesional'
+            : 'Photographer in Santo Domingo Dominican Republic during a professional photo session'}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gray-950/58" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/55" />
 
         <div className="relative container mx-auto px-4 text-center">
           {/* badge */}
