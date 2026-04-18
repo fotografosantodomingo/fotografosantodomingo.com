@@ -142,46 +142,24 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-8 mb-16">
-            {featuredItems.map((item) => {
-              const loc = resolveLocale(item, locale)
-              return (
-                <figure key={item.id} className="group cursor-pointer m-0" onClick={() => openLightbox(item)}>
-                  <div className="relative overflow-hidden md:rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <Image
-                      src={getThumbSrc(item)}
-                      alt={loc.alt}
-                      title={loc.title}
-                      width={item.width || 1200}
-                      height={item.height || 800}
-                      className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
-                      priority
-                      onError={() => markFailed(item.id)}
-                    />
-                    {/* Overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-all duration-300 flex items-center justify-center">
-                      <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
-                        <p className="text-xl font-bold mb-2">{loc.title}</p>
-                        <p className="text-sm">{item.location}</p>
-                        <p className="text-xs mt-2 max-w-xs">{loc.description}</p>
-                        <p className="text-xs mt-3 bg-white bg-opacity-20 px-3 py-1 rounded-full inline-block">
-                          {locale === 'es' ? 'Ver a tamaño original →' : 'View full size →'}
-                        </p>
-                      </div>
-                    </div>
-                    {/* Category badge */}
-                    <div className="absolute top-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">
-                      {categories.find((c) => c.id === item.category)?.label}
-                    </div>
-                  </div>
-                  {loc.caption && (
-                    <figcaption className="text-sm text-slate-600 dark:text-gray-500 mt-2 italic px-1 hidden md:block">
-                      {loc.caption}
-                    </figcaption>
-                  )}
-                </figure>
-              )
-            })}
+          <div className="mb-16">
+            <figure className="m-0">
+              <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
+                <Image
+                  src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/photo_sessions_dominican_republic_Photographer_in_santo_domingo_laidus"
+                  alt={locale === 'es'
+                    ? 'Fotografo en Santo Domingo Republica Dominicana sesion de fotos profesional'
+                    : 'Photographer in Santo Domingo Dominican Republic professional photo session'}
+                  title={locale === 'es'
+                    ? 'Sesion de fotos en Santo Domingo Republica Dominicana'
+                    : 'Photo session in Santo Domingo Dominican Republic'}
+                  width={2400}
+                  height={1350}
+                  className="w-full h-auto object-contain"
+                  priority
+                />
+              </div>
+            </figure>
           </div>
         </div>
       </section>
