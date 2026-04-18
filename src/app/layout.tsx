@@ -41,9 +41,9 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,r,n){w.TrustpilotObject=n;w[n]=w[n]||function(){(w[n].q=w[n].q||[]).push(arguments)};var a=d.createElement(s),f=d.getElementsByTagName(s)[0];a.async=1;a.src=r;a.type='text/java'+s;f.parentNode.insertBefore(a,f)})(window,document,'script','https://invitejs.trustpilot.com/tp.min.js','tp');tp('register','koOlqqOSlJEnxKKc');`,
-          }}
+          type="text/javascript"
+          src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js"
+          async
         />
       </head>
       <body className={inter.className}>
