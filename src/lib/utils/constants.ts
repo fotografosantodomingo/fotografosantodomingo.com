@@ -25,6 +25,7 @@ export const SOCIAL_LINKS = {
   tiktok: 'https://www.tiktok.com/@babulashots',
   linkedin: 'https://www.linkedin.com/company/fotografo-santo-domingo',
   pinterest: 'https://www.pinterest.com/FotografoEnSantoDomingo',
+  trustpilot: 'https://www.trustpilot.com/review/fotografosantodomingo.com',
   youtube: 'https://youtube.com/@babulashots',
   twitter: 'https://twitter.com/babulashots',
 }

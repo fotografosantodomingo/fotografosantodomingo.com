@@ -14,6 +14,7 @@ export const schemaGenerators = {
       'https://www.instagram.com/babulashotsrd',
       'https://www.facebook.com/babulashots',
       'https://www.tiktok.com/@babulashots',
+      'https://www.trustpilot.com/review/fotografosantodomingo.com',
     ],
     contactPoint: {
       '@type': 'ContactPoint',
@@ -80,6 +81,7 @@ export const schemaGenerators = {
       'https://www.instagram.com/babulashotsrd',
       'https://www.facebook.com/babulashots',
       'https://www.tiktok.com/@babulashots',
+      'https://www.trustpilot.com/review/fotografosantodomingo.com',
     ],
   }),
 
@@ -126,6 +128,7 @@ export const schemaGenerators = {
       'https://www.instagram.com/babulashotsrd',
       'https://www.facebook.com/babulashots',
       'https://www.tiktok.com/@babulashots',
+      'https://www.trustpilot.com/review/fotografosantodomingo.com',
     ],
   }),
 
