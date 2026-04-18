@@ -169,3 +169,13 @@ html.light-mode .dark\:to-slate-900 { --tw-gradient-to: #e2e8f0 var(--tw-gradien
     object-fit: contain !important;
   }
 }
+
+/* Homepage hero readability lock in light mode */
+html.light-mode .hero-white-lock .hero-white-text {
+  color: #ffffff !important;
+}
+
+html.light-mode .hero-white-lock .hero-white-card {
+  background-color: rgba(0, 0, 0, 0.42) !important;
+  border-color: rgba(255, 255, 255, 0.34) !important;
+}

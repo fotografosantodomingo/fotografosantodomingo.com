@@ -171,7 +171,7 @@ export default async function HomePage({ params: { locale } }: Props) {
     <main className="min-h-screen bg-gray-950 text-white">
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden min-h-screen bg-gray-950 pt-0 md:pt-24 pb-20 lg:pt-32 lg:pb-28 flex items-start lg:items-center">
+      <section className="hero-white-lock relative overflow-hidden min-h-screen bg-gray-950 pt-0 md:pt-24 pb-20 lg:pt-32 lg:pb-28 flex items-start lg:items-center">
         <Image
           src="https://res.cloudinary.com/dwewurxla/image/upload/v1776527725/Photographer_In_Santo_Domingo_Dominican_Republic_ienr6u.webp"
           alt={isEs
@@ -207,7 +207,7 @@ export default async function HomePage({ params: { locale } }: Props) {
             {isEs ? 'Disponible para nuevas reservas · Santo Domingo, RD' : 'Available for new bookings · Santo Domingo, DR'}
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-white">
+          <h1 className="hero-white-text text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-white">
             {t('title_main')}{' '}
             <span className="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
               {t('title_highlight')}
@@ -241,9 +241,9 @@ export default async function HomePage({ params: { locale } }: Props) {
               { value: t('stats_locations'),label: isEs ? 'Ubicaciones' : 'Locations served' },
               { value: t('stats_reviews'),  label: isEs ? '91 reseñas en Google' : '91 Google reviews' },
             ].map(({ value, label }) => (
-              <div key={label} className="bg-black/35 rounded-2xl p-4 border border-white/20 backdrop-blur-[1px]">
-                <div className="text-3xl font-bold text-white mb-1">{value}</div>
-                <div className="text-xs text-white uppercase tracking-wider">{label}</div>
+              <div key={label} className="hero-white-card bg-black/35 rounded-2xl p-4 border border-white/20 backdrop-blur-[1px]">
+                <div className="hero-white-text text-3xl font-bold text-white mb-1">{value}</div>
+                <div className="hero-white-text text-xs text-white uppercase tracking-wider">{label}</div>
               </div>
             ))}
           </div>
