@@ -202,7 +202,7 @@ export default async function HomePage({ params: { locale } }: Props) {
           </div>
 
           {/* badge */}
-          <div className="inline-flex items-center gap-2 bg-black/35 border border-white/25 rounded-full px-4 py-1.5 text-sm text-white mb-8">
+          <div className="hero-white-text inline-flex items-center gap-2 bg-black/35 border border-white/25 rounded-full px-4 py-1.5 text-sm text-white mb-8">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             {isEs ? 'Disponible para nuevas reservas · Santo Domingo, RD' : 'Available for new bookings · Santo Domingo, DR'}
           </div>
