@@ -171,7 +171,7 @@ export default async function HomePage({ params: { locale } }: Props) {
     <main className="min-h-screen bg-gray-950 text-white">
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden min-h-screen bg-gray-950 pt-24 pb-20 lg:pt-32 lg:pb-28 flex items-center">
+      <section className="relative overflow-hidden min-h-screen bg-gray-950 pt-24 pb-20 lg:pt-32 lg:pb-28 flex items-start lg:items-center">
         <Image
           src="https://res.cloudinary.com/dwewurxla/image/upload/v1776527725/Photographer_In_Santo_Domingo_Dominican_Republic_ienr6u.webp"
           alt={isEs
@@ -180,26 +180,41 @@ export default async function HomePage({ params: { locale } }: Props) {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center"
+          className="hidden md:block object-cover object-center md:brightness-110"
         />
-        <div className="absolute inset-0 bg-gray-950/58" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/55" />
+        <div className="absolute inset-0 hidden md:block bg-gray-950/30" />
+        <div className="absolute inset-0 hidden md:block bg-gradient-to-b from-black/22 via-black/12 to-black/32" />
 
         <div className="relative container mx-auto px-4 text-center">
+          <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mb-8 md:hidden">
+            <div className="relative w-full aspect-[16/9]">
+              <Image
+                src="https://res.cloudinary.com/dwewurxla/image/upload/v1776527725/Photographer_In_Santo_Domingo_Dominican_Republic_ienr6u.webp"
+                alt={isEs
+                  ? 'Fotógrafo en Santo Domingo República Dominicana en sesión de fotos profesional'
+                  : 'Photographer in Santo Domingo Dominican Republic during a professional photo session'}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+            </div>
+          </div>
+
           {/* badge */}
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 text-sm text-gray-300 mb-8">
+          <div className="inline-flex items-center gap-2 bg-black/35 border border-white/25 rounded-full px-4 py-1.5 text-sm text-white mb-8">
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             {isEs ? 'Disponible para nuevas reservas · Santo Domingo, RD' : 'Available for new bookings · Santo Domingo, DR'}
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-white">
             {t('title_main')}{' '}
             <span className="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
               {t('title_highlight')}
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-400 mb-10 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-white mb-10 leading-relaxed max-w-3xl mx-auto">
             {t('subtitle')}
           </p>
 
@@ -226,9 +241,9 @@ export default async function HomePage({ params: { locale } }: Props) {
               { value: t('stats_locations'),label: isEs ? 'Ubicaciones' : 'Locations served' },
               { value: t('stats_reviews'),  label: isEs ? '91 reseñas en Google' : '91 Google reviews' },
             ].map(({ value, label }) => (
-              <div key={label} className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                <div className="text-3xl font-bold text-sky-400 mb-1">{value}</div>
-                <div className="text-xs text-gray-400 uppercase tracking-wider">{label}</div>
+              <div key={label} className="bg-black/35 rounded-2xl p-4 border border-white/20 backdrop-blur-[1px]">
+                <div className="text-3xl font-bold text-white mb-1">{value}</div>
+                <div className="text-xs text-white uppercase tracking-wider">{label}</div>
               </div>
             ))}
           </div>
