@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
 
@@ -69,6 +70,7 @@ export default async function RootLayout({
         {process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics />
         )}
+        <Analytics />
         {children}
       </body>
     </html>
