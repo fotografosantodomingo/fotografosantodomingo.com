@@ -15,8 +15,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Sobre Mí — Fotógrafo Santo Domingo | Babula Shots'
     : 'About — Photographer Santo Domingo | Babula Shots'
   const description = isEs
-    ? 'Conoce a Michal Babula, fotógrafo profesional en Santo Domingo desde 2015. Más de 500 bodas cubiertas, 20+ locaciones y 91 reseñas cinco estrellas en Google.'
-    : 'Meet Michal Babula — professional photographer in Santo Domingo since 2015. Over 500 weddings covered, 20+ locations, and 91 five-star Google reviews.'
+    ? 'Conoce a Michal Babula, fotógrafo profesional en Santo Domingo desde 2015. Más de 500 clientes satisfech@s, 20+ locaciones y 91 reseñas cinco estrellas en Google.'
+    : 'Meet Michal Babula — professional photographer in Santo Domingo since 2015. Over 500 satisfied clients, 20+ locations, and 91 five-star Google reviews.'
   return {
     title,
     description,
@@ -84,8 +84,8 @@ export default function AboutPage({ params: { locale } }: Props) {
   const achievements = [
     {
       number: '500+',
-      label: locale === 'es' ? 'Bodas Fotografiadas' : 'Weddings Photographed',
-      icon: '💍',
+      label: locale === 'es' ? 'Clientes satisfech@s' : 'Satisfied Clients',
+      icon: '🤝',
     },
     {
       number: '10+',
@@ -163,8 +163,8 @@ export default function AboutPage({ params: { locale } }: Props) {
                 </p>
                 <p>
                   {locale === 'es'
-                    ? 'Con más de 500 bodas fotografiadas, 91+ reseñas 5 estrellas en Google y clientes que regresan una y otra vez — me enorgullece ser tu fotógrafo de confianza en Santo Domingo.'
-                    : 'With 500+ weddings photographed, 91+ five-star Google reviews and clients who return again and again — I am proud to be your trusted photographer in Santo Domingo.'
+                    ? 'Con más de 500 clientes satisfech@s, 91+ reseñas 5 estrellas en Google y clientes que regresan una y otra vez — me enorgullece ser tu fotógrafo de confianza en Santo Domingo.'
+                    : 'With 500+ satisfied clients, 91+ five-star Google reviews and clients who return again and again — I am proud to be your trusted photographer in Santo Domingo.'
                   }
                 </p>
               </div>

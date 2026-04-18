@@ -255,7 +255,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
       <section className="py-20 bg-slate-100 border-t border-slate-200 dark:bg-gray-900 dark:border-white/10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">500+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Bodas Cubiertas' : 'Weddings Covered'}</div></div>
+            <div><div className="text-4xl md:text-5xl font-bold mb-2">500+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Clientes satisfech@s' : 'Satisfied Clients'}</div></div>
             <div><div className="text-4xl md:text-5xl font-bold mb-2">10+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Años de Experiencia' : 'Years Experience'}</div></div>
             <div><div className="text-4xl md:text-5xl font-bold mb-2">20+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Ubicaciones' : 'Locations Served'}</div></div>
             <div><div className="text-4xl md:text-5xl font-bold mb-2">5★</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Reseñas en Google' : 'Google Reviews'}</div></div>

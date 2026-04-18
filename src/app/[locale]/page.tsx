@@ -211,7 +211,7 @@ export default async function HomePage({ params: { locale } }: Props) {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
             {[
-              { value: t('stats_weddings'), label: isEs ? 'Bodas cubiertas' : 'Weddings covered' },
+              { value: t('stats_weddings'), label: isEs ? 'Clientes satisfech@s' : 'Satisfied clients' },
               { value: t('stats_years'),    label: isEs ? 'Años de experiencia' : 'Years experience' },
               { value: t('stats_locations'),label: isEs ? 'Ubicaciones' : 'Locations served' },
               { value: t('stats_reviews'),  label: isEs ? '91 reseñas en Google' : '91 Google reviews' },
