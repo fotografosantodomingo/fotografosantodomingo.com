@@ -41,9 +41,6 @@ export default function Footer() {
               <a href={SOCIAL_LINKS.pinterest} target="_blank" rel="noopener noreferrer" aria-label="Pinterest" className="text-gray-400 hover:text-red-400 transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.017 0C5.396 0 0 5.392 0 12.01c0 4.93 2.983 9.166 7.244 11.03-.1-.936-.19-2.374.04-3.397.21-.925 1.347-5.887 1.347-5.887s-.343-.687-.343-1.703c0-1.596.925-2.788 2.077-2.788.98 0 1.453.736 1.453 1.62 0 .988-.63 2.466-.956 3.837-.274 1.156.58 2.098 1.72 2.098 2.064 0 3.652-2.176 3.652-5.316 0-2.779-1.997-4.724-4.85-4.724-3.304 0-5.244 2.478-5.244 5.04 0 .998.384 2.067.864 2.648a.35.35 0 01.08.334c-.09.368-.293 1.156-.332 1.317-.053.214-.173.26-.4.157-1.49-.694-2.42-2.876-2.42-4.63 0-3.77 2.739-7.234 7.9-7.234 4.147 0 7.373 2.956 7.373 6.907 0 4.123-2.6 7.44-6.21 7.44-1.213 0-2.353-.63-2.742-1.376l-.747 2.844c-.27 1.04-1.003 2.34-1.493 3.134 1.124.347 2.313.534 3.548.534C18.624 24 24 18.624 24 12.017 24 5.392 18.624 0 12.017 0z"/></svg>
               </a>
-              <a href={SOCIAL_LINKS.trustpilot} target="_blank" rel="noopener noreferrer" aria-label="Trustpilot" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l2.59 5.26L20.4 8.1l-4.2 4.09.99 5.78L12 15.2l-5.19 2.77.99-5.78L3.6 8.1l5.81-.84L12 2z"/></svg>
-              </a>
               <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="text-gray-400 hover:text-white transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
               </a>
@@ -74,9 +71,37 @@ export default function Footer() {
             <p className="text-sm text-gray-300 mb-3">
               {locale === 'es' ? 'Opiniones verificadas en Trustpilot' : 'Verified opinions on Trustpilot'}
             </p>
-            <div className="rounded-lg border border-emerald-400/30 bg-emerald-500/10 p-3">
+            <div className="rounded-2xl border border-emerald-200 bg-white p-4 text-slate-900 shadow-[0_12px_30px_rgba(0,182,122,0.18)]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-700">
+                {locale === 'es' ? 'Valoración verificada' : 'Verified rating'}
+              </p>
+              <div className="mt-3 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-[4px] bg-[#00B67A] text-xs font-bold leading-none text-white"
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <span className="text-sm font-semibold text-slate-800">
+                  {locale === 'es' ? 'Excelente' : 'Excellent'}
+                </span>
+              </div>
+
+              <a
+                href={SOCIAL_LINKS.trustpilot}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-[#00B67A] px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#009c6a]"
+              >
+                {locale === 'es' ? 'Ver perfil público en Trustpilot' : 'View public Trustpilot profile'}
+              </a>
+
               <div
-                className="trustpilot-widget"
+                className="trustpilot-widget mt-3"
                 data-locale={locale === 'es' ? 'es-ES' : 'en-US'}
                 data-template-id="5419b6a8b0d04a076446a9ad"
                 data-businessunit-id={trustpilotBusinessUnitId}
@@ -86,15 +111,6 @@ export default function Footer() {
               >
                 <a href={SOCIAL_LINKS.trustpilot} target="_blank" rel="noopener noreferrer">Trustpilot</a>
               </div>
-              <a
-                href={SOCIAL_LINKS.trustpilot}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center gap-2 rounded-md border border-[#00B67A]/50 bg-[#00B67A]/15 px-3 py-2 text-xs font-semibold text-[#00B67A] hover:bg-[#00B67A]/25 transition-colors"
-              >
-                <span aria-hidden="true" className="tracking-[0.18em]">★★★★★</span>
-                <span>{locale === 'es' ? 'Ver perfil público' : 'View public profile'}</span>
-              </a>
             </div>
           </div>
 
