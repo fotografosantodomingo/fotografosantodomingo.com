@@ -73,7 +73,7 @@ export default async function HomePage({ params: { locale } }: Props) {
   const isEs = locale === 'es'
 
   const desktopWorkImages = [
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1776561752/sesion-fotos-pareja-playa-punta-cana_ryziuu.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1776563769/sesion-fotos-pareja-playa-punta-cana_nniebt.webp',
     'https://res.cloudinary.com/dwewurxla/image/upload/v1776561751/fotografo-retratos-profesionales-santo-domingo_r93azo.webp',
     'https://res.cloudinary.com/dwewurxla/image/upload/v1776561751/Fotografo_profesional_Santo_Domingo_Sesion_de_Fotos_aradxg.webp',
     'https://res.cloudinary.com/dwewurxla/image/upload/v1776561751/Fotografo_en_Santo_Domingo_retratos_arte_srdiz0.webp',
