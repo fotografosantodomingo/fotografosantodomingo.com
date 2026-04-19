@@ -186,7 +186,7 @@ export default async function HomePage({ params: { locale } }: Props) {
         <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
           <div className="hidden md:block">
             <Image
-              src="https://res.cloudinary.com/dwewurxla/image/upload/v1776563022/Fotografo_Santo_Domingo_Zona_Colonial_republica_Domincana_g7bimm.webp"
+              src="https://res.cloudinary.com/dwewurxla/image/upload/v1776564550/Fotografo_Santo_Domingo_Zona_Colonial_republica_Domincana_mn2u2j.webp"
               alt={isEs
                 ? 'Fotografo Santo Domingo Zona Colonial Republica Dominicana sesion de fotos'
                 : 'Photographer Santo Domingo Zona Colonial Dominican Republic photo session'}
