@@ -5,8 +5,7 @@ import Image from 'next/image'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import HomeFaq from '@/components/HomeFaq'
 import { getFaqData } from '@/lib/faq-data'
-import { getPortfolioImages, getReviewStats } from '@/lib/supabase/images'
-import CloudinaryImage from '@/components/CloudinaryImage'
+import { getReviewStats } from '@/lib/supabase/images'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
@@ -66,14 +65,26 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
 }
 
 export default async function HomePage({ params: { locale } }: Props) {
-  const [t, allImages, reviewStats] = await Promise.all([
+  const [t, reviewStats] = await Promise.all([
     getTranslations({ locale, namespace: 'hero' }),
-    getPortfolioImages(),
     getReviewStats(),
   ])
 
   const isEs = locale === 'es'
-  const previewImages = allImages.slice(0, 6)
+
+  const desktopWorkImages = [
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1776561752/sesion-fotos-pareja-playa-punta-cana_ryziuu.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1776561751/fotografo-retratos-profesionales-santo-domingo_r93azo.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1776561751/Fotografo_profesional_Santo_Domingo_Sesion_de_Fotos_aradxg.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1776561751/Fotografo_en_Santo_Domingo_retratos_arte_srdiz0.webp',
+  ]
+
+  const mobileWorkImages = [
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1776562590/sesion-fotos-pareja-playa-punta-cana_mobvic.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1776562590/Fotografo_profesional_Santo_Domingo_Sesion_de_Fotos_yi7dq9.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1776562589/fotografo-retratos-profesionales-santo-domingo_efdy3v.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1776562589/Fotografo_en_Santo_Domingo_retratos_arte_w7cmuw.webp',
+  ]
 
   // ── JSON-LD schemas ──
   const localBusinessSchema = schemaGenerators.localBusinessWithRating(reviewStats)
@@ -171,35 +182,43 @@ export default async function HomePage({ params: { locale } }: Props) {
     <main className="min-h-screen bg-gray-950 text-white">
 
       {/* ── HERO ── */}
-      <section className="hero-white-lock relative overflow-hidden min-h-screen bg-gray-950 pt-0 md:pt-24 pb-20 lg:pt-32 lg:pb-28 flex items-start lg:items-center">
-        <Image
-          src="https://res.cloudinary.com/dwewurxla/image/upload/v1776527725/Photographer_In_Santo_Domingo_Dominican_Republic_ienr6u.webp"
-          alt={isEs
-            ? 'Fotógrafo en Santo Domingo República Dominicana en sesión de fotos profesional'
-            : 'Photographer in Santo Domingo Dominican Republic during a professional photo session'}
-          fill
-          priority
-          sizes="100vw"
-          className="hidden md:block object-cover object-center md:brightness-110"
-        />
-        <div className="absolute inset-0 hidden md:block bg-gray-950/30" />
-        <div className="absolute inset-0 hidden md:block bg-gradient-to-b from-black/22 via-black/12 to-black/32" />
-
-        <div className="relative container mx-auto px-4 text-center">
-          <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mb-8 md:hidden">
-            <div className="relative w-full aspect-[16/9]">
-              <Image
-                src="https://res.cloudinary.com/dwewurxla/image/upload/v1776527725/Photographer_In_Santo_Domingo_Dominican_Republic_ienr6u.webp"
-                alt={isEs
-                  ? 'Fotógrafo en Santo Domingo República Dominicana en sesión de fotos profesional'
-                  : 'Photographer in Santo Domingo Dominican Republic during a professional photo session'}
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover object-center"
-              />
-            </div>
+      <section className="hero-white-lock relative overflow-hidden bg-gray-950 pt-0 pb-20 md:pb-24 lg:pb-28">
+        <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+          <div className="hidden md:block">
+            <Image
+              src="https://res.cloudinary.com/dwewurxla/image/upload/v1776563022/Fotografo_Santo_Domingo_Zona_Colonial_republica_Domincana_g7bimm.webp"
+              alt={isEs
+                ? 'Fotografo Santo Domingo Zona Colonial Republica Dominicana sesion de fotos'
+                : 'Photographer Santo Domingo Zona Colonial Dominican Republic photo session'}
+              title={isEs
+                ? 'Fotografo Santo Domingo Zona Colonial'
+                : 'Photographer Santo Domingo Zona Colonial'}
+              width={2400}
+              height={1350}
+              priority
+              sizes="100vw"
+              className="w-full h-auto object-contain"
+            />
           </div>
+          <div className="md:hidden">
+            <Image
+              src="https://res.cloudinary.com/dwewurxla/image/upload/v1776563250/Fotografo_En_Santo_Domingo_Republica_Dominicana_if1in7.webp"
+              alt={isEs
+                ? 'Fotografo en Santo Domingo Republica Dominicana sesion de fotos'
+                : 'Photographer in Santo Domingo Dominican Republic photo session'}
+              title={isEs
+                ? 'Fotografo en Santo Domingo Republica Dominicana'
+                : 'Photographer in Santo Domingo Dominican Republic'}
+              width={1080}
+              height={1350}
+              priority
+              sizes="100vw"
+              className="w-full h-auto object-contain"
+            />
+          </div>
+        </div>
+
+        <div className="relative container mx-auto px-4 text-center mt-10 md:mt-12 lg:mt-14">
 
           {/* badge */}
           <div className="hero-white-text inline-flex items-center gap-2 bg-black/35 border border-white/25 rounded-full px-4 py-1.5 text-sm text-white mb-8">
@@ -252,7 +271,7 @@ export default async function HomePage({ params: { locale } }: Props) {
 
       {/* ── PORTFOLIO PREVIEW ── */}
       <section className="py-20 bg-gray-900">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-0 md:px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">
               {isEs ? 'Nuestro Trabajo' : 'Our Work'}
@@ -262,25 +281,46 @@ export default async function HomePage({ params: { locale } }: Props) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-10">
-            {previewImages.map((img, i) => (
-              <Link
-                key={img.id}
-                href={`/${locale}/portfolio`}
-                className="group relative overflow-hidden rounded-xl bg-gray-800"
-              >
-                <CloudinaryImage
-                  publicId={img.public_id}
-                  alt={isEs ? img.alt_es : img.alt_en}
-                  title={isEs ? img.title_es : img.title_en}
-                  width={img.width || 1200}
-                  height={img.height || 800}
-                  className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-500"
-                  priority={i < 2}
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 rounded-xl" />
-              </Link>
-            ))}
+          <div className="mb-10">
+            <div className="hidden md:grid relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid-cols-2 gap-0">
+              {desktopWorkImages.map((src, index) => (
+                <Link key={`desktop-work-${index}`} href={`/${locale}/portfolio`} className="block">
+                  <Image
+                    src={src}
+                    alt={isEs
+                      ? `Sesion de fotos profesional en Santo Domingo Republica Dominicana ${index + 1}`
+                      : `Professional photo session in Santo Domingo Dominican Republic ${index + 1}`}
+                    title={isEs
+                      ? `Fotografo en Santo Domingo sesion ${index + 1}`
+                      : `Photographer in Santo Domingo session ${index + 1}`}
+                    width={2400}
+                    height={1350}
+                    sizes="50vw"
+                    className="w-full h-auto object-contain"
+                  />
+                </Link>
+              ))}
+            </div>
+
+            <div className="md:hidden relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-1 gap-0">
+              {mobileWorkImages.map((src, index) => (
+                <Link key={`mobile-work-${index}`} href={`/${locale}/portfolio`} className="block">
+                  <Image
+                    src={src}
+                    alt={isEs
+                      ? `Sesion vertical de fotos en Santo Domingo Republica Dominicana ${index + 1}`
+                      : `Vertical photo session in Santo Domingo Dominican Republic ${index + 1}`}
+                    title={isEs
+                      ? `Fotografo en Santo Domingo foto vertical ${index + 1}`
+                      : `Photographer in Santo Domingo vertical photo ${index + 1}`}
+                    width={1080}
+                    height={1350}
+                    sizes="100vw"
+                    className="w-full h-auto object-contain"
+                  />
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="text-center">
