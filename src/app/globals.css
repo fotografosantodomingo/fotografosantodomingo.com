@@ -179,3 +179,9 @@ html.light-mode .hero-white-lock .hero-white-card {
   background-color: rgba(0, 0, 0, 0.42) !important;
   border-color: rgba(255, 255, 255, 0.34) !important;
 }
+
+html.light-mode .hero-white-lock .hero-white-highlight {
+  background-image: none !important;
+  color: #dbeafe !important;
+  -webkit-text-fill-color: #dbeafe !important;
+}

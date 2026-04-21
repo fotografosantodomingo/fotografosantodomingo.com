@@ -212,7 +212,7 @@ export default async function HomePage({ params: { locale } }: Props) {
 
           <h1 className="hero-white-text text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-white">
             {t('title_main')}{' '}
-            <span className="bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="hero-white-highlight bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
               {t('title_highlight')}
             </span>
           </h1>

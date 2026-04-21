@@ -24,7 +24,7 @@ function getMailerClient(): MailClient | null {
   const port = Number(process.env.SMTP_PORT || 465)
   const secure = (process.env.SMTP_SECURE || 'true').toLowerCase() !== 'false'
   const user = process.env.SMTP_USER
-  const pass = process.env.SMTP_PASS
+  const pass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD
 
   if (!user || !pass) {
     return null
