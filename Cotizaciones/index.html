@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización Formal - CONOCER AL AUTOR REPUBLICA DOMINICANA SRL</title>
+   <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+   <style>
+       *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+       body {
+           font-family: 'Lato', sans-serif;
+           background: #E8E4DE;
+           color: #1C1C1C;
+           line-height: 1.7;
+           -webkit-font-smoothing: antialiased;
+       }
+
+       /* Download button */
+       .download-bar {
+           position: sticky;
+           top: 0;
+           z-index: 100;
+           display: flex;
+           justify-content: center;
+           padding: 16px 20px;
+           background: rgba(232, 228, 222, 0.92);
+           backdrop-filter: blur(10px);
+           -webkit-backdrop-filter: blur(10px);
+           border-bottom: 1px solid rgba(0,0,0,0.06);
+       }
+       .download-btn {
+           display: inline-flex;
+           align-items: center;
+           gap: 10px;
+           font-family: 'Lato', sans-serif;
+           font-size: 13px;
+           font-weight: 700;
+           letter-spacing: 0.12em;
+           text-transform: uppercase;
+           color: #FFFFFF;
+           background: #1C1C1C;
+           border: none;
+           padding: 14px 36px;
+           border-radius: 4px;
+           cursor: pointer;
+           transition: background 0.2s, transform 0.15s;
+           box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+       }
+       .download-btn:hover {
+           background: #333;
+           transform: translateY(-1px);
+           box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+       }
+       .download-btn:active {
+           transform: translateY(0);
+       }
+       .download-btn svg {
+           width: 16px;
+           height: 16px;
+       }
+
+       .download-btn[disabled] {
+           opacity: 0.7;
+           cursor: not-allowed;
+           transform: none;
+       }
+
+       .page-wrapper {
+           max-width: 820px;
+           margin: 0 auto 40px;
+           background: #FFFFFF;
+           box-shadow: 0 4px 40px rgba(0,0,0,0.10);
+           border-radius: 4px;
+           overflow: hidden;
+       }
+
+       .top-bar {
+           height: 6px;
+           background: linear-gradient(90deg, #1C1C1C 0%, #3a3a3a 50%, #1C1C1C 100%);
+       }
+
+       .header {
+           padding: 48px 56px 40px;
+           border-bottom: 1px solid #E8E4DE;
+           display: flex;
+           justify-content: space-between;
+           align-items: flex-start;
+           flex-wrap: wrap;
+           gap: 24px;
+       }
+       .header-label {
+           font-size: 10px;
+           font-weight: 700;
+           letter-spacing: 0.25em;
+           text-transform: uppercase;
+           color: #888;
+           margin-bottom: 12px;
+       }
+       .header-title {
+           font-size: 28px;
+           font-weight: 900;
+           line-height: 1.2;
+           color: #1C1C1C;
+           letter-spacing: -0.02em;
+       }
+       .header-subtitle {
+           font-size: 15px;
+           font-weight: 400;
+           color: #666;
+           margin-top: 6px;
+       }
+       .target-company-wrap {
+           margin-top: 14px;
+           display: inline-flex;
+           align-items: center;
+           gap: 8px;
+           background: #F5F3EF;
+           border: 1px solid #E8E4DE;
+           border-radius: 4px;
+           padding: 8px 12px;
+       }
+       .target-company-label {
+           font-size: 10px;
+           font-weight: 700;
+           letter-spacing: 0.14em;
+           text-transform: uppercase;
+           color: #777;
+           white-space: nowrap;
+       }
+       .target-company-input {
+           font-size: 13px;
+           font-weight: 700;
+           color: #1C1C1C;
+           min-width: 170px;
+           outline: none;
+           border-bottom: 1px dashed #c7c2ba;
+           line-height: 1.4;
+       }
+       .header-right {
+           text-align: right;
+           font-size: 12px;
+           color: #888;
+           line-height: 1.8;
+       }
+       .header-right strong {
+           color: #1C1C1C;
+           font-weight: 700;
+       }
+       .header-rnc {
+           display: inline-block;
+           font-size: 10px;
+           font-weight: 700;
+           letter-spacing: 0.12em;
+           background: #F5F3EF;
+           border: 1px solid #E8E4DE;
+           padding: 3px 10px;
+           border-radius: 3px;
+           color: #555;
+           margin-top: 4px;
+       }
+
+       .content {
+           padding: 0 56px;
+       }
+       .section {
+           padding: 36px 0;
+           border-bottom: 1px solid #E8E4DE;
+       }
+       .section:last-child {
+           border-bottom: none;
+       }
+       .section-number {
+           display: inline-block;
+           font-size: 10px;
+           font-weight: 700;
+           letter-spacing: 0.2em;
+           text-transform: uppercase;
+           color: #FFFFFF;
+           background: #1C1C1C;
+           width: 24px;
+           height: 24px;
+           text-align: center;
+           line-height: 24px;
+           border-radius: 50%;
+           margin-right: 10px;
+           vertical-align: middle;
+       }
+       .section-title {
+           display: inline-block;
+           font-size: 13px;
+           font-weight: 700;
+           letter-spacing: 0.18em;
+           text-transform: uppercase;
+           color: #1C1C1C;
+           vertical-align: middle;
+           margin-bottom: 18px;
+       }
+       .section p {
+           font-size: 14px;
+           color: #444;
+           margin-bottom: 12px;
+           text-align: justify;
+       }
+       .section p:last-child { margin-bottom: 0; }
+
+       .scope-grid {
+           display: grid;
+           grid-template-columns: 1fr 1fr;
+           gap: 8px 32px;
+           margin-top: 16px;
+       }
+       .scope-item {
+           font-size: 13px;
+           color: #444;
+           display: flex;
+           align-items: flex-start;
+           gap: 8px;
+       }
+       .scope-item .dot {
+           display: inline-block;
+           width: 5px;
+           height: 5px;
+           background: #1C1C1C;
+           border-radius: 50%;
+           margin-top: 8px;
+           flex-shrink: 0;
+       }
+       .scope-item span {
+           font-weight: 700;
+           color: #1C1C1C;
+       }
+
+       .equip-tags {
+           display: flex;
+           flex-wrap: wrap;
+           gap: 8px;
+           margin-top: 16px;
+       }
+       .equip-tag {
+           font-size: 11px;
+           font-weight: 700;
+           letter-spacing: 0.08em;
+           text-transform: uppercase;
+           background: #F5F3EF;
+           color: #1C1C1C;
+           padding: 7px 16px;
+           border-radius: 3px;
+           border: 1px solid #E8E4DE;
+       }
+
+       .deliverables-list {
+           list-style: none;
+           margin-top: 14px;
+       }
+       .deliverables-list li {
+           font-size: 13px;
+           color: #444;
+           padding: 10px 0;
+           border-bottom: 1px solid #F5F3EF;
+           display: flex;
+           align-items: flex-start;
+           gap: 10px;
+       }
+       .deliverables-list li:last-child { border-bottom: none; }
+       .deliverables-list li .check {
+           color: #1C1C1C;
+           font-weight: 900;
+           font-size: 14px;
+           flex-shrink: 0;
+           margin-top: 1px;
+       }
+
+       .note-box {
+           margin-top: 18px;
+           background: #F9F8F6;
+           border-left: 3px solid #1C1C1C;
+           padding: 14px 18px;
+           font-size: 13px;
+           color: #555;
+           font-style: italic;
+       }
+
+       .pricing-table {
+           width: 100%;
+           border-collapse: collapse;
+           margin-top: 16px;
+       }
+       .pricing-table th {
+           font-size: 10px;
+           font-weight: 700;
+           letter-spacing: 0.18em;
+           text-transform: uppercase;
+           color: #888;
+           text-align: left;
+           padding: 10px 0;
+           border-bottom: 2px solid #1C1C1C;
+       }
+       .pricing-table th:last-child { text-align: right; }
+       .pricing-table td {
+           font-size: 14px;
+           color: #444;
+           padding: 14px 0;
+           border-bottom: 1px solid #F0EDE8;
+       }
+       .pricing-table td:last-child {
+           text-align: right;
+           font-weight: 700;
+           color: #1C1C1C;
+           font-size: 15px;
+       }
+       .pricing-table tr.total-row td {
+           border-bottom: none;
+           border-top: 2px solid #1C1C1C;
+           padding-top: 16px;
+       }
+       .pricing-table tr.total-row td:last-child {
+           font-size: 22px;
+           font-weight: 900;
+           letter-spacing: -0.02em;
+       }
+
+       .payment-cards {
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+           margin-top: 18px;
+       }
+       .payment-card {
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           background: #F9F8F6;
+           border: 1px solid #E8E4DE;
+           border-radius: 4px;
+           padding: 16px 20px;
+           flex-wrap: wrap;
+           gap: 8px;
+       }
+       .payment-card-left {
+           display: flex;
+           align-items: center;
+           gap: 14px;
+       }
+       .payment-percent {
+           font-size: 28px;
+           font-weight: 900;
+           color: #1C1C1C;
+           line-height: 1;
+           min-width: 60px;
+       }
+       .payment-desc {
+           font-size: 12px;
+           color: #888;
+           line-height: 1.5;
+       }
+       .payment-desc strong {
+           display: block;
+           color: #444;
+           font-weight: 700;
+           font-size: 13px;
+       }
+       .payment-amount {
+           font-size: 18px;
+           font-weight: 900;
+           color: #1C1C1C;
+       }
+
+       .bank-info {
+           margin-top: 20px;
+           background: #1C1C1C;
+           color: #FFFFFF;
+           border-radius: 4px;
+           padding: 24px 28px;
+       }
+       .bank-info-title {
+           font-size: 10px;
+           font-weight: 700;
+           letter-spacing: 0.2em;
+           text-transform: uppercase;
+           color: #888;
+           margin-bottom: 14px;
+       }
+       .bank-row {
+           display: flex;
+           justify-content: space-between;
+           padding: 7px 0;
+           border-bottom: 1px solid rgba(255,255,255,0.08);
+           font-size: 13px;
+       }
+       .bank-row:last-child { border-bottom: none; }
+       .bank-row .label { color: #888; }
+       .bank-row .value { color: #fff; font-weight: 700; text-align: right; }
+
+       .rights-highlight {
+           font-size: 13px;
+           color: #444;
+           padding: 16px 20px;
+           background: #F9F8F6;
+           border-radius: 4px;
+           border: 1px solid #E8E4DE;
+           margin-top: 14px;
+           line-height: 1.8;
+       }
+       .rights-highlight strong {
+           color: #1C1C1C;
+       }
+
+       .license-badges {
+           display: flex;
+           gap: 12px;
+           flex-wrap: wrap;
+           margin-top: 14px;
+       }
+       .license-badge {
+           font-size: 11px;
+           font-weight: 700;
+           font-family: 'Courier New', monospace;
+           letter-spacing: 0.04em;
+           background: #F5F3EF;
+           border: 1px solid #E8E4DE;
+           padding: 10px 18px;
+           border-radius: 4px;
+           color: #1C1C1C;
+       }
+       .license-badge small {
+           display: block;
+           font-family: 'Lato', sans-serif;
+           font-size: 9px;
+           font-weight: 700;
+           letter-spacing: 0.15em;
+           text-transform: uppercase;
+           color: #999;
+           margin-bottom: 4px;
+       }
+
+       .validity-box {
+           display: inline-flex;
+           align-items: center;
+           gap: 10px;
+           background: #F5F3EF;
+           border: 1px solid #E8E4DE;
+           padding: 12px 20px;
+           border-radius: 4px;
+           font-size: 13px;
+           color: #444;
+           margin-top: 10px;
+       }
+       .validity-box strong {
+           color: #1C1C1C;
+           font-weight: 900;
+       }
+
+       .footer {
+           padding: 40px 56px 48px;
+           border-top: 1px solid #E8E4DE;
+       }
+       .footer-message {
+           font-size: 13px;
+           color: #888;
+           font-style: italic;
+           margin-bottom: 28px;
+           text-align: justify;
+       }
+       .signature-block {
+           display: flex;
+           align-items: flex-end;
+           gap: 20px;
+       }
+       .signature-line {
+           border-bottom: 1.5px solid #1C1C1C;
+           width: 220px;
+           padding-bottom: 6px;
+       }
+       .signature-name {
+           font-size: 14px;
+           font-weight: 900;
+           color: #1C1C1C;
+           margin-top: 8px;
+       }
+       .signature-role {
+           font-size: 11px;
+           color: #888;
+           letter-spacing: 0.06em;
+           margin-top: 2px;
+       }
+       .signature-logo {
+           font-size: 11px;
+           font-weight: 700;
+           letter-spacing: 0.15em;
+           text-transform: uppercase;
+           color: #BBB;
+           margin-left: auto;
+           padding-bottom: 10px;
+       }
+
+       /* Toast notification */
+       .toast {
+           position: fixed;
+           bottom: 30px;
+           left: 50%;
+           transform: translateX(-50%) translateY(100px);
+           background: #1C1C1C;
+           color: #fff;
+           font-family: 'Lato', sans-serif;
+           font-size: 13px;
+           font-weight: 400;
+           padding: 14px 28px;
+           border-radius: 4px;
+           box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+           opacity: 0;
+           transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.4s;
+           z-index: 200;
+           pointer-events: none;
+       }
+       .toast.show {
+           transform: translateX(-50%) translateY(0);
+           opacity: 1;
+       }
+
+       @media (max-width: 640px) {
+           .page-wrapper { margin: 0 0 40px; border-radius: 0; }
+           .header, .content, .footer { padding-left: 28px; padding-right: 28px; }
+           .header { padding-top: 32px; padding-bottom: 28px; }
+           .header-title { font-size: 22px; }
+           .scope-grid { grid-template-columns: 1fr; }
+           .payment-card { flex-direction: column; align-items: flex-start; }
+           .payment-amount { align-self: flex-end; }
+           .bank-row { flex-direction: column; gap: 2px; }
+           .bank-row .value { text-align: left; }
+           .signature-block { flex-direction: column; align-items: flex-start; }
+           .signature-logo { margin-left: 0; margin-top: 20px; }
+           .download-btn { padding: 12px 24px; font-size: 11px; }
+       }
+
+       @media print {
+           body { background: #fff; }
+           .download-bar { display: none !important; }
+           .toast { display: none !important; }
+           .page-wrapper { margin: 0; box-shadow: none; border-radius: 0; }
+           .section { break-inside: avoid; }
+           @page {
+               size: A4;
+               margin: 0;
+           }
+       }
+   </style>
+</head>
+<body>
+
+<!-- Download bar -->
+<div class="download-bar">
+   <button class="download-btn" onclick="downloadPDF()">
+       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"/>
+       </svg>
+       Descarga
+   </button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Selecciona "Guardar como PDF" en la ventana de impresión</div>
+
+<div class="page-wrapper">
+   <div class="top-bar"></div>
+
+   <div class="header">
+       <div class="header-left">
+           <div class="header-label">Cotización Formal</div>
+           <div class="header-title">Proyecto de Documentación<br>Visual con Drone</div>
+           <div class="header-subtitle">Macao, Punta Cana - República Dominicana</div>
+           <div class="target-company-wrap">
+               <span class="target-company-label">Cliente</span>
+               <span class="target-company-input" id="target-company-input" contenteditable="true" spellcheck="false">Company Right Constructions</span>
+           </div>
+       </div>
+       <div class="header-right">
+           <strong>CONOCER AL AUTOR REPUBLICA DOMINICANA SRL</strong><br>
+           Servicios Profesionales de Drone<br>
+           y Contenido Visual<br>
+           Santo Domingo · Punta Cana<br>
+           <strong>Tel:</strong> +1 809 720 9547<br>
+           <span class="header-rnc">RNC 13353271-9</span>
+       </div>
+   </div>
+
+   <div class="content">
+
+       <div class="section">
+           <div class="section-number">1</div>
+           <div class="section-title">Presentación</div>
+           <p>
+               Por medio del presente documento, me complace presentar la propuesta formal para la
+               documentación visual mediante drone hyperlapse, destinada a registrar de manera profesional
+               y precisa el progreso de un proyecto de gran escala desarrollado por <strong class="target-company-text">Company Right Constructions</strong>, Calle Gala #16, Arroyo Hondo Viejo, Santo Domingo RD.
+           </p>
+           <p>
+               El objetivo principal es generar un registro visual de alta calidad, manteniendo consistencia en
+               iluminación, encuadre y trayectoria de vuelo a lo largo de un periodo de <strong>1 año y medio</strong>.
+           </p>
+       </div>
+
+       <div class="section">
+           <div class="section-number">2</div>
+           <div class="section-title">Alcance del Proyecto</div>
+           <div class="scope-grid">
+               <div class="scope-item"><div class="dot"></div><span>Ubicación:</span> Macao, Punta Cana</div>
+               <div class="scope-item"><div class="dot"></div><span>Duración:</span> 1 año y medio (18 meses)</div>
+               <div class="scope-item"><div class="dot"></div><span>Frecuencia:</span> Una visita cada dos semanas</div>
+               <div class="scope-item"><div class="dot"></div><span>Total visitas:</span> 36 visitas</div>
+               <div class="scope-item"><div class="dot"></div><span>Duración/visita:</span> ~1h 30min (3 baterías)</div>
+               <div class="scope-item"><div class="dot"></div><span>Horario:</span> Mediodía (luz consistente)</div>
+               <div class="scope-item"><div class="dot"></div><span>Técnica:</span> Hyperlapse por waypoints</div>
+               <div class="scope-item"><div class="dot"></div><span>Precisión:</span> Máxima (puntos de referencia)</div>
+           </div>
+           <div class="equip-tags">
+               <div class="equip-tag">DJI Mavic 3</div>
+               <div class="equip-tag">Resolución 4K UHD</div>
+               <div class="equip-tag">Filtros ND 64-512</div>
+               <div class="equip-tag">Control Profesional de Exposición</div>
+           </div>
+       </div>
+
+       <div class="section">
+           <div class="section-number">3</div>
+           <div class="section-title">Entregables</div>
+           <p>El proyecto contempla la entrega de las siguientes piezas visuales editadas:</p>
+           <ul class="deliverables-list">
+               <li>
+                   <div class="check">✦</div>
+                   <div>Un <strong>video principal de larga duración</strong> que muestre el progreso completo del proyecto durante los 18 meses.</div>
+               </li>
+               <li>
+                   <div class="check">✦</div>
+                   <div><strong>Versiones de duración media</strong> enfocadas en hitos clave del proceso constructivo.</div>
+               </li>
+               <li>
+                   <div class="check">✦</div>
+                   <div><strong>Versiones cortas optimizadas</strong> para redes sociales, presentaciones ejecutivas y material promocional.</div>
+               </li>
+               <li>
+                   <div class="check">✦</div>
+                   <div><strong>Todo el material original</strong> grabado durante cada visita (archivos RAW).</div>
+               </li>
+               <li>
+                   <div class="check">✦</div>
+                   <div><strong>Posibilidad de incorporar</strong> textos, descripciones y elementos gráficos personalizados según requerimientos.</div>
+               </li>
+           </ul>
+           <div class="note-box">
+               Este enfoque garantiza la creación de un banco visual completo y versátil, ideal para uso
+               corporativo, comercial y de marketing.
+           </div>
+       </div>
+
+       <div class="section">
+           <div class="section-number">4</div>
+           <div class="section-title">Inversión</div>
+           <table class="pricing-table">
+               <thead>
+                   <tr>
+                       <th>Concepto</th>
+                       <th>Monto</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   <tr>
+                       <td>Costo por visita (36 visitas)</td>
+                       <td>USD 193.60</td>
+                   </tr>
+                   <tr class="total-row">
+                       <td>Total del Proyecto</td>
+                       <td>USD 6,969.60</td>
+                   </tr>
+               </tbody>
+           </table>
+       </div>
+
+       <div class="section">
+           <div class="section-number">5</div>
+           <div class="section-title">Condiciones de Pago</div>
+           <p>El pago se realizará mediante <strong>transferencia bancaria</strong> según el siguiente cronograma:</p>
+
+           <div class="payment-cards">
+               <div class="payment-card">
+                   <div class="payment-card-left">
+                       <div class="payment-percent">20%</div>
+                       <div class="payment-desc">
+                           <strong>Anticipo al inicio del contrato</strong>
+                           Para confirmar y reservar el proyecto
+                       </div>
+                   </div>
+                   <div class="payment-amount">USD 1,393.92</div>
+               </div>
+               <div class="payment-card">
+                   <div class="payment-card-left">
+                       <div class="payment-percent">50%</div>
+                       <div class="payment-desc">
+                           <strong>A mitad del contrato</strong>
+                           Después de la visita 18
+                       </div>
+                   </div>
+                   <div class="payment-amount">USD 3,484.80</div>
+               </div>
+               <div class="payment-card">
+                   <div class="payment-card-left">
+                       <div class="payment-percent">30%</div>
+                       <div class="payment-desc">
+                           <strong>Contra entrega final</strong>
+                           Al completar las 36 visitas y entrega de productos
+                       </div>
+                   </div>
+                   <div class="payment-amount">USD 2,090.88</div>
+               </div>
+           </div>
+
+           <p style="margin-top: 18px; font-size: 13px; color: #888;">
+               El proyecto iniciará una vez recibido el anticipo correspondiente.
+           </p>
+
+           <div class="bank-info">
+               <div class="bank-info-title">Datos para Transferencia Bancaria</div>
+               <div class="bank-row">
+                   <div class="label">Razón social</div>
+                   <div class="value">CONOCER AL AUTOR REPUBLICA DOMINICANA SRL</div>
+               </div>
+               <div class="bank-row">
+                   <div class="label">RNC</div>
+                   <div class="value">13353271-9</div>
+               </div>
+               <div class="bank-row">
+                   <div class="label">Correo electrónico</div>
+                   <div class="value">info@babulashots.pl</div>
+               </div>
+               <div class="bank-row">
+                   <div class="label">Cuenta de ahorros US$</div>
+                   <div class="value">33462030036</div>
+               </div>
+               <div class="bank-row">
+                   <div class="label">Banco</div>
+                   <div class="value">Banco BHD</div>
+               </div>
+               <div class="bank-row">
+                   <div class="label">Cuenta estándar (IBAN)</div>
+                   <div class="value">DO64BCBH00000000033462030036</div>
+               </div>
+           </div>
+       </div>
+
+       <div class="section">
+           <div class="section-number">6</div>
+           <div class="section-title">Cesión Total de Derechos y Propiedad del Material</div>
+           <div class="rights-highlight">
+               Todo el material visual producido durante el desarrollo del proyecto -incluyendo videos
+               editados, versiones finales, material original (RAW) y cualquier contenido derivado- será
+               <strong>propiedad exclusiva de <span class="target-company-text">Company Right Constructions</span></strong> una vez completados los pagos
+               establecidos en esta cotización.
+           </div>
+           <p style="margin-top: 14px;">
+               <strong class="target-company-text">Company Right Constructions</strong> podrá utilizar el contenido para fines corporativos,
+               comerciales, promocionales, institucionales, publicitarios o de marketing en cualquier medio físico
+               o digital, presente o futuro.
+           </p>
+           <p>
+               CONOCER AL AUTOR REPUBLICA DOMINICANA SRL se reserva únicamente el derecho de utilizar fragmentos del material con fines de
+               portafolio profesional y promoción de servicios, <strong>salvo que el cliente solicite
+               confidencialidad por escrito</strong>.
+           </p>
+       </div>
+
+       <div class="section">
+           <div class="section-number">7</div>
+           <div class="section-title">Licencias y Certificaciones</div>
+           <div class="license-badges">
+               <div class="license-badge">
+                   <small>Licencia BVLOS</small>
+                   POL-RP-c8b59268157j
+               </div>
+               <div class="license-badge">
+                   <small>Licencia VLOS</small>
+                   POL-RP-d1c54301b3dk
+               </div>
+           </div>
+       </div>
+
+       <div class="section">
+           <div class="section-number">8</div>
+           <div class="section-title">Vigencia de la Cotización</div>
+           <div class="validity-box">
+               Esta cotización tiene una validez de <strong>15 días</strong> a partir de su emisión.
+           </div>
+       </div>
+
+   </div>
+
+   <div class="footer">
+       <p class="footer-message">
+           Quedo a su disposición para cualquier consulta o ajuste que considere necesario. Será un honor
+           colaborar en la documentación profesional y estratégica de este importante proyecto.
+       </p>
+       <div class="signature-block">
+           <div>
+               <div class="signature-line"></div>
+               <div class="signature-name">Michal Babula</div>
+               <div class="signature-role">CONOCER AL AUTOR REPUBLICA DOMINICANA SRL</div>
+               <div class="signature-role">Servicios Profesionales de Drone y Contenido Visual</div>
+           </div>
+           <div class="signature-logo">CONOCER AL AUTOR REPUBLICA DOMINICANA SRL</div>
+       </div>
+   </div>
+
+   <div class="top-bar"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+   function getTargetCompanyName() {
+       const input = document.getElementById('target-company-input');
+       const value = input ? input.textContent.trim() : '';
+       return value || 'Cliente';
+   }
+
+   function syncTargetCompanyMentions() {
+       const company = getTargetCompanyName();
+       const mentions = document.querySelectorAll('.target-company-text');
+       mentions.forEach((node) => {
+           node.textContent = company;
+       });
+   }
+
+   function sanitizeFilePart(value) {
+       return value
+           .normalize('NFD')
+           .replace(/[\u0300-\u036f]/g, '')
+           .replace(/[^a-zA-Z0-9]+/g, '-')
+           .replace(/^-+|-+$/g, '')
+           .toLowerCase();
+   }
+
+   async function downloadPDF() {
+       const toast = document.getElementById('toast');
+       const button = document.querySelector('.download-btn');
+       const element = document.querySelector('.page-wrapper');
+       const targetCompany = getTargetCompanyName();
+       const filename = 'cotizacion-' + sanitizeFilePart(targetCompany) + '.pdf';
+
+       if (!window.html2pdf || !element || !button || !toast) {
+           return;
+       }
+
+       button.disabled = true;
+       const originalLabel = button.lastChild && button.lastChild.nodeType === Node.TEXT_NODE
+           ? button.lastChild.textContent
+           : '';
+
+       if (button.lastChild && button.lastChild.nodeType === Node.TEXT_NODE) {
+           button.lastChild.textContent = ' Generando PDF...';
+       }
+
+       toast.textContent = 'Generando PDF, la descarga iniciara en unos segundos...';
+       toast.classList.add('show');
+
+       try {
+           await html2pdf()
+               .set({
+                   margin: 0,
+                   filename: filename,
+                   image: { type: 'jpeg', quality: 0.98 },
+                   html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                   jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                   pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+               })
+               .from(element)
+               .save();
+
+           toast.textContent = 'PDF descargado correctamente';
+           setTimeout(() => toast.classList.remove('show'), 2500);
+       } catch (error) {
+           toast.textContent = 'No se pudo generar el PDF. Intenta nuevamente.';
+           setTimeout(() => toast.classList.remove('show'), 3500);
+           console.error(error);
+       } finally {
+           if (button.lastChild && button.lastChild.nodeType === Node.TEXT_NODE) {
+               button.lastChild.textContent = originalLabel;
+           }
+           button.disabled = false;
+       }
+   }
+
+   const companyInput = document.getElementById('target-company-input');
+   if (companyInput) {
+       companyInput.addEventListener('input', syncTargetCompanyMentions);
+       companyInput.addEventListener('blur', syncTargetCompanyMentions);
+   }
+
+   syncTargetCompanyMentions();
+</script>
+
+</body>
+</html>
