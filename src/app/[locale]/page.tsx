@@ -73,17 +73,17 @@ export default async function HomePage({ params: { locale } }: Props) {
   const isEs = locale === 'es'
 
   const desktopWorkImages = [
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1776563769/sesion-fotos-pareja-playa-punta-cana_nniebt.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1776561751/fotografo-retratos-profesionales-santo-domingo_r93azo.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1776561751/Fotografo_profesional_Santo_Domingo_Sesion_de_Fotos_aradxg.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1776561751/Fotografo_en_Santo_Domingo_retratos_arte_srdiz0.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/w_1200,c_limit,f_auto,q_auto/v1776563769/sesion-fotos-pareja-playa-punta-cana_nniebt.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/w_1200,c_limit,f_auto,q_auto/v1776561751/fotografo-retratos-profesionales-santo-domingo_r93azo.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/w_1200,c_limit,f_auto,q_auto/v1776561751/Fotografo_profesional_Santo_Domingo_Sesion_de_Fotos_aradxg.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/w_1200,c_limit,f_auto,q_auto/v1776561751/Fotografo_en_Santo_Domingo_retratos_arte_srdiz0.webp',
   ]
 
   const mobileWorkImages = [
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1776562590/sesion-fotos-pareja-playa-punta-cana_mobvic.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1776562590/Fotografo_profesional_Santo_Domingo_Sesion_de_Fotos_yi7dq9.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1776562589/fotografo-retratos-profesionales-santo-domingo_efdy3v.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1776562589/Fotografo_en_Santo_Domingo_retratos_arte_w7cmuw.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/w_900,c_limit,f_auto,q_auto/v1776562590/sesion-fotos-pareja-playa-punta-cana_mobvic.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/w_900,c_limit,f_auto,q_auto/v1776562590/Fotografo_profesional_Santo_Domingo_Sesion_de_Fotos_yi7dq9.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/w_900,c_limit,f_auto,q_auto/v1776562589/fotografo-retratos-profesionales-santo-domingo_efdy3v.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/w_900,c_limit,f_auto,q_auto/v1776562589/Fotografo_en_Santo_Domingo_retratos_arte_w7cmuw.webp',
   ]
 
   // ── JSON-LD schemas ──
@@ -184,22 +184,36 @@ export default async function HomePage({ params: { locale } }: Props) {
       {/* ── HERO ── */}
       <section className="hero-white-lock relative overflow-hidden bg-gray-950 pt-0 pb-20 md:pb-24 lg:pb-28">
         <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-          <picture>
-            <source
-              media="(max-width: 767px)"
-              srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1776563250/Fotografo_En_Santo_Domingo_Republica_Dominicana_if1in7.webp"
-            />
+          <div className="hidden md:block relative w-full overflow-hidden" style={{ aspectRatio: '1200 / 675' }}>
             <img
-              src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1920/v1776564550/Fotografo_Santo_Domingo_Zona_Colonial_republica_Domincana_mn2u2j.webp"
+              src="https://res.cloudinary.com/dwewurxla/image/upload/w_1200,c_limit,f_auto,q_auto/v1776564550/Fotografo_Santo_Domingo_Zona_Colonial_republica_Domincana_mn2u2j.webp"
               alt={isEs
                 ? 'Fotografo Santo Domingo Zona Colonial Republica Dominicana'
                 : 'Photographer Santo Domingo Zona Colonial Dominican Republic'}
-              className="w-full h-auto object-contain"
+              width={1200}
+              height={675}
+              sizes="100vw"
+              className="absolute inset-0 h-full w-full object-cover"
               fetchPriority="high"
               loading="eager"
               decoding="async"
             />
-          </picture>
+          </div>
+          <div className="md:hidden relative w-full overflow-hidden" style={{ aspectRatio: '4 / 5' }}>
+            <img
+              src="https://res.cloudinary.com/dwewurxla/image/upload/w_800,c_limit,f_auto,q_auto/v1776563250/Fotografo_En_Santo_Domingo_Republica_Dominicana_if1in7.webp"
+              alt={isEs
+                ? 'Fotografo en Santo Domingo Republica Dominicana sesion de fotos'
+                : 'Photographer in Santo Domingo Dominican Republic photo session'}
+              width={800}
+              height={1000}
+              sizes="100vw"
+              className="absolute inset-0 h-full w-full object-cover"
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
         </div>
 
         <div className="relative container mx-auto px-4 text-center mt-10 md:mt-12 lg:mt-14">
@@ -279,7 +293,8 @@ export default async function HomePage({ params: { locale } }: Props) {
                       : `Photographer in Santo Domingo session ${index + 1}`}
                     width={2400}
                     height={1350}
-                    sizes="50vw"
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    unoptimized
                     className="w-full h-auto object-contain"
                   />
                 </Link>
@@ -300,6 +315,7 @@ export default async function HomePage({ params: { locale } }: Props) {
                     width={1080}
                     height={1350}
                     sizes="100vw"
+                    unoptimized
                     className="w-full h-auto object-contain"
                   />
                 </Link>
