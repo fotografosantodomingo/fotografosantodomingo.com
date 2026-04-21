@@ -8,7 +8,6 @@ export default function Footer() {
   const t = useTranslations('footer')
   const locale = useLocale()
   const year = new Date().getFullYear()
-  const trustpilotBusinessUnitId = process.env.NEXT_PUBLIC_TRUSTPILOT_BUSINESS_UNIT_ID || 'koOlqqOSlJEnxKKc'
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -99,18 +98,6 @@ export default function Footer() {
               >
                 {locale === 'es' ? 'Ver perfil público en Trustpilot' : 'View public Trustpilot profile'}
               </a>
-
-              <div
-                className="trustpilot-widget mt-3"
-                data-locale={locale === 'es' ? 'es-ES' : 'en-US'}
-                data-template-id="5419b6a8b0d04a076446a9ad"
-                data-businessunit-id={trustpilotBusinessUnitId}
-                data-style-height="24px"
-                data-style-width="100%"
-                data-theme="light"
-              >
-                <a href={SOCIAL_LINKS.trustpilot} target="_blank" rel="noopener noreferrer">Trustpilot</a>
-              </div>
             </div>
           </div>
 

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
-import Image from 'next/image'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import HomeFaq from '@/components/HomeFaq'
 import { getFaqData } from '@/lib/faq-data'
@@ -283,18 +282,16 @@ export default async function HomePage({ params: { locale } }: Props) {
             <div className="hidden md:grid relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid-cols-2 gap-0">
               {desktopWorkImages.map((src, index) => (
                 <Link key={`desktop-work-${index}`} href={`/${locale}/portfolio`} className="block">
-                  <Image
+                  <img
                     src={src}
                     alt={isEs
                       ? `Sesion de fotos profesional en Santo Domingo Republica Dominicana ${index + 1}`
                       : `Professional photo session in Santo Domingo Dominican Republic ${index + 1}`}
-                    title={isEs
-                      ? `Fotografo en Santo Domingo sesion ${index + 1}`
-                      : `Photographer in Santo Domingo session ${index + 1}`}
                     width={2400}
                     height={1350}
                     sizes="(min-width: 768px) 50vw, 100vw"
-                    unoptimized
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-auto object-contain"
                   />
                 </Link>
@@ -304,18 +301,16 @@ export default async function HomePage({ params: { locale } }: Props) {
             <div className="md:hidden relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-1 gap-0">
               {mobileWorkImages.map((src, index) => (
                 <Link key={`mobile-work-${index}`} href={`/${locale}/portfolio`} className="block">
-                  <Image
+                  <img
                     src={src}
                     alt={isEs
                       ? `Sesion vertical de fotos en Santo Domingo Republica Dominicana ${index + 1}`
                       : `Vertical photo session in Santo Domingo Dominican Republic ${index + 1}`}
-                    title={isEs
-                      ? `Fotografo en Santo Domingo foto vertical ${index + 1}`
-                      : `Photographer in Santo Domingo vertical photo ${index + 1}`}
                     width={1080}
                     height={1350}
                     sizes="100vw"
-                    unoptimized
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-auto object-contain"
                   />
                 </Link>
@@ -392,7 +387,7 @@ export default async function HomePage({ params: { locale } }: Props) {
             {testimonials.map((t) => (
               <div key={t.name} className="bg-gray-950 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
                 <div className="flex text-yellow-400 text-lg">{'★'.repeat(t.rating)}</div>
-                <p className="text-gray-300 leading-relaxed flex-1">"{t.text}"</p>
+                <p className="text-gray-300 leading-relaxed flex-1">&ldquo;{t.text}&rdquo;</p>
                 <div>
                   <p className="font-semibold text-white">{t.name}</p>
                   <p className="text-xs text-gray-500">{t.role}</p>
