@@ -84,7 +84,7 @@ export default function CotizacionesPage({ params: { locale } }: Props) {
           <div className="overflow-hidden rounded-md border border-stone-200 bg-white shadow-sm">
             <iframe
               title={isEs ? 'Cotizacion Formal' : 'Formal Quotation'}
-              src="/cotizaciones/index.html"
+              src="/cotizaciones/Right-Constructions-1.html"
               className="h-[92vh] w-full"
             />
           </div>
