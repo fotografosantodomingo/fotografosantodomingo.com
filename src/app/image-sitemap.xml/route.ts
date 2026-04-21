@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getPortfolioImages } from '@/lib/supabase/images'
 
+export const runtime = 'edge'
+
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dwewurxla'
 

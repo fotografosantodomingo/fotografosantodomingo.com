@@ -15,6 +15,8 @@ import { redirect } from 'next/navigation'
 import { getPortfolioImages } from '@/lib/supabase/images'
 import ImageSeoEditor from '@/components/admin/ImageSeoEditor'
 
+export const runtime = 'edge'
+
 interface AdminImagesPageProps {
   searchParams: { key?: string }
 }

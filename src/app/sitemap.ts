@@ -2,6 +2,8 @@ import { MetadataRoute } from 'next'
 import { getAllSlugs } from '@/lib/supabase/blog'
 import { serviceLandingSlugs } from '@/lib/services/catalog'
 
+export const runtime = 'edge'
+
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
 export const revalidate = 0
