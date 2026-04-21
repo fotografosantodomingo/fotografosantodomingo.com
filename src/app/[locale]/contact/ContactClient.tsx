@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
-import { submitContactForm } from '@/lib/actions/contact'
 
 type FormData = {
   name: string
@@ -21,6 +20,7 @@ type FormErrors = {
 
 export default function ContactPage() {
   const t = useTranslations()
+  const locale = useLocale()
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -95,9 +95,18 @@ export default function ContactPage() {
     setSubmitStatus('idle')
 
     try {
-      const result = await submitContactForm(formData)
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-locale': locale,
+        },
+        body: JSON.stringify({ ...formData, locale }),
+      })
 
-      if (result.success) {
+      const result = await response.json()
+
+      if (response.ok && result.success) {
         setSubmitStatus('success')
         setFormData({
           name: '',

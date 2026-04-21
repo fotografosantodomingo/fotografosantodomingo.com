@@ -3,7 +3,7 @@ import { createServiceClient } from '@/lib/supabase/service'
 import { sendQuoteSubmissionConfirmation, sendQuoteSubmissionNotification } from '@/lib/email/resend'
 import { DRONE_ADDON_ELIGIBLE_SERVICES, type QuoteContactMethod, type QuoteServiceType } from '@/lib/quotes/constants'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 
 type QuoteMode = 'draft' | 'final'
 
