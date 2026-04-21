@@ -385,7 +385,7 @@ export default function Navigation() {
               href="https://wa.me/18097209547"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-sky-500 hover:bg-sky-400 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+              className="bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
             >
               {t('whatsapp')}
             </a>
@@ -487,7 +487,7 @@ export default function Navigation() {
                   href="https://wa.me/18097209547"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-sky-500 hover:bg-sky-400 text-white font-semibold text-center px-4 py-3 rounded-lg transition-colors"
+                  className="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-center px-4 py-3 rounded-lg transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {t('whatsapp')}

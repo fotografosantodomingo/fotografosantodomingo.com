@@ -184,38 +184,22 @@ export default async function HomePage({ params: { locale } }: Props) {
       {/* ── HERO ── */}
       <section className="hero-white-lock relative overflow-hidden bg-gray-950 pt-0 pb-20 md:pb-24 lg:pb-28">
         <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-          <div className="hidden md:block">
-            <Image
-              src="https://res.cloudinary.com/dwewurxla/image/upload/v1776564550/Fotografo_Santo_Domingo_Zona_Colonial_republica_Domincana_mn2u2j.webp"
-              alt={isEs
-                ? 'Fotografo Santo Domingo Zona Colonial Republica Dominicana sesion de fotos'
-                : 'Photographer Santo Domingo Zona Colonial Dominican Republic photo session'}
-              title={isEs
-                ? 'Fotografo Santo Domingo Zona Colonial'
-                : 'Photographer Santo Domingo Zona Colonial'}
-              width={2400}
-              height={1350}
-              priority
-              sizes="100vw"
-              className="w-full h-auto object-contain"
+          <picture>
+            <source
+              media="(max-width: 767px)"
+              srcSet="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1200/v1776563250/Fotografo_En_Santo_Domingo_Republica_Dominicana_if1in7.webp"
             />
-          </div>
-          <div className="md:hidden">
-            <Image
-              src="https://res.cloudinary.com/dwewurxla/image/upload/v1776563250/Fotografo_En_Santo_Domingo_Republica_Dominicana_if1in7.webp"
+            <img
+              src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1920/v1776564550/Fotografo_Santo_Domingo_Zona_Colonial_republica_Domincana_mn2u2j.webp"
               alt={isEs
-                ? 'Fotografo en Santo Domingo Republica Dominicana sesion de fotos'
-                : 'Photographer in Santo Domingo Dominican Republic photo session'}
-              title={isEs
-                ? 'Fotografo en Santo Domingo Republica Dominicana'
-                : 'Photographer in Santo Domingo Dominican Republic'}
-              width={1080}
-              height={1350}
-              priority
-              sizes="100vw"
+                ? 'Fotografo Santo Domingo Zona Colonial Republica Dominicana'
+                : 'Photographer Santo Domingo Zona Colonial Dominican Republic'}
               className="w-full h-auto object-contain"
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
             />
-          </div>
+          </picture>
         </div>
 
         <div className="relative container mx-auto px-4 text-center mt-10 md:mt-12 lg:mt-14">
@@ -240,7 +224,7 @@ export default async function HomePage({ params: { locale } }: Props) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link
               href={`/${locale}/portfolio`}
-              className="bg-sky-500 hover:bg-sky-400 text-white font-semibold text-lg px-8 py-4 rounded-xl transition-colors"
+              className="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-lg px-8 py-4 rounded-xl transition-colors"
             >
               {t('cta_primary')}
             </Link>
