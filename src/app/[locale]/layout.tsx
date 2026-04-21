@@ -9,6 +9,8 @@ import GoogleTagManager from '@/components/GoogleTagManager'
 import CookieConsent from '@/components/CookieConsent'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 
+export const runtime = 'edge'
+
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
 // Global schema: WebSite only. LocalBusiness is emitted per-page (homepage)

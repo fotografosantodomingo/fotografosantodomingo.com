@@ -3,6 +3,8 @@ import { ZodError } from 'zod'
 import { createServiceClient } from '@/lib/supabase/service'
 import { LogAutomationSchema } from '@/lib/automation/schemas'
 
+export const runtime = 'edge'
+
 function isAuthorized(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const expectedSecret = process.env.ADMIN_SECRET

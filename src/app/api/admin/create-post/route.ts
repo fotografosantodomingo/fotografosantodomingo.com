@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ZodError } from 'zod'
-import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/service'
 import { CreatePostSchema } from '@/lib/automation/schemas'
 import { generateBilingualCaptions, type GeneratedCaptions } from '@/lib/ai/caption-generator'
+
+export const runtime = 'edge'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -349,19 +350,6 @@ export async function POST(request: NextRequest) {
       }
 
       console.log(`[create-post] Portfolio sync OK for ${portfolioPublicId}`)
-
-      // Keep blog and sitemap outputs fresh right after automation publishes a post.
-      try {
-        revalidatePath('/sitemap.xml')
-        revalidatePath('/hreflang-sitemap.xml')
-        revalidatePath('/image-sitemap.xml')
-        revalidatePath('/es/blog')
-        revalidatePath('/en/blog')
-        revalidatePath(`/es/blog/${data.slug_es}`)
-        revalidatePath(`/en/blog/${data.slug_en}`)
-      } catch (revalidateError) {
-        console.error('[create-post] Revalidate failed:', revalidateError)
-      }
     }
 
     return NextResponse.json(

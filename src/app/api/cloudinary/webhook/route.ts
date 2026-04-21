@@ -41,6 +41,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateBilingualCaptions } from '@/lib/ai/caption-generator'
 import { createServiceClient } from '@/lib/supabase/service'
 
+export const runtime = 'edge'
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
