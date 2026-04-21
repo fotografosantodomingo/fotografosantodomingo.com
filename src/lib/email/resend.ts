@@ -1,58 +1,12 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
-type MailSendPayload = {
-  from?: string
-  to: string | string[]
-  bcc?: string | string[]
-  reply_to?: string
-  subject: string
-  html: string
-}
+// Resend API key — set RESEND_API_KEY in Vercel env vars
+// Domain fotografosantodomingo.com is verified in Resend — using real from address.
 
-type MailClient = {
-  emails: {
-    send: (payload: MailSendPayload) => Promise<void>
-  }
-}
-
-let _mailerClient: MailClient | null = null
-
-function getMailerClient(): MailClient | null {
-  if (_mailerClient) return _mailerClient
-
-  const host = process.env.SMTP_HOST || 'smtp.hostinger.com'
-  const port = Number(process.env.SMTP_PORT || 465)
-  const secure = (process.env.SMTP_SECURE || 'true').toLowerCase() !== 'false'
-  const user = process.env.SMTP_USER
-  const pass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD
-
-  if (!user || !pass) {
-    return null
-  }
-
-  const transporter = nodemailer.createTransport({
-    host,
-    port,
-    secure,
-    auth: { user, pass },
-  })
-
-  _mailerClient = {
-    emails: {
-      send: async (payload: MailSendPayload) => {
-        await transporter.sendMail({
-          from: payload.from || FROM,
-          to: payload.to,
-          bcc: payload.bcc,
-          replyTo: payload.reply_to,
-          subject: payload.subject,
-          html: payload.html,
-        })
-      },
-    },
-  }
-
-  return _mailerClient
+// Lazy getter — avoids "Missing API key" crash during Next.js build-time static render
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) return null
+  return new Resend(process.env.RESEND_API_KEY)
 }
 
 const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
@@ -80,9 +34,9 @@ export interface ContactData {
 }
 
 export async function sendContactNotification(data: ContactData) {
-  const client = getMailerClient()
+  const client = getResend()
   if (!client) {
-    console.warn('SMTP_USER / SMTP_PASS not set — contact notification skipped')
+    console.warn('RESEND_API_KEY not set — contact notification skipped')
     return
   }
 
@@ -161,7 +115,7 @@ export async function sendContactNotification(data: ContactData) {
 }
 
 export async function sendContactConfirmation(data: ContactData) {
-  const client = getMailerClient()
+  const client = getResend()
   if (!client) return
 
   const isEs = data.locale === 'es'
@@ -227,9 +181,9 @@ export async function sendNewsletterWelcome(data: {
   name?: string
   locale?: string
 }) {
-  const client = getMailerClient()
+  const client = getResend()
   if (!client) {
-    console.warn('SMTP_USER / SMTP_PASS not set — newsletter welcome skipped')
+    console.warn('RESEND_API_KEY not set — newsletter welcome skipped')
     return
   }
 
@@ -326,9 +280,9 @@ function formatServiceLabel(serviceType: string, locale: string) {
 }
 
 export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
-  const client = getMailerClient()
+  const client = getResend()
   if (!client) {
-    console.warn('SMTP_USER / SMTP_PASS not set — quote admin notification skipped')
+    console.warn('RESEND_API_KEY not set — quote admin notification skipped')
     return
   }
 
@@ -388,9 +342,9 @@ export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
 }
 
 export async function sendQuoteSubmissionConfirmation(data: QuoteEmailPayload) {
-  const client = getMailerClient()
+  const client = getResend()
   if (!client) {
-    console.warn('SMTP_USER / SMTP_PASS not set — quote customer confirmation skipped')
+    console.warn('RESEND_API_KEY not set — quote customer confirmation skipped')
     return
   }
 
