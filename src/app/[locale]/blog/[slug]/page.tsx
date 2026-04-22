@@ -372,7 +372,16 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
       bgClass: 'bg-amber-500/15 border-amber-400/40',
       textClass: 'text-amber-200',
     },
-  ].filter((item) => !!item.href)
+  ].filter((item) => {
+    if (!item.href) return false
+    // Guard: reject URLs that point back to our own domain (e.g. wrong Pinterest link = blog destination URL)
+    try {
+      const host = new URL(item.href).hostname
+      return !host.includes('fotografosantodomingo.com')
+    } catch {
+      return false
+    }
+  })
 
   const jsonLdGraph = {
     '@context': 'https://schema.org',
