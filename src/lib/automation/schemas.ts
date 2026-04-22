@@ -115,6 +115,26 @@ export const CreatePostSchema = z.object({
     (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
     z.string().url().optional()
   ),
+  instagram_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
+  facebook_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
+  linkedin_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
+  pinterest_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
+  blogger_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
   instagram_post_id: z.preprocess(
     (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
     z.string().optional()

@@ -71,6 +71,11 @@ export type PublishedPostDetail = {
   internal_links_es: Array<{ text: string; url: string; description?: string }> | null
   internal_links_en: Array<{ text: string; url: string; description?: string }> | null
   setmore_service_url: string | null
+  instagram_post_url: string | null
+  facebook_post_url: string | null
+  linkedin_post_url: string | null
+  pinterest_post_url: string | null
+  blogger_post_url: string | null
   instagram_post_id: string | null
   published_at: string
   updated_at: string | null

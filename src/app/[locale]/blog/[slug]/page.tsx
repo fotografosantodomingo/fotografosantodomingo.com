@@ -21,6 +21,7 @@ type Props = {
 type FaqItem = { question: string; answer: string }
 type ReviewItem = { author: string; rating: number; text: string; session_type?: string }
 type InternalLink = { text: string; url: string; description?: string }
+type SocialLinkItem = { key: string; label: string; href: string; bgClass: string; textClass: string }
 
 type ServiceOffer = {
   nameEs: string
@@ -335,6 +336,44 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
     ? (post.cover_image_description_es || excerpt || title)
     : (post.cover_image_description_en || excerpt || title)
 
+  const socialLinks: SocialLinkItem[] = [
+    {
+      key: 'instagram',
+      label: 'Instagram',
+      href: post.instagram_post_url || '',
+      bgClass: 'bg-pink-500/15 border-pink-400/40',
+      textClass: 'text-pink-200',
+    },
+    {
+      key: 'facebook',
+      label: 'Facebook',
+      href: post.facebook_post_url || '',
+      bgClass: 'bg-blue-500/15 border-blue-400/40',
+      textClass: 'text-blue-200',
+    },
+    {
+      key: 'linkedin',
+      label: 'LinkedIn',
+      href: post.linkedin_post_url || '',
+      bgClass: 'bg-cyan-500/15 border-cyan-400/40',
+      textClass: 'text-cyan-200',
+    },
+    {
+      key: 'pinterest',
+      label: 'Pinterest',
+      href: post.pinterest_post_url || '',
+      bgClass: 'bg-rose-500/15 border-rose-400/40',
+      textClass: 'text-rose-200',
+    },
+    {
+      key: 'blogger',
+      label: 'Blogger',
+      href: post.blogger_post_url || '',
+      bgClass: 'bg-amber-500/15 border-amber-400/40',
+      textClass: 'text-amber-200',
+    },
+  ].filter((item) => !!item.href)
+
   const jsonLdGraph = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -485,6 +524,27 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
               loading="eager"
             />
           </div>
+
+          {socialLinks.length > 0 && (
+            <div className="container mx-auto px-4 pb-6 pt-5">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-300">
+                {isEs ? 'Publicado también en' : 'Also published on'}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.key}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-semibold transition hover:brightness-110 ${social.bgClass} ${social.textClass}`}
+                  >
+                    {social.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="container mx-auto px-4 py-12">

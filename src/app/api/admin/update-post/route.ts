@@ -6,7 +6,42 @@ export const runtime = 'edge'
 
 const UpdatePostSchema = z.object({
   id: z.string().uuid({ message: 'id must be a valid UUID' }),
-  status: z.enum(['published', 'draft', 'archived']),
+  status: z.enum(['published', 'draft', 'archived']).optional(),
+  instagram_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
+  facebook_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
+  linkedin_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
+  pinterest_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
+  blogger_post_url: z.preprocess(
+    (value) => (typeof value === 'string' && !value.trim() ? undefined : value),
+    z.string().url().optional()
+  ),
+}).superRefine((value, ctx) => {
+  if (
+    !value.status &&
+    !value.instagram_post_url &&
+    !value.facebook_post_url &&
+    !value.linkedin_post_url &&
+    !value.pinterest_post_url &&
+    !value.blogger_post_url
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Provide at least one updatable field (status or social URLs)',
+      path: ['status'],
+    })
+  }
 })
 
 function isAuthorized(request: NextRequest) {
@@ -45,12 +80,20 @@ export async function PATCH(request: NextRequest) {
       )
     }
 
+    const updates: Record<string, string> = {
+      updated_at: new Date().toISOString(),
+    }
+
+    if (body.status) updates.status = body.status
+    if (body.instagram_post_url) updates.instagram_post_url = body.instagram_post_url
+    if (body.facebook_post_url) updates.facebook_post_url = body.facebook_post_url
+    if (body.linkedin_post_url) updates.linkedin_post_url = body.linkedin_post_url
+    if (body.pinterest_post_url) updates.pinterest_post_url = body.pinterest_post_url
+    if (body.blogger_post_url) updates.blogger_post_url = body.blogger_post_url
+
     const { error: updateError } = await supabase
       .from('blog_posts')
-      .update({
-        status: body.status,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updates)
       .eq('id', body.id)
 
     if (updateError) {
@@ -65,10 +108,15 @@ export async function PATCH(request: NextRequest) {
       {
         success: true,
         id: body.id,
-        status: body.status,
+        status: body.status ?? existing.status,
         slug_es: existing.slug_es,
         slug_en: existing.slug_en,
         previous_status: existing.status,
+        instagram_post_url: body.instagram_post_url ?? null,
+        facebook_post_url: body.facebook_post_url ?? null,
+        linkedin_post_url: body.linkedin_post_url ?? null,
+        pinterest_post_url: body.pinterest_post_url ?? null,
+        blogger_post_url: body.blogger_post_url ?? null,
       },
       { status: 200 }
     )
