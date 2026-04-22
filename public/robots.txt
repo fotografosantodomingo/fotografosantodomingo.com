@@ -26,6 +26,12 @@ Allow: /
 User-agent: Applebot
 Allow: /
 
+User-Agent: Google-Extended
+Allow: /
+
+User-Agent: Googlebot
+Allow: /
+
 Sitemap: https://www.fotografosantodomingo.com/sitemap.xml
 Sitemap: https://www.fotografosantodomingo.com/image-sitemap.xml
 Sitemap: https://www.fotografosantodomingo.com/hreflang-sitemap.xml

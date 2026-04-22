@@ -127,6 +127,7 @@ export async function POST(request: NextRequest) {
     const portfolioLocation = body.location || body.geo_city || 'República Dominicana'
 
     let aiCaptions: GeneratedCaptions | null = null
+    let aiMetadataWarning: string | null = null
     const needsAiMetadata = !body.cover_image_alt_es ||
       !body.cover_image_alt_en ||
       !body.cover_image_title_es ||
@@ -151,14 +152,8 @@ export async function POST(request: NextRequest) {
           blogTitleEn: body.title_en,
         }, model || undefined)
       } catch (error) {
-        console.error('[create-post] OpenAI metadata generation failed:', error)
-        return NextResponse.json(
-          {
-            error: 'OpenAI generation failed',
-            message: error instanceof Error ? error.message : 'Unknown OpenAI error',
-          },
-          { status: 502 }
-        )
+        aiMetadataWarning = error instanceof Error ? error.message : 'Unknown OpenAI error'
+        console.error('[create-post] OpenAI metadata generation failed, continuing with fallbacks:', error)
       }
     }
 
@@ -358,6 +353,7 @@ export async function POST(request: NextRequest) {
         post_id: data.id,
         url_es: `${BASE_URL}/es/blog/${data.slug_es}`,
         url_en: `${BASE_URL}/en/blog/${data.slug_en}`,
+        warning: aiMetadataWarning,
       },
       { status: 201 }
     )
