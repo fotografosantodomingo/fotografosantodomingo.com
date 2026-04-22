@@ -459,33 +459,31 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
               </Link>
             </div>
 
-            <div className="grid items-center gap-8 md:grid-cols-2">
-              <div>
-                <h1 className="mb-4 text-4xl font-black leading-tight md:text-5xl lg:text-6xl">{title}</h1>
-                {excerpt && <p className="mb-6 text-lg text-gray-200 md:text-xl">{excerpt}</p>}
-                <div className="flex flex-wrap gap-3">
-                  <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-3 text-sm font-bold text-gray-900 transition hover:bg-gray-200">
-                    {isEs ? 'Reservar Sesión' : 'Book Session'}
-                  </a>
-                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-400 bg-green-500/20 px-5 py-3 text-sm font-bold text-green-200 transition hover:bg-green-500/30">
-                    WhatsApp
-                  </a>
-                </div>
-                <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block text-sm font-semibold text-amber-300 hover:text-amber-200">
-                  ⭐ 4.9 / 162 {isEs ? 'reseñas en Google' : 'Google reviews'}
+            <div>
+              <h1 className="mb-4 text-4xl font-black leading-tight md:text-5xl lg:text-6xl">{title}</h1>
+              {excerpt && <p className="mb-6 text-lg text-gray-200 md:text-xl">{excerpt}</p>}
+              <div className="flex flex-wrap gap-3">
+                <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-3 text-sm font-bold text-gray-900 transition hover:bg-gray-200">
+                  {isEs ? 'Reservar Sesión' : 'Book Session'}
+                </a>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-400 bg-green-500/20 px-5 py-3 text-sm font-bold text-green-200 transition hover:bg-green-500/30">
+                  WhatsApp
                 </a>
               </div>
-
-              <div className="overflow-hidden rounded-2xl border border-white/20 bg-black/30 p-3 shadow-2xl md:p-4">
-                <img
-                  src={heroImageUrl}
-                  alt={coverImageAlt}
-                  title={coverImageTitle}
-                  className="h-auto max-h-[75vh] w-full rounded-xl object-contain"
-                  loading="eager"
-                />
-              </div>
+              <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block text-sm font-semibold text-amber-300 hover:text-amber-200">
+                ⭐ 4.9 / 162 {isEs ? 'reseñas en Google' : 'Google reviews'}
+              </a>
             </div>
+          </div>
+
+          <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden border-y border-white/10 bg-black/20">
+            <img
+              src={heroImageUrl}
+              alt={coverImageAlt}
+              title={coverImageTitle}
+              className="h-auto w-full object-contain"
+              loading="eager"
+            />
           </div>
         </section>
 

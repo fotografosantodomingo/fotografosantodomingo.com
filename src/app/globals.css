@@ -172,7 +172,8 @@ html.light-mode .dark\:to-slate-900 { --tw-gradient-to: #e2e8f0 var(--tw-gradien
 
 /* Homepage hero readability lock in light mode */
 html.light-mode .hero-white-lock .hero-white-text {
-  color: #ffffff !important;
+  color: #e2e8f0 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
 }
 
 html.light-mode .hero-white-lock .hero-white-card {
@@ -182,6 +183,6 @@ html.light-mode .hero-white-lock .hero-white-card {
 
 html.light-mode .hero-white-lock .hero-white-highlight {
   background-image: none !important;
-  color: #dbeafe !important;
-  -webkit-text-fill-color: #dbeafe !important;
+  color: #bfdbfe !important;
+  -webkit-text-fill-color: #bfdbfe !important;
 }

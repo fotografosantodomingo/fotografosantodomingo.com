@@ -131,17 +131,6 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
       {/* Featured Work */}
       <section className="py-20 bg-slate-100 dark:bg-gray-900">
         <div className="container mx-auto px-0 md:px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
-              {locale === 'es' ? 'Trabajos Destacados' : 'Featured Work'}
-            </h2>
-            <p className="text-xl text-slate-600 dark:text-gray-400 max-w-2xl mx-auto">
-              {locale === 'es'
-                ? 'Una selección de nuestros proyectos más emblemáticos'
-                : 'A selection of our most emblematic projects'}
-            </p>
-          </div>
-
           <div className="mb-16">
             <figure className="m-0">
               <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
