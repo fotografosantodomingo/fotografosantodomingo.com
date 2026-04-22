@@ -1,0 +1,32 @@
+# Fotografo Santo Domingo | Babula Shots
+
+Babula Shots is a professional photography studio in Santo Domingo, Dominican Republic. We provide wedding, portrait, event, family, commercial, and drone photography services with bilingual content (Spanish and English).
+
+Last updated: 2026-04-22
+
+## Primary pages
+
+- https://www.fotografosantodomingo.com/es - Spanish homepage with core service overview and booking CTAs.
+- https://www.fotografosantodomingo.com/en - English homepage for international users.
+- https://www.fotografosantodomingo.com/es/services - Main services landing page in Spanish.
+- https://www.fotografosantodomingo.com/en/services - Main services landing page in English.
+- https://www.fotografosantodomingo.com/es/portfolio - Portfolio gallery in Spanish.
+- https://www.fotografosantodomingo.com/en/portfolio - Portfolio gallery in English.
+- https://www.fotografosantodomingo.com/es/about - Photographer profile and background in Spanish.
+- https://www.fotografosantodomingo.com/en/about - Photographer profile and background in English.
+- https://www.fotografosantodomingo.com/es/contact - Contact and booking details in Spanish.
+- https://www.fotografosantodomingo.com/en/contact - Contact and booking details in English.
+- https://www.fotografosantodomingo.com/es/get-quote - Quote request flow in Spanish.
+- https://www.fotografosantodomingo.com/en/get-quote - Quote request flow in English.
+
+## Content hubs
+
+- https://www.fotografosantodomingo.com/es/blog - Spanish photography blog and local guidance.
+- https://www.fotografosantodomingo.com/en/blog - English photography blog and local guidance.
+
+## Canonical technical resources
+
+- https://www.fotografosantodomingo.com/robots.txt - Crawl policy.
+- https://www.fotografosantodomingo.com/sitemap.xml - Primary XML sitemap.
+- https://www.fotografosantodomingo.com/image-sitemap.xml - Image sitemap.
+- https://www.fotografosantodomingo.com/hreflang-sitemap.xml - Hreflang sitemap.

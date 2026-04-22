@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { generateJsonLd, schemaGenerators } from '@/components/seo/JsonLd'
+import { formatSiteLastUpdated, SITE_LAST_UPDATED_ISO } from '@/lib/seo/freshness'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -66,6 +67,7 @@ export async function generateMetadata({ params: { locale } }: PageProps): Promi
 
 export default async function LocalizedSeoPageTemplate({ params: { locale } }: PageProps) {
   const t = await getTranslations({ locale, namespace: 'replace_me' })
+  const lastUpdatedLabel = formatSiteLastUpdated(locale)
 
   const breadcrumbSchema = schemaGenerators.breadcrumb([
     { name: locale === 'es' ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
@@ -76,6 +78,7 @@ export default async function LocalizedSeoPageTemplate({ params: { locale } }: P
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
       <main className="min-h-screen bg-gray-950 text-white">
+        <article>
         <section className="relative py-20">
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
           <div className="relative container mx-auto px-4">
@@ -102,9 +105,16 @@ export default async function LocalizedSeoPageTemplate({ params: { locale } }: P
                 <h2 className="text-3xl font-semibold text-white">{t('section_two_title')}</h2>
                 <p className="text-gray-300 leading-8">{t('section_two_body')}</p>
               </div>
+
+              <aside className="rounded-xl border border-white/10 bg-gray-950/70 px-5 py-4 text-sm text-gray-300" aria-label="Content freshness">
+                {locale === 'es'
+                  ? `Ultima actualizacion: ${lastUpdatedLabel}`
+                  : `Last updated: ${lastUpdatedLabel}`}
+              </aside>
             </div>
           </div>
         </section>
+        </article>
       </main>
     </>
   )

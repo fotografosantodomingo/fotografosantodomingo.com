@@ -278,3 +278,61 @@ When creating or editing files for blog content, preserve the same SEO strategy 
 
 - Default push: `git push origin main` only
 - Push to backup only when user explicitly requests: `git push backup main`
+
+---
+
+## 12. GEO / LLM Discoverability Rules (All Existing and New Pages)
+
+Apply these standards whenever creating or updating pages, layouts, metadata, robots, or SEO assets.
+
+### Robots and crawler access
+
+- Keep `src/app/robots.ts` and `public/robots.txt` aligned.
+- Explicitly allow key AI crawlers unless legal/compliance requirements change:
+  - `GPTBot`
+  - `ChatGPT-User`
+  - `OAI-SearchBot`
+  - `ClaudeBot`
+  - `Claude-Web`
+  - `PerplexityBot`
+  - `Applebot`
+- If production behavior differs from repo robots content, verify Cloudflare/Bot Management is not injecting conflicting directives.
+
+### llms.txt standard
+
+- Maintain `public/llms.txt` as a concise markdown roadmap for LLMs.
+- Include:
+  - one-paragraph company summary,
+  - canonical ES/EN entry pages,
+  - key services/blog/contact links,
+  - canonical machine-readable resources (`robots.txt`, `sitemap.xml`, image and hreflang sitemaps),
+  - `Last updated` date.
+- Update `llms.txt` when adding major pages or changing URL structure.
+
+### Structured data completeness
+
+- Ensure schema coverage includes these entity types where appropriate:
+  - `Organization`
+  - `Service` (or service lists)
+  - `FAQPage`
+  - `Article` / `BlogPosting`
+  - `Person`
+- Reuse `schemaGenerators` from `src/components/seo/JsonLd.ts` and extend there first when adding new schema types.
+
+### Semantic extraction friendliness
+
+- Use semantic HTML structure for all indexable content:
+  - one `h1`,
+  - logical `h2`/`h3` hierarchy,
+  - meaningful `article`, `section`, and `aside` landmarks when relevant.
+- Prefer lists and tables for feature comparisons, pricing, inclusions, and process steps when content is naturally structured.
+
+### Freshness and date signals
+
+- Keep a site-wide freshness date in `src/lib/seo/freshness.ts`.
+- Expose freshness via metadata and visible UI where already implemented.
+- For new pages with editorial content, include `dateModified` in JSON-LD when applicable.
+
+### Runtime and edge constraints
+
+- Cloudflare deployment may inject bot management directives. If indexing diagnostics show unknown robots directives, inspect live `/robots.txt` and reconcile Cloudflare settings with repository intent.

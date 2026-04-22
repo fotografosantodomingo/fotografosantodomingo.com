@@ -8,6 +8,8 @@ import WhatsAppButton from '@/components/WhatsAppButton'
 import GoogleTagManager from '@/components/GoogleTagManager'
 import CookieConsent from '@/components/CookieConsent'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { formatSiteLastUpdated, SITE_LAST_UPDATED_ISO } from '@/lib/seo/freshness'
+import { generateJsonLd, schemaGenerators } from '@/components/seo/JsonLd'
 
 export const runtime = 'edge'
 
@@ -53,6 +55,7 @@ export async function generateMetadata({
   params: { locale }
 }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'meta' })
+  const modifiedAt = `${SITE_LAST_UPDATED_ISO}T00:00:00.000Z`
   
   return {
     title: {
@@ -89,6 +92,10 @@ export async function generateMetadata({
       description: t('description'),
       images: [`${BASE_URL}/api/og`],
       creator: '@babulashots',
+    },
+    other: {
+      'article:modified_time': modifiedAt,
+      'last-modified': modifiedAt,
     },
     robots: {
       index: true,
@@ -127,16 +134,25 @@ export default async function RootLayout({
     notFound()
   }
 
+  const lastUpdatedLabel = formatSiteLastUpdated(normalizedLocale)
+  const organizationSchema = schemaGenerators.organization()
+
   return (
     <NextIntlClientProvider locale={normalizedLocale} messages={messages}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(globalSchema) }}
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(organizationSchema)} />
       {process.env.NEXT_PUBLIC_GTM_ID && <GoogleTagManager />}
       <ErrorBoundary>
         <Navigation />
         {children}
+        <aside className="border-t border-gray-800 bg-gray-950/95 px-4 py-3 text-center text-xs text-gray-400" aria-label="Page freshness">
+          {normalizedLocale === 'es'
+            ? `Ultima actualizacion del sitio: ${lastUpdatedLabel}`
+            : `Site last updated: ${lastUpdatedLabel}`}
+        </aside>
         <Footer />
       </ErrorBoundary>
       <WhatsAppButton />

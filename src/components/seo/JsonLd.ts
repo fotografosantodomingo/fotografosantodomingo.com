@@ -1,15 +1,19 @@
 import { PortfolioImage, ReviewStats, resolveLocale } from '@/lib/types/portfolio'
 import { getServiceCatalog, serviceSlugById } from '@/lib/services/catalog'
+import { SITE_LAST_UPDATED_ISO } from '@/lib/seo/freshness'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const CLOUDINARY_BASE = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
 
 export const schemaGenerators = {
   organization: () => ({
+    '@context': 'https://schema.org',
+    '@id': `${BASE_URL}/#organization`,
     '@type': 'Organization',
     name: 'Fotografo Santo Domingo | Babula Shots',
     url: BASE_URL,
     logo: `${BASE_URL}/images/logo.png`,
+    dateModified: SITE_LAST_UPDATED_ISO,
     sameAs: [
       'https://www.instagram.com/babulashotsrd',
       'https://www.facebook.com/babulashots',
