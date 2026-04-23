@@ -47,7 +47,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
         isEs ? 'Album profesional de alta calidad' : 'Professional high-quality album',
         isEs ? 'Todas las fotos editadas en alta resolucion' : 'All photos edited in high resolution',
         isEs ? 'Galeria online privada para compartir' : 'Private online gallery for sharing',
-        isEs ? 'Impresiones de regalo' : 'Complimentary prints',
+        isEs ? 'Álbum de boda + impresiones de regalo' : 'Wedding album + prints included',
       ],
       pricing: {
         starting: isEs ? 'Desde $2,500' : 'Starting at $2,500',

@@ -210,6 +210,37 @@ function fallbackInternalLinks(locale: string): InternalLink[] {
   ]
 }
 
+type ServicePageLink = { slug: string; labelEs: string; labelEn: string; descEs: string; descEn: string }
+
+function getServicePageLink(post: {
+  service_type?: string | null
+  title_es?: string | null
+  title_en?: string | null
+  primary_keyword_es?: string | null
+}): ServicePageLink {
+  const combined = [post.service_type, post.title_es, post.title_en, post.primary_keyword_es]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+
+  if (/boda|wedding|novio|novia|matrimonio/.test(combined)) {
+    return { slug: 'wedding-photography', labelEs: 'Fotografía de Bodas', labelEn: 'Wedding Photography', descEs: 'Cobertura profesional del día más importante.', descEn: 'Professional coverage for your most important day.' }
+  }
+  if (/dron|drone|aérea|aerial/.test(combined)) {
+    return { slug: 'drone-services-photography-punta-cana', labelEs: 'Fotografía con Drones', labelEn: 'Drone Photography', descEs: 'Perspectiva aérea única sobre Punta Cana y el Caribe.', descEn: 'Unique aerial perspective over Punta Cana and the Caribbean.' }
+  }
+  if (/retrato|portrait|estudio|studio|cumpleaños|birthday|headshot/.test(combined)) {
+    return { slug: 'portrait-photography', labelEs: 'Fotografía de Retratos', labelEn: 'Portrait Photography', descEs: 'Retratos editoriales en estudio y exteriores.', descEn: 'Editorial portraits in studio and on location.' }
+  }
+  if (/familiar|family|playa|beach|saona/.test(combined)) {
+    return { slug: 'family-photography', labelEs: 'Fotografía Familiar', labelEn: 'Family Photography', descEs: 'Momentos auténticos de familia en escenarios únicos.', descEn: 'Authentic family moments in unique settings.' }
+  }
+  if (/event|evento|deport|sport|corporat|comercial|commercial/.test(combined)) {
+    return { slug: 'event-photography', labelEs: 'Fotografía de Eventos', labelEn: 'Event Photography', descEs: 'Cobertura de eventos sociales y corporativos.', descEn: 'Social and corporate event coverage.' }
+  }
+  return { slug: '', labelEs: 'Servicios de Fotografía', labelEn: 'Photography Services', descEs: 'Todos nuestros servicios fotográficos en Santo Domingo.', descEn: 'All our photography services in Santo Domingo.' }
+}
+
 function originalCloudinaryImage(publicId: string | null | undefined, fallbackUrl: string | null | undefined) {
   if (fallbackUrl) {
     return fallbackUrl
@@ -303,6 +334,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const serviceKey = (post.service_type || '').toLowerCase().includes('saona') ? 'saona' : (post.service_type || 'general')
   const serviceOffers = SERVICE_OFFERS[serviceKey] || SERVICE_OFFERS.general
   const setmoreUrl = post.setmore_service_url || `${SETMORE_BASE_URL}${serviceOffers[0]?.path || 'reserva'}`
+  const servicePageLink = getServicePageLink(post)
 
   // For gallery we prefer the source built from public_id to avoid inherited crop transforms.
   const galleryImageUrl = post.cover_image_public_id
@@ -670,6 +702,17 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
             <a href={`/${locale}/portfolio`} className="rounded-xl border border-white/10 bg-gray-900 p-5 hover:border-sky-400">
               <h3 className="mb-2 text-xl font-bold">{isEs ? 'Portafolio Principal' : 'Main Portfolio'}</h3>
               <p className="text-gray-300">{isEs ? 'Explora bodas, parejas, retratos y sesiones en playa.' : 'Explore weddings, couples, portraits, and beach sessions.'}</p>
+            </a>
+            <a
+              href={servicePageLink.slug ? `/${locale}/services/${servicePageLink.slug}` : `/${locale}/services`}
+              className="rounded-xl border border-sky-400/40 bg-gray-900 p-5 hover:border-sky-400"
+            >
+              <h3 className="mb-2 text-xl font-bold">{isEs ? servicePageLink.labelEs : servicePageLink.labelEn}</h3>
+              <p className="text-gray-300">{isEs ? servicePageLink.descEs : servicePageLink.descEn}</p>
+            </a>
+            <a href={`/${locale}/contact`} className="rounded-xl border border-emerald-400/40 bg-gray-900 p-5 hover:border-emerald-400">
+              <h3 className="mb-2 text-xl font-bold">{isEs ? 'Contactar al Fotógrafo' : 'Contact the Photographer'}</h3>
+              <p className="text-gray-300">{isEs ? 'Consulta disponibilidad, precios y detalles de tu sesión.' : 'Ask about availability, pricing, and session details.'}</p>
             </a>
             <a href="https://babulashotsprevievshots.pic-time.com/-fotografobodapuntacanard" target="_blank" rel="noopener noreferrer" className="rounded-xl border border-white/10 bg-gray-900 p-5 hover:border-sky-400">
               <h3 className="mb-2 text-xl font-bold">{isEs ? 'Galería de Bodas' : 'Wedding Gallery'}</h3>
