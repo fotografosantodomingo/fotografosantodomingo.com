@@ -41,6 +41,7 @@ export default function Navigation() {
       // Studio Photography and Travel Photography nav items are temporarily removed
       // until /services/studio-photography and /services/travel-photography hub pages exist.
       { href: '/services/drone-services-photography-punta-cana', labelKey: 'items.droneServices', descriptionKey: 'descriptions.droneServices' },
+      { href: '/services/proposal-photography', labelKey: 'items.proposalPhotography', descriptionKey: 'descriptions.proposalPhotography' },
       { href: '/services', labelKey: 'items.additionalServices', descriptionKey: 'descriptions.additionalServices' },
     ]
 
