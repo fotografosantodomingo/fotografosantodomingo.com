@@ -110,61 +110,19 @@ export default function ProposalGallery({ locale }: Props) {
         </p>
       </div>
 
-      {/* Full-bleed gallery — zero gap */}
+      {/* Full-bleed gallery — every image full width, zero gap, no crop */}
       <div className="flex flex-col" style={{ gap: 0, lineHeight: 0 }}>
-
-        {/* ── Desktop Row 1 — full width telephoto ninja shot ─────────────── */}
-        <div className="hidden md:flex w-full" style={{ gap: 0 }}>
-          <img src={src(IMAGES.telephotoNinja)} alt={alt(IMAGES.telephotoNinja)}
-            className="w-full h-auto block" style={{ objectFit: 'unset' }} loading="lazy" decoding="async" />
-        </div>
-
-        {/* ── Desktop Row 2 — 50/50 getting position + PC shot ────────────── */}
-        <div className="hidden md:flex w-full" style={{ gap: 0 }}>
-          <img src={src(IMAGES.gettingPosition)} alt={alt(IMAGES.gettingPosition)}
-            className="h-auto block" style={{ width: '50%', objectFit: 'unset' }} loading="lazy" decoding="async" />
-          <img src={src(IMAGES.pc2)} alt={alt(IMAGES.pc2)}
-            className="h-auto block" style={{ width: '50%', objectFit: 'unset' }} loading="lazy" decoding="async" />
-        </div>
-
-        {/* ── Desktop Row 3 — 33/33/33 full ninja + ninja2 + in position ───── */}
-        <div className="hidden md:flex w-full" style={{ gap: 0 }}>
-          <img src={src(IMAGES.fullNinja)} alt={alt(IMAGES.fullNinja)}
-            className="h-auto block" style={{ width: '33.333%', objectFit: 'unset' }} loading="lazy" decoding="async" />
-          <img src={src(IMAGES.ninjaMode2)} alt={alt(IMAGES.ninjaMode2)}
-            className="h-auto block" style={{ width: '33.333%', objectFit: 'unset' }} loading="lazy" decoding="async" />
-          <img src={src(IMAGES.inPosition)} alt={alt(IMAGES.inPosition)}
-            className="h-auto block" style={{ width: '33.333%', objectFit: 'unset' }} loading="lazy" decoding="async" />
-        </div>
-
-        {/* ── Desktop Row 4 — full width on knees moment ──────────────────── */}
-        <div className="hidden md:flex w-full" style={{ gap: 0 }}>
-          <img src={src(IMAGES.onKnees)} alt={alt(IMAGES.onKnees)}
-            className="w-full h-auto block" style={{ objectFit: 'unset' }} loading="lazy" decoding="async" />
-        </div>
-
-        {/* ── Desktop Row 5 — 50/50 ring + hugs ──────────────────────────── */}
-        <div className="hidden md:flex w-full" style={{ gap: 0 }}>
-          <img src={src(IMAGES.ring)} alt={alt(IMAGES.ring)}
-            className="h-auto block" style={{ width: '50%', objectFit: 'unset' }} loading="lazy" decoding="async" />
-          <img src={src(IMAGES.hugKiss)} alt={alt(IMAGES.hugKiss)}
-            className="h-auto block" style={{ width: '50%', objectFit: 'unset' }} loading="lazy" decoding="async" />
-        </div>
-
-        {/* ── Desktop Row 6 — full width still hidden ─────────────────────── */}
-        <div className="hidden md:flex w-full" style={{ gap: 0 }}>
-          <img src={src(IMAGES.stillHidden)} alt={alt(IMAGES.stillHidden)}
-            className="w-full h-auto block" style={{ objectFit: 'unset' }} loading="lazy" decoding="async" />
-        </div>
-
-        {/* ── Mobile stack — all images single column ─────────────────────── */}
-        <div className="flex flex-col md:hidden w-full" style={{ gap: 0 }}>
-          {Object.values(IMAGES).map((img) => (
-            <img key={img.id} src={src(img)} alt={alt(img)}
-              className="w-full h-auto block" style={{ objectFit: 'unset' }} loading="lazy" decoding="async" />
-          ))}
-        </div>
-
+        {Object.values(IMAGES).map((img) => (
+          <img
+            key={img.id}
+            src={src(img)}
+            alt={alt(img)}
+            className="w-full h-auto block"
+            style={{ objectFit: 'unset' }}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
       </div>
     </section>
   )
