@@ -5,6 +5,7 @@ import { getServiceBySlug, serviceLandingSlugs } from '@/lib/services/catalog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import { generateJsonLd, schemaGenerators } from '@/components/seo/JsonLd'
 import NewsletterForm from '@/components/NewsletterForm'
+import HubSpokeCTA from '@/components/spoke/HubSpokeCTA'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -2363,6 +2364,9 @@ export default function ServiceLandingPage({ params: { locale, service } }: Prop
             </p>
           </div>
         </section>
+
+        {/* Hub → Spoke CTA: shows location-specific pages when approved/published */}
+        <HubSpokeCTA hubSlug={serviceData.id} locale={locale} />
 
         <section className="py-16 bg-slate-100/70 border-y border-slate-200 dark:bg-gray-900/40 dark:border-white/10">
           <div className="container mx-auto px-4 max-w-6xl">

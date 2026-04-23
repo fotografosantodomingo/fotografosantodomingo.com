@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { getAllSlugs } from '@/lib/supabase/blog'
 import { serviceLandingSlugs } from '@/lib/services/catalog'
+import { getPublishedSpokes, spokeTierToPriority } from '@/data/spoke-pages'
 
 export const runtime = 'edge'
 
@@ -38,6 +39,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
+    },
+  ])
+
+  const publishedSpokes = getPublishedSpokes()
+  const spokeEntries: MetadataRoute.Sitemap = publishedSpokes.flatMap((sp) => [
+    {
+      url: `${BASE_URL}/en/${sp.enSlug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: spokeTierToPriority(sp.tier),
+    },
+    {
+      url: `${BASE_URL}/es/${sp.esSlug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: spokeTierToPriority(sp.tier),
     },
   ])
 
@@ -164,5 +181,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...serviceEntries,
     ...blogEntries,
+    ...spokeEntries,
   ]
 }
