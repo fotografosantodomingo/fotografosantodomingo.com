@@ -17,7 +17,9 @@ For **spoke pages** (`src/app/[locale]/[hub]/[spoke]/page.tsx`), use `src/data/s
 - **Custom gallery** — real Cloudinary images only. Pass `customGallery={<YourGallery />}` to `SpokePageTemplate`. Zero placeholders ever.
 - **Investment section** — real starting price shown with `$` amount. No ranges like "$X–$Y", no "Contact for pricing".
 - **Why Babula Shots** — 4 reasons specific to that city/venue. Not a copy-paste of the previous spoke.
+- **Client testimonial** — one real named quote from a client who used this exact service type or location. Never anonymous. Place after Why Babula Shots. Add to `spoke.testimonial` field in `spoke-pages.ts`.
 - **FAQ** — minimum 5 questions specific to that location. If a question could apply to any photographer in any country it is not acceptable.
+- **Author bio** — 2-sentence bio of Michal Babula with link to `/about`. Required for E-E-A-T scoring. Rendered automatically by `SpokePageTemplate` between FAQ and Final CTA — no extra data needed.
 - **Related spokes** — minimum 3 once more spokes are published. Suppress section when < 3 are live.
 - **Final CTA** — urgency line specific to this location (e.g. season, permit notice, limited availability). Not generic.
 - **Schema** — all 4 JSON-LD blocks: BreadcrumbList, Service/LocalService, FAQPage, ImageObject. Must pass Rich Results Test with zero warnings.
@@ -52,6 +54,7 @@ Run every item before changing `status: 'approved'` → `status: 'published'`.
 □ Footer renders in correct language on both EN and ES versions
 □ Language switcher EN ↔ ES works correctly on both versions
 □ FAQ has minimum 5 location-specific questions
+□ Testimonial present — named client, real quote, relevant location or service type
 □ Pricing shown — real dollar amount, not a range
 □ At least 1 related spoke link (3+ preferred once more are published)
 □ Both EN and ES versions deployed together in the same commit
@@ -68,6 +71,8 @@ When adding a new spoke:
 3. Provide real `heroImagePublicId` and all `gallery[].publicId` from Cloudinary
 4. Write 5 genuine location-specific FAQ items — verify they are not duplicates of any sibling spoke
 5. Set `status: 'draft'` on commit; change to `'approved'` after local preview builds without errors; change to `'published'` after client visual sign-off
+
+**Testimonial field** — add `testimonial: { clientName, eventLabel, quoteEn, quoteEs }` to the spoke object. `clientName` must be a real person (full name). `eventLabel` shows under the name (e.g. `"Zona Colonial Wedding, December 2025"`). The section renders automatically and is skipped if the field is absent.
 
 ---
 

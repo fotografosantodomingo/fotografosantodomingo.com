@@ -335,6 +335,87 @@ function FaqSection({ spoke, locale }: Props) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Section 5b — Client Testimonial (after Why Us)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function TestimonialSection({ spoke, locale }: Props) {
+  const isEs = locale === 'es'
+  const t = spoke.testimonial
+  if (!t) return null
+
+  return (
+    <section className="py-14 sm:py-20" aria-label={isEs ? 'Testimonio de cliente' : 'Client testimonial'}>
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <figure className="rounded-2xl border border-amber-200 bg-amber-50 px-8 py-10 dark:border-amber-900/40 dark:bg-amber-950/20">
+          <blockquote>
+            <p className="text-base font-medium leading-relaxed text-neutral-800 before:content-['\u201c'] after:content-['\u201d'] dark:text-neutral-100 sm:text-lg">
+              {isEs ? t.quoteEs : t.quoteEn}
+            </p>
+          </blockquote>
+          <figcaption className="mt-6 flex items-center gap-3">
+            <span
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500 text-base font-bold text-white"
+              aria-hidden="true"
+            >
+              {t.clientName.charAt(0)}
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-neutral-900 dark:text-white">{t.clientName}</p>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400">{t.eventLabel}</p>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Section 6b — Author Bio (between FAQ and Final CTA)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const ABOUT_URL = 'https://www.fotografosantodomingo.com'
+
+function AuthorBioSection({ locale }: { locale: string }) {
+  const isEs = locale === 'es'
+
+  return (
+    <section className="bg-neutral-50 py-12 dark:bg-neutral-950" aria-label={isEs ? 'Sobre el fotógrafo' : 'About the photographer'}>
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+          {/* Avatar placeholder — replace with real photo once available */}
+          <div
+            className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-3xl dark:bg-neutral-700"
+            aria-hidden="true"
+          >
+            📷
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-amber-500">
+              {isEs ? 'Sobre el fotógrafo' : 'About the photographer'}
+            </p>
+            <h2 className="mt-1 text-lg font-bold text-neutral-900 dark:text-white">
+              Michal Babula
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+              {isEs
+                ? 'Michal Babula es fotógrafo profesional con más de 10 años de experiencia documentando bodas, retratos y eventos en la República Dominicana. Fundador de Babula Shots, ha fotografiado más de 200 bodas en Santo Domingo, Punta Cana y destinos del Caribe.'
+                : 'Michal Babula is a professional photographer with over 10 years documenting weddings, portraits, and events across the Dominican Republic. Founder of Babula Shots, he has photographed over 200 weddings in Santo Domingo, Punta Cana, and Caribbean destinations.'}
+            </p>
+            <Link
+              href={`/${locale}/about`}
+              className="mt-3 inline-block text-xs font-semibold text-amber-500 underline-offset-2 hover:underline"
+            >
+              {isEs ? 'Ver perfil completo →' : 'Full profile →'}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Section 7 — Related Spokes
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -451,7 +532,9 @@ export default function SpokePageTemplate({ spoke, locale, noHeroImage, customGa
       {customGallery ?? <GallerySection spoke={spoke} locale={locale} />}
       <PricingSection spoke={spoke} locale={locale} />
       <WhyUsSection spoke={spoke} locale={locale} />
+      <TestimonialSection spoke={spoke} locale={locale} />
       <FaqSection spoke={spoke} locale={locale} />
+      <AuthorBioSection locale={locale} />
       <RelatedSection spoke={spoke} locale={locale} />
       <FinalCTASection spoke={spoke} locale={locale} />
     </main>

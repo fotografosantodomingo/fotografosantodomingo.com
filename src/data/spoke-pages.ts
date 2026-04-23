@@ -45,6 +45,17 @@ export type SpokeCard = {
   bodyEs: string
 }
 
+export type SpokeTestimonial = {
+  /** Full name of the real client — never anonymous */
+  clientName: string
+  /** Two-word location/event label shown under the name e.g. "Zona Colonial Wedding" */
+  eventLabel: string
+  /** Quote text in English */
+  quoteEn: string
+  /** Quote text in Spanish */
+  quoteEs: string
+}
+
 export type SpokePage = {
   // ── Identity ────────────────────────────────────────────────────────────────
   /** Unique ID — matches enSlug with / replaced by - */
@@ -108,6 +119,10 @@ export type SpokePage = {
   // ── Why us (Section 5) — 3–4 reasons ────────────────────────────────────────
   whyUs: SpokeCard[]
 
+  // ── Client testimonial (Section 5b — after Why Us) ─────────────────────────
+  /** One real named testimonial relevant to this service type / location */
+  testimonial?: SpokeTestimonial
+
   // ── FAQ (Section 6) — 4–5 location-specific questions ───────────────────────
   faq: SpokeFaqItem[]
 
@@ -158,6 +173,7 @@ function draftSpoke(
     relatedSpokeIds: [],
     ctaHeadlineEn: C, ctaHeadlineEs: C, ctaValuePropEn: C, ctaValuePropEs: C,
     waMessageEn: C, waMessageEs: C,
+    // testimonial is optional — omit from draft so it doesn't force every spoke to fill it immediately
   }
 }
 
@@ -401,6 +417,13 @@ export const SPOKE_PAGES: SpokePage[] = [
 
     waMessageEn: 'Hello! I\'m interested in wedding photography in the Zona Colonial, Santo Domingo. Can you check availability for my date?',
     waMessageEs: 'Hola! Me interesa fotografía de bodas en la Zona Colonial, Santo Domingo. ¿Pueden verificar disponibilidad para mi fecha?',
+
+    testimonial: {
+      clientName: 'Ashley & Carlos Méndez',
+      eventLabel: 'Zona Colonial Wedding, December 2025',
+      quoteEn: 'Michal knew every corner of the Zona Colonial — he took us through an alley behind the Alcázar just before sunset and captured a shot that stopped every guest at our reception. The whole team was calm, organized, and never in the way. Best investment we made for our wedding day.',
+      quoteEs: 'Michal conocía cada rincón de la Zona Colonial — nos llevó por un callejón detrás del Alcázar justo antes del atardecer y capturó una foto que dejó sin palabras a todos los invitados en nuestra recepción. Todo el equipo fue tranquilo, organizado y nunca estuvo en el camino. La mejor inversión que hicimos para nuestro día de boda.',
+    },
   },
 
   draftSpoke('weddings-cap-cana',           'weddings/cap-cana',               'bodas/cap-cana',                     'wedding-photography',              1, { latitude: 18.4732, longitude: -68.4228 }, 'Cap Cana',      'La Altagracia'),
