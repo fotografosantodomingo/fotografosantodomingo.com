@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
+import ObfuscatedEmail from '@/components/ui/ObfuscatedEmail'
 
 type FormData = {
   name: string
@@ -364,13 +365,8 @@ export default function ContactPage() {
                     <h3 className="font-semibold text-white mb-1">
                       {t('contact.info.email') || 'Email'}
                     </h3>
-                    <p className="text-gray-400">{CONTACT_INFO.email}</p>
-                    <a
-                      href={`mailto:${CONTACT_INFO.email}`}
-                      className="text-sky-400 hover:text-sky-300 font-medium"
-                    >
-                      {t('contact.info.sendEmail') || 'Send email'}
-                    </a>
+                    <p className="text-gray-400"><ObfuscatedEmail locale={locale} /></p>
+                    <ObfuscatedEmail locale={locale} label={t('contact.info.sendEmail') || 'Send email'} className="text-sky-400 hover:text-sky-300 font-medium" />
                   </div>
                 </div>
 

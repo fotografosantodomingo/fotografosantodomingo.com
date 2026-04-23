@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Script from 'next/script'
 import { useParams } from 'next/navigation'
 
 const STORAGE_KEY = 'cookie_consent'
-const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void
+  }
+}
 
 type Consent = 'accepted' | 'declined' | null
 
@@ -21,6 +25,10 @@ export default function CookieConsent() {
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) as Consent | null
     setConsent(stored)
+    // If already accepted, grant consent immediately (gtag loaded in <head>)
+    if (stored === 'accepted' && typeof window.gtag === 'function') {
+      window.gtag('consent', 'update', { analytics_storage: 'granted' })
+    }
     // Show banner only if no prior choice
     if (!stored) {
       // Small delay so it doesn't flash before hydration
@@ -33,6 +41,10 @@ export default function CookieConsent() {
     localStorage.setItem(STORAGE_KEY, 'accepted')
     setConsent('accepted')
     setVisible(false)
+    // Grant analytics consent — gtag is already loaded in <head> with consent mode
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('consent', 'update', { analytics_storage: 'granted' })
+    }
   }
 
   function decline() {
@@ -43,28 +55,6 @@ export default function CookieConsent() {
 
   return (
     <>
-      {/* Load GA only when consent is accepted */}
-      {consent === 'accepted' && GA_ID && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="ga-consent-init" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}', {
-                page_path: window.location.pathname,
-                anonymize_ip: true
-              });
-            `}
-          </Script>
-        </>
-      )}
-
-      {/* Cookie banner */}
       {visible && (
         <div
           role="dialog"
