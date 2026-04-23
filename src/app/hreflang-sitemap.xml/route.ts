@@ -28,10 +28,19 @@ const PAGES: HreflangPage[] = [
   { path: '',          changefreq: 'weekly',  priority: 1.0  },
   { path: 'portfolio', changefreq: 'weekly',  priority: 0.9  },
   { path: 'services',  changefreq: 'monthly', priority: 0.85 },
-  { path: 'services/birthday-photographer', changefreq: 'monthly', priority: 0.86 },
+  { path: 'services/birthday-photographer',                      changefreq: 'monthly', priority: 0.86 },
+  { path: 'services/wedding-photography',                        changefreq: 'monthly', priority: 0.86 },
+  { path: 'services/portrait-photography',                       changefreq: 'monthly', priority: 0.82 },
+  { path: 'services/drone-services-photography-punta-cana',      changefreq: 'monthly', priority: 0.82 },
+  { path: 'services/event-photography',                          changefreq: 'monthly', priority: 0.82 },
+  { path: 'services/family-photography',                         changefreq: 'monthly', priority: 0.82 },
+  { path: 'services/commercial-photography',                     changefreq: 'monthly', priority: 0.80 },
   { path: 'about',     changefreq: 'monthly', priority: 0.8  },
   { path: 'contact',   changefreq: 'monthly', priority: 0.8  },
+  { path: 'get-quote', changefreq: 'monthly', priority: 0.8  },
   { path: 'blog',      changefreq: 'weekly',  priority: 0.75 },
+  { path: 'privacy',   changefreq: 'yearly',  priority: 0.3  },
+  { path: 'terms',     changefreq: 'yearly',  priority: 0.3  },
 ]
 
 function buildUrl(locale: string, path: string): string {

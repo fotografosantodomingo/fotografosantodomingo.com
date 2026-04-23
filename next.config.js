@@ -131,6 +131,45 @@ const nextConfig = {
       { source: '/servicios-dron-fotografia-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: true },
       { source: '/es/servicios-dron-fotografia-punta-cana', destination: '/es/services/drone-services-photography-punta-cana', permanent: true },
       { source: '/en/servicios-dron-fotografia-punta-cana', destination: '/en/services/drone-services-photography-punta-cana', permanent: true },
+
+      // =============================================
+      // BLOG DUPLICATE CONSOLIDATION (301 redirects)
+      // Zones Colonial — 6 duplicates → canonical: fotografo-zona-colonial-santo-domingo
+      // =============================================
+      { source: '/es/blog/fotografo-santo-domingo-zona-colonial',             destination: '/es/blog/fotografo-zona-colonial-santo-domingo',             permanent: true },
+      { source: '/en/blog/photographer-santo-domingo-colonial-zone',          destination: '/en/blog/photographer-zona-colonial-santo-domingo',          permanent: true },
+      { source: '/es/blog/fotografo-zona-colonial-santo-domingo-2',           destination: '/es/blog/fotografo-zona-colonial-santo-domingo',             permanent: true },
+      { source: '/en/blog/photographer-zona-colonial-santo-domingo-2',        destination: '/en/blog/photographer-zona-colonial-santo-domingo',          permanent: true },
+      { source: '/es/blog/sesion-de-fotos-zona-colonial',                     destination: '/es/blog/fotografo-zona-colonial-santo-domingo',             permanent: true },
+      { source: '/en/blog/photo-session-colonial-zone',                       destination: '/en/blog/photographer-zona-colonial-santo-domingo',          permanent: true },
+      { source: '/es/blog/sesion-de-fotos-zona-colonial-fotografo-santo-domingo', destination: '/es/blog/fotografo-zona-colonial-santo-domingo',         permanent: true },
+      { source: '/en/blog/photo-session-colonial-zone-photographer-santo-domingo', destination: '/en/blog/photographer-zona-colonial-santo-domingo',     permanent: true },
+      { source: '/es/blog/sesion-fotos-luz-natural-zona-colonial',            destination: '/es/blog/fotografo-zona-colonial-santo-domingo',             permanent: true },
+      { source: '/en/blog/natural-light-photo-session-colonial-zona',         destination: '/en/blog/photographer-zona-colonial-santo-domingo',          permanent: true },
+      { source: '/es/blog/sesion-fotos-zona-colonial-2',                      destination: '/es/blog/fotografo-zona-colonial-santo-domingo',             permanent: true },
+      { source: '/en/blog/photo-session-colonial-zone-2',                     destination: '/en/blog/photographer-zona-colonial-santo-domingo',          permanent: true },
+
+      // Bodas duplicate — fotografo-de-bodas-en-santo-domingo → fotografo-bodas-santo-domingo
+      { source: '/es/blog/fotografo-de-bodas-en-santo-domingo',               destination: '/es/blog/fotografo-bodas-santo-domingo',                     permanent: true },
+      { source: '/en/blog/wedding-photographer-in-santo-domingo',             destination: '/en/blog/wedding-photographer-santo-domingo',                permanent: true },
+
+      // Drone Santo Domingo duplicates → fotografo-profesional-dron-santo-domingo
+      { source: '/es/blog/piloto-de-drone-fotografia-santo-domingo',          destination: '/es/blog/fotografo-profesional-dron-santo-domingo',          permanent: true },
+      { source: '/en/blog/drone-pilot-photography-santo-domingo',             destination: '/en/blog/professional-drone-photographer-santo-domingo',     permanent: true },
+      { source: '/es/blog/santo-domingo-fotografia-drone',                    destination: '/es/blog/fotografo-profesional-dron-santo-domingo',          permanent: true },
+      { source: '/en/blog/santo-domingo-drone-photography',                   destination: '/en/blog/professional-drone-photographer-santo-domingo',     permanent: true },
+      // Drone RD generic → servicio-foto-y-video-con-dron-en-republica-dominicana
+      { source: '/es/blog/servicio-drone-republica-dominicana',               destination: '/es/blog/servicio-foto-y-video-con-dron-en-republica-dominicana', permanent: true },
+      { source: '/en/blog/drone-service-dominican-republic',                  destination: '/en/blog/drone-photo-and-video-service-in-dominican-republic', permanent: true },
+      // Drone Punta Cana duplicate → servicio-drone-foto-video-profesional-punta-cana
+      { source: '/es/blog/servicio-profesional-drone-punta-cana',             destination: '/es/blog/servicio-drone-foto-video-profesional-punta-cana', permanent: true },
+      { source: '/en/blog/professional-drone-service-punta-cana',             destination: '/en/blog/professional-drone-photo-video-service-punta-cana', permanent: true },
+      // Drone Samaná duplicate → piloto-drone-samana-republica-dominicana-servicio-profesional
+      { source: '/es/blog/sesion-piloto-dron-samana',                         destination: '/es/blog/piloto-drone-samana-republica-dominicana-servicio-profesional', permanent: true },
+      { source: '/en/blog/drone-pilot-session-samana',                        destination: '/en/blog/drone-pilot-samana-dominican-republic-professional-service', permanent: true },
+      // Estudio duplicate → fotografo-profesional-en-estudio-santo-domingo
+      { source: '/es/blog/sesion-fotos-estudio-santo-domingo',                destination: '/es/blog/fotografo-profesional-en-estudio-santo-domingo',   permanent: true },
+      { source: '/en/blog/photo-session-studio-santo-domingo',                destination: '/en/blog/professional-photo-studio-santo-domingo',           permanent: true },
     ]
   },
 
