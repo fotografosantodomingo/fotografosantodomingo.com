@@ -150,7 +150,7 @@ export default async function RootLayout({
         {children}
         <aside className="border-t border-gray-800 bg-gray-950/95 px-4 py-3 text-center text-xs text-gray-400" aria-label="Page freshness">
           {normalizedLocale === 'es'
-            ? `Ultima actualizacion del sitio: ${lastUpdatedLabel}`
+            ? `Última actualización del sitio: ${lastUpdatedLabel}`
             : `Site last updated: ${lastUpdatedLabel}`}
         </aside>
         <Footer locale={normalizedLocale} />
