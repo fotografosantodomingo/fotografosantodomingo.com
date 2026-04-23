@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { findSpokeByRoute } from '@/data/spoke-pages'
 
 type MenuItem = {
   href: string
@@ -82,7 +83,25 @@ export default function Navigation() {
   ]
 
   const switchLocale = locale === 'es' ? 'en' : 'es'
-  const switchPath = pathname.replace(`/${locale}`, `/${switchLocale}`) || `/${switchLocale}`
+
+  // Spoke pages have translated hub slugs (e.g. es: 'bodas/zona-colonial-...' vs en: 'weddings/zona-colonial-...')
+  // A simple locale-prefix replace would produce the wrong URL, so we look up the correct slug from spoke data.
+  const buildSwitchPath = (): string => {
+    const pathAfterLocale = pathname.replace(`/${locale}`, '') // e.g. '/bodas/zona-colonial-santo-domingo'
+    const parts = pathAfterLocale.split('/').filter(Boolean) // ['bodas', 'zona-colonial-santo-domingo']
+    if (parts.length === 2) {
+      const [hub, spoke] = parts
+      const spokeData = findSpokeByRoute(locale, hub, spoke)
+      if (spokeData) {
+        const targetSlug = switchLocale === 'es' ? spokeData.esSlug : spokeData.enSlug
+        return `/${switchLocale}/${targetSlug}`
+      }
+    }
+    // Fallback: naive replace for all non-spoke pages (no translated path segments)
+    return pathname.replace(`/${locale}`, `/${switchLocale}`) || `/${switchLocale}`
+  }
+
+  const switchPath = buildSwitchPath()
 
   const getLocalizedHref = (href: string) => {
     if (href === '/') return `/${locale}`
