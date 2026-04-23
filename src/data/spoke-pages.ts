@@ -168,14 +168,14 @@ function draftSpoke(
 export const SPOKE_PAGES: SpokePage[] = [
 
   // ── HUB 1: Wedding Photography ─────────────────────────────────────────────
-  // ✅  weddings/punta-cana promoted to 'published' — fully indexed and in sitemap.
-  //      All other wedding spokes stay 'draft'.
+  // ⚠️  weddings/punta-cana stays 'approved' (noindex) — placeholder images in gallery.
+  //      Promote to 'published' only after real images are swapped in.
   {
     id: 'weddings-punta-cana',
     enSlug: 'weddings/punta-cana',
     esSlug: 'bodas/punta-cana',
     hubSlug: 'wedding-photography',
-    status: 'published',
+    status: 'approved',
     tier: 1,
     geo: { latitude: 18.5601, longitude: -68.3725 },
     geoCity: 'Punta Cana',
@@ -287,6 +287,122 @@ export const SPOKE_PAGES: SpokePage[] = [
   },
 
   // ── Wedding spokes (draft) ──────────────────────────────────────────────────
+  // ✅  weddings/zona-colonial-santo-domingo — status: 'draft' pending client review
+  {
+    id: 'weddings-zona-colonial-santo-domingo',
+    enSlug: 'weddings/zona-colonial-santo-domingo',
+    esSlug: 'bodas/zona-colonial-santo-domingo',
+    hubSlug: 'wedding-photography',
+    status: 'draft',
+    tier: 1,
+    geo: { latitude: 18.4731, longitude: -69.8837 },
+    geoCity: 'Zona Colonial',
+    geoRegion: 'Santo Domingo',
+
+    titleEn: 'Wedding Photographer Zona Colonial Santo Domingo',
+    titleEs: 'Fotógrafo de Bodas Zona Colonial Santo Domingo',
+    descriptionEn: 'Intimate wedding photography in the UNESCO-listed Zona Colonial of Santo Domingo. Cobblestone streets, colonial courtyards, and golden afternoon light. Book your Zona Colonial wedding photographer today.',
+    descriptionEs: 'Fotografía de bodas íntima en la Zona Colonial de Santo Domingo, Patrimonio de la Humanidad. Adoquines, patios coloniales y luz dorada de tarde. Reserva tu fotógrafo de bodas en la Zona Colonial hoy.',
+    keywordsEn: 'wedding photographer zona colonial santo domingo, zona colonial wedding photography, historic district wedding photographer dominican republic, santo domingo colonial zone wedding, wedding photos ciudad colonial',
+    keywordsEs: 'fotógrafo de bodas zona colonial santo domingo, fotografía de bodas zona colonial, fotógrafo boda ciudad colonial república dominicana, bodas zona colonial santo domingo, fotos boda patrimonio humanidad santo domingo',
+
+    h1En: 'Wedding Photographer Zona Colonial Santo Domingo',
+    h1Es: 'Fotógrafo de Bodas en la Zona Colonial de Santo Domingo',
+    hookEn: 'The oldest European city in the Americas is your backdrop. Cobblestone streets, centuries-old courtyards, and the warm glow of Dominican golden hour — we know every corner of the Zona Colonial and how to make your wedding photos unforgettable.',
+    hookEs: 'La ciudad europea más antigua de América es tu escenario. Adoquines, patios centenarios y la cálida luz del atardecer dominicano — conocemos cada rincón de la Zona Colonial y cómo hacer que tus fotos de boda sean inolvidables.',
+
+    heroImagePublicId: 'v1776954735/wedding-photographer-zona-colonial-sunset_svubtx',
+    heroImageAltEn: 'Wedding photographer Zona Colonial sunset Santo Domingo — Babula Shots',
+    heroImageAltEs: 'Fotógrafo de bodas Zona Colonial atardecer Santo Domingo — Babula Shots',
+
+    expectCards: [
+      {
+        icon: '🏛️',
+        titleEn: 'UNESCO World Heritage Backdrop',
+        titleEs: 'Escenario Patrimonio de la Humanidad',
+        bodyEn: 'The Zona Colonial is the oldest continuously inhabited European settlement in the Americas. Every alley, fortified wall, and colonial mansion is a natural photo set. We know the best angles, the hidden courtyards, and the golden-hour spots that make every image feel cinematic.',
+        bodyEs: 'La Zona Colonial es el asentamiento europeo habitado más antiguo de América. Cada callejón, muralla y mansión colonial es un escenario natural para fotografías. Conocemos los mejores ángulos, los patios escondidos y los puntos de hora dorada que hacen que cada imagen se sienta cinematográfica.',
+      },
+      {
+        icon: '🌅',
+        titleEn: 'Perfect Golden Hour Light',
+        titleEs: 'Luz de Hora Dorada Perfecta',
+        bodyEn: 'The Zona Colonial faces west over the Ozama River, giving you some of the most dramatic sunset light in Santo Domingo. We plan your portrait session around the 5:30–6:10 PM golden hour window so the warm light falls directly on the historic facades behind you.',
+        bodyEs: 'La Zona Colonial mira al oeste sobre el río Ozama, ofreciéndote una de las luces de atardecer más dramáticas de Santo Domingo. Planificamos tu sesión de retratos alrededor de la ventana de hora dorada de 5:30–6:10 PM para que la cálida luz caiga directamente sobre las fachadas históricas detrás de ti.',
+      },
+      {
+        icon: '📍',
+        titleEn: 'Local Permit Knowledge',
+        titleEs: 'Conocimiento de Permisos Locales',
+        bodyEn: 'Some of the most photogenic locations in the Zona Colonial — the Alcázar de Colón, the Fortaleza Ozama, the Catedral Primada — require advance coordination. We handle all of that so you can focus on your wedding day.',
+        bodyEs: 'Algunos de los lugares más fotogénicos de la Zona Colonial — el Alcázar de Colón, la Fortaleza Ozama, la Catedral Primada — requieren coordinación previa. Nos encargamos de todo eso para que puedas concentrarte en tu día de boda.',
+      },
+    ],
+
+    gallery: [
+      { publicId: 'v1776954732/cobertura-eventos-sociales-santo-domingo_a69wba', altEn: 'Wedding reception at colonial venue Santo Domingo — Babula Shots', altEs: 'Recepción de boda en venue colonial Santo Domingo — Babula Shots' },
+      { publicId: 'v1776954733/fotografo-bodas-destino-dominican-republic_h6syhy', altEn: 'Destination wedding photographer Dominican Republic — Babula Shots', altEs: 'Fotógrafo de bodas destino República Dominicana — Babula Shots' },
+      { publicId: 'v1776954733/fotografo_de_bodas_en_Republica_Dominicana_etbazw', altEn: 'Wedding photographer in Dominican Republic — Babula Shots', altEs: 'Fotógrafo de bodas en República Dominicana — Babula Shots' },
+      { publicId: 'v1776954733/pre-wedding-session-zona-colonial-santo-domingo_ojo8j2', altEn: 'Pre-wedding session Zona Colonial Santo Domingo — Babula Shots', altEs: 'Sesión pre-boda Zona Colonial Santo Domingo — Babula Shots' },
+      { publicId: 'v1776954735/wedding-photographer-zona-colonial-sunset_svubtx', altEn: 'Wedding photographer Zona Colonial sunset Santo Domingo — Babula Shots', altEs: 'Fotógrafo de bodas Zona Colonial atardecer Santo Domingo — Babula Shots' },
+      { publicId: 'v1776954733/sesion-de-fotos-post-boda-punta-cana_zgplqf', altEn: 'Post-wedding photo session after ceremony — Babula Shots', altEs: 'Sesión de fotos post-boda — Babula Shots' },
+    ],
+
+    priceFromUsd: '$399',
+    pricingDescEn: 'Zona Colonial wedding photography starts at $399 for ceremony-only coverage. Full-day packages include getting ready, ceremony, cocktail hour, and reception. Every package includes edited high-resolution photos delivered via a private online gallery. Travel within Santo Domingo is included at no extra charge.',
+    pricingDescEs: 'La fotografía de bodas en la Zona Colonial comienza en $399 para cobertura solo de ceremonia. Los paquetes de día completo incluyen preparativos, ceremonia, cóctel y recepción. Cada paquete incluye fotos editadas en alta resolución entregadas en una galería privada en línea. El traslado dentro de Santo Domingo está incluido sin costo adicional.',
+
+    whyUs: [
+      { icon: '🗺️', titleEn: 'Deep Local Knowledge', titleEs: 'Conocimiento Local Profundo', bodyEn: 'We have been photographing in the Zona Colonial since 2015. We know every courtyard, every light angle, and every hidden passage that turns into the perfect backdrop.', bodyEs: 'Llevamos fotografiando en la Zona Colonial desde 2015. Conocemos cada patio, cada ángulo de luz y cada pasaje escondido que se convierte en el fondo perfecto.' },
+      { icon: '🏛️', titleEn: 'UNESCO Venue Experience', titleEs: 'Experiencia en Venues UNESCO', bodyEn: 'From the Ozama Fortress to the Cathedral of Santa María la Menor, we have photographed in all the major landmarks and know how to work within each venue\'s rules and restrictions.', bodyEs: 'Desde la Fortaleza Ozama hasta la Catedral de Santa María la Menor, hemos fotografiado en todos los monumentos principales y sabemos cómo trabajar dentro de las reglas y restricciones de cada venue.' },
+      { icon: '🌤️', titleEn: 'City Weather Strategy', titleEs: 'Estrategia Climática Urbana', bodyEn: 'Santo Domingo weather is predictable once you know the patterns. We plan your timeline with the dry season (November–April) in mind and always have an indoor backup plan for Caribbean showers.', bodyEs: 'El clima de Santo Domingo es predecible una vez que conoces los patrones. Planificamos tu cronograma con la temporada seca (noviembre–abril) en mente y siempre tenemos un plan de respaldo interior para los aguaceros caribeños.' },
+      { icon: '⭐', titleEn: '4.9 Stars on Google', titleEs: '4.9 Estrellas en Google', bodyEn: '91+ Google reviews from real couples who celebrated in the Dominican Republic. Consistent, honest feedback from clients in your exact situation.', bodyEs: '+91 reseñas de Google de parejas reales que celebraron en República Dominicana. Comentarios consistentes y honestos de clientes en tu misma situación.' },
+    ],
+
+    faq: [
+      {
+        questionEn: 'What are the best locations in the Zona Colonial for wedding photos?',
+        questionEs: '¿Cuáles son los mejores lugares de la Zona Colonial para fotos de boda?',
+        answerEn: 'Our top spots are the Alcázar de Colón courtyard, the Fortaleza Ozama ramparts, Calle Las Damas at golden hour, the interior of Casa de Bastidas, and the seafront Paseo Presidente Billini along the Ozama River. We scout each location in advance and plan the route based on your ceremony time and sunset window.',
+        answerEs: 'Nuestros mejores spots son el patio del Alcázar de Colón, las murallas de la Fortaleza Ozama, la Calle Las Damas en hora dorada, el interior de la Casa de Bastidas y el Paseo Presidente Billini frente al río Ozama. Hacemos un reconocimiento previo de cada lugar y planificamos la ruta según la hora de tu ceremonia y la ventana de atardecer.',
+      },
+      {
+        questionEn: 'Do you need permits to photograph at the Alcázar de Colón or the Fortaleza?',
+        questionEs: '¿Se necesitan permisos para fotografiar en el Alcázar de Colón o la Fortaleza?',
+        answerEn: 'Yes — the Alcázar de Colón and Fortaleza Ozama are managed by the Ministry of Culture and require a photography permit for commercial or wedding sessions. We handle the permit coordination as part of your booking so you do not have to deal with the paperwork.',
+        answerEs: 'Sí — el Alcázar de Colón y la Fortaleza Ozama son administrados por el Ministerio de Cultura y requieren un permiso fotográfico para sesiones comerciales o de boda. Nos encargamos de la coordinación del permiso como parte de tu reserva para que no tengas que lidiar con el papeleo.',
+      },
+      {
+        questionEn: 'Is parking or logistics difficult for a wedding in the Zona Colonial?',
+        questionEs: '¿Es difícil el estacionamiento o la logística para una boda en la Zona Colonial?',
+        answerEn: 'Traffic and parking in the Zona Colonial can be challenging, especially on weekends. We handle our own logistics and always arrive early to secure the best angles before crowds build. We also coordinate with your venue and planner to synchronize arrival times.',
+        answerEs: 'El tráfico y el estacionamiento en la Zona Colonial pueden ser complicados, especialmente los fines de semana. Nos encargamos de nuestra propia logística y siempre llegamos temprano para asegurar los mejores ángulos antes de que se aglomere el público. También coordinamos con tu venue y planificador para sincronizar los tiempos de llegada.',
+      },
+      {
+        questionEn: 'Can you cover both a church ceremony and reception in the Zona Colonial in one package?',
+        questionEs: '¿Pueden cubrir una ceremonia en iglesia y recepción en la Zona Colonial en un solo paquete?',
+        answerEn: 'Yes — our full-day packages are designed for exactly this. The Zona Colonial has the Cathedral of Santa María la Menor (the first cathedral in the Americas), several historic churches, and numerous colonial mansion venues that host both ceremonies and receptions. We stay with you from getting-ready through the last dance.',
+        answerEs: 'Sí — nuestros paquetes de día completo están diseñados exactamente para esto. La Zona Colonial cuenta con la Catedral de Santa María la Menor (la primera catedral de las Américas), varias iglesias históricas y numerosas mansiones coloniales que albergan tanto ceremonias como recepciones. Nos quedamos contigo desde los preparativos hasta el último baile.',
+      },
+      {
+        questionEn: 'How far in advance should we book a Zona Colonial wedding photographer?',
+        questionEs: '¿Con cuánta anticipación debemos reservar un fotógrafo de bodas para la Zona Colonial?',
+        answerEn: 'We recommend booking 3–6 months in advance for Santo Domingo weddings. December through March is peak season and our most popular dates fill quickly. Securing your date with a deposit locks it in completely — we do not double-book.',
+        answerEs: 'Recomendamos reservar con 3–6 meses de anticipación para bodas en Santo Domingo. Diciembre a marzo es temporada alta y nuestras fechas más populares se llenan rápidamente. Asegurar tu fecha con un depósito la bloquea completamente — no hacemos doble reservación.',
+      },
+    ],
+
+    relatedSpokeIds: ['weddings-punta-cana', 'weddings-santo-domingo', 'weddings-cap-cana'],
+
+    ctaHeadlineEn: 'Ready to book your Zona Colonial wedding photographer?',
+    ctaHeadlineEs: '¿Listo para reservar tu fotógrafo de bodas en la Zona Colonial?',
+    ctaValuePropEn: 'Santo Domingo dates fill up fast — especially for December–March peak season. Check availability and hold your date today. · ⭐ 4.9 on Google (91+ reviews)',
+    ctaValuePropEs: 'Las fechas en Santo Domingo se agotan rápido — especialmente en la temporada alta de diciembre a marzo. Verifica disponibilidad y reserva tu fecha hoy. · ⭐ 4.9 en Google (+91 reseñas)',
+
+    waMessageEn: 'Hello! I\'m interested in wedding photography in the Zona Colonial, Santo Domingo. Can you check availability for my date?',
+    waMessageEs: 'Hola! Me interesa fotografía de bodas en la Zona Colonial, Santo Domingo. ¿Pueden verificar disponibilidad para mi fecha?',
+  },
+
   draftSpoke('weddings-cap-cana',           'weddings/cap-cana',               'bodas/cap-cana',                     'wedding-photography',              1, { latitude: 18.4732, longitude: -68.4228 }, 'Cap Cana',      'La Altagracia'),
   draftSpoke('weddings-santo-domingo',      'weddings/santo-domingo',          'bodas/santo-domingo',                'wedding-photography',              2, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
   draftSpoke('weddings-casa-de-campo',      'weddings/casa-de-campo',          'bodas/casa-de-campo',                'wedding-photography',              2, { latitude: 18.4207, longitude: -68.9706 }, 'La Romana',     'La Romana'),

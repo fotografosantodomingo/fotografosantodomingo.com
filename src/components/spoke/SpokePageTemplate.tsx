@@ -15,6 +15,7 @@
  * All copy comes from spoke-pages.ts; no Supabase or API calls here.
  */
 
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import BookingCTA from '@/components/spoke/BookingCTA'
@@ -34,36 +35,45 @@ function cloudinaryUrl(publicId: string, transform: string): string {
 type Props = {
   spoke: SpokePage
   locale: string
+  /** When true the hero renders as a text-only section with no background image */
+  noHeroImage?: boolean
+  /** When provided, replaces the default GallerySection entirely */
+  customGallery?: React.ReactNode
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Section 1 — Hero
 // ─────────────────────────────────────────────────────────────────────────────
 
-function HeroSection({ spoke, locale }: Props) {
+function HeroSection({ spoke, locale, noHeroImage }: Props) {
   const isEs = locale === 'es'
   const h1 = isEs ? spoke.h1Es : spoke.h1En
-  const hook = isEs ? spoke.hookEn : spoke.hookEn // intentional: same until translated
   const hookLocalized = isEs ? spoke.hookEs : spoke.hookEn
   const waMessage = isEs ? spoke.waMessageEs : spoke.waMessageEn
   const heroSrc = cloudinaryUrl(spoke.heroImagePublicId, 'c_fill,w_1920,h_1080,f_auto,q_auto:good')
   const heroAlt = isEs ? spoke.heroImageAltEs : spoke.heroImageAltEn
 
   return (
-    <section className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden text-center">
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={heroSrc}
-          alt={heroAlt}
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-          quality={85}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-      </div>
+    <section
+      className={`relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden text-center ${
+        noHeroImage ? 'bg-neutral-900' : ''
+      }`}
+    >
+      {/* Background — omitted when noHeroImage is true */}
+      {!noHeroImage && (
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={heroSrc}
+            alt={heroAlt}
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+            quality={85}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        </div>
+      )}
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-4xl px-6 py-20 sm:py-32">
@@ -427,12 +437,12 @@ function FinalCTASection({ spoke, locale }: Props) {
 // Main export
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function SpokePageTemplate({ spoke, locale }: Props) {
+export default function SpokePageTemplate({ spoke, locale, noHeroImage, customGallery }: Props) {
   return (
     <main>
-      <HeroSection spoke={spoke} locale={locale} />
+      <HeroSection spoke={spoke} locale={locale} noHeroImage={noHeroImage} />
       <ExpectSection spoke={spoke} locale={locale} />
-      <GallerySection spoke={spoke} locale={locale} />
+      {customGallery ?? <GallerySection spoke={spoke} locale={locale} />}
       <PricingSection spoke={spoke} locale={locale} />
       <WhyUsSection spoke={spoke} locale={locale} />
       <FaqSection spoke={spoke} locale={locale} />

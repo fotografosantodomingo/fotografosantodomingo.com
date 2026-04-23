@@ -16,6 +16,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import SpokePageTemplate from '@/components/spoke/SpokePageTemplate'
+import ZonaColonialGallery from '@/components/spoke/ZonaColonialGallery'
 import { buildSpokeSchemas } from '@/lib/spoke-schema'
 import {
   findSpokeByRoute,
@@ -146,6 +147,9 @@ export default function SpokePage({
 
   const schemas = buildSpokeSchemas(spokeData, params.locale, BASE_URL)
 
+  // Custom overrides keyed by spoke ID
+  const isZonaColonial = spokeData.id === 'weddings-zona-colonial-santo-domingo'
+
   return (
     <>
       {/* JSON-LD — placed inline per official Next.js App Router pattern:
@@ -159,7 +163,12 @@ export default function SpokePage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
-      <SpokePageTemplate spoke={spokeData} locale={params.locale} />
+      <SpokePageTemplate
+        spoke={spokeData}
+        locale={params.locale}
+        noHeroImage={isZonaColonial}
+        customGallery={isZonaColonial ? <ZonaColonialGallery locale={params.locale} /> : undefined}
+      />
     </>
   )
 }
