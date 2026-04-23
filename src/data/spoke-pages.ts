@@ -287,13 +287,14 @@ export const SPOKE_PAGES: SpokePage[] = [
   },
 
   // ── Wedding spokes (draft) ──────────────────────────────────────────────────
-  // ✅  weddings/zona-colonial-santo-domingo — status: 'draft' pending client review
+  // ✅  weddings/zona-colonial-santo-domingo — status: 'approved' for client preview
+  //      Still noindex. Change to 'published' only after client confirms all checks.
   {
     id: 'weddings-zona-colonial-santo-domingo',
     enSlug: 'weddings/zona-colonial-santo-domingo',
     esSlug: 'bodas/zona-colonial-santo-domingo',
     hubSlug: 'wedding-photography',
-    status: 'draft',
+    status: 'approved',
     tier: 1,
     geo: { latitude: 18.4731, longitude: -69.8837 },
     geoCity: 'Zona Colonial',
