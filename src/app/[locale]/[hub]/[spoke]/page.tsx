@@ -3,26 +3,28 @@
  *
  * STATUS GATING:
  *   draft     → notFound() (404)
- *   approved  → renders, NOT in sitemap
- *   published → renders, in sitemap
+ *   approved  → renders, noindex
+ *   published → renders, indexed, in sitemap
  *
- * generateStaticParams returns only approved + published pages so Next.js
- * pre-renders those at build time. Any other path that reaches this handler
- * at runtime will also apply the notFound() guard.
+ * JSON-LD schemas are injected via <script> tags in the page body following the
+ * official Next.js App Router pattern for JSON-LD:
+ * https://nextjs.org/docs/app/building-your-application/optimizing/metadata#json-ld
  *
  * Locale routing is handled by next-intl middleware (src/middleware.ts).
  */
 
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { generateJsonLd } from '@/components/seo/JsonLd'
 import SpokePageTemplate from '@/components/spoke/SpokePageTemplate'
 import { buildSpokeSchemas } from '@/lib/spoke-schema'
 import {
   findSpokeByRoute,
   getLiveSpokes,
-  SPOKE_PAGES,
 } from '@/data/spoke-pages'
+
+// Inherit edge runtime from [locale]/layout.tsx; force static pre-rendering
+// at build time for all approved/published spoke pages.
+export const dynamic = 'force-static'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -60,14 +62,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const spokeData = findSpokeByRoute(params.locale, params.hub, params.spoke)
   if (!spokeData || spokeData.status === 'draft') {
-    return { title: '404 | Babula Shots' }
+    // Return bare title so layout template doesn't double-append brand
+    return { title: '404' }
   }
 
   const isEs = params.locale === 'es'
   const slug = isEs ? spokeData.esSlug : spokeData.enSlug
+  // titleEn/titleEs do NOT include brand name — layout template appends " | Babula Shots"
   const title = isEs ? spokeData.titleEs : spokeData.titleEn
   const description = isEs ? spokeData.descriptionEs : spokeData.descriptionEn
   const keywords = isEs ? spokeData.keywordsEs : spokeData.keywordsEn
+  // OG/Twitter titles include brand name explicitly since they bypass the template
+  const brandedTitle = `${title} | Babula Shots`
+  const ogImageUrl = `${BASE_URL}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(spokeData.geoCity)}`
 
   return {
     title,
@@ -84,13 +91,13 @@ export async function generateMetadata({
     openGraph: {
       type: 'website',
       siteName: 'Fotografo Santo Domingo | Babula Shots',
-      title: isEs ? spokeData.titleEs : spokeData.titleEn,
+      title: brandedTitle,
       description,
       url: `${BASE_URL}/${params.locale}/${slug}`,
       locale: isEs ? 'es_DO' : 'en_US',
       images: [
         {
-          url: `${BASE_URL}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(spokeData.geoCity)}`,
+          url: ogImageUrl,
           width: 1200,
           height: 630,
           alt: isEs ? spokeData.heroImageAltEs : spokeData.heroImageAltEn,
@@ -101,11 +108,9 @@ export async function generateMetadata({
       card: 'summary_large_image',
       site: '@babulashots',
       creator: '@babulashots',
-      title: isEs ? spokeData.titleEs : spokeData.titleEn,
+      title: brandedTitle,
       description,
-      images: [
-        `${BASE_URL}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(spokeData.geoCity)}`,
-      ],
+      images: [ogImageUrl],
     },
     robots:
       spokeData.status === 'approved'
@@ -143,11 +148,15 @@ export default function SpokePage({
 
   return (
     <>
+      {/* JSON-LD — placed inline per official Next.js App Router pattern:
+          https://nextjs.org/docs/app/building-your-application/optimizing/metadata#json-ld
+          RSC guarantees server-side rendering so Google sees these on first fetch. */}
       {schemas.map((schema, i) => (
         <script
           key={i}
           type="application/ld+json"
-          dangerouslySetInnerHTML={generateJsonLd(schema)}
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD schema, no user input
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
       <SpokePageTemplate spoke={spokeData} locale={params.locale} />

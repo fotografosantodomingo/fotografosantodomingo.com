@@ -145,12 +145,17 @@ function buildFaq(spoke: SpokePage, locale: string) {
 
 const CLOUDINARY_BASE = 'https://res.cloudinary.com/dwewurxla/image/upload'
 
+/** Returns true only if the publicId is a real Cloudinary ID, not a placeholder */
+function isRealCloudinaryId(id: string | undefined | null): boolean {
+  if (!id) return false
+  if (id.startsWith('[')) return false   // e.g. '[CONTENT — Sprint 2]'
+  if (id.includes('+Coming+Soon')) return false
+  if (id.length < 4) return false
+  return true
+}
+
 function buildImageObject(spoke: SpokePage, locale: string, baseUrl: string) {
-  if (
-    !spoke.heroImagePublicId ||
-    spoke.heroImagePublicId === '[CONTENT — Sprint 2]' ||
-    spoke.heroImagePublicId.startsWith('[CONTENT')
-  ) {
+  if (!isRealCloudinaryId(spoke.heroImagePublicId)) {
     return null
   }
 

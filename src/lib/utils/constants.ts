@@ -30,6 +30,14 @@ export const SOCIAL_LINKS = {
   twitter: 'https://twitter.com/babulashots',
 }
 
+// Business rating — single source of truth used in schema builders and page copy.
+// Update count here when Google review total changes; do NOT hardcode elsewhere.
+export const BUSINESS_RATING = {
+  value: '4.9',
+  count: '91',
+  platform: 'Google',
+}
+
 // Booking links
 export const BOOKING_LINKS = {
   setmore: 'https://babulashotsrd.setmore.com/reserva',
