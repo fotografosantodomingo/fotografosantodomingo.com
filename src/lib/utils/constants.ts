@@ -8,7 +8,6 @@ export const SITE_CONFIG = {
 
 // Contact information
 export const CONTACT_INFO = {
-  email: 'info@fotografosantodomingo.com',
   phone: '+1 (809) 720-9547',
   whatsapp: '18097209547',
   whatsappMessage: 'Hola! Me interesa una sesión de fotos.',

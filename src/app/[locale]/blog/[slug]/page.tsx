@@ -468,7 +468,6 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         name: 'Fotografo Santo Domingo',
         url: BASE_URL,
         telephone: '+1-809-720-9547',
-        email: 'info@fotografosantodomingo.com',
         image: imageUrl,
         address: {
           '@type': 'PostalAddress',

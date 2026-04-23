@@ -45,7 +45,6 @@ export const schemaGenerators = {
     image: `${BASE_URL}/api/og`,
     url: BASE_URL,
     telephone: '+1-809-720-9547',
-    email: 'info@fotografosantodomingo.com',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'C. El Conde 142',
@@ -101,7 +100,6 @@ export const schemaGenerators = {
     image: `${BASE_URL}/api/og`,
     url: BASE_URL,
     telephone: '+18097209547',
-    email: 'info@fotografosantodomingo.com',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'C. El Conde 142',

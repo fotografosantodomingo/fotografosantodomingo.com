@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import ObfuscatedEmail from '@/components/ui/ObfuscatedEmail'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -71,13 +72,13 @@ export default function PrivacyPage({ params: { locale } }: Props) {
               <>
                 <p>Bienvenido a fotografosantodomingo.com. Esta Política de Privacidad explica cómo recopilamos, usamos, almacenamos y protegemos tu información personal cuando visitas nuestro sitio web o nos contactas para contratar una sesión fotográfica en Santo Domingo, República Dominicana.</p>
                 <p className="mt-3">Al utilizar este sitio web aceptas los términos descritos en esta Política de Privacidad. Si no estás de acuerdo, por favor no utilices nuestro sitio web.</p>
-                <p className="mt-3">Este sitio web es operado por Fotografo Santo Domingo, un servicio de fotografía profesional con sede en Santo Domingo, República Dominicana. Para cualquier consulta relacionada con privacidad puedes contactarnos en <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</p>
+                <p className="mt-3">Este sitio web es operado por Fotografo Santo Domingo, un servicio de fotografía profesional con sede en Santo Domingo, República Dominicana. Para cualquier consulta relacionada con privacidad puedes contactarnos en <ObfuscatedEmail locale="es" className="text-sky-400 hover:text-sky-300" /> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</p>
               </>
             ) : (
               <>
                 <p>Welcome to fotografosantodomingo.com. This Privacy Policy explains how we collect, use, store and protect your personal information when you visit our website or contact us to book a photography session in Santo Domingo, Dominican Republic.</p>
                 <p className="mt-3">By using this website you agree to the terms described in this Privacy Policy. If you do not agree, please do not use our website.</p>
-                <p className="mt-3">This website is operated by Fotografo Santo Domingo, a professional photography service based in Santo Domingo, Dominican Republic. For any privacy-related questions you can contact us at <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</p>
+                <p className="mt-3">This website is operated by Fotografo Santo Domingo, a professional photography service based in Santo Domingo, Dominican Republic. For any privacy-related questions you can contact us at <ObfuscatedEmail locale="en" className="text-sky-400 hover:text-sky-300" /> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</p>
               </>
             )}
           </Section>
@@ -192,8 +193,9 @@ export default function PrivacyPage({ params: { locale } }: Props) {
               ]).map((item, i) => <li key={i}>{item}</li>)}
             </ul>
             <p className="mt-3">{isEs
-              ? 'Para ejercer cualquiera de estos derechos, contáctanos en info@fotografosantodomingo.com. Responderemos a tu solicitud en un plazo de 30 días.'
-              : 'To exercise any of these rights, please contact us at info@fotografosantodomingo.com. We will respond to your request within 30 days.'}
+              ? <>'Para ejercer cualquiera de estos derechos, contáctanos en <ObfuscatedEmail locale="es" className="text-sky-400 hover:text-sky-300" />. Responderemos a tu solicitud en un plazo de 30 días.</>
+              : <>To exercise any of these rights, please contact us at <ObfuscatedEmail locale="en" className="text-sky-400 hover:text-sky-300" />. We will respond to your request within 30 days.</>
+            }
             </p>
             {!isEs && <p className="mt-3">If you are located in the European Union or European Economic Area, you also have the right to lodge a complaint with your local data protection authority.</p>}
           </Section>
@@ -201,8 +203,9 @@ export default function PrivacyPage({ params: { locale } }: Props) {
           {/* 8 */}
           <Section title={isEs ? '8. Privacidad de menores' : "8. Children's Privacy"}>
             <p>{isEs
-              ? 'Nuestro sitio web no está dirigido a menores de 13 años. No recopilamos conscientemente información personal de niños. Si eres padre o tutor y crees que tu hijo nos ha proporcionado información personal, contáctanos de inmediato en info@fotografosantodomingo.com y eliminaremos esa información de inmediato.'
-              : 'Our website is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you are a parent or guardian and believe your child has provided us with personal information, please contact us immediately at info@fotografosantodomingo.com and we will delete that information promptly.'}
+              ? <>Nuestro sitio web no está dirigido a menores de 13 años. No recopilamos conscientemente información personal de niños. Si eres padre o tutor y crees que tu hijo nos ha proporcionado información personal, contáctanos de inmediato en <ObfuscatedEmail locale="es" className="text-sky-400 hover:text-sky-300" /> y eliminaremos esa información de inmediato.</>
+              : <>Our website is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you are a parent or guardian and believe your child has provided us with personal information, please contact us immediately at <ObfuscatedEmail locale="en" className="text-sky-400 hover:text-sky-300" /> and we will delete that information promptly.</>
+            }
             </p>
           </Section>
 
@@ -243,7 +246,7 @@ export default function PrivacyPage({ params: { locale } }: Props) {
             <address className="mt-4 not-italic text-gray-300 space-y-1">
               <p className="font-semibold text-white">Fotografo Santo Domingo</p>
               <p>Santo Domingo, Distrito Nacional, República Dominicana</p>
-              <p>Email: <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a></p>
+              <p>Email: <ObfuscatedEmail locale={locale} className="text-sky-400 hover:text-sky-300" /></p>
               <p>WhatsApp: <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a></p>
               <p>Web: <a href="https://www.fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">www.fotografosantodomingo.com</a></p>
             </address>

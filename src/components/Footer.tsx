@@ -3,6 +3,7 @@ import Link from 'next/link'
 import NewsletterForm from './NewsletterForm'
 import ThemeToggle from './ThemeToggle'
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/lib/utils/constants'
+import ObfuscatedEmail from '@/components/ui/ObfuscatedEmail'
 
 export default function Footer({ locale: localeProp }: { locale?: string } = {}) {
   const t = useTranslations('footer')
@@ -23,7 +24,7 @@ export default function Footer({ locale: localeProp }: { locale?: string } = {})
             <div className="space-y-2 text-sm text-gray-400">
               <p>📍 {t('contact.info.office')}</p>
               <p>📞 {CONTACT_INFO.phone}</p>
-              <p>✉️ {CONTACT_INFO.email}</p>
+              <p>✉️ <ObfuscatedEmail locale={locale} className="text-gray-400 hover:text-white transition-colors" /></p>
               <p>⏰ {t('contact.info.response_time')}</p>
             </div>
 

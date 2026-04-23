@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import ObfuscatedEmail from '@/components/ui/ObfuscatedEmail'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -88,8 +89,8 @@ export default function TermsPage({ params: { locale } }: Props) {
               : 'Fotografo Santo Domingo is a professional photography service based in Santo Domingo, Distrito Nacional, Dominican Republic. We provide professional photography services across the entire country including Santo Domingo, Punta Cana, Bávaro, Cap Cana, Isla Saona, Tortuga Bay, Casa de Campo, La Romana, Santiago, San Pedro de Macorís, Puerto Plata and any other location agreed upon with the client.'}
             </p>
             <p className="mt-3">{isEs
-              ? <>Puedes contactarnos en <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</>
-              : <>You can reach us at <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</>}
+              ? <>Puedes contactarnos en <ObfuscatedEmail locale="es" className="text-sky-400 hover:text-sky-300" /> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</>
+              : <>You can reach us at <ObfuscatedEmail locale="en" className="text-sky-400 hover:text-sky-300" /> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</>}
             </p>
           </Section>
 
@@ -307,7 +308,7 @@ export default function TermsPage({ params: { locale } }: Props) {
             <address className="mt-4 not-italic text-gray-300 space-y-1">
               <p className="font-semibold text-white">Fotografo Santo Domingo</p>
               <p>Santo Domingo, Distrito Nacional, República Dominicana</p>
-              <p>Email: <a href="mailto:info@fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">info@fotografosantodomingo.com</a></p>
+              <p>Email: <ObfuscatedEmail locale={locale} className="text-sky-400 hover:text-sky-300" /></p>
               <p>WhatsApp: <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a></p>
               <p>Web: <a href="https://www.fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">www.fotografosantodomingo.com</a></p>
             </address>

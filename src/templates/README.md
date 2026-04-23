@@ -36,6 +36,7 @@ For **spoke pages** (`src/app/[locale]/[hub]/[spoke]/page.tsx`), use `src/data/s
 - Publishing before client visual approval on desktop **and** mobile
 - Mismatched footer language (EN footer on ES page or vice versa)
 - `status: 'published'` without both EN and ES URLs submitted to GSC the same day
+- Hardcoded email addresses in any HTML, JSX, or JSON-LD — always use `<ObfuscatedEmail locale={locale} />` from `@/components/ui/ObfuscatedEmail`
 
 ---
 
