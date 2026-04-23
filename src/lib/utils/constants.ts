@@ -38,6 +38,28 @@ export const BUSINESS_RATING = {
   platform: 'Google',
 }
 
+// Photographer identity — single source of truth for all schema builders.
+// Import PHOTOGRAPHER instead of hardcoding names, URLs, or copyright strings.
+export const PHOTOGRAPHER = {
+  name: 'Michal Babula',
+  brandName: 'Babula Shots',
+  url: 'https://www.fotografosantodomingo.com',
+  aboutUrl: 'https://www.fotografosantodomingo.com/en/about',
+  phone: '+18097209547',
+  address: {
+    street: 'C. El Conde 142',
+    locality: 'Santo Domingo',
+    region: 'Distrito Nacional',
+    postalCode: '10210',
+    country: 'DO',
+  },
+  license: 'https://www.fotografosantodomingo.com/en/terms',
+  acquireLicensePage: 'https://www.fotografosantodomingo.com/en/contact',
+  creditText: 'Babula Shots — fotografosantodomingo.com',
+  instagram: 'https://www.instagram.com/babulashots',
+  facebook: 'https://www.facebook.com/babulashots',
+}
+
 // Booking links
 export const BOOKING_LINKS = {
   setmore: 'https://babulashotsrd.setmore.com/reserva',

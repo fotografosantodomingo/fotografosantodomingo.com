@@ -153,7 +153,7 @@ export default async function RootLayout({
             ? `Ultima actualizacion del sitio: ${lastUpdatedLabel}`
             : `Site last updated: ${lastUpdatedLabel}`}
         </aside>
-        <Footer />
+        <Footer locale={normalizedLocale} />
       </ErrorBoundary>
       <WhatsAppButton />
       <CookieConsent />

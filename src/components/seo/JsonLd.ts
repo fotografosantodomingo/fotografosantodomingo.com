@@ -31,7 +31,7 @@ export const schemaGenerators = {
       streetAddress: 'C. El Conde 142',
       addressLocality: 'Santo Domingo',
       addressRegion: 'Distrito Nacional',
-      postalCode: '11111',
+      postalCode: '10210',
       addressCountry: 'DO'
     }
   }),
@@ -51,7 +51,7 @@ export const schemaGenerators = {
       streetAddress: 'C. El Conde 142',
       addressLocality: 'Santo Domingo',
       addressRegion: 'Distrito Nacional',
-      postalCode: '11111',
+      postalCode: '10210',
       addressCountry: 'DO'
     },
     geo: {
@@ -107,7 +107,7 @@ export const schemaGenerators = {
       streetAddress: 'C. El Conde 142',
       addressLocality: 'Santo Domingo',
       addressRegion: 'Distrito Nacional',
-      postalCode: '11111',
+      postalCode: '10210',
       addressCountry: 'DO',
     },
     geo: { '@type': 'GeoCoordinates', latitude: 18.4727, longitude: -69.8866 },
@@ -341,6 +341,8 @@ export const schemaGenerators = {
       '@type': 'PostalAddress',
       streetAddress: 'C. El Conde 142',
       addressLocality: 'Santo Domingo',
+      addressRegion: 'Distrito Nacional',
+      postalCode: '10210',
       addressCountry: 'DO',
     },
     knowsAbout: locale === 'es'

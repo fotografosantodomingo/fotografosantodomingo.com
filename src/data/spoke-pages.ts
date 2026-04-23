@@ -287,14 +287,13 @@ export const SPOKE_PAGES: SpokePage[] = [
   },
 
   // ── Wedding spokes (draft) ──────────────────────────────────────────────────
-  // ✅  weddings/zona-colonial-santo-domingo — status: 'approved' for client preview
-  //      Still noindex. Change to 'published' only after client confirms all checks.
+  // ✅  weddings/zona-colonial-santo-domingo — status: 'published' — live + indexed
   {
     id: 'weddings-zona-colonial-santo-domingo',
     enSlug: 'weddings/zona-colonial-santo-domingo',
     esSlug: 'bodas/zona-colonial-santo-domingo',
     hubSlug: 'wedding-photography',
-    status: 'approved',
+    status: 'published',
     tier: 1,
     geo: { latitude: 18.4731, longitude: -69.8837 },
     geoCity: 'Zona Colonial',
@@ -341,7 +340,7 @@ export const SPOKE_PAGES: SpokePage[] = [
     ],
 
     gallery: [
-      { publicId: 'v1776954732/cobertura-eventos-sociales-santo-domingo_a69wba', altEn: 'Wedding reception at colonial venue Santo Domingo — Babula Shots', altEs: 'Recepción de boda en venue colonial Santo Domingo — Babula Shots' },
+      { publicId: 'v1776954732/cobertura-eventos-sociales-santo-domingo_a69wba', altEn: 'Wedding reception coverage Zona Colonial Santo Domingo — Babula Shots', altEs: 'Cobertura de recepción de boda Zona Colonial Santo Domingo — Babula Shots' },
       { publicId: 'v1776954733/fotografo-bodas-destino-dominican-republic_h6syhy', altEn: 'Destination wedding photographer Dominican Republic — Babula Shots', altEs: 'Fotógrafo de bodas destino República Dominicana — Babula Shots' },
       { publicId: 'v1776954733/fotografo_de_bodas_en_Republica_Dominicana_etbazw', altEn: 'Wedding photographer in Dominican Republic — Babula Shots', altEs: 'Fotógrafo de bodas en República Dominicana — Babula Shots' },
       { publicId: 'v1776954733/pre-wedding-session-zona-colonial-santo-domingo_ojo8j2', altEn: 'Pre-wedding session Zona Colonial Santo Domingo — Babula Shots', altEs: 'Sesión pre-boda Zona Colonial Santo Domingo — Babula Shots' },

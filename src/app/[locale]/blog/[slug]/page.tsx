@@ -472,8 +472,10 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         image: imageUrl,
         address: {
           '@type': 'PostalAddress',
+          streetAddress: 'C. El Conde 142',
           addressLocality: 'Santo Domingo',
           addressRegion: 'Distrito Nacional',
+          postalCode: '10210',
           addressCountry: 'DO',
         },
         sameAs: [

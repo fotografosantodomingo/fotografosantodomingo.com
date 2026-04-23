@@ -4,9 +4,10 @@ import NewsletterForm from './NewsletterForm'
 import ThemeToggle from './ThemeToggle'
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/lib/utils/constants'
 
-export default function Footer() {
+export default function Footer({ locale: localeProp }: { locale?: string } = {}) {
   const t = useTranslations('footer')
-  const locale = useLocale()
+  const ctxLocale = useLocale()
+  const locale = localeProp ?? ctxLocale
   const year = new Date().getFullYear()
 
   return (

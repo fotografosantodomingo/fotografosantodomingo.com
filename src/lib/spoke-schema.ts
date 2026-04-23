@@ -10,6 +10,7 @@
  */
 
 import type { SpokePage } from '@/data/spoke-pages'
+import { PHOTOGRAPHER } from '@/lib/utils/constants'
 
 const DEFAULT_BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -76,18 +77,23 @@ function buildLocalService(spoke: SpokePage, locale: string, baseUrl: string) {
       '@type': 'LocalBusiness',
       name: 'Babula Shots',
       url: baseUrl,
-      telephone: '+18097209547',
+      telephone: PHOTOGRAPHER.phone,
       priceRange: '$$',
       image: `${baseUrl}/images/babula-shots-logo.jpg`,
       address: {
         '@type': 'PostalAddress',
-        addressLocality: 'Santo Domingo',
-        addressRegion: 'Distrito Nacional',
-        addressCountry: 'DO',
+        streetAddress: PHOTOGRAPHER.address.street,
+        addressLocality: PHOTOGRAPHER.address.locality,
+        addressRegion: PHOTOGRAPHER.address.region,
+        postalCode: PHOTOGRAPHER.address.postalCode,
+        addressCountry: {
+          '@type': 'Country',
+          name: PHOTOGRAPHER.address.country,
+        },
       },
       sameAs: [
-        'https://www.instagram.com/babulashots',
-        'https://www.facebook.com/babulashots',
+        PHOTOGRAPHER.instagram,
+        PHOTOGRAPHER.facebook,
       ],
     },
     areaServed: {
@@ -171,10 +177,14 @@ function buildImageObject(spoke: SpokePage, locale: string, baseUrl: string) {
     url: `${baseUrl}/${locale}/${slug}`,
     width: 1200,
     height: 630,
+    license: PHOTOGRAPHER.license,
+    acquireLicensePage: PHOTOGRAPHER.acquireLicensePage,
+    creditText: PHOTOGRAPHER.creditText,
+    copyrightNotice: `© ${new Date().getFullYear()} ${PHOTOGRAPHER.brandName}. All rights reserved.`,
     creator: {
       '@type': 'Person',
-      name: 'Babula Shots',
-      url: baseUrl,
+      name: PHOTOGRAPHER.name,
+      url: PHOTOGRAPHER.aboutUrl,
     },
   }
 }
