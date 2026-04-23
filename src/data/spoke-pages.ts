@@ -9,8 +9,7 @@
  * CONTENT RULES:
  *   - Do NOT set status to 'approved' or 'published' until copywriter has filled
  *     all [CONTENT] fields and client has explicitly approved.
- *   - The only exception is 'weddings/punta-cana' which is set to 'approved'
- *     for the Sprint 1 design review template with placeholder content.
+   *   - 'weddings/punta-cana' is the first published spoke (promoted from 'approved').
  *   - Cloudinary public IDs only — no external image URLs.
  *   - Every gallery array must have 6–8 entries.
  *   - Every faq array must have 4–5 entries.
@@ -169,14 +168,14 @@ function draftSpoke(
 export const SPOKE_PAGES: SpokePage[] = [
 
   // ── HUB 1: Wedding Photography ─────────────────────────────────────────────
-  // ⚠️  weddings/punta-cana is set to 'approved' for Sprint 1 design template.
+  // ✅  weddings/punta-cana promoted to 'published' — fully indexed and in sitemap.
   //      All other wedding spokes stay 'draft'.
   {
     id: 'weddings-punta-cana',
     enSlug: 'weddings/punta-cana',
     esSlug: 'bodas/punta-cana',
     hubSlug: 'wedding-photography',
-    status: 'approved',
+    status: 'published',
     tier: 1,
     geo: { latitude: 18.5601, longitude: -68.3725 },
     geoCity: 'Punta Cana',
