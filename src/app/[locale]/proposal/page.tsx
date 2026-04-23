@@ -137,11 +137,9 @@ export default function ProposalHubPage({ params: { locale } }: Props) {
     { name: isEs ? 'Fotografía de Propuesta' : 'Proposal Photography', url: `${BASE_URL}/${locale}/proposal` },
   ])
 
-  const waMsg = encodeURIComponent(
-    isEs
-      ? 'Hola! Quiero planear una fotografía de propuesta de matrimonio en República Dominicana. ¿Podemos coordinar?'
-      : 'Hello! I want to plan a proposal photography session in Dominican Republic. Can we coordinate?'
-  )
+  const waMsg = isEs
+    ? 'Hola! Quiero planear una fotografía de propuesta de matrimonio en República Dominicana. ¿Podemos coordinar?'
+    : 'Hello! I want to plan a proposal photography session in Dominican Republic. Can we coordinate?'
 
   return (
     <>
@@ -175,7 +173,7 @@ export default function ProposalHubPage({ params: { locale } }: Props) {
         {/* ── Packages ──────────────────────────────────────────────────────── */}
         <section className="py-16 sm:py-24 px-4 bg-white dark:bg-neutral-900" aria-labelledby="packages-heading">
           <div className="mx-auto max-w-5xl">
-            <h2 id="packages-heading" className="text-center text-2xl font-bold tracking-tight sm:text-3xl mb-12">
+            <h2 id="packages-heading" className="text-center text-2xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-3xl mb-12">
               {isEs ? 'Todos Nuestros Servicios de Propuesta' : 'All Our Proposal Services'}
             </h2>
             <div className="grid gap-6 sm:grid-cols-3">
@@ -218,7 +216,7 @@ export default function ProposalHubPage({ params: { locale } }: Props) {
         {/* ── How it works ──────────────────────────────────────────────────── */}
         <section className="py-16 sm:py-24 px-4 bg-neutral-50 dark:bg-neutral-950" aria-labelledby="how-heading">
           <div className="mx-auto max-w-4xl">
-            <h2 id="how-heading" className="text-center text-2xl font-bold tracking-tight sm:text-3xl mb-12">
+            <h2 id="how-heading" className="text-center text-2xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-3xl mb-12">
               {isEs ? '¿Cómo funciona el modo ninja?' : 'How does ninja mode work?'}
             </h2>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -245,8 +243,8 @@ export default function ProposalHubPage({ params: { locale } }: Props) {
                 },
               ].map(({ step, en, es }) => (
                 <div key={step} className="flex flex-col">
-                  <span className="text-4xl font-extrabold text-amber-400/40 leading-none mb-3">{step}</span>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  <span className="text-4xl font-extrabold text-amber-300 dark:text-amber-400/50 leading-none mb-3">{step}</span>
+                  <p className="text-sm text-neutral-700 dark:text-neutral-400 leading-relaxed">
                     {isEs ? es : en}
                   </p>
                 </div>

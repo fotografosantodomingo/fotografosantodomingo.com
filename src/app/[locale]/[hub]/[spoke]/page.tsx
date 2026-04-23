@@ -152,7 +152,6 @@ export default function SpokePage({
   const isZonaColonial = spokeData.id === 'weddings-zona-colonial-santo-domingo'
   const isProposalSpoke =
     spokeData.id === 'weddings-proposal-photographer-dominican-republic' ||
-    spokeData.id === 'weddings-proposal-photographer-punta-cana' ||
     spokeData.id === 'proposal-hidden-mode-ninja-photographer'
 
   return (
