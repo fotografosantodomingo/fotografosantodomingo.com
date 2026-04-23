@@ -17,6 +17,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import SpokePageTemplate from '@/components/spoke/SpokePageTemplate'
 import ZonaColonialGallery from '@/components/spoke/ZonaColonialGallery'
+import ProposalGallery from '@/components/spoke/ProposalGallery'
 import { buildSpokeSchemas } from '@/lib/spoke-schema'
 import {
   findSpokeByRoute,
@@ -149,6 +150,9 @@ export default function SpokePage({
 
   // Custom overrides keyed by spoke ID
   const isZonaColonial = spokeData.id === 'weddings-zona-colonial-santo-domingo'
+  const isProposalSpoke =
+    spokeData.id === 'weddings-proposal-photographer-dominican-republic' ||
+    spokeData.id === 'weddings-proposal-photographer-punta-cana'
 
   return (
     <>
@@ -166,8 +170,14 @@ export default function SpokePage({
       <SpokePageTemplate
         spoke={spokeData}
         locale={params.locale}
-        noHeroImage={isZonaColonial}
-        customGallery={isZonaColonial ? <ZonaColonialGallery locale={params.locale} /> : undefined}
+        noHeroImage={isZonaColonial || isProposalSpoke}
+        customGallery={
+          isZonaColonial
+            ? <ZonaColonialGallery locale={params.locale} />
+            : isProposalSpoke
+            ? <ProposalGallery locale={params.locale} />
+            : undefined
+        }
       />
     </>
   )
