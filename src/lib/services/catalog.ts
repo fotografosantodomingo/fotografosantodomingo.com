@@ -4,7 +4,7 @@ type ServicePricing = {
 }
 
 export type ServiceCatalogItem = {
-  id: 'wedding' | 'portrait' | 'drone' | 'event' | 'family' | 'commercial'
+  id: 'wedding' | 'portrait' | 'drone' | 'event' | 'family' | 'commercial' | 'proposal'
   title: string
   subtitle: string
   description: string
@@ -22,6 +22,7 @@ export const serviceSlugById: Record<ServiceCatalogItem['id'], string> = {
   event: 'event-photography',
   family: 'family-photography',
   commercial: 'commercial-photography',
+  proposal: 'proposal-photography',
 }
 
 export const serviceIdBySlug: Record<string, ServiceCatalogItem['id']> = Object.fromEntries(
@@ -166,6 +167,28 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
       },
       icon: '📸',
       gradientClass: 'bg-gradient-to-br from-violet-500 to-purple-700',
+    },
+    {
+      id: 'proposal',
+      title: isEs ? 'Fotografía de Propuesta' : 'Proposal Photography',
+      subtitle: isEs ? 'Modo ninja oculto en toda la RD' : 'Hidden ninja mode across Dominican Republic',
+      description: isEs
+        ? 'Fotografía de propuesta sorpresa con técnica de teleobjetivo 400–600 mm. Completamente ocultos. Restaurantes en Santo Domingo, playas privadas en Punta Cana, villas en Casa de Campo y toda la isla.'
+        : 'Surprise proposal photography with 400–600 mm telephoto technique. Completely hidden. Restaurants in Santo Domingo, private beaches in Punta Cana, villas in Casa de Campo, and across the island.',
+      features: [
+        isEs ? 'Teleobjetivo 400–600 mm desde 50–80 metros' : '400–600 mm telephoto from 50–80 meters',
+        isEs ? 'Coordinación secreta con restaurante o venue' : 'Secret coordination with restaurant or venue',
+        isEs ? 'Galería privada entregada esa misma noche' : 'Private gallery delivered that same night',
+        isEs ? 'Ella nunca sabe que estuvimos ahí' : 'She never knows we were there',
+        isEs ? 'Cobertura en toda República Dominicana' : 'Coverage across all Dominican Republic',
+        isEs ? 'Solo por WhatsApp — sin rastro digital' : 'WhatsApp-only — no digital trail',
+      ],
+      pricing: {
+        starting: isEs ? 'Desde $250' : 'Starting at $250',
+        includes: isEs ? 'Modo ninja + galería 24h + ITBIS' : 'Ninja mode + 24h gallery + tax',
+      },
+      icon: '🥷',
+      gradientClass: 'bg-gradient-to-br from-amber-500 to-rose-600',
     },
   ]
 }
