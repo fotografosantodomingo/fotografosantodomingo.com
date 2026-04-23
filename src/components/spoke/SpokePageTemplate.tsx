@@ -56,7 +56,7 @@ function HeroSection({ spoke, locale, noHeroImage }: Props) {
   return (
     <section
       className={`relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden text-center ${
-        noHeroImage ? 'bg-neutral-900' : ''
+        noHeroImage ? 'bg-white dark:bg-neutral-900' : ''
       }`}
     >
       {/* Background — omitted when noHeroImage is true */}
@@ -77,17 +77,23 @@ function HeroSection({ spoke, locale, noHeroImage }: Props) {
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-4xl px-6 py-20 sm:py-32">
-        <h1 className="text-4xl font-extrabold leading-tight text-white drop-shadow-lg sm:text-5xl lg:text-6xl">
+        <h1 className={`text-4xl font-extrabold leading-tight drop-shadow-lg sm:text-5xl lg:text-6xl ${
+          noHeroImage ? 'text-neutral-900 dark:text-white' : 'text-white'
+        }`}>
           {h1}
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg font-light leading-relaxed text-neutral-200 sm:text-xl">
+        <p className={`mx-auto mt-6 max-w-2xl text-lg font-light leading-relaxed sm:text-xl ${
+          noHeroImage ? 'text-neutral-700 dark:text-neutral-200' : 'text-neutral-200'
+        }`}>
           {hookLocalized}
         </p>
         <div className="mt-10">
           <BookingCTA locale={locale} waMessage={waMessage} layout="horizontal" />
         </div>
         {/* Geo trust signal */}
-        <p className="mt-6 text-sm text-neutral-300">
+        <p className={`mt-6 text-sm ${
+          noHeroImage ? 'text-neutral-500 dark:text-neutral-300' : 'text-neutral-300'
+        }`}>
           📍 {spoke.geoCity}, {spoke.geoRegion}
         </p>
       </div>
