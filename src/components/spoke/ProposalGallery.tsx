@@ -93,21 +93,126 @@ export default function ProposalGallery({ locale }: Props) {
 
   return (
     <section aria-labelledby="proposal-gallery-heading" className="w-full">
-      {/* Section heading — contained */}
-      <div className="bg-neutral-950 py-10 sm:py-16">
-        <h2
-          id="proposal-gallery-heading"
-          className="text-center text-2xl font-bold tracking-tight text-white sm:text-3xl"
-        >
-          {isEs
-            ? 'La secuencia completa — desde ninja oculto hasta el sí'
-            : 'The full sequence — from hidden ninja to the yes'}
-        </h2>
-        <p className="mt-3 text-center text-base text-neutral-400 max-w-2xl mx-auto px-4">
-          {isEs
-            ? 'Estas fotos muestran exactamente cómo funciona el modo ninja: posicionamiento oculto, teleobjetivo, la propuesta capturada, y finalmente todavía ocultos mientras la pareja celebra.'
-            : 'These shots show exactly how ninja mode works: hidden positioning, telephoto lens, the proposal captured, and finally still hidden while the couple celebrates.'}
-        </p>
+
+      {/* ── Technique + locations + pricing — theme-aware ─────────────────── */}
+      <div className="bg-neutral-100 dark:bg-neutral-950 py-12 sm:py-20 px-4">
+        <div className="mx-auto max-w-4xl">
+
+          {/* Heading */}
+          <h2
+            id="proposal-gallery-heading"
+            className="text-center text-2xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-3xl"
+          >
+            {isEs ? 'Modo Ninja — Teleobjetivo 400–600 mm' : 'Ninja Mode — 400–600 mm Telephoto Lens'}
+          </h2>
+          <p className="mt-4 text-center text-base leading-relaxed text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+            {isEs
+              ? 'Usamos lentes de teleobjetivo de 400 a 600 mm para capturar el momento desde muy lejos — la pareja nunca sabe que estamos ahí. Actuamos igual que un paparazzi profesional: invisibles, silenciosos, perfectamente posicionados antes de que él saque el anillo.'
+              : 'We use 400 to 600 mm telephoto lenses to shoot from a long distance — the couple never knows we are there. We work exactly like a professional paparazzi: invisible, silent, perfectly positioned before he pulls out the ring.'}
+          </p>
+
+          {/* Locations */}
+          <div className="mt-10 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-6 sm:p-8">
+            <h3 className="text-base font-semibold text-neutral-900 dark:text-white mb-3">
+              {isEs ? '¿Dónde operamos?' : 'Where do we work?'}
+            </h3>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-5">
+              {isEs
+                ? 'No es solo la playa — podemos trabajar en cualquier lugar donde vayas a proponer: resort, restaurante, terraza, villa, parque, azotea. Aquí algunas de las ubicaciones donde más operamos:'
+                : "It's not just the beach — we can work anywhere you plan to propose: resort, restaurant, terrace, villa, park, rooftop. Here are some of the locations we cover most:"}
+            </p>
+            <div className="grid gap-x-8 gap-y-1.5 grid-cols-1 sm:grid-cols-2 text-sm text-neutral-700 dark:text-neutral-300">
+              {(isEs ? [
+                '🏖️ Playa Bávaro — Punta Cana',
+                '🏖️ Playa Juanillo — Cap Cana',
+                '🏖️ Playa Macao — Este de Punta Cana',
+                '🏖️ Playa Rincón — Samaná',
+                '🏖️ Playa Limón — El Seibo',
+                '🏖️ Playa Dorada — Puerto Plata',
+                '🏖️ Playa Dominicus — Bayahíbe',
+                '🏖️ Playa Ancón — Las Terrenas',
+                '🌆 Malecón — Santo Domingo',
+                '🌆 Parque Mirador — Santo Domingo',
+                '🌆 Zona Colonial — Santo Domingo',
+                '🌴 Casa de Campo — La Romana',
+                '🌴 Hard Rock Beach — Punta Cana',
+                '🌴 Las Terrenas — Samaná',
+                '✨ Restaurantes privados, terrazas, villas y más',
+              ] : [
+                '🏖️ Playa Bávaro — Punta Cana',
+                '🏖️ Playa Juanillo — Cap Cana',
+                '🏖️ Playa Macao — East Punta Cana',
+                '🏖️ Playa Rincón — Samaná',
+                '🏖️ Playa Limón — El Seibo',
+                '🏖️ Playa Dorada — Puerto Plata',
+                '🏖️ Playa Dominicus — Bayahíbe',
+                '🏖️ Playa Ancón — Las Terrenas',
+                '🌆 Malecón — Santo Domingo',
+                '🌆 Mirador Park — Santo Domingo',
+                '🌆 Zona Colonial — Santo Domingo',
+                '🌴 Casa de Campo — La Romana',
+                '🌴 Hard Rock Beach — Punta Cana',
+                '🌴 Las Terrenas — Samaná',
+                '✨ Private restaurants, terraces, villas and more',
+              ]).map((loc) => (
+                <span key={loc} className="py-0.5">{loc}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Pricing table */}
+          <div className="mt-8">
+            <h3 className="text-base font-semibold text-neutral-900 dark:text-white mb-4 text-center">
+              {isEs ? 'Precios desde' : 'Starting from'}
+            </h3>
+            <div className="overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-700">
+              <table className="w-full text-sm text-left">
+                <thead className="bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-xs uppercase tracking-widest">
+                  <tr>
+                    <th className="px-5 py-3">{isEs ? 'Paquete' : 'Package'}</th>
+                    <th className="px-5 py-3">{isEs ? 'Precio' : 'Price'}</th>
+                    <th className="px-5 py-3">{isEs ? 'Incluye' : 'Includes'}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700 bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300">
+                  <tr>
+                    <td className="px-5 py-4 font-medium text-neutral-900 dark:text-white whitespace-nowrap">
+                      {isEs ? 'Estándar' : 'Standard'}
+                    </td>
+                    <td className="px-5 py-4 font-bold text-amber-500 whitespace-nowrap">
+                      $250 USD
+                      <span className="block text-xs font-normal text-neutral-500 dark:text-neutral-400 mt-0.5">
+                        + 18% ITBIS
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 text-neutral-600 dark:text-neutral-400">
+                      {isEs
+                        ? 'Cobertura completa en modo ninja, posicionamiento oculto con teleobjetivo, galería privada en 24 h, edición incluida'
+                        : 'Full ninja mode coverage, hidden positioning with telephoto, private gallery in 24 h, editing included'}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-5 py-4 font-medium text-neutral-900 dark:text-white whitespace-nowrap">
+                      {isEs ? 'Personalizado' : 'Custom'}
+                    </td>
+                    <td className="px-5 py-4 font-bold text-amber-500 whitespace-nowrap">
+                      {isEs ? 'Cotización' : 'Quote'}
+                      <span className="block text-xs font-normal text-neutral-500 dark:text-neutral-400 mt-0.5">
+                        + 18% ITBIS
+                      </span>
+                    </td>
+                    <td className="px-5 py-4 text-neutral-600 dark:text-neutral-400">
+                      {isEs
+                        ? 'Propuesta en múltiples locaciones, coordinación especial de la sorpresa, segundo fotógrafo, acceso a lugares privados, álbum impreso de lujo — todo adaptado a tu idea'
+                        : 'Multi-location proposal, special surprise coordination, second photographer, private venue access, luxury printed album — everything tailored to your idea'}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
       </div>
 
       {/* Full-bleed gallery — every image full width, zero gap, no crop */}
