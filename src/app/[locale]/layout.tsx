@@ -5,7 +5,6 @@ import { getTranslations } from 'next-intl/server'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
-import GoogleTagManager from '@/components/GoogleTagManager'
 import CookieConsent from '@/components/CookieConsent'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { formatSiteLastUpdated, SITE_LAST_UPDATED_ISO } from '@/lib/seo/freshness'
@@ -144,7 +143,6 @@ export default async function RootLayout({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(globalSchema) }}
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(organizationSchema)} />
-      {process.env.NEXT_PUBLIC_GTM_ID && <GoogleTagManager />}
       <ErrorBoundary>
         <Navigation />
         {children}
