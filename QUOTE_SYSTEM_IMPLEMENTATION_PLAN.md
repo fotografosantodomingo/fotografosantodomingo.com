@@ -77,8 +77,8 @@ Replace all site-level "Get Quote" flows with a bilingual multi-step quote wizar
   - active
   - expired
   - accepted
-- Stripe checkout for 50% deposit
-- Success redirect handling + DB update
+- Stripe checkout for full payment (not 50% deposit)
+- Success redirect handling + DB update via webhook
 - Stripe webhook fallback update
 
 ### Phase 7 - Link Replacement + Analytics
@@ -113,6 +113,6 @@ Replace all site-level "Get Quote" flows with a bilingual multi-step quote wizar
 - [x] Phase 3 complete — /api/quotes POST (draft + final modes, emails on final submit)
 - [x] Phase 4 complete — 6-step bilingual GetQuoteWizard with draft sync
 - [x] Phase 5 complete — Admin auth (middleware), login, quotes list, quote detail + send-proposal action
-- [ ] Phase 6 complete — /proposal/[id] client page + Stripe 50% deposit
+- [x] Phase 6 complete — /proposal/[id] client page + Stripe full payment checkout + webhook
 - [ ] Phase 7 complete — Link replacement + analytics events
 - [ ] Phase 8 complete — QA + launch
