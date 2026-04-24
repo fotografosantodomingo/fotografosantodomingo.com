@@ -1,0 +1,44 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Admin — Babula Shots',
+  robots: { index: false, follow: false },
+}
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className="min-h-screen bg-slate-100 font-sans antialiased dark:bg-gray-950">
+        <div className="flex min-h-screen flex-col">
+          <header className="border-b border-slate-200 bg-white px-6 py-3 dark:border-white/10 dark:bg-gray-900">
+            <div className="mx-auto flex max-w-7xl items-center justify-between">
+              <Link href="/admin/quotes" className="font-semibold text-slate-900 dark:text-white">
+                📸 Babula Shots Admin
+              </Link>
+              <nav className="flex items-center gap-4 text-sm">
+                <Link href="/admin/quotes" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
+                  Quotes
+                </Link>
+                <Link href="/admin/images" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
+                  Images
+                </Link>
+                <form action="/api/admin/signout" method="POST">
+                  <button
+                    type="submit"
+                    className="rounded-full border border-slate-300 px-3 py-1 text-slate-600 hover:border-slate-400 hover:text-slate-900 dark:border-white/20 dark:text-gray-300 dark:hover:text-white"
+                  >
+                    Sign out
+                  </button>
+                </form>
+              </nav>
+            </div>
+          </header>
+          <main className="flex-1 px-4 py-8">
+            <div className="mx-auto max-w-7xl">{children}</div>
+          </main>
+        </div>
+      </body>
+    </html>
+  )
+}

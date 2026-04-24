@@ -373,3 +373,116 @@ export async function sendQuoteSubmissionConfirmation(data: QuoteEmailPayload) {
     `,
   })
 }
+
+// ─── Proposal email ─────────────────────────────────────────────────────────
+
+export type ProposalEmailData = {
+  id: string
+  locale: string
+  fullName: string
+  email: string
+  serviceType: string
+  finalPriceUsd: number
+  adminNoteCustomer: string | null
+  proposalUrl: string
+  proposalExpiresAt: string // ISO string
+}
+
+export async function sendProposalEmail(data: ProposalEmailData): Promise<void> {
+  const client = getResend()
+  if (!client) {
+    console.warn('RESEND_API_KEY not set — proposal email skipped')
+    return
+  }
+
+  const isEs = data.locale === 'es'
+  const serviceLabel = formatServiceLabel(data.serviceType, data.locale)
+  const expiryDate = new Date(data.proposalExpiresAt).toLocaleDateString(
+    isEs ? 'es-DO' : 'en-US',
+    { month: 'long', day: 'numeric', year: 'numeric' }
+  )
+
+  await client.emails.send({
+    from: FROM,
+    to: data.email,
+    subject: isEs
+      ? `Tu presupuesto personalizado está listo — Babula Shots`
+      : `Your personalized quote is ready — Babula Shots`,
+    html: `
+      <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#f8fafc;padding:24px 12px">
+        <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
+
+          <div style="background:linear-gradient(135deg,#0ea5e9,#0369a1);padding:28px 24px;text-align:center">
+            <p style="margin:0;color:#e0f2fe;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700">Babula Shots</p>
+            <h2 style="margin:10px 0 0;color:#ffffff;font-size:26px;line-height:1.2">
+              ${isEs ? 'Tu presupuesto está listo' : 'Your quote is ready'}
+            </h2>
+            <p style="margin:10px 0 0;color:#e0f2fe;font-size:15px">
+              ${isEs ? `Hola ${data.fullName}` : `Hi ${data.fullName}`}
+            </p>
+          </div>
+
+          <div style="padding:28px 24px">
+            <p style="margin:0 0 20px;color:#334155;line-height:1.65;font-size:15px">
+              ${isEs
+                ? 'Revisamos tu solicitud y preparamos un presupuesto personalizado. Haz clic abajo para verlo completo antes de que expire.'
+                : 'We reviewed your request and prepared a personalized quote. Click below to view it in full before it expires.'}
+            </p>
+
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;margin-bottom:24px">
+              <table style="width:100%;border-collapse:collapse;font-size:14px">
+                <tr>
+                  <td style="padding:6px 0;color:#64748b;width:150px">${isEs ? 'Servicio' : 'Service'}</td>
+                  <td style="padding:6px 0;font-weight:600;color:#0f172a">${serviceLabel}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0;color:#64748b">${isEs ? 'Inversión total' : 'Total investment'}</td>
+                  <td style="padding:6px 0;font-size:18px;font-weight:700;color:#0ea5e9">
+                    $${data.finalPriceUsd.toLocaleString('en-US')} USD
+                    <span style="font-size:12px;color:#64748b;font-weight:400"> + 18% ITBIS</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0;color:#64748b">${isEs ? 'Válido hasta' : 'Valid until'}</td>
+                  <td style="padding:6px 0;color:#334155">${expiryDate}</td>
+                </tr>
+              </table>
+              ${data.adminNoteCustomer ? `
+              <div style="margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0">
+                <p style="margin:0 0 6px;color:#0f172a;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">
+                  ${isEs ? 'Nota del fotógrafo' : "Photographer's note"}
+                </p>
+                <p style="margin:0;color:#334155;line-height:1.6;white-space:pre-wrap">${data.adminNoteCustomer}</p>
+              </div>` : ''}
+            </div>
+
+            <div style="text-align:center;margin-bottom:24px">
+              <a href="${data.proposalUrl}"
+                 style="display:inline-block;background:#0ea5e9;color:#ffffff;padding:14px 32px;border-radius:50px;text-decoration:none;font-size:16px;font-weight:700;letter-spacing:.01em">
+                ${isEs ? 'Ver mi presupuesto completo →' : 'View my full quote →'}
+              </a>
+            </div>
+
+            <p style="margin:0;color:#64748b;font-size:13px;text-align:center">
+              ${isEs
+                ? `Este enlace es único para ti y expira el ${expiryDate}.`
+                : `This link is unique to you and expires on ${expiryDate}.`}
+              ${isEs
+                ? ' Si tienes preguntas, responde este email o escríbenos por WhatsApp.'
+                : ' If you have questions, reply to this email or message us on WhatsApp.'}
+            </p>
+          </div>
+
+          <div style="padding:14px 24px;border-top:1px solid #e2e8f0;background:#f8fafc;text-align:center">
+            <p style="margin:0;color:#94a3b8;font-size:12px">
+              Fotógrafo Santo Domingo — Babula Shots · Santo Domingo, República Dominicana<br/>
+              <a href="https://www.fotografosantodomingo.com" style="color:#0284c7">fotografosantodomingo.com</a>
+              &nbsp;·&nbsp;
+              <a href="https://wa.me/18097209547" style="color:#0284c7">WhatsApp +1 (809) 720-9547</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    `,
+  })
+}

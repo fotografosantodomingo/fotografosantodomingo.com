@@ -108,12 +108,11 @@ Replace all site-level "Get Quote" flows with a bilingual multi-step quote wizar
 
 ## Progress Tracker
 - [x] Plan created and saved
-- [x] Phase 1 started
-- [ ] Phase 1 complete
-- [ ] Phase 2 complete
-- [ ] Phase 3 complete
-- [ ] Phase 4 complete
-- [ ] Phase 5 complete
-- [ ] Phase 6 complete
-- [ ] Phase 7 complete
-- [ ] Phase 8 complete
+- [x] Phase 1 complete — DB table, enums, RLS, indexes, triggers (migrations 006, 007, 009)
+- [x] Phase 2 complete — Resend email helpers for quote submission + proposal email
+- [x] Phase 3 complete — /api/quotes POST (draft + final modes, emails on final submit)
+- [x] Phase 4 complete — 6-step bilingual GetQuoteWizard with draft sync
+- [x] Phase 5 complete — Admin auth (middleware), login, quotes list, quote detail + send-proposal action
+- [ ] Phase 6 complete — /proposal/[id] client page + Stripe 50% deposit
+- [ ] Phase 7 complete — Link replacement + analytics events
+- [ ] Phase 8 complete — QA + launch
