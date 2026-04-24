@@ -114,5 +114,5 @@ Replace all site-level "Get Quote" flows with a bilingual multi-step quote wizar
 - [x] Phase 4 complete — 6-step bilingual GetQuoteWizard with draft sync
 - [x] Phase 5 complete — Admin auth (middleware), login, quotes list, quote detail + send-proposal action
 - [x] Phase 6 complete — /proposal/[id] client page + Stripe full payment checkout + webhook
-- [ ] Phase 7 complete — Link replacement + analytics events
+- [x] Phase 7 complete — Link replacement + analytics events
 - [ ] Phase 8 complete — QA + launch

@@ -16,7 +16,8 @@ export default function WhatsAppButton() {
     if (typeof window !== 'undefined') {
       window.dataLayer = window.dataLayer || []
       window.dataLayer.push({
-        event: 'whatsapp_click_floating',
+        event: 'whatsapp_click',
+        source: 'floating_button',
         locale,
       })
     }
