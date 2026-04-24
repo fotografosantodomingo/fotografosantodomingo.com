@@ -193,7 +193,7 @@ export default function PrivacyPage({ params: { locale } }: Props) {
               ]).map((item, i) => <li key={i}>{item}</li>)}
             </ul>
             <p className="mt-3">{isEs
-              ? <>'Para ejercer cualquiera de estos derechos, contáctanos en <ObfuscatedEmail locale="es" className="text-sky-400 hover:text-sky-300" />. Responderemos a tu solicitud en un plazo de 30 días.</>
+              ? <>&apos;Para ejercer cualquiera de estos derechos, contáctanos en <ObfuscatedEmail locale="es" className="text-sky-400 hover:text-sky-300" />. Responderemos a tu solicitud en un plazo de 30 días.</>
               : <>To exercise any of these rights, please contact us at <ObfuscatedEmail locale="en" className="text-sky-400 hover:text-sky-300" />. We will respond to your request within 30 days.</>
             }
             </p>

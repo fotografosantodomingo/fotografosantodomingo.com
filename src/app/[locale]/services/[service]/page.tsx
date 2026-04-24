@@ -2241,7 +2241,7 @@ const SERVICE_SCHEMA_KNOWS_ABOUT: Record<string, { es: string[]; en: string[] }>
 
 function uniqueLocationsOrdered(primary: string[]) {
   const ordered = [...primary, ...DOMINICAN_KEY_LOCATIONS.map((p) => p.en)]
-  return [...new Set(ordered)]
+  return Array.from(new Set(ordered))
 }
 
 function localizeLocationName(locale: string, nameEn: string) {

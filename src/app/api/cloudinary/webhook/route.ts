@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
   const supabase = createServiceClient()
 
   const upsertData = {
-    public_id,
+    public_id: publicId,
     ...captions,
     // Parse metadata from upload context (with safe defaults)
     category:  ctx.category  ?? 'other',

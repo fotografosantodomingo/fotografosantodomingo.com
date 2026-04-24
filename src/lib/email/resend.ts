@@ -48,7 +48,7 @@ export async function sendContactNotification(data: ContactData) {
     from: FROM,
     to: PRIMARY_ADMIN_EMAIL,
     ...(getAdminSecondaryRecipient() ? { bcc: getAdminSecondaryRecipient() } : {}),
-    reply_to: data.email,
+    replyTo: data.email,
     subject: `📸 Nueva consulta de ${data.name} — ${serviceLabel}`,
     html: `
       <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#f8fafc;padding:24px 12px">
@@ -292,7 +292,7 @@ export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
     from: FROM,
     to: PRIMARY_ADMIN_EMAIL,
     ...(getAdminSecondaryRecipient() ? { bcc: getAdminSecondaryRecipient() } : {}),
-    reply_to: data.email,
+    replyTo: data.email,
     subject: `Nueva solicitud de presupuesto: ${data.fullName} - ${serviceLabel}`,
     html: `
       <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#f8fafc;padding:24px 12px">
