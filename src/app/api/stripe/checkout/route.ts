@@ -1,12 +1,17 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe/server'
 import { createServiceClient } from '@/lib/supabase/service'
-import crypto from 'crypto'
+
+export const runtime = 'edge'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.fotografosantodomingo.com'
 
-function hashToken(raw: string): string {
-  return crypto.createHash('sha256').update(raw).digest('hex')
+async function hashToken(raw: string): Promise<string> {
+  const data = new TextEncoder().encode(raw)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
 }
 
 type CreateCheckoutBody = {
@@ -28,7 +33,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 400 })
     }
 
-    const tokenHash = hashToken(token)
+    const tokenHash = await hashToken(token)
     const supabase = createServiceClient()
 
     // Verify token matches and proposal is still active

@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe/server'
 import { createServiceClient } from '@/lib/supabase/service'
 
-export const runtime = 'nodejs' // Stripe raw body parsing requires Node.js runtime
+export const runtime = 'edge'
 
 export async function POST(request: NextRequest) {
   const rawBody = await request.text()
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   let event
   try {
     const stripe = getStripe()
-    event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret)
+    event = await stripe.webhooks.constructEventAsync(rawBody, signature, webhookSecret)
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error'
     console.error('Webhook signature verification failed:', message)

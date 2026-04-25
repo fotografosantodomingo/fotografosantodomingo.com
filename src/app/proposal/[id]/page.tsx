@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/service'
 import { generateJsonLd, schemaGenerators } from '@/components/seo/JsonLd'
 import ProposalCheckoutButton from './ProposalCheckoutButton'
-import crypto from 'crypto'
 
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Your Proposal — Babula Shots',
@@ -14,8 +14,12 @@ export const metadata: Metadata = {
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
-function hashToken(raw: string): string {
-  return crypto.createHash('sha256').update(raw).digest('hex')
+async function hashToken(raw: string): Promise<string> {
+  const data = new TextEncoder().encode(raw)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('')
 }
 
 const SERVICE_LABELS: Record<string, { es: string; en: string }> = {
@@ -59,7 +63,7 @@ export default async function ProposalPage({ params, searchParams }: Props) {
     notFound()
   }
 
-  const tokenHash = hashToken(rawToken)
+  const tokenHash = await hashToken(rawToken)
   const supabase = createServiceClient()
 
   const { data: quote, error } = await supabase

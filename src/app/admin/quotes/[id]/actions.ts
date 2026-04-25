@@ -3,12 +3,23 @@
 import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/service'
 import { sendProposalEmail } from '@/lib/email/resend'
-import crypto from 'crypto'
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.fotografosantodomingo.com'
 
-function hashToken(raw: string): string {
-  return crypto.createHash('sha256').update(raw).digest('hex')
+function bytesToHex(bytes: Uint8Array): string {
+  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
+async function hashToken(raw: string): Promise<string> {
+  const data = new TextEncoder().encode(raw)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  return bytesToHex(new Uint8Array(hashBuffer))
+}
+
+function randomTokenHex(byteLength: number): string {
+  const bytes = new Uint8Array(byteLength)
+  crypto.getRandomValues(bytes)
+  return bytesToHex(bytes)
 }
 
 export type SavePriceState = { error: string | null; success: boolean }
@@ -80,8 +91,8 @@ export async function sendProposal(
   }
 
   // Generate a random token and store its hash
-  const rawToken = crypto.randomBytes(32).toString('hex')
-  const tokenHash = hashToken(rawToken)
+  const rawToken = randomTokenHex(32)
+  const tokenHash = await hashToken(rawToken)
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
 
   const { error: updateError } = await supabase
