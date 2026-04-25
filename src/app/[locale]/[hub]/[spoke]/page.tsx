@@ -24,9 +24,8 @@ import {
   getLiveSpokes,
 } from '@/data/spoke-pages'
 
-// Override layout's edge runtime — this page is statically pre-rendered.
-// force-static + generateStaticParams is incompatible with edge runtime.
-export const runtime = 'nodejs'
+// Inherit edge runtime from [locale]/layout.tsx; force static pre-rendering
+// at build time for all approved/published spoke pages.
 export const dynamic = 'force-static'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'

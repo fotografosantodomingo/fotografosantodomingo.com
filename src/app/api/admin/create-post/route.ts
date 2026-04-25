@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase/service'
 import { CreatePostSchema } from '@/lib/automation/schemas'
 import { generateBilingualCaptions, type GeneratedCaptions } from '@/lib/ai/caption-generator'
 
+export const runtime = 'edge'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 

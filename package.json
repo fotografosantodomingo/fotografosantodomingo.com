@@ -5,9 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cf": "opennextjs-cloudflare build",
     "start": "next start",
-    "preview": "opennextjs-cloudflare preview",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "seo:check:canonical": "node scripts/seo-canonical-hreflang-check.cjs",
@@ -47,7 +45,6 @@
     "zod": "^3.22.0"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.19.4",
     "@tailwindcss/typography": "^0.5.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",

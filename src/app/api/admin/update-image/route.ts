@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { updateImageSeo } from '@/lib/supabase/images'
 
+export const runtime = 'edge'
 
 export async function POST(req: NextRequest) {
   // --- Auth check ---

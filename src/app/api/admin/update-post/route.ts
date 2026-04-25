@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ZodError, z } from 'zod'
 import { createServiceClient } from '@/lib/supabase/service'
 
+export const runtime = 'edge'
 
 const UpdatePostSchema = z.object({
   id: z.string().uuid({ message: 'id must be a valid UUID' }),

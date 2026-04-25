@@ -3,6 +3,7 @@ import { getAllSlugs } from '@/lib/supabase/blog'
 import { serviceLandingSlugs } from '@/lib/services/catalog'
 import { getPublishedSpokes, spokeTierToPriority } from '@/data/spoke-pages'
 
+export const runtime = 'edge'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
