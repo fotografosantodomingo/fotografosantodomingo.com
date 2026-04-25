@@ -19,6 +19,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 📸 Babula Shots Admin
               </Link>
               <nav className="flex items-center gap-4 text-sm">
+                <Link href="/admin/bookings" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
+                  Bookings
+                </Link>
+                <Link href="/admin/availability" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
+                  Availability
+                </Link>
+                <Link href="/admin/booking-services" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
+                  Services
+                </Link>
                 <Link href="/admin/quotes" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
                   Quotes
                 </Link>
