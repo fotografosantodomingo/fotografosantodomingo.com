@@ -8,6 +8,10 @@ import {
   releaseStalePendingBookings,
   utcToAstDate,
 } from '@/lib/bookings/availability'
+import {
+  sendBookingCancellation,
+  type BookingEmailContext,
+} from '@/lib/email/bookings'
 
 export type ActionState = { error: string | null; success: boolean }
 
@@ -32,7 +36,13 @@ export async function cancelBooking(
 
   const { data: booking, error: fetchErr } = await supabase
     .from('bookings')
-    .select('id, status, stripe_payment_intent_id, deposit_amount_usd, refund_amount_usd')
+    .select(
+      `id, status, locale, customer_name, customer_email,
+       starts_at, ends_at,
+       stripe_payment_intent_id, stripe_amount_usd, deposit_amount_usd, refund_amount_usd,
+       service:booking_services ( name_es, name_en, icon, duration_min ),
+       staff:staff_members ( name )`
+    )
     .eq('id', bookingId)
     .single()
 
@@ -81,6 +91,30 @@ export async function cancelBooking(
   if (updErr) {
     return { error: `DB update failed: ${updErr.message}`, success: false }
   }
+
+  // Send cancellation email (logs to booking_email_log; never blocks the action)
+  const svc = booking.service as { name_es: string; name_en: string; icon: string; duration_min: number } | null
+  const staff = booking.staff as { name: string } | null
+  const ctx: BookingEmailContext = {
+    bookingId: booking.id,
+    customerName: booking.customer_name,
+    customerEmail: booking.customer_email,
+    locale: (booking.locale ?? 'es') as 'es' | 'en',
+    serviceNameEs: svc?.name_es ?? '',
+    serviceNameEn: svc?.name_en ?? '',
+    serviceIcon: svc?.icon ?? '📷',
+    durationMin: svc?.duration_min ?? 60,
+    startsAt: booking.starts_at,
+    endsAt: booking.ends_at,
+    staffName: staff?.name ?? 'Babula Shots',
+    fullPriceUsd: Number(booking.stripe_amount_usd ?? 0),
+    depositUsd: Number(booking.deposit_amount_usd ?? 0),
+  }
+  await sendBookingCancellation(supabase, {
+    ...ctx,
+    reason,
+    refundUsd: actualRefundUsd,
+  })
 
   revalidatePath(`/admin/bookings/${bookingId}`)
   revalidatePath('/admin/bookings')

@@ -1,0 +1,14 @@
+name = "cron-bookings"
+main = "src/index.ts"
+compatibility_date = "2025-08-01"
+
+# Hourly trigger — handles 24h reminders, same-day reminders, and post-session
+# review requests in a single endpoint hit. Worker logic is intentionally tiny
+# (just a fetch + bearer token); all booking logic lives in the Next.js app at
+# /api/cron/booking-reminders.
+[triggers]
+crons = ["0 * * * *"]
+
+# Production env vars (set via `wrangler secret put` after deploy):
+#   CRON_SECRET = <same value used in the Pages app>
+#   APP_URL     = https://www.fotografosantodomingo.com  (or override per env)

@@ -2,6 +2,11 @@ import { type NextRequest, NextResponse } from 'next/server'
 import type Stripe from 'stripe'
 import { getStripe } from '@/lib/stripe/server'
 import { createServiceClient } from '@/lib/supabase/service'
+import {
+  sendBookingConfirmation,
+  sendBookingAdminAlert,
+  type BookingEmailContext,
+} from '@/lib/email/bookings'
 
 export const runtime = 'edge'
 
@@ -67,7 +72,8 @@ export async function POST(request: NextRequest) {
 
       const chargeId = typeof pi.latest_charge === 'string' ? pi.latest_charge : null
 
-      const { error } = await supabase
+      // Update + return the previous status so we know if this is a fresh confirmation
+      const { data: updated, error } = await supabase
         .from('bookings')
         .update({
           status: 'CONFIRMED',
@@ -76,11 +82,47 @@ export async function POST(request: NextRequest) {
         })
         .eq('id', bookingId)
         .neq('status', 'CONFIRMED') // idempotency guard
+        .select(
+          `id, customer_name, customer_email, customer_phone, locale,
+           starts_at, ends_at,
+           stripe_amount_usd, deposit_amount_usd,
+           service:booking_services ( name_es, name_en, icon, duration_min ),
+           staff:staff_members ( name )`
+        )
+        .maybeSingle()
 
       if (error) {
         console.error('Booking CONFIRMED update error:', error)
         // 500 → Stripe will retry
         return NextResponse.json({ error: 'DB update failed' }, { status: 500 })
+      }
+
+      // updated is null when the row was already CONFIRMED — that's fine, no emails needed
+      if (updated) {
+        const svc = updated.service as { name_es: string; name_en: string; icon: string; duration_min: number } | null
+        const staff = updated.staff as { name: string } | null
+
+        const ctx: BookingEmailContext = {
+          bookingId: updated.id,
+          customerName: updated.customer_name,
+          customerEmail: updated.customer_email,
+          locale: (updated.locale ?? 'es') as 'es' | 'en',
+          serviceNameEs: svc?.name_es ?? '',
+          serviceNameEn: svc?.name_en ?? '',
+          serviceIcon: svc?.icon ?? '📷',
+          durationMin: svc?.duration_min ?? 60,
+          startsAt: updated.starts_at,
+          endsAt: updated.ends_at,
+          staffName: staff?.name ?? 'Babula Shots',
+          fullPriceUsd: Number(updated.stripe_amount_usd ?? 0),
+          depositUsd: Number(updated.deposit_amount_usd ?? 0),
+        }
+
+        // Fire and forget — failure already logged in booking_email_log
+        await Promise.all([
+          sendBookingConfirmation(supabase, ctx),
+          sendBookingAdminAlert(supabase, { ...ctx, customerPhone: updated.customer_phone }),
+        ])
       }
 
       console.log(`Booking ${bookingId} CONFIRMED via Stripe webhook`)
