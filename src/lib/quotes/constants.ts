@@ -34,7 +34,7 @@ export const QUOTE_SERVICE_TYPES: Array<{
   { value: 'BAPTISMS', icon: '⛪', labelEs: 'Bautizos', labelEn: 'Baptisms' },
   { value: 'GRADUATION', icon: '🎓', labelEs: 'Graduacion', labelEn: 'Graduation' },
   { value: 'CHILDRENS_SESSIONS', icon: '🧸', labelEs: 'Sesiones infantiles', labelEn: "Children's Sessions" },
-  { value: 'ARCHITECTURE', icon: '🏛️', labelEs: 'Arquitectura', labelEn: 'Architecture' },
+  { value: 'ARCHITECTURE', icon: '�', labelEs: 'Bienes Raíces', labelEn: 'Real Estate' },
   { value: 'PORTRAITS', icon: '🧑‍💼', labelEs: 'Retratos', labelEn: 'Portraits' },
   { value: 'CORPORATE_EVENTS', icon: '🏢', labelEs: 'Eventos corporativos', labelEn: 'Corporate Events' },
   { value: 'CORPORATE_PORTRAITS', icon: '📷', labelEs: 'Retratos corporativos', labelEn: 'Corporate Portraits' },
