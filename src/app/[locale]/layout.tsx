@@ -10,8 +10,6 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { formatSiteLastUpdated, SITE_LAST_UPDATED_ISO } from '@/lib/seo/freshness'
 import { generateJsonLd, schemaGenerators } from '@/components/seo/JsonLd'
 
-export const runtime = 'edge'
-
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
 // Global schema: WebSite only. LocalBusiness is emitted per-page (homepage)

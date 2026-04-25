@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { sendNewsletterWelcome } from '@/lib/email/resend'
 
-export const runtime = 'edge'
 
 export async function POST(request: NextRequest) {
   try {

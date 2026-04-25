@@ -10,12 +10,8 @@
  * - Saves directly to Supabase via /api/admin/update-image
  */
 
-import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
 import { getPortfolioImages } from '@/lib/supabase/images'
 import ImageSeoEditor from '@/components/admin/ImageSeoEditor'
-
-export const runtime = 'edge'
 
 interface AdminImagesPageProps {
   searchParams: { key?: string }
@@ -37,7 +33,7 @@ export default async function AdminImagesPage({ searchParams }: AdminImagesPageP
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Admin Not Configured</h1>
           <p className="text-gray-600">
             Set the <code className="bg-gray-100 px-1 rounded">ADMIN_SECRET</code> environment
-            variable in your Vercel project settings to enable this page.
+            variable in your Cloudflare project settings to enable this page.
           </p>
         </div>
       </main>
@@ -71,8 +67,7 @@ export default async function AdminImagesPage({ searchParams }: AdminImagesPageP
             Changes are saved directly to Supabase and take effect on the next request.
           </p>
           <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
-            <strong>Tip:</strong> After saving, purge the Vercel edge cache by redeploying or
-            waiting for the ISR revalidation window.
+            <strong>Tip:</strong> After saving, changes take effect on the next request (Cloudflare cache may take a moment to clear).
           </div>
         </div>
 

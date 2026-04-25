@@ -183,9 +183,7 @@ const nextConfig = {
   // =====================================================
   // EXPERIMENTAL FEATURES
   // =====================================================
-  experimental: {
-    // optimizeCss: true, // Disabled for Vercel compatibility
-  },
+  experimental: {},
 
   // =====================================================
   // TYPESCRIPT STRICT MODE
@@ -201,10 +199,6 @@ const nextConfig = {
     ignoreDuringBuilds: true, // Allow build to pass with ESLint errors
   },
 
-  // =====================================================
-  // OUTPUT MODE (for Vercel)
-  // =====================================================
-  output: 'standalone',
 }
 
 module.exports = createNextIntlPlugin('./i18n.config.ts')(nextConfig)

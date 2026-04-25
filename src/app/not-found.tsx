@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import NotFoundClient from '@/components/NotFoundClient'
 
-export const runtime = 'edge'
-
 export const metadata: Metadata = {
   title: '404 - Page Not Found',
   description: 'The requested photography gallery or page is missing. Explore our portfolio instead.',
