@@ -122,14 +122,16 @@ VALUES
   'Bodas', 'Wedding Photography',
   'Cobertura completa del día de tu boda con sesión de compromiso incluida. Capturamos cada momento mágico con estilo artístico.',
   'Full wedding day coverage including engagement session. We capture every magical moment with artistic style.',
-  '💍', 'celebrations', 480, 2500.00, 50, true, true, 10
+  -- Price from Excel: Boda + Sesión Playa mismo día (40+30 fotos, 4h) = $1,000
+  '💍', 'celebrations', 240, 1000.00, 50, true, true, 10
 ),
 (
   'engagement-session',
   'Sesión de Compromiso', 'Engagement Session',
   'Sesión romántica para parejas comprometidas. Locaciones en Santo Domingo, Punta Cana o cualquier lugar de la isla.',
   'Romantic session for engaged couples. Locations in Santo Domingo, Punta Cana, or anywhere on the island.',
-  '💑', 'celebrations', 120, 350.00, 50, true, true, 20
+  -- Price from Excel: Pre Boda Plan Básico (10 fotos, 1h) = ~$180
+  '💑', 'celebrations', 60, 180.00, 50, true, true, 20
 ),
 (
   'quinceaneras',
@@ -166,7 +168,8 @@ VALUES
   'Retratos', 'Portrait Session',
   'Sesión de retratos individual en locación o estudio. Natural, elegante y personalizado a tu estilo.',
   'Individual portrait session on location or studio. Natural, elegant, and personalized to your style.',
-  '🧑‍💼', 'portraits', 60, 150.00, 50, true, true, 110
+  -- Price from Excel: Session Fotos Estudio Ejecutivo (1h) = $100 | Beach Güibia = $150
+  '🧑‍💼', 'portraits', 60, 100.00, 50, true, true, 110
 ),
 (
   'family-session',
@@ -180,7 +183,8 @@ VALUES
   'Maternidad', 'Maternity Session',
   'Sesión fotográfica de maternidad para celebrar esta etapa única. Ambiente íntimo, natural y emotivo.',
   'Maternity photography session to celebrate this unique stage. Intimate, natural, and emotional atmosphere.',
-  '🤰', 'portraits', 60, 200.00, 50, true, true, 130
+  -- Price from Excel: Sesión Maternidad 5 Fotos (1h) = $150
+  '🤰', 'portraits', 60, 150.00, 50, true, true, 130
 ),
 (
   'children-session',
@@ -194,7 +198,8 @@ VALUES
   'Retratos Corporativos', 'Corporate Portraits',
   'Fotografía ejecutiva para LinkedIn, sitios web y material corporativo. Entrega en 24–48 horas.',
   'Executive photography for LinkedIn, websites, and corporate materials. Delivery in 24–48 hours.',
-  '📷', 'portraits', 60, 150.00, 50, true, true, 150
+  -- Price from Excel: Pack Corporativo 5 Fotos Ejecutivas (1h) = ~$180
+  '📷', 'portraits', 60, 180.00, 50, true, true, 150
 ),
 
 -- ── Commercial & Business / Comercial y Empresarial ──────────────────────────
@@ -224,7 +229,8 @@ VALUES
   'Bienes Raíces', 'Real Estate Photography',
   'Fotografía de propiedades residenciales y comerciales. Interior, exterior y opciones con dron disponibles.',
   'Residential and commercial property photography. Interior, exterior, and drone options available.',
-  '🏠', 'commercial', 120, 350.00, 50, true, true, 240
+  -- Price from Excel: Package 1 Essential Listing (2h) = $150
+  '🏠', 'commercial', 120, 150.00, 50, true, true, 240
 ),
 
 -- ── Specialty / Especialidades ────────────────────────────────────────────────
@@ -233,14 +239,16 @@ VALUES
   'Drone Aéreo', 'Drone Aerial Photography',
   'Fotografía y video aéreo con dron. Certificación FAA. Cobertura hasta 500 acres. Video 4K incluido.',
   'Aerial drone photography and video. FAA certified. Coverage up to 500 acres. 4K video included.',
-  '🚁', 'specialty', 120, 500.00, 50, true, true, 310
+  -- Price from Excel: Fotografía Aérea (1h) = ~$250
+  '🚁', 'specialty', 120, 250.00, 50, true, true, 310
 ),
 (
   'video-production',
   'Producción de Video', 'Video Production',
   'Producción de video profesional para bodas, eventos, branding y redes sociales. Edición y montaje incluidos.',
   'Professional video production for weddings, events, branding, and social media. Editing and assembly included.',
-  '🎬', 'specialty', 240, 500.00, 50, true, true, 320
+  -- Price from Excel: Producción de Video Día Completo (6h, 50% dep $270) = ~$800/day
+  '🎬', 'specialty', 360, 800.00, 50, true, true, 320
 ),
 (
   'proposal-photography',
