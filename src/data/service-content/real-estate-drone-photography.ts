@@ -35,8 +35,8 @@ export const realEstateDronePhotographyContent: ServiceContent = {
       citySlug: 'punta-cana',
       cityName: { es: 'Punta Cana', en: 'Punta Cana' },
       intro: {
-        es: 'Punta Cana concentra el mayor inventario de propiedades vacacionales y residenciales de la región este — desde condos frente al mar en Bávaro hasta lotes en comunidades de golf como Cocotal y Punta Blanca. Cubrimos fotografía interior con luz natural balanceada, sets de drone aéreo para mostrar contexto de playa y resort, y twilight para listados de alta gama. Manejamos los permisos y altitudes restringidas en zonas cercanas al Aeropuerto Internacional de Punta Cana (PUJ).',
-        en: 'Punta Cana holds the eastern region\'s largest inventory of vacation and residential properties — from beachfront condos in Bávaro to lots in golf communities like Cocotal and Punta Blanca. We cover interior photography with balanced natural light, drone aerial sets showing beach and resort context, and twilight for high-end listings. We handle the permits and altitude restrictions near Punta Cana International Airport (PUJ).',
+        es: 'Punta Cana concentra el mayor inventario de propiedades vacacionales y residenciales de la región este — desde condos frente al mar en Bávaro hasta lotes en comunidades de golf como Cocotal y Punta Blanca. Cubrimos fotografía interior con luz natural balanceada, sets de drone aéreo para mostrar contexto de playa y resort, y twilight para listados de alta gama. Manejamos las zonas restringidas y de altitud limitada que el Aeropuerto Internacional de Punta Cana (PUJ) impone en Bávaro central, y volamos sin restricción en zonas libres como Cabeza de Toro y Macao cuando la propiedad lo permite.',
+        en: 'Punta Cana holds the eastern region\'s largest inventory of vacation and residential properties — from beachfront condos in Bávaro to lots in golf communities like Cocotal and Punta Blanca. We cover interior photography with balanced natural light, drone aerial sets showing beach and resort context, and twilight for high-end listings. We handle the restricted and altitude-limited zones around Punta Cana International Airport (PUJ) in central Bávaro, and fly unrestricted in free zones like Cabeza de Toro and Macao when the property allows.',
       },
       venues: {
         es: [
@@ -65,8 +65,8 @@ export const realEstateDronePhotographyContent: ServiceContent = {
             en: 'Can you fly drones near Punta Cana airport?',
           },
           answer: {
-            es: 'Sí, con restricciones. La zona dentro de 8 km del PUJ tiene altitud limitada y requiere coordinación previa. Manejamos los permisos del IDAC (Instituto Dominicano de Aviación Civil) cuando el listado lo requiere.', // VERIFY: distance/altitude exact figures
-            en: 'Yes, with restrictions. The zone within 5 mi of PUJ has limited altitude and requires advance coordination. We handle IDAC (Dominican Civil Aviation Institute) permits when the listing requires it.', // VERIFY: distance/altitude exact figures
+            es: 'Sí, con restricciones según la zona. El área inmediata al PUJ es zona restringida (sin vuelo). Bávaro central, Los Manantiales, Cabo Engaño y Punta Cana Village quedan en zona de altitud limitada — volamos a baja altura con coordinación. Cabeza de Toro al norte, Cap Cana al sur y Macao quedan fuera de las restricciones del aeropuerto. Para casos formales coordinamos con el IDAC (Instituto Dominicano de Aviación Civil).',
+            en: 'Yes, with restrictions depending on the zone. The area immediately around PUJ is a no-fly Restricted Zone. Central Bávaro, Los Manantiales, Cabo Engaño, and Punta Cana Village fall in an Altitude-Limited Zone — we fly low with coordination. Cabeza de Toro to the north, Cap Cana to the south, and Macao are outside the airport\'s restrictions. For formal cases we coordinate with IDAC (Dominican Civil Aviation Institute).',
           },
         },
         {
@@ -96,20 +96,20 @@ export const realEstateDronePhotographyContent: ServiceContent = {
         es: [
           'Hacienda Cap Cana — villas residenciales en zona cerrada',
           'Las Iguanas — residencias en campo de golf Punta Espada',
+          'Punta Aguila — comunidad residencial cerrada en Cap Cana',
           'Cap Cana Marina — propiedades frente a marina con muelle privado',
           'Juanillo Beach residences — propiedades a pasos de la playa',
           'Punta Espada Golf Course community — frente al campo Jack Nicklaus',
           'Eden Roc Cap Cana residences — propiedades dentro del resort de lujo',
-          'Sanctuary Cap Cana residential zone — propiedades adults-only adjacentes', // VERIFY: residential availability
         ],
         en: [
           'Hacienda Cap Cana — residential villas in the gated zone',
           'Las Iguanas — residences on the Punta Espada golf course',
+          'Punta Aguila — gated residential community in Cap Cana',
           'Cap Cana Marina — marina-front properties with private slips',
           'Juanillo Beach residences — properties steps from the beach',
           'Punta Espada Golf Course community — fronting the Jack Nicklaus course',
           'Eden Roc Cap Cana residences — properties within the luxury resort',
-          'Sanctuary Cap Cana residential zone — adjacent adults-only properties', // VERIFY: residential availability
         ],
       },
       miniFaq: [
@@ -200,7 +200,7 @@ export const realEstateDronePhotographyContent: ServiceContent = {
           'Altos de Chavón — apartamentos boutique en el pueblo mediterráneo',
           'Minitas Beach residences — propiedades cerca de playa privada del resort',
           'La Romana Country Club — desarrollos residenciales',
-          'Punta Aguila — comunidad residencial cerrada en La Romana', // VERIFY
+          'Cacique — sector residencial premium dentro de Casa de Campo',
         ],
         en: [
           'Casa de Campo Resort — private villas with pool and butler service',
@@ -209,7 +209,7 @@ export const realEstateDronePhotographyContent: ServiceContent = {
           'Altos de Chavón — boutique apartments in the Mediterranean village',
           'Minitas Beach residences — properties near the resort\'s private beach',
           'La Romana Country Club — residential developments',
-          'Punta Aguila — gated residential community in La Romana', // VERIFY
+          'Cacique — premium residential sector inside Casa de Campo',
         ],
       },
       miniFaq: [

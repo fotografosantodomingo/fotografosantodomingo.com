@@ -89,8 +89,8 @@ export const familyBeachPhotographyContent: ServiceContent = {
       citySlug: 'santo-domingo',
       cityName: { es: 'Santo Domingo', en: 'Santo Domingo' },
       intro: {
-        es: 'Santo Domingo aporta opciones de sesión familiar que ningún destino de playa ofrece: arquitectura colonial de quinientos años, parques urbanos amplios, y la posibilidad de combinar sesión exterior con estudio. Cubrimos sesiones en la Zona Colonial (Plaza España, Calle Las Damas), parques familiares como Mirador Sur, y estudios privados para retratos de maternidad y recién nacido. Para familias residentes que quieren capturar etapas (embarazo, recién nacido, primer cumpleaños) ofrecemos paquetes de seguimiento anual.',
-        en: 'Santo Domingo offers family session options no beach destination has: 500-year-old colonial architecture, expansive urban parks, and the ability to combine outdoor and studio shoots. We cover sessions in the Colonial Zone (Plaza España, Calle Las Damas), family parks like Mirador Sur, and private studios for maternity and newborn portraits. For resident families wanting to capture stages (pregnancy, newborn, first birthday) we offer annual milestone packages.',
+        es: 'Santo Domingo aporta opciones de sesión familiar que ningún destino de playa ofrece: arquitectura colonial de quinientos años, parques urbanos amplios, y la posibilidad de combinar sesión exterior con estudio. Cubrimos sesiones en la Zona Colonial (Plaza España, Calle Las Damas), parques familiares como Mirador Sur, y estudios privados para retratos de maternidad y recién nacido. Para sesiones familiares de playa, las opciones más cercanas a la ciudad están en Juan Dolio (40 minutos al este): Playa Hemingway y la Playa Pública Juan Dolio, ambas excelentes para sesiones con buena luz natural.',
+        en: 'Santo Domingo offers family session options no beach destination has: 500-year-old colonial architecture, expansive urban parks, and the ability to combine outdoor and studio shoots. We cover sessions in the Colonial Zone (Plaza España, Calle Las Damas), family parks like Mirador Sur, and private studios for maternity and newborn portraits. For family beach sessions, the closest options to the city are in Juan Dolio (40 min east): Playa Hemingway and Playa Pública Juan Dolio — both excellent for sessions with strong natural light.',
       },
       venues: {
         es: [
@@ -100,7 +100,8 @@ export const familyBeachPhotographyContent: ServiceContent = {
           'Estudio privado en Piantini — sesión de maternidad y recién nacido en luz controlada',
           'Malecón de Santo Domingo — fondo de mar Caribe con la ciudad detrás',
           'Jardín Botánico Nacional — sesión natural con fondos verdes y florales',
-          'Faro a Colón / Parque Mirador del Este — espacios amplios para grupos grandes', // VERIFY
+          'Playa Hemingway, Juan Dolio — playa familiar a 40 min de Santo Domingo',
+          'Playa Pública Juan Dolio — playa amplia ideal para sesiones grupales',
         ],
         en: [
           'Plaza España — family session with colonial backdrop and sunset light',
@@ -109,7 +110,8 @@ export const familyBeachPhotographyContent: ServiceContent = {
           'Private studio in Piantini — maternity and newborn session in controlled light',
           'Malecón de Santo Domingo — Caribbean Sea backdrop with the city behind',
           'Jardín Botánico Nacional — natural session with green and floral backdrops',
-          'Faro a Colón / Parque Mirador del Este — wide spaces for large groups', // VERIFY
+          'Playa Hemingway, Juan Dolio — family beach 40 min from Santo Domingo',
+          'Playa Pública Juan Dolio — wide beach ideal for group sessions',
         ],
       },
       miniFaq: [
@@ -150,7 +152,8 @@ export const familyBeachPhotographyContent: ServiceContent = {
           'Casa de Campo villas privadas — sesión con piscina e infraestructura del cliente',
           'Playa Bayahibe (35 min de La Romana) — playa pública natural, ideal para familias',
           'Isla Saona excursión — sesión en isla paradisíaca como add-on de día completo',
-          'Catalina Island — alternativa a Saona, menos turística', // VERIFY: photo session feasibility
+          'Catalina Island — isla cercana a La Romana, alternativa a Saona menos turística',
+          'Juanillo Beach (Cap Cana, ~1 h al este) — playa premium para sesión con vista al Caribe',
         ],
         en: [
           'Minitas Beach — resort private beach, ideal for family sessions',
@@ -159,7 +162,8 @@ export const familyBeachPhotographyContent: ServiceContent = {
           'Casa de Campo private villas — session with the client\'s pool and infrastructure',
           'Bayahibe Beach (35 min from La Romana) — natural public beach, ideal for families',
           'Saona Island excursion — paradise-island session as a full-day add-on',
-          'Catalina Island — alternative to Saona, less touristy', // VERIFY: photo session feasibility
+          'Catalina Island — close to La Romana, less touristy alternative to Saona',
+          'Juanillo Beach (Cap Cana, ~1 h east) — premium beach for sessions with Caribbean views',
         ],
       },
       miniFaq: [
