@@ -219,6 +219,28 @@ CREATE POLICY "quote_requests_anon_insert"
   TO anon
   WITH CHECK (true);
 
+-- ─── 6. AMENDMENTS (per canonical-seed-final-locked.md §1) ───────────────────
+-- These two additive columns enable migration 016 to seed correctly.
+-- They are appended here (rather than as a separate migration) because
+-- 015 has not yet been applied to production — applying once with everything
+-- in place keeps the migration history clean.
+
+-- Amendment A: legacy_aliases — captures multi-source mergers (e.g., a single
+-- new package that absorbs 3 legacy slugs like family-session + maternity +
+-- children-session). Single nullable scalar would have lost info.
+ALTER TABLE public.service_packages
+  ADD COLUMN IF NOT EXISTS legacy_aliases TEXT[] NOT NULL DEFAULT '{}'::text[];
+
+CREATE INDEX IF NOT EXISTS idx_service_packages_legacy_aliases
+  ON public.service_packages USING GIN (legacy_aliases);
+
+-- Amendment B: minimum_billable_hours — required for hourly-priced packages
+-- (corporate-event-photography:hourly-standard at $100/h and :hourly-premium
+-- at $200/h, both with 2-hour minimums). NULL for fixed-price or RFQ packages.
+ALTER TABLE public.service_packages
+  ADD COLUMN IF NOT EXISTS minimum_billable_hours INTEGER
+    CHECK (minimum_billable_hours IS NULL OR minimum_billable_hours > 0);
+
 COMMIT;
 
 -- ============================================================================
@@ -226,6 +248,7 @@ COMMIT;
 -- ============================================================================
 --
 -- BEGIN;
+--   DROP INDEX IF EXISTS public.idx_service_packages_legacy_aliases;
 --   DROP INDEX IF EXISTS public.idx_bookings_package;
 --   DROP INDEX IF EXISTS public.idx_bookings_family;
 --   ALTER TABLE public.bookings
@@ -236,7 +259,7 @@ COMMIT;
 --     DROP COLUMN IF EXISTS package_id,
 --     DROP COLUMN IF EXISTS family_id;
 --   DROP TABLE IF EXISTS public.quote_requests;
---   DROP TABLE IF EXISTS public.service_packages;
+--   DROP TABLE IF EXISTS public.service_packages;  -- includes legacy_aliases + minimum_billable_hours
 --   DROP TABLE IF EXISTS public.service_families;
 -- COMMIT;
 -- ============================================================================
