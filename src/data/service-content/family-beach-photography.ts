@@ -9,6 +9,20 @@
 import type { ServiceContent } from './types'
 
 export const familyBeachPhotographyContent: ServiceContent = {
+  seo: {
+    title: {
+      es: 'Sesiones Familiares y de Playa Premium en Punta Cana | Santo Domingo & Boca Chica | Babula Shots',
+      en: 'Premium Family & Beach Photography in Punta Cana | Santo Domingo & Boca Chica | Babula Shots',
+    },
+    description: {
+      es: 'Sesiones familiares, maternidad y recién nacido en estudio o playas premium de Punta Cana y Santo Domingo. Dirección natural y reserva online inmediata.',
+      en: 'Family, maternity, and newborn sessions in studio or on premium Punta Cana and Santo Domingo beaches. Natural direction and instant online booking.',
+    },
+    keywords: {
+      es: 'fotografo familia punta cana, sesion familiar santo domingo, fotos maternidad republica dominicana, sesion playa familia punta cana, fotografo recien nacido rd, sesion familia premium dominicana',
+      en: 'punta cana family photographer, family photographer santo domingo, maternity photography dominican republic, beach family session punta cana, newborn photographer DR, premium family session dominican republic',
+    },
+  },
   schemaAdditionalType: 'https://schema.org/Service',
   knowsAbout: {
       es: ['sesion familiar', 'retratos de maternidad', 'fotografia en playa', 'sesion multigeneracional'],

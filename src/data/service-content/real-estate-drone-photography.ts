@@ -9,6 +9,20 @@
 import type { ServiceContent } from './types'
 
 export const realEstateDronePhotographyContent: ServiceContent = {
+  seo: {
+    title: {
+      es: 'Contratar Fotógrafo Inmobiliario y Drone en Punta Cana | Bavaro, Casa de Campo & Santo Domingo | Babula Shots',
+      en: 'Hire a Real Estate & Drone Photographer in Punta Cana | Bavaro, Casa de Campo & Santo Domingo | Babula Shots',
+    },
+    description: {
+      es: 'Fotografía inmobiliaria, aéreas con drone, twilight y tours Matterport para propiedades en Punta Cana, Bavaro y Santo Domingo. Reserva online con depósito seguro.',
+      en: 'Real estate listings, drone aerials, twilight, and Matterport tours for properties in Punta Cana, Bavaro, and Santo Domingo. Online booking with secure deposit.',
+    },
+    keywords: {
+      es: 'fotografo inmobiliario punta cana, dron inmobiliaria republica dominicana, fotografia aerea bavaro, twilight inmobiliaria casa de campo, tour matterport santo domingo, listing real estate fotografo rd',
+      en: 'real estate photographer punta cana, drone real estate dominican republic, aerial photographer bavaro, twilight real estate casa de campo, matterport tour santo domingo, listing photographer DR',
+    },
+  },
   schemaAdditionalType: 'https://schema.org/ProfessionalService',
   knowsAbout: {
       es: ['fotografia aerea', 'video aereo', 'contenido para hoteleria', 'produccion para real estate'],

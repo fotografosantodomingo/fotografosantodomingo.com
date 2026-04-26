@@ -79,14 +79,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const result = await loadFamily(canonicalSlug)
   if (!result) return {}
   const { family } = result
-  const title = isEs
-    ? `${family.title_es} — Babula Shots`
-    : `${family.title_en} — Babula Shots`
-  const description = (isEs ? family.tagline_es : family.tagline_en) ?? ''
+  const seo = getServiceContent(family.slug)?.seo
+
+  // seo block (when authored) wins; falls back to DB title + tagline so a
+  // family without a content module still gets reasonable metadata.
+  const title = seo
+    ? (isEs ? seo.title.es : seo.title.en)
+    : isEs
+      ? `${family.title_es} — Babula Shots`
+      : `${family.title_en} — Babula Shots`
+  const description = seo
+    ? (isEs ? seo.description.es : seo.description.en)
+    : (isEs ? family.tagline_es : family.tagline_en) ?? ''
+  const keywords = seo ? (isEs ? seo.keywords.es : seo.keywords.en) : undefined
 
   return {
     title,
     description,
+    ...(keywords ? { keywords } : {}),
     alternates: {
       canonical: `${BASE_URL}/${locale}/services/${family.slug}`,
       languages: {

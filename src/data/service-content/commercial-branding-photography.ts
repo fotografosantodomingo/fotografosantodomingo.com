@@ -9,6 +9,20 @@
 import type { ServiceContent } from './types'
 
 export const commercialBrandingPhotographyContent: ServiceContent = {
+  seo: {
+    title: {
+      es: 'Fotografía Comercial Profesional en República Dominicana | Hoteles, Productos & Marcas | Babula Shots',
+      en: 'Professional Commercial Photography Dominican Republic | Hotels, Products & Brands | Babula Shots',
+    },
+    description: {
+      es: 'Fotografía comercial para hoteles de Punta Cana, restaurantes de Santo Domingo, productos y marcas en RD. Derechos de uso claros y entrega rápida con reserva online.',
+      en: 'Commercial photography for Punta Cana hotels, Santo Domingo restaurants, products, and brands across DR. Clear usage rights, fast delivery, and online booking.',
+    },
+    keywords: {
+      es: 'fotografo comercial santo domingo, fotografia hoteles punta cana, fotografo productos republica dominicana, fotografia gastronomica restaurantes rd, contenido marca premium dominicana, contratar fotografo comercial dr',
+      en: 'commercial photographer santo domingo, hotel photographer punta cana, product photography dominican republic, food photography restaurants DR, premium brand content dominican republic, hire commercial photographer DR',
+    },
+  },
   schemaAdditionalType: 'https://schema.org/ProfessionalService',
   knowsAbout: {
       es: ['fotografia comercial', 'produccion de campanas', 'contenido ecommerce', 'licenciamiento de imagen'],

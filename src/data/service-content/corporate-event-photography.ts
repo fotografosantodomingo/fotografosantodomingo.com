@@ -9,6 +9,20 @@
 import type { ServiceContent } from './types'
 
 export const corporateEventPhotographyContent: ServiceContent = {
+  seo: {
+    title: {
+      es: 'Fotógrafo de Eventos Corporativos Premium en Santo Domingo | Punta Cana & Resorts RD | Babula Shots',
+      en: 'Premium Corporate Event Photographer in Santo Domingo | Punta Cana & DR Resorts | Babula Shots',
+    },
+    description: {
+      es: 'Cobertura premium de conferencias, lanzamientos, premiaciones e incentivos en Santo Domingo, Punta Cana y resorts de RD. Reserva por hora o día completo.',
+      en: 'Premium coverage of conferences, launches, awards, and incentive trips in Santo Domingo, Punta Cana, and DR resorts. Hourly or full-day online booking.',
+    },
+    keywords: {
+      es: 'fotografo eventos corporativos santo domingo, fotografo conferencias punta cana, cobertura premiaciones republica dominicana, fotografo lanzamiento marca rd, fotografia incentivo corporativo resort, contratar fotografo corporativo dominicana',
+      en: 'corporate event photographer santo domingo, conference photographer punta cana, awards coverage dominican republic, brand launch photographer DR, incentive trip photographer resort, hire corporate photographer dominican republic',
+    },
+  },
   schemaAdditionalType: 'https://schema.org/Event',
   knowsAbout: {
       es: ['fotografia de eventos corporativos', 'cobertura de conferencias', 'entrega express para prensa', 'fotografia de activaciones de marca'],

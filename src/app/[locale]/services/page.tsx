@@ -12,15 +12,19 @@ type Props = { params: { locale: string } }
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
   const isEs = locale === 'es'
   const title = isEs
-    ? 'Servicios de Fotografía — Bodas, Drone, Retratos | Fotógrafo Santo Domingo'
-    : 'Photography Services — Weddings, Drone, Portraits | Photographer Santo Domingo'
+    ? 'Fotógrafo Profesional en Santo Domingo, Punta Cana & República Dominicana | Servicios Babula Shots'
+    : 'Professional Photographer in Punta Cana, Santo Domingo & Dominican Republic | Babula Shots Services'
   const description = isEs
-    ? 'Servicios de fotografía para bodas, retratos, drone, eventos, sesiones familiares y fotografía comercial en Santo Domingo y Punta Cana.'
-    : 'Wedding, portrait, drone, event, family, and commercial photography services in Santo Domingo and Punta Cana.'
+    ? 'Servicios de bodas, retratos, drone, eventos corporativos, familia y comercial en Santo Domingo, Punta Cana y RD. Reserva online con confirmación inmediata.'
+    : 'Wedding, portrait, drone, corporate event, family, and commercial services in Santo Domingo, Punta Cana, and DR. Online booking with instant confirmation.'
+  const keywords = isEs
+    ? 'fotografo santo domingo, fotografo punta cana, fotografo profesional republica dominicana, servicios fotografia rd, contratar fotografo dominicana, reservar fotografo bodas dr'
+    : 'photographer santo domingo, punta cana photographer, professional photographer dominican republic, photography services DR, hire photographer dominican republic, book wedding photographer DR'
 
   return {
     title,
     description,
+    keywords,
     alternates: {
       canonical: `${BASE_URL}/${locale}/services`,
       languages: {

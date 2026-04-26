@@ -373,11 +373,19 @@ const faqItems = {
   ],
 }
 
-const bookingLinks = {
-  quincenara10: 'https://babulashotsrd.setmore.com/book?step=staff&products=b31e3558-0a5f-4e1b-8bc0-044ef171c706&type=service',
-  quincenara15: 'https://babulashotsrd.setmore.com/book?step=staff&products=2b901454-3c03-44f0-a53b-b4e6f6d9687a&type=service',
-  quincenaraVip: 'https://babulashotsrd.setmore.com/book?step=staff&products=413dd972-ccbb-41db-8ac5-6424fc995ee7&type=service',
-  event3h: 'https://babulashotsrd.setmore.com/book?step=time-slot&products=76f13f08-20be-43f2-8dd4-4e8902a2bc43&type=service&staff=a0f4eb7f-9ac4-412e-8b02-c60ede177919&staffSelected=true',
+// Booking routes mapped to canonical service_packages (birthday-event-photography family).
+// `?service=<slug>` jumps the BookingWizard straight to the date step (BookingWizard.tsx:143).
+// Quinceañera 10/15 photo studio sessions have no exact canonical package (canonical
+// quinceanera-premium covers 4h ceremony + waltz + reception), so those route through
+// /get-quote with family + package context.
+function getBookingLinks(locale: string) {
+  const cta = 'birthday-photographer-card'
+  return {
+    event3h: `/${locale}/book?service=signature-celebration&cta=${cta}`,
+    quincenara10: `/${locale}/get-quote?family=birthday-event-photography&package=quinceanera-essential-10&cta=${cta}`,
+    quincenara15: `/${locale}/get-quote?family=birthday-event-photography&package=quinceanera-essential-15&cta=${cta}`,
+    quincenaraVip: `/${locale}/book?service=quinceanera-premium&cta=${cta}`,
+  }
 }
 
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
@@ -435,6 +443,7 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
 
 export default function BirthdayPhotographerPage({ params: { locale } }: Props) {
   const isEs = locale === 'es'
+  const bookingLinks = getBookingLinks(locale)
 
   const breadcrumbSchema = schemaGenerators.breadcrumb([
     { name: isEs ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
@@ -491,22 +500,18 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
                 : 'Professional coverage for kids birthdays, beach birthdays, studio sessions, and quinceañeras across Santo Domingo, Punta Cana, and Boca Chica. Real memories with clear direction and premium style.'}
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
-              <a
+              <Link
                 href={bookingLinks.event3h}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
               >
-                {isEs ? 'Cobertura de evento (3h)' : 'Event coverage (3h)'}
-              </a>
-              <a
+                {isEs ? 'Reservar cobertura (2h)' : 'Book coverage (2h)'}
+              </Link>
+              <Link
                 href={bookingLinks.quincenara15}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
               >
                 {isEs ? 'Quinceañera' : 'Quinceañera'}
-              </a>
+              </Link>
               <Link
                 href={`/${locale}/portfolio?category=birthday`}
                 className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full border border-hairline-soft text-ink-muted hover:text-ink hover:border-hairline transition-colors duration-200"
@@ -674,14 +679,12 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
                       </li>
                     ))}
                   </ul>
-                  <a
+                  <Link
                     href={pkg.bookingHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="mt-7 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] px-6 py-3 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
                   >
                     {pkg.ctaLabel}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -743,14 +746,12 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
                   : 'We help you design the right coverage based on age, location, and celebration style.'}
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <a
+                <Link
                   href={bookingLinks.event3h}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
                 >
                   {isEs ? 'Reservar ahora' : 'Book now'}
-                </a>
+                </Link>
                 <Link
                   href={`/${locale}/get-quote?cta=birthday-photographer-bottom`}
                   className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"

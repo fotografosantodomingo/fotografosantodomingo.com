@@ -9,6 +9,20 @@
 import type { ServiceContent } from './types'
 
 export const proposalPhotographyContent: ServiceContent = {
+  seo: {
+    title: {
+      es: 'Contratar Fotógrafo de Pedida de Mano en Punta Cana | Resorts y Restaurantes RD | Babula Shots',
+      en: 'Hire a Surprise Proposal Photographer in Punta Cana | Resorts & Beaches DR | Babula Shots',
+    },
+    description: {
+      es: 'Cobertura oculta de pedidas de mano sorpresa en resorts de Punta Cana y restaurantes de Santo Domingo. Discreta, editorial y con reserva online segura.',
+      en: 'Hidden surprise proposal coverage at Punta Cana resorts and Santo Domingo restaurants. Discreet, editorial, and bookable online with secure deposit.',
+    },
+    keywords: {
+      es: 'fotografo pedida de mano punta cana, fotografo propuesta santo domingo, propuesta sorpresa republica dominicana, fotografo oculto resort punta cana, propuesta playa republica dominicana, reservar fotografo propuesta rd',
+      en: 'surprise proposal photographer punta cana, proposal photographer santo domingo, hidden proposal photographer dominican republic, resort proposal photography DR, beach proposal photographer punta cana, book proposal photographer DR',
+    },
+  },
   schemaAdditionalType: 'https://schema.org/Service',
   knowsAbout: {
       es: ['fotografia de propuesta sorpresa', 'modo ninja con teleobjetivo', 'propuesta en restaurante Santo Domingo', 'fotografia oculta de pedida de mano'],

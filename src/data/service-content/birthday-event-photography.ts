@@ -13,6 +13,21 @@
 import type { ServiceContent } from './types'
 
 export const birthdayEventPhotographyContent: ServiceContent = {
+  seo: {
+    title: {
+      es: 'Fotógrafo de Quinceañeras, Cumpleaños y Bautizos | Santo Domingo & Punta Cana | Babula Shots',
+      en: 'Quinceañera, Birthday & Baptism Photographer | Santo Domingo & Punta Cana | Babula Shots',
+    },
+    description: {
+      es: 'Cobertura premium de quinceañeras, cumpleaños, bautizos y graduaciones en Santo Domingo, Punta Cana y Boca Chica. Galería editada y reserva online con depósito.',
+      en: 'Premium coverage of quinceañeras, birthdays, baptisms, and graduations in Santo Domingo, Punta Cana, and Boca Chica. Edited gallery and online booking with deposit.',
+    },
+    keywords: {
+      es: 'fotografo quinceanera santo domingo, fotografo cumpleanos punta cana, fotografia bautizo republica dominicana, fotografo graduacion rd, cobertura quinceanos premium dominicana, reservar fotografo cumpleanos dr',
+      en: 'quinceanera photographer santo domingo, birthday photographer punta cana, baptism photography dominican republic, graduation photographer DR, premium quinceanera coverage, book birthday photographer DR',
+    },
+  },
+
   schemaAdditionalType: 'https://schema.org/Event',
 
   knowsAbout: {

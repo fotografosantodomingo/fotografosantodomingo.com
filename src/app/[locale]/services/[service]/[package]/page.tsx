@@ -5,6 +5,7 @@ import { createServiceClient } from '@/lib/supabase/service'
 import {
   LEGACY_SERVICE_SLUG_TO_FAMILY,
 } from '@/lib/services/legacy-aliases'
+import { getServiceContent } from '@/data/service-content'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'edge'
@@ -90,9 +91,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? `${name} — ${familyTitle} | Babula Shots`
     : `${name} — ${familyTitle} | Babula Shots`
 
+  // Inherit family-level keyword cluster and prepend the package name as the
+  // unique buyer-intent term. Falls back to undefined if the family has no
+  // seo block authored yet.
+  const familyKeywords = getServiceContent(detail.family.slug)?.seo?.keywords
+  const keywords = familyKeywords
+    ? `${name.toLowerCase()}, ${isEs ? familyKeywords.es : familyKeywords.en}`
+    : undefined
+
   return {
     title,
     description: desc,
+    ...(keywords ? { keywords } : {}),
     alternates: {
       canonical: `${BASE_URL}/${locale}/services/${detail.family.slug}/${detail.slug}`,
       languages: {
