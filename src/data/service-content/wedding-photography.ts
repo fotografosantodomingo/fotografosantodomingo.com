@@ -48,7 +48,7 @@ export const weddingPhotographyContent: ServiceContent = {
           'Iberostar Grand Bávaro — ceremonias clásicas frente al mar',
           'Paradisus Palma Real — gazebos privados y salón gala',
           'The Westin Puntacana Resort — eventos boutique en playa Tortuga Bay',
-          'Macao Beach — ceremonias en playa pública con permisos coordinados', // VERIFY: permits process
+          'Macao Beach — playa pública natural al norte de Bávaro; ceremonias íntimas con coordinación local',
         ],
         en: [
           'Hard Rock Hotel & Casino Punta Cana — beach gazebo and reception ballroom',
@@ -57,7 +57,7 @@ export const weddingPhotographyContent: ServiceContent = {
           'Iberostar Grand Bávaro — classic oceanfront ceremonies',
           'Paradisus Palma Real — private gazebos and gala ballroom',
           'The Westin Puntacana Resort — boutique beach events at Tortuga Bay',
-          'Macao Beach — public-beach ceremonies with coordinated permits', // VERIFY: permits process
+          'Macao Beach — natural public beach north of Bávaro; intimate ceremonies with local coordination',
         ],
       },
       miniFaq: [
@@ -97,7 +97,7 @@ export const weddingPhotographyContent: ServiceContent = {
       venues: {
         es: [
           'Catedral Primada de América — bodas religiosas en la primera catedral del Nuevo Mundo',
-          'Casas del XVI — boutique hotel en Zona Colonial con patios coloniales', // VERIFY
+          'Casas del XVI — boutique hotel en Zona Colonial; bodas íntimas en casas restauradas del siglo XVI',
           'JW Marriott Santo Domingo — recepciones de gran escala en Piantini',
           'Hilton Santo Domingo — bodas con vista al Malecón y Mar Caribe',
           'Hotel El Embajador — clásico de bodas dominicanas con jardines',
@@ -106,7 +106,7 @@ export const weddingPhotographyContent: ServiceContent = {
         ],
         en: [
           'Catedral Primada de América — religious weddings at the New World\'s first cathedral',
-          'Casas del XVI — boutique hotel in Colonial Zone with colonial courtyards', // VERIFY
+          'Casas del XVI — boutique hotel in the Colonial Zone; intimate weddings in restored 16th-century houses',
           'JW Marriott Santo Domingo — large-scale receptions in Piantini',
           'Hilton Santo Domingo — weddings overlooking Malecón and the Caribbean',
           'Hotel El Embajador — classic Dominican wedding venue with gardens',
