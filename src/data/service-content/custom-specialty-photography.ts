@@ -10,6 +10,21 @@
 import type { ServiceContent } from './types'
 
 export const customSpecialtyPhotographyContent: ServiceContent = {
+  seo: {
+    title: {
+      es: 'Producción Fotográfica y Video a Medida en República Dominicana | Editorial, Multi-día & Campañas | Babula Shots',
+      en: 'Custom Photo & Video Production in Dominican Republic | Editorial, Multi-Day & Campaigns | Babula Shots',
+    },
+    description: {
+      es: 'Producciones fotográficas y de video a medida: campañas editoriales, multi-día, video musical y proyectos especiales en RD. Propuesta personalizada en 5 días.',
+      en: 'Custom photo and video productions: editorial campaigns, multi-day shoots, music videos, and special projects across DR. Tailored proposal within 5 days.',
+    },
+    keywords: {
+      es: 'produccion fotografica republica dominicana, fotografia editorial santo domingo, video musical punta cana, campana de marca dominicana, produccion multi-dia rd, fotografo documental republica dominicana',
+      en: 'custom photo production dominican republic, editorial photography santo domingo, music video photographer punta cana, brand campaign photographer DR, multi-day photo production, documentary photographer dominican republic',
+    },
+  },
+
   schemaAdditionalType: 'https://schema.org/CreativeWork',
 
   knowsAbout: {

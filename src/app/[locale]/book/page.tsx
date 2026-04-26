@@ -14,15 +14,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const isEs = params.locale === 'es'
   const title = isEs
-    ? 'Reservar sesión fotográfica — Babula Shots'
-    : 'Book a photo session — Babula Shots'
+    ? 'Reservar Fotógrafo en Santo Domingo, Punta Cana & República Dominicana | Babula Shots'
+    : 'Book a Photographer in Punta Cana, Santo Domingo & Dominican Republic | Babula Shots'
   const description = isEs
-    ? 'Reserva tu sesión fotográfica en Santo Domingo o Punta Cana. Pago seguro con depósito del 50% por Stripe. Confirmación inmediata.'
-    : 'Book your photo session in Santo Domingo or Punta Cana. Secure 50% deposit payment via Stripe. Instant confirmation.'
+    ? 'Reserva online tu fotógrafo para bodas, familia, retratos o eventos en República Dominicana. Confirmación rápida y depósito seguro por Stripe.'
+    : 'Book your photographer online for weddings, family, portraits, or events in the Dominican Republic. Fast confirmation and secure Stripe deposit.'
+  const keywords = isEs
+    ? 'reservar fotografo punta cana, reservar fotografo santo domingo, contratar fotografo republica dominicana, deposito stripe fotografia, booking fotografo bodas rd, reservar sesion fotos dominicana'
+    : 'book photographer punta cana, book photographer santo domingo, hire photographer dominican republic, stripe deposit photography, wedding photographer booking DR, book photo session dominican republic'
 
   return {
     title,
     description,
+    keywords,
     alternates: {
       canonical: `${BASE_URL}/${params.locale}/book`,
       languages: {

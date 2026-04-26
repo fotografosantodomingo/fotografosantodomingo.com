@@ -10,6 +10,21 @@
 import type { ServiceContent } from './types'
 
 export const weddingPhotographyContent: ServiceContent = {
+  seo: {
+    title: {
+      es: 'Fotógrafo de Bodas en República Dominicana | Santo Domingo & Punta Cana | Babula Shots',
+      en: 'Wedding Photographer in Dominican Republic | Punta Cana & Santo Domingo | Babula Shots',
+    },
+    description: {
+      es: 'Fotografía de bodas premium en Punta Cana, Santo Domingo y toda República Dominicana. Cobertura natural, editorial, galería editada y reserva online inmediata.',
+      en: 'Premium wedding photography in Punta Cana, Santo Domingo, and across the Dominican Republic. Natural editorial coverage, edited gallery, and instant online booking.',
+    },
+    keywords: {
+      es: 'fotografo de bodas republica dominicana, fotografo de bodas punta cana, fotografo de bodas santo domingo, boda destino republica dominicana, fotografia de bodas premium, reservar fotografo boda rd',
+      en: 'dominican republic wedding photographer, punta cana wedding photographer, santo domingo wedding photographer, destination wedding photographer dominican republic, luxury wedding photography dominican republic, book wedding photographer DR',
+    },
+  },
+
   schemaAdditionalType: 'https://schema.org/WeddingService',
 
   knowsAbout: {

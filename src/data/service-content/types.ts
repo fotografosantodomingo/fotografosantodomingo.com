@@ -89,11 +89,25 @@ export type InternalLink = {
 }
 
 /**
+ * Conversion-sniper metadata payload (title, description, keywords) for
+ * the family page's <head>. When present, the family page's generateMetadata
+ * uses these instead of the DB's default tagline. Each family rotates a
+ * different title syntax so the set doesn't read as a programmatic template.
+ */
+export type ServiceSeo = {
+  title: Bilingual
+  description: Bilingual
+  keywords: Bilingual
+}
+
+/**
  * Full SEO content payload for one family. All sections are optional —
  * the page renders only what's present, so a family can ship with just
  * a couple of sections and grow over time.
  */
 export type ServiceContent = {
+  /** Title + description + keywords for the family page's <head>. */
+  seo?: ServiceSeo
   /** Used for FAQPage + Service knowsAbout JSON-LD. */
   knowsAbout?: BilingualList
   /** Used as Service.additionalType in JSON-LD (e.g. https://schema.org/WeddingService). */
