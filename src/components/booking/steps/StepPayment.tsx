@@ -35,7 +35,10 @@ export default function StepPayment({
 
   if (!stripeJs) {
     return (
-      <div className="rounded-lg border border-red-500/40 bg-red-950/40 p-4 text-sm text-red-200">
+      <div className="border border-hairline p-4 text-sm text-ink">
+        <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+          {locale === 'es' ? 'Error' : 'Error'}
+        </p>
         {locale === 'es'
           ? 'Error de configuración: Stripe no está disponible.'
           : 'Configuration error: Stripe is not available.'}
@@ -44,16 +47,33 @@ export default function StepPayment({
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold">
-        {locale === 'es' ? 'Pagar el depósito' : 'Pay the deposit'}
-      </h2>
-      <p className="text-sm text-gray-400">
-        {locale === 'es'
-          ? `Cargo seguro de $${depositUsd.toFixed(2)} USD ahora. El saldo se paga el día de la sesión.`
-          : `Secure $${depositUsd.toFixed(2)} USD charge now. Balance is paid on the session day.`}
-      </p>
+    <div className="space-y-6">
+      <div>
+        <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-3">
+          {locale === 'es' ? 'Depósito' : 'Deposit'}
+        </h2>
+        <div className="flex items-baseline gap-3">
+          <div
+            className="font-display text-ink"
+            style={{ fontSize: 'clamp(40px, 6vw, 56px)', lineHeight: '1' }}
+          >
+            ${depositUsd.toFixed(2)}
+          </div>
+          <div className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+            USD
+          </div>
+        </div>
+        <p className="mt-3 text-sm text-ink-muted leading-relaxed max-w-md">
+          {locale === 'es'
+            ? 'Cargo seguro ahora. El saldo se paga el día de la sesión.'
+            : 'Secure charge now. Balance is paid on the session day.'}
+        </p>
+      </div>
 
+      {/* Stripe Elements iframe — uses its own appearance theme. We keep
+          'night' regardless of html.dark / html.light-mode because the
+          payment field reads as a luxury "concierge" surface in both
+          modes (Apple Pay-style dark embed). */}
       <Elements
         stripe={stripeJs}
         options={{
@@ -61,12 +81,36 @@ export default function StepPayment({
           appearance: {
             theme: 'night',
             variables: {
-              colorPrimary: '#10b981',
-              colorBackground: '#0f172a',
+              colorPrimary: '#ffffff',
+              colorBackground: '#000000',
               colorText: '#ffffff',
-              colorDanger: '#ef4444',
-              fontFamily: 'system-ui, -apple-system, "Segoe UI", sans-serif',
-              borderRadius: '8px',
+              colorDanger: '#ffffff',
+              fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+              borderRadius: '6px',
+              spacingUnit: '4px',
+            },
+            rules: {
+              '.Input': {
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+                color: '#ffffff',
+                fontSize: '15px',
+              },
+              '.Input:focus': {
+                border: '1px solid #ffffff',
+                boxShadow: 'none',
+              },
+              '.Label': {
+                color: '#999999',
+                fontSize: '10px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+              },
+              '.Tab': {
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+              },
+              '.Tab--selected': {
+                border: '1px solid #ffffff',
+              },
             },
           },
         }}
@@ -149,11 +193,14 @@ function PaymentForm({
   }, [bookingId, onSuccess])
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <PaymentElement options={{ layout: 'tabs' }} />
 
       {error && (
-        <div className="rounded-lg border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-200">
+        <div className="border border-hairline p-4 text-sm text-ink">
+          <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+            {locale === 'es' ? 'Error' : 'Error'}
+          </p>
           {error}
         </div>
       )}
@@ -161,17 +208,17 @@ function PaymentForm({
       <button
         type="submit"
         disabled={!stripe || submitting}
-        className="w-full rounded-full bg-emerald-500 py-3 font-semibold text-gray-950 hover:bg-emerald-400 disabled:opacity-50"
+        className="w-full inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] py-4 rounded-full bg-ink text-canvas hover:opacity-80 disabled:opacity-30 transition-opacity duration-200"
       >
         {submitting
           ? locale === 'es' ? 'Procesando pago…' : 'Processing payment…'
-          : locale === 'es' ? 'Pagar y confirmar reserva' : 'Pay and confirm booking'}
+          : locale === 'es' ? 'Pagar y confirmar' : 'Pay and confirm'}
       </button>
 
-      <p className="text-center text-xs text-gray-500">
+      <p className="text-center font-mono uppercase tracking-widest text-[10px] text-ink-muted">
         {locale === 'es'
-          ? 'Pagos procesados de forma segura por Stripe. No almacenamos tu tarjeta.'
-          : 'Payments processed securely by Stripe. We never store your card.'}
+          ? 'Pagos seguros · Stripe · No almacenamos tu tarjeta'
+          : 'Secure payments · Stripe · We never store your card'}
       </p>
     </form>
   )

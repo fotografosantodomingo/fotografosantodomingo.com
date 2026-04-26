@@ -278,16 +278,25 @@ export default function GetQuoteWizard({ locale }: Props) {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-white/10 dark:bg-gray-900">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+      <div className="border border-hairline-soft p-8 md:p-12 text-center">
+        <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-5">
+          {isEs ? 'Recibido' : 'Received'}
+        </p>
+        <h2
+          className="font-display uppercase text-ink"
+          style={{ fontSize: 'clamp(28px, 5vw, 48px)', lineHeight: '1.0' }}
+        >
           {isEs ? 'Recibimos tu solicitud' : 'We received your request'}
         </h2>
-        <p className="mt-3 text-slate-600 dark:text-gray-300">
+        <p className="mt-5 text-sm md:text-base text-ink-muted leading-relaxed max-w-md mx-auto">
           {isEs
-            ? 'Gracias. Nuestro equipo revisara tus detalles y te contactara pronto con un presupuesto personalizado.'
+            ? 'Gracias. Nuestro equipo revisará tus detalles y te contactará pronto con un presupuesto personalizado.'
             : 'Thank you. Our team will review your details and contact you soon with a personalized quote.'}
         </p>
-        <Link href={`/${locale}`} className="mt-6 inline-flex rounded-full bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-sky-500">
+        <Link
+          href={`/${locale}`}
+          className="mt-10 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+        >
           {isEs ? 'Volver al inicio' : 'Back to home'}
         </Link>
       </div>
@@ -295,101 +304,131 @@ export default function GetQuoteWizard({ locale }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-8 dark:border-white/10 dark:bg-gray-900">
-      <div className="mb-6 flex items-center justify-between gap-4">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.15em] text-sky-700 dark:text-sky-300">
-            {isEs ? 'Formulario de cotizacion' : 'Quote form'}
-          </p>
-          <h1 className="text-2xl font-bold text-slate-900 md:text-3xl dark:text-white">
-            {isEs ? 'Solicita tu presupuesto' : 'Request your quote'}
-          </h1>
-        </div>
-        <div className="text-sm font-semibold text-slate-600 dark:text-gray-300">
-          {isEs ? `Paso ${step} de ${maxStep}` : `Step ${step} of ${maxStep}`}
-        </div>
+    <form onSubmit={handleSubmit}>
+      {/* Header */}
+      <div className="mb-10">
+        <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+          {isEs ? 'Cotización · Solicitud' : 'Quote · Request'}
+        </p>
+        <h1
+          className="font-display uppercase text-ink"
+          style={{
+            fontSize: 'clamp(36px, 6vw, 72px)',
+            lineHeight: '0.95',
+            letterSpacing: '-0.01em',
+          }}
+        >
+          {isEs ? 'Solicita tu presupuesto' : 'Request your quote'}
+        </h1>
       </div>
 
-      <div className="mb-8 h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-gray-700">
-        <div className="h-full rounded-full bg-sky-600 transition-all duration-300" style={{ width: `${progress}%` }} />
+      {/* Stepper — same telemetry pattern as /book */}
+      <div className="mb-10 border-y border-hairline-soft py-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+            {String(step).padStart(2, '0')} / {String(maxStep).padStart(2, '0')}
+          </div>
+          <div className="font-mono uppercase tracking-widest text-[11px] text-ink">
+            {isEs ? `Paso ${step}` : `Step ${step}`}
+          </div>
+        </div>
+        <div className="mt-3 flex gap-1">
+          {Array.from({ length: maxStep }).map((_, i) => (
+            <span
+              key={i}
+              className={`h-px flex-1 ${i < step - 1 ? 'bg-ink/60' : i === step - 1 ? 'bg-ink' : 'bg-hairline-soft'}`}
+              aria-hidden="true"
+            />
+          ))}
+        </div>
+        <div className="sr-only">{`${progress}%`}</div>
       </div>
 
       {errors.length > 0 && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 dark:border-red-400/20 dark:bg-red-500/10">
+        <div className="mb-8 border border-hairline p-4">
+          <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+            {isEs ? 'Revisa' : 'Check'}
+          </p>
           {errors.map((error) => (
-            <p key={error} className="text-sm text-red-700 dark:text-red-300">{error}</p>
+            <p key={error} className="text-sm text-ink leading-relaxed">{error}</p>
           ))}
         </div>
       )}
 
       {submitError && (
-        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 dark:border-red-400/20 dark:bg-red-500/10">
-          <p className="text-sm text-red-700 dark:text-red-300">{submitError}</p>
+        <div className="mb-8 border border-hairline p-4">
+          <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+            {isEs ? 'Error' : 'Error'}
+          </p>
+          <p className="text-sm text-ink leading-relaxed">{submitError}</p>
         </div>
       )}
 
       {step === 1 && (
         <div>
-          <h2 className="mb-4 text-xl font-bold text-slate-900 dark:text-white">{isEs ? 'Selecciona el tipo de servicio' : 'Choose your service type'}</h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-6">
+            {isEs ? 'Tipo de servicio' : 'Service type'}
+          </h2>
+          <ul className="grid gap-0 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
             {QUOTE_SERVICE_TYPES.map((item) => {
               const active = form.serviceType === item.value
               return (
-                <button
-                  key={item.value}
-                  type="button"
-                  onClick={() => {
-                    setForm((prev) => ({
-                      ...prev,
-                      serviceType: item.value,
-                      addDrone: DRONE_ADDON_ELIGIBLE_SERVICES.includes(item.value) ? prev.addDrone : false,
-                    }))
-                  }}
-                  className={`rounded-xl border p-4 text-left transition ${active ? 'border-sky-500 bg-sky-50 dark:bg-sky-400/10' : 'border-slate-200 hover:border-slate-300 dark:border-white/10 dark:hover:border-white/30'}`}
-                >
-                  <div className="text-2xl">{item.icon}</div>
-                  <p className="mt-2 font-semibold text-slate-900 dark:text-white">{isEs ? item.labelEs : item.labelEn}</p>
-                </button>
+                <li key={item.value} className="border-r border-b border-hairline-soft">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForm((prev) => ({
+                        ...prev,
+                        serviceType: item.value,
+                        addDrone: DRONE_ADDON_ELIGIBLE_SERVICES.includes(item.value) ? prev.addDrone : false,
+                      }))
+                    }}
+                    className={`group flex flex-col w-full h-full p-5 text-left hover:bg-ink/5 transition-colors duration-200 ${active ? 'bg-ink/10' : ''}`}
+                  >
+                    <div className="text-xl mb-3" aria-hidden="true">{item.icon}</div>
+                    <p className="font-mono uppercase tracking-widest text-[11px] text-ink leading-snug">
+                      {isEs ? item.labelEs : item.labelEn}
+                    </p>
+                  </button>
+                </li>
               )
             })}
-          </div>
+          </ul>
         </div>
       )}
 
       {step === 2 && (
-        <div className="space-y-5">
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">
-              {isEs ? 'Cuantas personas incluye el servicio' : 'How many people are included in the service'}
-            </label>
+        <div className="space-y-8">
+          <FieldBlock label={isEs ? 'Cuántas personas incluye' : 'How many people'}>
             <input
               type="number"
               min={1}
               step={1}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 md:max-w-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+              className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors md:max-w-sm"
               value={form.participantsCount}
               onChange={(e) => update('participantsCount', e.target.value)}
-              placeholder={isEs ? 'Ejemplo: 40' : 'Example: 40'}
+              placeholder={isEs ? 'Ej: 40' : 'e.g. 40'}
             />
-          </div>
+          </FieldBlock>
 
-          <div className="rounded-xl border border-slate-200 p-4 dark:border-white/10">
-            <p className="text-sm font-semibold text-slate-800 dark:text-gray-200">
+          <div className="border border-hairline-soft p-5">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-3">
               {isEs ? 'Extras opcionales' : 'Optional extras'}
             </p>
             {droneEligible ? (
-              <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm text-slate-700 dark:text-gray-200">
+              <label className="flex cursor-pointer items-center gap-3 text-sm text-ink">
                 <input
                   type="checkbox"
                   checked={form.addDrone}
                   onChange={(e) => update('addDrone', e.target.checked)}
+                  className="h-4 w-4 accent-ink"
                 />
                 <span>{isEs ? 'Agregar cobertura con drone' : 'Add drone coverage'}</span>
               </label>
             ) : (
-              <p className="mt-3 text-sm text-slate-600 dark:text-gray-300">
+              <p className="text-sm text-ink-muted">
                 {isEs
-                  ? 'Este servicio no incluye opcion de drone.'
+                  ? 'Este servicio no incluye opción de drone.'
                   : 'This service does not include a drone option.'}
               </p>
             )}
@@ -398,54 +437,88 @@ export default function GetQuoteWizard({ locale }: Props) {
       )}
 
       {step === 3 && (
-        <div className="grid gap-4 md:grid-cols-3">
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Pais' : 'Country'}</label>
-            <select className="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.country} onChange={(e) => update('country', e.target.value as FormState['country'])}>
+        <div className="grid gap-6 md:grid-cols-3">
+          <FieldBlock label={isEs ? 'País' : 'Country'}>
+            <select
+              className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink outline-none focus:border-ink transition-colors"
+              value={form.country}
+              onChange={(e) => update('country', e.target.value as FormState['country'])}
+            >
               <option value="">{isEs ? 'Selecciona' : 'Select'}</option>
               <option value="US">{isEs ? 'Estados Unidos' : 'United States'}</option>
-              <option value="DO">{isEs ? 'Republica Dominicana' : 'Dominican Republic'}</option>
+              <option value="DO">{isEs ? 'República Dominicana' : 'Dominican Republic'}</option>
             </select>
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Estado / Provincia' : 'State / Province'}</label>
-            <input className="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.state} onChange={(e) => update('state', e.target.value)} placeholder={isEs ? 'Selecciona estado' : 'Select state'} />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Ciudad' : 'City'}</label>
-            <input className="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.city} onChange={(e) => update('city', e.target.value)} placeholder={isEs ? 'Selecciona ciudad' : 'Select city'} />
-          </div>
+          </FieldBlock>
+          <FieldBlock label={isEs ? 'Estado / Provincia' : 'State / Province'}>
+            <input
+              className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors"
+              value={form.state}
+              onChange={(e) => update('state', e.target.value)}
+              placeholder={isEs ? 'Estado' : 'State'}
+            />
+          </FieldBlock>
+          <FieldBlock label={isEs ? 'Ciudad' : 'City'}>
+            <input
+              className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors"
+              value={form.city}
+              onChange={(e) => update('city', e.target.value)}
+              placeholder={isEs ? 'Ciudad' : 'City'}
+            />
+          </FieldBlock>
         </div>
       )}
 
       {step === 4 && (
-        <div>
-          <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Fecha del evento' : 'Event date'}</label>
-          <input type="date" min={minDate} className="w-full rounded-lg border border-slate-300 px-3 py-2 md:max-w-sm dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.eventDate} onChange={(e) => update('eventDate', e.target.value)} />
-        </div>
+        <FieldBlock label={isEs ? 'Fecha del evento' : 'Event date'}>
+          <input
+            type="date"
+            min={minDate}
+            className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink outline-none focus:border-ink transition-colors md:max-w-sm"
+            value={form.eventDate}
+            onChange={(e) => update('eventDate', e.target.value)}
+          />
+        </FieldBlock>
       )}
 
       {step === 5 && (
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Nombre completo' : 'Full name'}</label>
-            <input className="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.fullName} onChange={(e) => update('fullName', e.target.value)} />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">Email</label>
-            <input type="email" className="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.email} onChange={(e) => update('email', e.target.value)} />
-          </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <FieldBlock label={isEs ? 'Nombre completo' : 'Full name'}>
+            <input
+              className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors"
+              value={form.fullName}
+              onChange={(e) => update('fullName', e.target.value)}
+              autoComplete="name"
+            />
+          </FieldBlock>
+          <FieldBlock label="Email">
+            <input
+              type="email"
+              className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors"
+              value={form.email}
+              onChange={(e) => update('email', e.target.value)}
+              autoComplete="email"
+            />
+          </FieldBlock>
           <div className="md:col-span-2">
-            <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">WhatsApp</label>
-            <input className="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.whatsappPhone} onChange={(e) => update('whatsappPhone', e.target.value)} placeholder={isEs ? '+1 809 ...' : '+1 809 ...'} />
+            <FieldBlock label="WhatsApp">
+              <input
+                className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors"
+                value={form.whatsappPhone}
+                onChange={(e) => update('whatsappPhone', e.target.value)}
+                placeholder={isEs ? '+1 809 ...' : '+1 809 ...'}
+                autoComplete="tel"
+              />
+            </FieldBlock>
           </div>
         </div>
       )}
 
       {step === 6 && (
-        <div className="space-y-4">
+        <div className="space-y-8">
           <div>
-            <p className="mb-2 text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Metodo de contacto preferido' : 'Preferred contact method'}</p>
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Método de contacto' : 'Contact method'}
+            </p>
             <div className="flex flex-wrap gap-2">
               {QUOTE_CONTACT_METHODS.map((item) => {
                 const active = form.preferredContactMethod === item.value
@@ -454,7 +527,11 @@ export default function GetQuoteWizard({ locale }: Props) {
                     key={item.value}
                     type="button"
                     onClick={() => update('preferredContactMethod', item.value)}
-                    className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${active ? 'border-sky-500 bg-sky-50 text-sky-800 dark:bg-sky-400/10 dark:text-sky-200' : 'border-slate-300 text-slate-700 hover:border-slate-400 dark:border-white/20 dark:text-gray-200 dark:hover:border-white/40'}`}
+                    className={`inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] px-5 py-2.5 rounded-full border transition-colors duration-200 ${
+                      active
+                        ? 'bg-ink text-canvas border-ink'
+                        : 'border-hairline text-ink hover:bg-ink hover:text-canvas'
+                    }`}
                   >
                     {isEs ? item.labelEs : item.labelEn}
                   </button>
@@ -464,9 +541,12 @@ export default function GetQuoteWizard({ locale }: Props) {
           </div>
 
           {form.preferredContactMethod === 'PHONE_CALL' && (
-            <div>
-              <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Horario preferido para llamada' : 'Preferred callback time'}</label>
-              <select className="w-full rounded-lg border border-slate-300 px-3 py-2 md:max-w-md dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.callbackTimePreference} onChange={(e) => update('callbackTimePreference', e.target.value)}>
+            <FieldBlock label={isEs ? 'Horario preferido' : 'Preferred time'}>
+              <select
+                className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink outline-none focus:border-ink transition-colors md:max-w-md"
+                value={form.callbackTimePreference}
+                onChange={(e) => update('callbackTimePreference', e.target.value)}
+              >
                 <option value="">{isEs ? 'Selecciona horario' : 'Select a time window'}</option>
                 {QUOTE_CALLBACK_WINDOWS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -474,31 +554,66 @@ export default function GetQuoteWizard({ locale }: Props) {
                   </option>
                 ))}
               </select>
-            </div>
+            </FieldBlock>
           )}
 
-          <div>
-            <label className="mb-1 block text-sm font-semibold text-slate-800 dark:text-gray-200">{isEs ? 'Describe tu sesion, objetivos y presupuesto esperado' : 'Describe your session, goals, and budget expectations'}</label>
-            <textarea className="min-h-[140px] w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-white/15 dark:bg-gray-800 dark:text-white" value={form.description} onChange={(e) => update('description', e.target.value)} />
-          </div>
+          <FieldBlock
+            label={isEs ? 'Describe tu sesión y presupuesto' : 'Describe your session and budget'}
+          >
+            <textarea
+              className="min-h-[160px] w-full bg-transparent border border-hairline-soft px-3 py-3 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors resize-y"
+              value={form.description}
+              onChange={(e) => update('description', e.target.value)}
+              placeholder={isEs ? 'Cuéntanos los detalles…' : 'Tell us the details…'}
+            />
+          </FieldBlock>
         </div>
       )}
 
-      <div className="mt-8 flex items-center justify-between">
-        <button type="button" onClick={previousStep} disabled={step === 1 || savingDraft} className="rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 disabled:opacity-40 dark:border-white/20 dark:text-gray-200">
-          {isEs ? 'Atras' : 'Back'}
+      <div className="mt-12 flex items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={previousStep}
+          disabled={step === 1 || savingDraft}
+          className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-6 py-3 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-ink transition-colors duration-200"
+        >
+          {isEs ? 'Atrás' : 'Back'}
         </button>
 
         {step < maxStep ? (
-          <button type="button" onClick={() => void nextStep()} disabled={savingDraft} className="rounded-full bg-sky-600 px-5 py-2 text-sm font-semibold text-white hover:bg-sky-500 disabled:opacity-60">
-            {savingDraft ? (isEs ? 'Guardando...' : 'Saving...') : isEs ? 'Continuar' : 'Continue'}
+          <button
+            type="button"
+            onClick={() => void nextStep()}
+            disabled={savingDraft}
+            className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3 rounded-full bg-ink text-canvas hover:opacity-80 disabled:opacity-30 transition-opacity duration-200"
+          >
+            {savingDraft
+              ? (isEs ? 'Guardando…' : 'Saving…')
+              : (isEs ? 'Continuar' : 'Continue')}
           </button>
         ) : (
-          <button type="submit" disabled={savingDraft} className="rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-500 disabled:opacity-60">
-            {savingDraft ? (isEs ? 'Enviando...' : 'Submitting...') : isEs ? 'Enviar solicitud' : 'Submit request'}
+          <button
+            type="submit"
+            disabled={savingDraft}
+            className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3 rounded-full bg-ink text-canvas hover:opacity-80 disabled:opacity-30 transition-opacity duration-200"
+          >
+            {savingDraft
+              ? (isEs ? 'Enviando…' : 'Submitting…')
+              : (isEs ? 'Enviar solicitud' : 'Submit request')}
           </button>
         )}
       </div>
     </form>
+  )
+}
+
+function FieldBlock({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-2 block font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+        {label}
+      </span>
+      {children}
+    </label>
   )
 }

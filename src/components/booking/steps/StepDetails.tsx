@@ -43,62 +43,64 @@ export default function StepDetails({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
+        <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted">
           {locale === 'es' ? 'Tus datos' : 'Your details'}
         </h2>
         <button
           type="button"
           onClick={onBack}
-          className="text-sm text-gray-400 hover:text-white"
+          className="font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity"
         >
           ← {locale === 'es' ? 'Atrás' : 'Back'}
         </button>
       </div>
 
-      <Field
-        label={locale === 'es' ? 'Nombre completo' : 'Full name'}
-        type="text"
-        value={name}
-        onChange={setName}
-        required
-        autoComplete="name"
-      />
+      <div className="space-y-5">
+        <Field
+          label={locale === 'es' ? 'Nombre completo' : 'Full name'}
+          type="text"
+          value={name}
+          onChange={setName}
+          required
+          autoComplete="name"
+        />
 
-      <Field
-        label={locale === 'es' ? 'Correo electrónico' : 'Email'}
-        type="email"
-        value={email}
-        onChange={setEmail}
-        required
-        autoComplete="email"
-      />
+        <Field
+          label={locale === 'es' ? 'Correo electrónico' : 'Email'}
+          type="email"
+          value={email}
+          onChange={setEmail}
+          required
+          autoComplete="email"
+        />
 
-      <Field
-        label={locale === 'es' ? 'Teléfono / WhatsApp (opcional)' : 'Phone / WhatsApp (optional)'}
-        type="tel"
-        value={phone}
-        onChange={setPhone}
-        autoComplete="tel"
-      />
+        <Field
+          label={locale === 'es' ? 'Teléfono / WhatsApp (opcional)' : 'Phone / WhatsApp (optional)'}
+          type="tel"
+          value={phone}
+          onChange={setPhone}
+          autoComplete="tel"
+        />
+      </div>
 
-      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-3 text-sm">
+      <label className="flex items-start gap-3 border border-hairline-soft p-4 text-sm cursor-pointer hover:border-hairline transition-colors">
         <input
           type="checkbox"
           checked={terms}
           onChange={e => setTerms(e.target.checked)}
-          className="mt-0.5 h-4 w-4 rounded border-white/20 bg-transparent text-emerald-500 focus:ring-emerald-500"
+          className="mt-0.5 h-4 w-4 shrink-0 accent-ink"
         />
-        <span className="text-gray-300">
+        <span className="text-ink-muted leading-relaxed">
           {locale === 'es' ? (
             <>
               Acepto los{' '}
-              <a href="/es/terms" target="_blank" className="text-emerald-400 hover:underline">
+              <a href="/es/terms" target="_blank" className="text-ink underline underline-offset-2 hover:opacity-70">
                 términos
               </a>{' '}
               y la{' '}
-              <a href="/es/privacy" target="_blank" className="text-emerald-400 hover:underline">
+              <a href="/es/privacy" target="_blank" className="text-ink underline underline-offset-2 hover:opacity-70">
                 política de privacidad
               </a>
               . Entiendo que el depósito del 50% no es reembolsable dentro de las 24 horas previas a la sesión.
@@ -106,11 +108,11 @@ export default function StepDetails({
           ) : (
             <>
               I accept the{' '}
-              <a href="/en/terms" target="_blank" className="text-emerald-400 hover:underline">
+              <a href="/en/terms" target="_blank" className="text-ink underline underline-offset-2 hover:opacity-70">
                 terms
               </a>{' '}
               and{' '}
-              <a href="/en/privacy" target="_blank" className="text-emerald-400 hover:underline">
+              <a href="/en/privacy" target="_blank" className="text-ink underline underline-offset-2 hover:opacity-70">
                 privacy policy
               </a>
               . I understand the 50% deposit is non-refundable within 24 hours of the session.
@@ -120,7 +122,10 @@ export default function StepDetails({
       </label>
 
       {error && (
-        <div className="rounded-lg border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-200">
+        <div className="border border-hairline p-4 text-sm text-ink">
+          <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+            {locale === 'es' ? 'Error' : 'Error'}
+          </p>
           {error}
         </div>
       )}
@@ -128,7 +133,7 @@ export default function StepDetails({
       <button
         type="submit"
         disabled={!valid || submitting}
-        className="w-full rounded-full bg-emerald-500 py-3 font-semibold text-gray-950 hover:bg-emerald-400 disabled:opacity-50"
+        className="w-full inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] py-4 rounded-full bg-ink text-canvas hover:opacity-80 disabled:opacity-30 transition-opacity duration-200"
       >
         {submitting
           ? locale === 'es' ? 'Procesando…' : 'Processing…'
@@ -150,12 +155,14 @@ function Field({
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm text-gray-300">{label}</span>
+      <span className="mb-2 block font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+        {label}
+      </span>
       <input
         {...rest}
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-white placeholder-gray-500 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20"
+        className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors"
       />
     </label>
   )

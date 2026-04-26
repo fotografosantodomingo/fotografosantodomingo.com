@@ -150,7 +150,7 @@ export default async function BookPage({
   const schemas = await buildJsonLd(locale)
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white">
+    <main className="min-h-screen bg-canvas text-ink">
       {schemas.map((schema, i) => (
         <script
           key={i}

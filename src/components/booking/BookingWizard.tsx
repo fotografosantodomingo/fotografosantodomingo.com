@@ -158,16 +158,26 @@ export default function BookingWizard({
   const currentStepKey = STEPS[stepIdx].key
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10 sm:py-14">
-      <header className="mb-8 text-center">
-        <h1 className="text-3xl font-bold sm:text-4xl">
+    <div className="mx-auto max-w-2xl px-4 py-12 sm:py-16 lg:py-20">
+      <header className="mb-10 md:mb-14">
+        <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+          {t(locale, 'Reserva', 'Booking')}
+        </p>
+        <h1
+          className="font-display uppercase text-ink"
+          style={{
+            fontSize: 'clamp(36px, 6vw, 72px)',
+            lineHeight: '0.95',
+            letterSpacing: '-0.01em',
+          }}
+        >
           {t(locale, 'Reserva tu sesión', 'Book your session')}
         </h1>
-        <p className="mt-2 text-sm text-gray-400">
+        <p className="mt-5 font-mono uppercase tracking-widest text-[11px] text-ink-muted">
           {t(
             locale,
-            'Confirmación inmediata · Depósito 50% · Pago seguro con Stripe',
-            'Instant confirmation · 50% deposit · Secure Stripe payment'
+            'Confirmación inmediata · Depósito 50% · Stripe',
+            'Instant confirmation · 50% deposit · Stripe'
           )}
         </p>
       </header>
@@ -243,46 +253,40 @@ export default function BookingWizard({
 }
 
 // ─── Stepper ────────────────────────────────────────────────────────────────
+// Bugatti telemetry-row stepper: mono-caps step counter on left, current step
+// label on right. Inactive labels stay in ink-muted; active in ink. No
+// circles, no chips, no color shift — scale + opacity carry hierarchy.
 
 function Stepper({ currentIdx, locale }: { currentIdx: number; locale: Locale }) {
   return (
-    <ol className="mb-8 flex items-center justify-between gap-1 text-xs sm:text-sm">
-      {STEPS.map((s, i) => {
-        const done = i < currentIdx
-        const active = i === currentIdx
-        return (
-          <li key={s.key} className="flex flex-1 items-center gap-2">
+    <div className="mb-10 border-y border-hairline-soft py-4">
+      <div className="flex items-center justify-between gap-4">
+        <div className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+          {String(currentIdx + 1).padStart(2, '0')} / {String(STEPS.length).padStart(2, '0')}
+        </div>
+        <div className="font-mono uppercase tracking-widest text-[11px] text-ink">
+          {locale === 'es' ? STEPS[currentIdx].labelEs : STEPS[currentIdx].labelEn}
+        </div>
+      </div>
+      <div className="mt-3 flex gap-1">
+        {STEPS.map((s, i) => {
+          const done = i < currentIdx
+          const active = i === currentIdx
+          return (
             <span
-              className={
-                active
-                  ? 'flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 font-semibold text-gray-950'
-                  : done
-                    ? 'flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400'
-                    : 'flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-gray-500'
-              }
-            >
-              {done ? '✓' : i + 1}
-            </span>
-            <span
-              className={
-                active
-                  ? 'hidden text-white sm:inline'
-                  : 'hidden text-gray-500 sm:inline'
-              }
-            >
-              {locale === 'es' ? s.labelEs : s.labelEn}
-            </span>
-            {i < STEPS.length - 1 && (
-              <span className="ml-1 hidden h-px flex-1 bg-white/10 sm:block" />
-            )}
-          </li>
-        )
-      })}
-    </ol>
+              key={s.key}
+              className={`h-px flex-1 ${active ? 'bg-ink' : done ? 'bg-ink/60' : 'bg-hairline-soft'}`}
+              aria-hidden="true"
+            />
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
-// ─── Persistent summary card (shown after service is picked) ─────────────────
+// ─── Persistent summary (shown after service is picked) ─────────────────────
+// Flat hairline-bordered strip, no card chassis.
 
 function BookingSummary({ state, locale }: { state: State; locale: Locale }) {
   if (!state.service) return null
@@ -298,12 +302,14 @@ function BookingSummary({ state, locale }: { state: State; locale: Locale }) {
     : state.date
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
+    <div className="border border-hairline-soft px-4 py-3.5 text-sm">
       <div className="flex items-center gap-3">
-        <span className="text-2xl">{state.service.icon}</span>
-        <div className="flex-1">
-          <div className="font-semibold text-white">{name}</div>
-          <div className="text-xs text-gray-400">
+        <span className="text-2xl shrink-0" aria-hidden="true">{state.service.icon}</span>
+        <div className="flex-1 min-w-0">
+          <div className="font-display uppercase text-ink truncate" style={{ fontSize: '15px', lineHeight: '1.1' }}>
+            {name}
+          </div>
+          <div className="mt-1 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
             {state.service.duration_min} min · ${Number(state.service.price_usd).toFixed(0)} USD
             {dateStr && ` · ${dateStr}`}
             {slot && ` · ${slot.time} AST`}
