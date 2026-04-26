@@ -516,10 +516,13 @@ SET
     'historic_price_usd',  b.stripe_amount_usd,
     'backfilled',          true
   )
+-- PostgreSQL UPDATE...FROM scoping rule: the target table alias (b) is NOT
+-- visible inside JOIN ON clauses of the FROM list. We must connect to b in
+-- the WHERE clause, not in JOIN.
 FROM public.service_packages p
 JOIN public.service_families f ON f.id = p.family_id
-JOIN public.booking_services bs ON bs.id = b.service_id
-WHERE bs.slug = ANY(p.legacy_aliases)
+JOIN public.booking_services bs ON bs.slug = ANY(p.legacy_aliases)
+WHERE bs.id = b.service_id  -- connects FROM rows to the UPDATE target
   AND b.family_id IS NULL;  -- idempotency guard
 
 -- Verify every booking with non-null service_id is now backfilled.
