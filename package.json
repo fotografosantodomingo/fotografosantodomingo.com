@@ -13,7 +13,8 @@
     "seo:check:blog-image-metadata:all": "node scripts/blog-image-seo-audit.cjs --status=all",
     "blog:count": "node scripts/blog-maintenance.cjs count",
     "blog:archive:published": "node scripts/blog-maintenance.cjs archive --all-published",
-    "blog:restore": "node scripts/blog-maintenance.cjs restore"
+    "blog:restore": "node scripts/blog-maintenance.cjs restore",
+    "backup:db": "node scripts/backup-supabase.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.0",
