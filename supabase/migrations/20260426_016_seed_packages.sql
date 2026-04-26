@@ -1,7 +1,11 @@
 -- ============================================================================
--- Migration 016 — Seed canonical families/packages + backfill bookings + view
+-- Migration 016 — STRATEGY B (SAFE ADDITIVE ONLY)
 -- ============================================================================
+-- Seeds canonical families/packages + backfills bookings WITHOUT touching the
+-- legacy booking_services table or bookings.service_id.
+--
 -- Authored from: docs/canonical-seed-final-locked.md (v3, 2026-04-26)
+-- Strategy locked by: docs/migration-016-defensive-audit.md (2026-04-26)
 -- Architecture: 9 families · 33 packages · 18 legacy slugs reconciled
 -- Live booking exposure: 3 rows (2× weddings CONFIRMED + 1× portrait CANCELLED)
 --
@@ -10,18 +14,24 @@
 --   2. Migrations 009 + 010 SHOULD be applied to align quotes drift
 --      (recommended but not strictly required for 016 to succeed)
 --
--- Operations summary (zero destructive DROP TABLE — only RENAME):
+-- Operations (purely additive — zero rename, zero FK drop, zero DML on legacy):
 --   A. Insert 9 service_families rows
 --   B. Insert 33 service_packages rows (with legacy_aliases populated)
 --   C. Verify counts
---   D. Backfill 3 historical bookings (family_id, package_id, package_snapshot)
---   E. Drop FK constraint bookings_service_id_fkey (no data loss)
---   F. UPDATE bookings.service_id to point to new service_packages UUIDs
---      (so the backwards-compat view's id column still joins correctly)
---   G. RENAME booking_services → booking_services_legacy (data preserved)
---   H. CREATE VIEW booking_services for backwards compatibility
---   I. Re-add FK on bookings.service_id pointing to service_packages.id
---   J. Final verification with assertions
+--   D. Backfill 3 historical bookings — populate ONLY:
+--        bookings.family_id        (NULLable column added by 015)
+--        bookings.package_id       (NULLable column added by 015)
+--        bookings.package_snapshot (NULLable JSONB added by 015)
+--      bookings.service_id is NOT mutated. The legacy FK to booking_services
+--      stays in place. The legacy booking_services table stays in place.
+--   E. Final verification of additive state.
+--
+-- DEFERRED to a future migration (after Slice A code is shipped and verified):
+--   - bookings.service_id repoint to service_packages.id
+--   - DROP CONSTRAINT bookings_service_id_fkey
+--   - ALTER TABLE booking_services RENAME TO booking_services_legacy
+--   - CREATE VIEW booking_services backwards-compat shim
+--   - ADD CONSTRAINT bookings_service_id_fkey REFERENCES service_packages(id)
 --
 -- Wrapped in a single transaction. Failures roll back entirely.
 -- Re-running is gated by the pre-flight EXCEPTION on non-empty service_families.
@@ -529,148 +539,105 @@ BEGIN
 END $$;
 
 -- ============================================================================
--- SECTION E · Drop FK on bookings.service_id (constraint only — no data drop)
+-- SECTION E · Final verification (Strategy B — additive only)
 -- ============================================================================
--- The original FK points to booking_services. We're about to rename that
--- table and update the values, so the constraint must come off temporarily.
--- It's re-added in Section I pointing to the new service_packages table.
+-- Confirms the migration achieved the additive parallel state without
+-- touching the legacy booking_services table or bookings.service_id.
 
-ALTER TABLE public.bookings
-  DROP CONSTRAINT IF EXISTS bookings_service_id_fkey;
-
--- ============================================================================
--- SECTION F · Update bookings.service_id to new package UUIDs
--- ============================================================================
--- After this update, bookings.service_id contains UUIDs that exist in
--- service_packages. This is what makes the backwards-compat view in
--- Section H actually JOIN-able by legacy code that does
---   SELECT * FROM bookings JOIN booking_services ON booking_services.id = bookings.service_id
--- The view's id column will return service_packages.id, which now matches.
-
-UPDATE public.bookings
-SET service_id = package_id
-WHERE package_id IS NOT NULL
-  AND service_id IS DISTINCT FROM package_id;
-
--- ============================================================================
--- SECTION G · RENAME booking_services to booking_services_legacy
--- ============================================================================
--- Non-destructive: data is preserved under the new name. RLS policies, indexes,
--- and the updated_at trigger all follow the rename automatically.
--- The renamed table remains queryable for historical reference.
-
-ALTER TABLE public.booking_services
-  RENAME TO booking_services_legacy;
-
--- ============================================================================
--- SECTION H · CREATE backwards-compat VIEW booking_services
--- ============================================================================
--- Sprint 1-4 code (every API route + admin page that still reads
--- "booking_services") continues to work without modification. The view exposes
--- the same column names/types as the old table, sourced from
--- service_packages JOIN service_families.
---
--- RLS: views inherit RLS from underlying tables. service_packages has
--- "active = true" public read; service_families has the same. Anon users
--- see only active rows automatically.
-
-CREATE OR REPLACE VIEW public.booking_services AS
-  SELECT
-    p.id                        AS id,
-    p.slug                      AS slug,
-    p.name_es                   AS name_es,
-    p.name_en                   AS name_en,
-    p.description_short_es      AS description_es,
-    p.description_short_en      AS description_en,
-    f.icon                      AS icon,
-    f.slug                      AS category,
-    p.duration_min              AS duration_min,
-    p.starting_price_usd        AS price_usd,
-    p.deposit_percent           AS deposit_percent,
-    p.bookable_direct           AS bookable,
-    (p.active AND f.active)     AS active,
-    p.sort_order                AS sort_order,
-    p.created_at                AS created_at,
-    p.updated_at                AS updated_at
-  FROM public.service_packages p
-  JOIN public.service_families f ON f.id = p.family_id;
-
--- ============================================================================
--- SECTION I · Re-add FK on bookings.service_id pointing to service_packages
--- ============================================================================
--- service_id now references the new canonical table. The constraint validates
--- at creation time — every existing service_id must exist in
--- service_packages.id (we ensured this in Section F).
-
-ALTER TABLE public.bookings
-  ADD CONSTRAINT bookings_service_id_fkey
-  FOREIGN KEY (service_id) REFERENCES public.service_packages(id);
-
--- ============================================================================
--- SECTION J · Final verification with full migration assertion
--- ============================================================================
 DO $$
 DECLARE
-  view_total       INTEGER;
-  view_active      INTEGER;
-  legacy_total     INTEGER;
+  fam_count        INTEGER;
+  pkg_count        INTEGER;
+  alias_total      INTEGER;
+  legacy_count     INTEGER;
   bookings_total   INTEGER;
   bookings_filled  INTEGER;
 BEGIN
-  -- View should expose all 33 packages
-  SELECT COUNT(*) INTO view_total FROM public.booking_services;
-  IF view_total != 33 THEN
-    RAISE EXCEPTION 'Section J failed: booking_services view returned % rows, expected 33', view_total;
+  -- New tables seeded
+  SELECT COUNT(*) INTO fam_count FROM public.service_families;
+  IF fam_count != 9 THEN
+    RAISE EXCEPTION 'verification failed: expected 9 families, got %', fam_count;
   END IF;
 
-  -- Active+bookable subset (what /api/bookings/services returns publicly): 24
-  SELECT COUNT(*) INTO view_active FROM public.booking_services
-    WHERE active = true AND bookable = true;
-  IF view_active != 24 THEN
-    RAISE EXCEPTION 'Section J failed: view returned % active+bookable rows, expected 24', view_active;
+  SELECT COUNT(*) INTO pkg_count FROM public.service_packages;
+  IF pkg_count != 33 THEN
+    RAISE EXCEPTION 'verification failed: expected 33 packages, got %', pkg_count;
   END IF;
 
-  -- Renamed legacy table still has its 18 original rows
-  SELECT COUNT(*) INTO legacy_total FROM public.booking_services_legacy;
-  IF legacy_total != 18 THEN
-    RAISE EXCEPTION 'Section J failed: booking_services_legacy has % rows, expected 18', legacy_total;
+  SELECT COALESCE(SUM(array_length(legacy_aliases, 1)), 0) INTO alias_total
+  FROM public.service_packages
+  WHERE legacy_aliases IS NOT NULL AND array_length(legacy_aliases, 1) > 0;
+  IF alias_total != 18 THEN
+    RAISE EXCEPTION 'verification failed: expected 18 legacy aliases, got %', alias_total;
   END IF;
 
-  -- Every booking has full backfill
+  -- Legacy table UNTOUCHED — must still exist with original 18 rows.
+  IF NOT EXISTS (SELECT 1 FROM information_schema.tables
+                 WHERE table_schema='public' AND table_name='booking_services'
+                   AND table_type='BASE TABLE') THEN
+    RAISE EXCEPTION 'verification failed: booking_services is no longer a BASE TABLE — Strategy B violated';
+  END IF;
+  SELECT COUNT(*) INTO legacy_count FROM public.booking_services;
+  IF legacy_count != 18 THEN
+    RAISE EXCEPTION 'verification failed: booking_services row count changed (% rows, expected 18)', legacy_count;
+  END IF;
+
+  -- bookings.service_id NOT mutated. Verify it still references the legacy
+  -- table by checking the FK target.
+  IF NOT EXISTS (
+    SELECT 1
+    FROM information_schema.referential_constraints rc
+    JOIN information_schema.constraint_column_usage ccu
+      ON ccu.constraint_name = rc.constraint_name
+    WHERE rc.constraint_name = 'bookings_service_id_fkey'
+      AND ccu.table_name = 'booking_services'
+  ) THEN
+    RAISE EXCEPTION 'verification failed: bookings_service_id_fkey no longer points at booking_services — Strategy B violated';
+  END IF;
+
+  -- All bookings have additive enrichment (family_id, package_id, snapshot)
   SELECT COUNT(*) INTO bookings_total FROM public.bookings;
   SELECT COUNT(*) INTO bookings_filled FROM public.bookings
-    WHERE family_id IS NOT NULL AND package_id IS NOT NULL AND package_snapshot IS NOT NULL;
+    WHERE family_id IS NOT NULL
+      AND package_id IS NOT NULL
+      AND package_snapshot IS NOT NULL;
   IF bookings_total != bookings_filled THEN
-    RAISE EXCEPTION 'Section J failed: % of % bookings missing backfill', (bookings_total - bookings_filled), bookings_total;
+    RAISE EXCEPTION 'verification failed: % of % bookings missing additive backfill',
+                    (bookings_total - bookings_filled), bookings_total;
   END IF;
 
-  RAISE NOTICE '✓ Migration 016 verification PASSED.';
-  RAISE NOTICE '  service_families: 9';
-  RAISE NOTICE '  service_packages: 33';
-  RAISE NOTICE '  booking_services view: % rows (24 active+bookable)', view_total;
-  RAISE NOTICE '  booking_services_legacy: % rows preserved', legacy_total;
-  RAISE NOTICE '  bookings backfilled: % of %', bookings_filled, bookings_total;
+  RAISE NOTICE '✓ Migration 016 (Strategy B) verification PASSED.';
+  RAISE NOTICE '  service_families:  9';
+  RAISE NOTICE '  service_packages:  33';
+  RAISE NOTICE '  legacy_aliases:    18 entries';
+  RAISE NOTICE '  booking_services:  % rows (UNCHANGED — still BASE TABLE)', legacy_count;
+  RAISE NOTICE '  bookings backfill: % of % rows enriched (additive only)', bookings_filled, bookings_total;
+  RAISE NOTICE '  bookings.service_id: NOT mutated';
+  RAISE NOTICE '  bookings_service_id_fkey: still pointing at booking_services';
 END $$;
 
 COMMIT;
 
 -- ============================================================================
--- POST-MIGRATION NOTES (read after applying)
+-- WHAT'S DEFERRED (do NOT add to this migration)
 -- ============================================================================
--- 1. The renamed booking_services_legacy table is now an orphan in PostgREST
---    — the OpenAPI spec will expose it as a queryable resource until you DROP
---    it. Recommended: leave it for at least 30 days as a recovery checkpoint,
---    then DROP TABLE in a future migration once Slice A code is fully verified.
+-- The following operations were authored in the pre-Strategy-B draft of this
+-- file and are now postponed to a separate later migration (likely 020),
+-- to be authored AFTER Slice A code is shipped and verified to read directly
+-- from service_packages:
 --
--- 2. RLS policies on booking_services_legacy were renamed automatically with
---    the table. Their names still start with "booking_services_..." — this is
---    cosmetic; rename them in a future cleanup migration if desired.
+--   * UPDATE bookings.service_id to point to service_packages.id
+--   * ALTER TABLE bookings DROP CONSTRAINT bookings_service_id_fkey
+--   * ALTER TABLE booking_services RENAME TO booking_services_legacy
+--   * CREATE VIEW booking_services AS SELECT … FROM service_packages JOIN service_families
+--   * ALTER TABLE bookings ADD CONSTRAINT bookings_service_id_fkey REFERENCES service_packages
 --
--- 3. PostgREST's schema cache may need a refresh to pick up the new view.
---    In Supabase: API → Settings → Reload schema cache. Otherwise queries
---    via /rest/v1/booking_services may return stale 404 for ~60s after migration.
+-- Strategy B keeps booking_services as a physical table for the entire Slice A
+-- window. Sprint 1-4 code continues reading from it byte-for-byte unchanged.
+-- The new service_packages table sits in parallel, populated and ready for
+-- Slice A code to query directly.
 --
--- 4. After Slice A frontend code lands and reads service_packages directly,
---    the booking_services view becomes vestigial — but it remains harmless
---    to keep indefinitely as a read-only compatibility shim.
+-- Per docs/migration-016-defensive-audit.md, the only mandatory pre-Slice-A
+-- code patch is making /admin/booking-services/* read-only (the 3 write paths
+-- in actions.ts must be disabled to prevent drift between the two catalogs).
 -- ============================================================================
