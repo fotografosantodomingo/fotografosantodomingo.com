@@ -176,7 +176,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 150,
         includesEs: ['10 fotos editadas premium', 'Playa Güibia cerca del Malecón, Santo Domingo', 'Mejor en golden hour (amanecer/atardecer)'],
         includesEn: ['10 premium edited photos', 'Güibia Beach near the Malecón, Santo Domingo', 'Best at golden hour (sunrise/sunset)'],
-        bookable: true,
+        // Not yet in booking_services — quote-only until added to DB
+        bookable: false,
       },
       {
         slug: 'beach-session-caribbean',
@@ -188,7 +189,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 300,
         includesEs: ['10 fotos premium editadas', 'Boca Chica, Juan Dolio, La Romana, Punta Cana, Puerto Plata', 'Dirección fotográfica profesional + consejos de outfits'],
         includesEn: ['10 premium edited photos', 'Boca Chica, Juan Dolio, La Romana, Punta Cana, Puerto Plata', 'Professional photography direction + outfit advice'],
-        bookable: true,
+        // Not yet in booking_services — quote-only until added to DB
+        bookable: false,
       },
       {
         slug: 'beach-session-saona',
@@ -200,7 +202,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 400,
         includesEs: ['25 fotos editadas en alta resolución', 'Transporte en lancha o catamarán incluido', 'Almuerzo buffet + bebidas incluidas'],
         includesEn: ['25 professionally edited photos', 'Fast boat or catamaran transport included', 'Buffet lunch + drinks included'],
-        bookable: true,
+        // Not yet in booking_services — quote-only until added to DB
+        bookable: false,
       },
     ],
   },
@@ -279,7 +282,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 400,
         includesEs: ['Estudio privado o habitación de hotel de lujo', 'Iluminación profesional + dirección experta y cómoda', 'Galería privada entregada en 48–72h'],
         includesEn: ['Private studio or luxury hotel room', 'Professional lighting + expert, comfortable direction', 'Private gallery delivered in 48–72h'],
-        bookable: true,
+        // Not yet in booking_services — quote-only until added to DB
+        bookable: false,
       },
     ],
   },
@@ -355,7 +359,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 150,
         includesEs: ['Técnica de iluminación Snoot Óptico', '5 fotos editadas en alta resolución', 'Efectos dramáticos y cinematográficos'],
         includesEn: ['Snoot Optical lighting technique', '5 edited high-res photos', 'Dramatic cinematic lighting effects'],
-        bookable: true,
+        // Not yet in booking_services — quote-only until added to DB
+        bookable: false,
       },
       {
         slug: 'snoot-optico-10',
@@ -367,7 +372,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 200,
         includesEs: ['10 fotos con iluminación Snoot', 'Mayor variedad de ángulos y looks', 'Book, branding personal, productos premium'],
         includesEn: ['10 photos with Snoot lighting', 'Greater variety of angles and looks', 'Model book, personal branding, premium products'],
-        bookable: true,
+        // Not yet in booking_services — quote-only until added to DB
+        bookable: false,
       },
       {
         slug: 'snoot-optico-premium',
@@ -379,7 +385,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 250,
         includesEs: ['15 fotos Snoot Óptico', '2h con cambios de look y vestuario', 'Entrega digital lista para uso inmediato'],
         includesEn: ['15 photos with Snoot Optical', '2h with look and wardrobe changes', 'Digital delivery ready for immediate use'],
-        bookable: true,
+        // Not yet in booking_services — quote-only until added to DB
+        bookable: false,
       },
     ],
   },

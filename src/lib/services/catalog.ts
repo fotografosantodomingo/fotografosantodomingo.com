@@ -54,8 +54,8 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
         isEs ? 'Álbum de boda + impresiones de regalo' : 'Wedding album + prints included',
       ],
       pricing: {
-        starting: isEs ? 'Desde $2,500' : 'Starting at $2,500',
-        includes: isEs ? '8 horas de cobertura + edicion completa' : '8 hours coverage + full editing',
+        starting: isEs ? 'Desde $1,100' : 'Starting at $1,100',
+        includes: isEs ? '4 horas de cobertura + edicion completa' : '4 hours coverage + full editing',
       },
       icon: '💍',
       gradientClass: 'bg-gradient-to-br from-rose-400 to-pink-600',
@@ -78,7 +78,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
         isEs ? 'Archivos en alta resolucion' : 'High-resolution files',
       ],
       pricing: {
-        starting: isEs ? 'Desde $150' : 'Starting at $150',
+        starting: isEs ? 'Desde $180' : 'Starting at $180',
         includes: isEs ? 'Por sesion individual' : 'Per individual session',
       },
       icon: '👔',
@@ -101,7 +101,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
         isEs ? 'Permisos legales gestionados' : 'Legal permissions managed',
       ],
       pricing: {
-        starting: isEs ? 'Desde $500' : 'Starting at $500',
+        starting: isEs ? 'Desde $250' : 'Starting at $250',
         includes: isEs ? 'Por ubicacion + edicion' : 'Per location + editing',
       },
       icon: '🚁',
