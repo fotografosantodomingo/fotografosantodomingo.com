@@ -1,0 +1,31 @@
+# Cloudflare Pages configuration.
+#
+# Cloudflare Pages reads this file as part of its BETA wrangler-config
+# support (the build log line "Checking for configuration in a Wrangler
+# configuration file (BETA)" confirms it is checked at build time).
+#
+# Why this file exists:
+#   The Pages dashboard tracks compatibility flags PER ENVIRONMENT
+#   (Production vs Preview). When `nodejs_compat` was added to the
+#   Production environment manually via the dashboard, the Preview
+#   environment was left without it — so every feature-branch preview
+#   deploy returned a runtime "no nodejs_compat compatibility flag set"
+#   error even though the build itself succeeded.
+#
+#   Setting the flag here applies it to BOTH environments at build
+#   time, so any branch (production main, preview redesign/*, future
+#   feature branches) automatically gets node:* compatibility without
+#   touching the dashboard.
+#
+# Why nodejs_compat is needed:
+#   Several runtime dependencies (Supabase JS client, Stripe SDK,
+#   middleware bundle) import node:buffer and node:async_hooks.
+#   Without nodejs_compat the Worker rejects those imports at
+#   request time.
+
+name = "fotografosantodomingo"
+compatibility_date = "2026-04-21"
+compatibility_flags = ["nodejs_compat"]
+
+# pages_build_output_dir is set by @cloudflare/next-on-pages — do not
+# override here; the dashboard's "Build output directory" setting wins.
