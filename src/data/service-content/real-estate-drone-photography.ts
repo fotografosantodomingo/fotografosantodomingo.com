@@ -24,6 +24,219 @@ export const realEstateDronePhotographyContent: ServiceContent = {
     },
   },
   schemaAdditionalType: 'https://schema.org/ProfessionalService',
+
+  // ── GEO COVERAGE ────────────────────────────────────────────────────
+  // 4 cities (user-approved 2026-04-26): Punta Cana, Cap Cana, Bavaro,
+  // La Romana / Casa de Campo. Real-estate-specific framing — listing
+  // agents, vacation-rental owners, developer marketing departments are
+  // the primary buyers. Drone permit/altitude language is geo-specific.
+  geoCoverage: [
+    {
+      citySlug: 'punta-cana',
+      cityName: { es: 'Punta Cana', en: 'Punta Cana' },
+      intro: {
+        es: 'Punta Cana concentra el mayor inventario de propiedades vacacionales y residenciales de la región este — desde condos frente al mar en Bávaro hasta lotes en comunidades de golf como Cocotal y Punta Blanca. Cubrimos fotografía interior con luz natural balanceada, sets de drone aéreo para mostrar contexto de playa y resort, y twilight para listados de alta gama. Manejamos los permisos y altitudes restringidas en zonas cercanas al Aeropuerto Internacional de Punta Cana (PUJ).',
+        en: 'Punta Cana holds the eastern region\'s largest inventory of vacation and residential properties — from beachfront condos in Bávaro to lots in golf communities like Cocotal and Punta Blanca. We cover interior photography with balanced natural light, drone aerial sets showing beach and resort context, and twilight for high-end listings. We handle the permits and altitude restrictions near Punta Cana International Airport (PUJ).',
+      },
+      venues: {
+        es: [
+          'Cocotal Golf & Country Club — comunidad residencial con propiedades en campo de golf',
+          'Punta Blanca Golf Resort — desarrollos boutique con vista al mar',
+          'White Sands — condos frente a la playa',
+          'Bávaro Beach — propiedades de alquiler vacacional con acceso directo a playa',
+          'Cap Cana Marina (zona Punta Cana) — yates y propiedades de marina',
+          'Hard Rock Hotel residences — propiedades dentro del resort all-inclusive',
+          'Cana Bay Golf — desarrollos premium con vista al campo',
+        ],
+        en: [
+          'Cocotal Golf & Country Club — residential community with golf-front properties',
+          'Punta Blanca Golf Resort — boutique developments with ocean views',
+          'White Sands — beachfront condos',
+          'Bávaro Beach — vacation rental properties with direct beach access',
+          'Cap Cana Marina (Punta Cana side) — yacht and marina properties',
+          'Hard Rock Hotel residences — properties within the all-inclusive resort',
+          'Cana Bay Golf — premium developments with course views',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Pueden volar drone cerca del aeropuerto de Punta Cana?',
+            en: 'Can you fly drones near Punta Cana airport?',
+          },
+          answer: {
+            es: 'Sí, con restricciones. La zona dentro de 8 km del PUJ tiene altitud limitada y requiere coordinación previa. Manejamos los permisos del IDAC (Instituto Dominicano de Aviación Civil) cuando el listado lo requiere.', // VERIFY: distance/altitude exact figures
+            en: 'Yes, with restrictions. The zone within 5 mi of PUJ has limited altitude and requires advance coordination. We handle IDAC (Dominican Civil Aviation Institute) permits when the listing requires it.', // VERIFY: distance/altitude exact figures
+          },
+        },
+        {
+          question: {
+            es: '¿Cuánto tiempo toma fotografiar un condo de 2 habitaciones en Bávaro?',
+            en: 'How long does it take to photograph a 2-bedroom Bávaro condo?',
+          },
+          answer: {
+            es: 'Una sesión típica de 2 habitaciones tarda 2-3 horas: interiores con luz natural, exteriores con drone si aplica, y twilight si el cliente lo pide. Entrega en 5-7 días hábiles.',
+            en: 'A typical 2-bedroom shoot takes 2-3 hours: interiors with natural light, exteriors with drone if applicable, and twilight if requested. Delivery in 5-7 business days.',
+          },
+        },
+      ],
+      bestSeasonNote: {
+        es: 'Mejor luz interior: noviembre a marzo (sol más bajo, ventanas suaves). Para drone exterior, evitar mediodía por altos contrastes.',
+        en: 'Best interior light: November–March (lower sun angle, softer through windows). For exterior drone, avoid midday for high-contrast harshness.',
+      },
+    },
+    {
+      citySlug: 'cap-cana',
+      cityName: { es: 'Cap Cana', en: 'Cap Cana' },
+      intro: {
+        es: 'Cap Cana es el mercado de bienes raíces de mayor ticket promedio del este — villas en Hacienda Cap Cana, residencias en Las Iguanas, y propiedades de marina con acceso directo a yates. La fotografía aquí debe transmitir privacidad, exclusividad y arquitectura singular. Tenemos acceso de fotógrafos acreditados al gated community y conocimiento de los puntos de vuelo permitidos para drone (Cap Cana tiene reglas internas además de las del IDAC).',
+        en: 'Cap Cana is the east\'s highest-ticket real estate market — villas in Hacienda Cap Cana, residences in Las Iguanas, and marina properties with direct yacht access. Photography here must convey privacy, exclusivity, and architectural singularity. We hold accredited photographer access to the gated community and know the permitted drone flight zones (Cap Cana has internal rules on top of IDAC\'s).',
+      },
+      venues: {
+        es: [
+          'Hacienda Cap Cana — villas residenciales en zona cerrada',
+          'Las Iguanas — residencias en campo de golf Punta Espada',
+          'Cap Cana Marina — propiedades frente a marina con muelle privado',
+          'Juanillo Beach residences — propiedades a pasos de la playa',
+          'Punta Espada Golf Course community — frente al campo Jack Nicklaus',
+          'Eden Roc Cap Cana residences — propiedades dentro del resort de lujo',
+          'Sanctuary Cap Cana residential zone — propiedades adults-only adjacentes', // VERIFY: residential availability
+        ],
+        en: [
+          'Hacienda Cap Cana — residential villas in the gated zone',
+          'Las Iguanas — residences on the Punta Espada golf course',
+          'Cap Cana Marina — marina-front properties with private slips',
+          'Juanillo Beach residences — properties steps from the beach',
+          'Punta Espada Golf Course community — fronting the Jack Nicklaus course',
+          'Eden Roc Cap Cana residences — properties within the luxury resort',
+          'Sanctuary Cap Cana residential zone — adjacent adults-only properties', // VERIFY: residential availability
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Tienen acceso al gated community de Cap Cana para fotografiar?',
+            en: 'Do you have access to Cap Cana\'s gated community for shoots?',
+          },
+          answer: {
+            es: 'Sí. Tenemos acreditación de seguridad de Cap Cana para entrar como fotógrafos comerciales. Coordinamos con el listing agent o el property manager con 24-48 horas de anticipación.',
+            en: 'Yes. We hold Cap Cana security accreditation to enter as commercial photographers. We coordinate with the listing agent or property manager 24-48 hours in advance.',
+          },
+        },
+        {
+          question: {
+            es: '¿Hacen twilight con drone en propiedades frente a la marina?',
+            en: 'Do you shoot twilight drone for marina-front properties?',
+          },
+          answer: {
+            es: 'Sí. Twilight con drone sobre Cap Cana Marina al atardecer es uno de los entregables más vendibles para listados de alto valor. Coordinamos golden hour según orientación de la propiedad.',
+            en: 'Yes. Twilight drone over Cap Cana Marina at sunset is one of the most sellable deliverables for high-value listings. We coordinate golden hour to the property\'s orientation.',
+          },
+        },
+      ],
+    },
+    {
+      citySlug: 'bavaro',
+      cityName: { es: 'Bávaro', en: 'Bávaro' },
+      intro: {
+        es: 'Bávaro es el corazón del mercado de alquiler vacacional dominicano — desarrollos como Los Corales, Costa Bávaro, El Cortecito y Punta Cana Village concentran miles de propiedades de uso turístico. Fotografía aquí está optimizada para Airbnb, Booking, Vrbo y portales locales: interiores brillantes, exterior con drone para mostrar proximidad a la playa, y planos generales de la propiedad. Conocemos los flujos de coordinación con property managers y los tiempos de entrega que la rotación de huéspedes exige.',
+        en: 'Bávaro is the heart of the Dominican vacation rental market — developments like Los Corales, Costa Bávaro, El Cortecito, and Punta Cana Village concentrate thousands of tourist-use properties. Photography here is optimized for Airbnb, Booking, Vrbo, and local portals: bright interiors, drone exteriors showing beach proximity, and overall property layouts. We know property-manager coordination flows and the delivery timelines that guest turnover demands.',
+      },
+      venues: {
+        es: [
+          'Los Corales — condos y villas de alquiler vacacional cerca de la playa',
+          'Costa Bávaro — desarrollos residenciales y vacacionales',
+          'El Cortecito — zona turística mixta con propiedades para Airbnb',
+          'Punta Cana Village — comunidad residencial con servicios privados',
+          'Bayahibe Beach (zona ampliada) — alquiler vacacional cerca del mar',
+          'Cocotal Golf residential — propiedades en comunidad de golf',
+          'Cabeza de Toro — desarrollos residenciales boutique',
+        ],
+        en: [
+          'Los Corales — vacation rental condos and villas near the beach',
+          'Costa Bávaro — residential and vacation developments',
+          'El Cortecito — mixed tourist zone with Airbnb properties',
+          'Punta Cana Village — residential community with private services',
+          'Bayahibe Beach (extended zone) — vacation rentals close to the water',
+          'Cocotal Golf residential — properties in the golf community',
+          'Cabeza de Toro — boutique residential developments',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Hacen sets optimizados para Airbnb y Booking?',
+            en: 'Do you shoot sets optimized for Airbnb and Booking?',
+          },
+          answer: {
+            es: 'Sí. Conocemos las dimensiones recomendadas de cada plataforma (1200×800 horizontal para Airbnb, 1280×720 para Booking) y entregamos sets con la portada correcta para maximizar el click-through-rate del listado.',
+            en: 'Yes. We know each platform\'s recommended dimensions (1200×800 landscape for Airbnb, 1280×720 for Booking) and deliver sets with the right cover image to maximize listing click-through rate.',
+          },
+        },
+        {
+          question: {
+            es: '¿Cuál es el tiempo mínimo de entrega para una propiedad lista para listar?',
+            en: 'What\'s the minimum delivery time to get a property ready to list?',
+          },
+          answer: {
+            es: 'Express: 48 horas para set básico (interiores + 2-3 drone). Standard: 5-7 días con edición completa. Para alquileres con check-in inminente coordinamos express si la propiedad está lista al llegar.',
+            en: 'Express: 48 hours for a basic set (interiors + 2-3 drone). Standard: 5-7 days with full editing. For rentals with imminent check-in we coordinate express if the property is ready on arrival.',
+          },
+        },
+      ],
+    },
+    {
+      citySlug: 'la-romana-casa-de-campo',
+      cityName: { es: 'La Romana / Casa de Campo', en: 'La Romana / Casa de Campo' },
+      intro: {
+        es: 'Casa de Campo en La Romana es uno de los mercados residenciales más exclusivos del Caribe — villas privadas con servicio de mayordomo, residencias frente al campo de golf Teeth of the Dog, y propiedades en la marina más sofisticada del país. La Romana adyacente complementa con propiedades urbanas y residencias de inversión. Fotografía aquí prioriza arquitectura singular: piscinas infinity, doble altura, integración interior-exterior. Manejamos las restricciones de drone dentro del resort y coordinamos con el equipo de Casa de Campo para acceso a propiedades en venta o alquiler.',
+        en: 'Casa de Campo in La Romana is one of the Caribbean\'s most exclusive residential markets — private villas with butler service, residences fronting the Teeth of the Dog golf course, and properties at the country\'s most sophisticated marina. Adjacent La Romana complements with urban properties and investment residences. Photography here prioritizes singular architecture: infinity pools, double-height ceilings, indoor-outdoor integration. We handle drone restrictions inside the resort and coordinate with Casa de Campo\'s team for access to properties for sale or rent.',
+      },
+      venues: {
+        es: [
+          'Casa de Campo Resort — villas privadas con piscina y mayordomo',
+          'Teeth of the Dog Golf — residencias frente al campo Pete Dye',
+          'Casa de Campo Marina — propiedades de marina con muelle',
+          'Altos de Chavón — apartamentos boutique en el pueblo mediterráneo',
+          'Minitas Beach residences — propiedades cerca de playa privada del resort',
+          'La Romana Country Club — desarrollos residenciales',
+          'Punta Aguila — comunidad residencial cerrada en La Romana', // VERIFY
+        ],
+        en: [
+          'Casa de Campo Resort — private villas with pool and butler service',
+          'Teeth of the Dog Golf — residences fronting the Pete Dye course',
+          'Casa de Campo Marina — marina properties with private slips',
+          'Altos de Chavón — boutique apartments in the Mediterranean village',
+          'Minitas Beach residences — properties near the resort\'s private beach',
+          'La Romana Country Club — residential developments',
+          'Punta Aguila — gated residential community in La Romana', // VERIFY
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Pueden volar drone dentro de Casa de Campo?',
+            en: 'Can you fly drones inside Casa de Campo?',
+          },
+          answer: {
+            es: 'Con restricciones. Casa de Campo tiene políticas internas sobre drone — algunos sectores requieren permiso del manager del resort. Coordinamos con anticipación y respetamos las zonas restringidas (cerca de la marina y áreas residenciales sensibles).',
+            en: 'With restrictions. Casa de Campo has internal drone policies — some sectors require resort manager permission. We coordinate in advance and respect restricted zones (near the marina and sensitive residential areas).',
+          },
+        },
+        {
+          question: {
+            es: '¿Tienen experiencia con villas de Casa de Campo de alto valor?',
+            en: 'Do you have experience with high-value Casa de Campo villas?',
+          },
+          answer: {
+            es: 'Sí. Hemos fotografiado villas con valores de mercado superiores a USD 3M en sectores como Teeth of the Dog, La Romana Country Club y Cacique. Conocemos cómo iluminar dobles alturas, piscinas infinity y áreas de entretenimiento exterior.',
+            en: 'Yes. We have photographed villas with market values above USD 3M in sectors like Teeth of the Dog, La Romana Country Club, and Cacique. We know how to light double-height ceilings, infinity pools, and outdoor entertainment areas.',
+          },
+        },
+      ],
+    },
+  ],
+
   knowsAbout: {
       es: ['fotografia aerea', 'video aereo', 'contenido para hoteleria', 'produccion para real estate'],
       en: ['aerial photography', 'aerial video', 'hospitality marketing content', 'real estate media production'],

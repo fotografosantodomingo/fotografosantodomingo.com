@@ -24,6 +24,169 @@ export const familyBeachPhotographyContent: ServiceContent = {
     },
   },
   schemaAdditionalType: 'https://schema.org/Service',
+
+  // ── GEO COVERAGE ────────────────────────────────────────────────────
+  // 3 cities (user-approved 2026-04-26): Punta Cana, Santo Domingo,
+  // La Romana / Casa de Campo. Boca Chica explicitly rejected. Family +
+  // beach + maternity intent — destination families on vacation, local
+  // families for studio + planned outings, multigenerational reunions.
+  geoCoverage: [
+    {
+      citySlug: 'punta-cana',
+      cityName: { es: 'Punta Cana', en: 'Punta Cana' },
+      intro: {
+        es: 'Punta Cana es la ciudad más fotografiada de República Dominicana para sesiones familiares en playa — familias internacionales que vienen de vacaciones, sesiones de maternidad en arena blanca, y celebraciones multigeneracionales en resorts. Cubrimos sesiones en las playas del Bávaro y Cabeza de Toro, con experiencia en coordinar con resorts all-inclusive (algunos requieren registro previo del fotógrafo). Trabajamos con luz natural en golden hour y manejamos el flujo cuando hay niños pequeños o abuelos en la sesión.',
+        en: 'Punta Cana is the most-photographed city in the Dominican Republic for family beach sessions — international families on vacation, maternity sessions on white sand, and multigenerational resort celebrations. We cover sessions on Bávaro and Cabeza de Toro beaches, fluent in all-inclusive resort coordination (some require advance photographer registration). We work natural light at golden hour and manage flow when small kids or grandparents are in the session.',
+      },
+      venues: {
+        es: [
+          'Playa Bávaro — sesión clásica de familia frente al Caribe',
+          'Cabeza de Toro Beach — playa más tranquila, ideal para bebés y niños pequeños',
+          'Playa Macao — set más natural, sin construcciones al fondo',
+          'Hard Rock Punta Cana playa — sesión dentro del resort para huéspedes',
+          'Iberostar Bávaro playa — para familias hospedadas en el resort',
+          'Sanctuary Cap Cana / Juanillo Beach — sesión adults-only premium',
+          'Hoyo Azul (cenote) — sesión natural diferente al concepto playa',
+        ],
+        en: [
+          'Bávaro Beach — classic Caribbean-front family session',
+          'Cabeza de Toro Beach — calmer beach, ideal for babies and young kids',
+          'Macao Beach — more natural set, no resort buildings in background',
+          'Hard Rock Punta Cana beach — in-resort session for guests',
+          'Iberostar Bávaro beach — for families staying at the resort',
+          'Sanctuary Cap Cana / Juanillo Beach — premium adults-only session',
+          'Hoyo Azul cenote — natural cenote session beyond the beach concept',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Pueden hacer la sesión en la playa de mi resort all-inclusive?',
+            en: 'Can you shoot the session on my all-inclusive resort\'s beach?',
+          },
+          answer: {
+            es: 'Generalmente sí. Algunos resorts (Hard Rock, Iberostar, Hyatt, Excellence) permiten fotógrafos externos con registro previo en seguridad. Otros requieren tarifa de fotógrafo externo. Lo gestionamos en la coordinación.',
+            en: 'Usually yes. Some resorts (Hard Rock, Iberostar, Hyatt, Excellence) allow outside photographers with advance security registration. Others charge an outside-photographer fee. We handle this during coordination.',
+          },
+        },
+        {
+          question: {
+            es: '¿Cuál es la mejor hora para fotografiar familia con niños en la playa?',
+            en: 'What\'s the best time for a beach family session with kids?',
+          },
+          answer: {
+            es: 'Golden hour: 6:30-7:30 AM o 5:00-6:00 PM (varía según mes). Luz suave, sin sombras duras en la cara, y temperatura cómoda para niños pequeños. Evitamos mediodía por incomodidad y luz dura.',
+            en: 'Golden hour: 6:30-7:30 AM or 5:00-6:00 PM (varies by month). Soft light, no harsh face shadows, comfortable temperature for small kids. We avoid midday for discomfort and harsh light.',
+          },
+        },
+      ],
+      bestSeasonNote: {
+        es: 'Mejor temporada: diciembre a abril (clima estable). Mayo a noviembre puede tener tarde lluviosa; coordinamos ventana flexible cuando hay riesgo de lluvia.',
+        en: 'Best season: December–April (stable weather). May–November may bring afternoon rain; we coordinate a flexible window when rain is likely.',
+      },
+    },
+    {
+      citySlug: 'santo-domingo',
+      cityName: { es: 'Santo Domingo', en: 'Santo Domingo' },
+      intro: {
+        es: 'Santo Domingo aporta opciones de sesión familiar que ningún destino de playa ofrece: arquitectura colonial de quinientos años, parques urbanos amplios, y la posibilidad de combinar sesión exterior con estudio. Cubrimos sesiones en la Zona Colonial (Plaza España, Calle Las Damas), parques familiares como Mirador Sur, y estudios privados para retratos de maternidad y recién nacido. Para familias residentes que quieren capturar etapas (embarazo, recién nacido, primer cumpleaños) ofrecemos paquetes de seguimiento anual.',
+        en: 'Santo Domingo offers family session options no beach destination has: 500-year-old colonial architecture, expansive urban parks, and the ability to combine outdoor and studio shoots. We cover sessions in the Colonial Zone (Plaza España, Calle Las Damas), family parks like Mirador Sur, and private studios for maternity and newborn portraits. For resident families wanting to capture stages (pregnancy, newborn, first birthday) we offer annual milestone packages.',
+      },
+      venues: {
+        es: [
+          'Plaza España — sesión familiar con fondo colonial e iluminación al atardecer',
+          'Calle Las Damas — la calle empedrada más antigua del Nuevo Mundo',
+          'Parque Mirador Sur — sesión amplia en parque familiar urbano',
+          'Estudio privado en Piantini — sesión de maternidad y recién nacido en luz controlada',
+          'Malecón de Santo Domingo — fondo de mar Caribe con la ciudad detrás',
+          'Jardín Botánico Nacional — sesión natural con fondos verdes y florales',
+          'Faro a Colón / Parque Mirador del Este — espacios amplios para grupos grandes', // VERIFY
+        ],
+        en: [
+          'Plaza España — family session with colonial backdrop and sunset light',
+          'Calle Las Damas — the oldest cobblestone street in the New World',
+          'Parque Mirador Sur — wide-open session in a family urban park',
+          'Private studio in Piantini — maternity and newborn session in controlled light',
+          'Malecón de Santo Domingo — Caribbean Sea backdrop with the city behind',
+          'Jardín Botánico Nacional — natural session with green and floral backdrops',
+          'Faro a Colón / Parque Mirador del Este — wide spaces for large groups', // VERIFY
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Hacen sesiones de recién nacido en estudio en Santo Domingo?',
+            en: 'Do you do studio newborn sessions in Santo Domingo?',
+          },
+          answer: {
+            es: 'Sí. Tenemos estudio privado con calefacción, props neutros y configuración para sesión de recién nacido (idealmente entre 5 y 14 días de vida). Sesión típica de 2 horas con descansos para alimentar.',
+            en: 'Yes. We have a private studio with heating, neutral props, and a newborn session setup (ideally between 5–14 days of age). Typical 2-hour session with feeding breaks.',
+          },
+        },
+        {
+          question: {
+            es: '¿Pueden combinar sesión exterior y estudio en el mismo día?',
+            en: 'Can you combine outdoor and studio sessions on the same day?',
+          },
+          answer: {
+            es: 'Sí. Una opción común: 1 hora en estudio para recién nacido o maternidad + 1 hora en parque o Zona Colonial para familia completa. Coordinamos logística según edad de los participantes.',
+            en: 'Yes. A common combo: 1 hour in studio for newborn or maternity + 1 hour in a park or Colonial Zone for the full family. We coordinate logistics based on participant ages.',
+          },
+        },
+      ],
+    },
+    {
+      citySlug: 'la-romana-casa-de-campo',
+      cityName: { es: 'La Romana / Casa de Campo', en: 'La Romana / Casa de Campo' },
+      intro: {
+        es: 'La Romana y Casa de Campo son destino para familias que buscan exclusividad sin la masificación de Punta Cana — playas privadas del resort, villas familiares con servicio dedicado, y la opción única de sesión en Altos de Chavón (un pueblo mediterráneo del siglo XVI tallado a mano). Cubrimos sesiones de familias hospedadas en Casa de Campo Resort, sesiones de maternidad en Minitas Beach, y producciones multigeneracionales en villas privadas. Bayahibe (35 minutos al este) ofrece playas más naturales para familias que prefieren esa estética.',
+        en: 'La Romana and Casa de Campo draw families seeking exclusivity without Punta Cana\'s crowds — private resort beaches, family villas with dedicated service, and the unique option of a session at Altos de Chavón (a hand-carved 16th-century Mediterranean village). We cover sessions for families staying at Casa de Campo Resort, maternity sessions on Minitas Beach, and multigenerational productions in private villas. Bayahibe (35 min east) offers more natural beaches for families preferring that aesthetic.',
+      },
+      venues: {
+        es: [
+          'Minitas Beach — playa privada del resort, ideal para sesión familiar',
+          'Casa de Campo Marina — sesión con yates y restaurantes frente al mar',
+          'Altos de Chavón — sesión única con fondos del pueblo mediterráneo',
+          'Casa de Campo villas privadas — sesión con piscina e infraestructura del cliente',
+          'Playa Bayahibe (35 min de La Romana) — playa pública natural, ideal para familias',
+          'Isla Saona excursión — sesión en isla paradisíaca como add-on de día completo',
+          'Catalina Island — alternativa a Saona, menos turística', // VERIFY: photo session feasibility
+        ],
+        en: [
+          'Minitas Beach — resort private beach, ideal for family sessions',
+          'Casa de Campo Marina — session with yachts and seaside restaurants',
+          'Altos de Chavón — unique session with Mediterranean village backdrops',
+          'Casa de Campo private villas — session with the client\'s pool and infrastructure',
+          'Bayahibe Beach (35 min from La Romana) — natural public beach, ideal for families',
+          'Saona Island excursion — paradise-island session as a full-day add-on',
+          'Catalina Island — alternative to Saona, less touristy', // VERIFY: photo session feasibility
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Cubren sesiones familiares en villas de Casa de Campo?',
+            en: 'Do you cover family sessions in Casa de Campo villas?',
+          },
+          answer: {
+            es: 'Sí. Coordinamos con el wedding planner o concierge del huésped para acceso de fotógrafo externo. Las villas con piscina infinity y áreas exteriores cubiertas son ideales para sesiones multigeneracionales en cualquier clima.',
+            en: 'Yes. We coordinate with the guest\'s wedding planner or concierge for outside-photographer access. Villas with infinity pools and covered outdoor areas are ideal for multigenerational sessions in any weather.',
+          },
+        },
+        {
+          question: {
+            es: '¿Vale la pena hacer sesión en Altos de Chavón con niños pequeños?',
+            en: 'Is an Altos de Chavón session worth it with small children?',
+          },
+          answer: {
+            es: 'Sí, si los niños tienen al menos 4 años (calles empedradas). El pueblo entrega 30+ fondos diferentes en menos de una hora caminando: piedra, madera, escaleras, plazas, vista al río Chavón. Para bebés sugerimos Minitas Beach.',
+            en: 'Yes, if kids are at least 4 (cobblestone streets). The village delivers 30+ different backdrops in under an hour walking: stone, wood, stairs, plazas, Chavón River views. For babies we suggest Minitas Beach instead.',
+          },
+        },
+      ],
+    },
+  ],
+
   knowsAbout: {
       es: ['sesion familiar', 'retratos de maternidad', 'fotografia en playa', 'sesion multigeneracional'],
       en: ['family sessions', 'maternity portraits', 'beach photography', 'multigenerational session'],
