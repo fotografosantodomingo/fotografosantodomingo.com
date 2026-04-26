@@ -1,12 +1,13 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import {
   DRONE_ADDON_ELIGIBLE_SERVICES,
   QUOTE_CALLBACK_WINDOWS,
   QUOTE_CONTACT_METHODS,
   QUOTE_SERVICE_TYPES,
+  QUOTE_SERVICE_TYPE_TO_FAMILY_SLUG,
   type QuoteContactMethod,
   type QuoteServiceType,
 } from '@/lib/quotes/constants'
@@ -14,6 +15,8 @@ import {
 type Props = {
   locale: string
 }
+
+const FORM_STARTED_AT = typeof Date !== 'undefined' ? Date.now() : 0
 
 type FormState = {
   serviceType: QuoteServiceType | ''
@@ -53,7 +56,6 @@ export default function GetQuoteWizard({ locale }: Props) {
   const [errors, setErrors] = useState<string[]>([])
   const [savingDraft, setSavingDraft] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [quoteId, setQuoteId] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState<FormState>(INITIAL_STATE)
 
@@ -64,6 +66,32 @@ export default function GetQuoteWizard({ locale }: Props) {
     const date = new Date()
     date.setDate(date.getDate() + 14)
     return date.toISOString().split('T')[0]
+  }, [])
+
+  // ?family=<slug>, ?package=<slug>, ?cta=<id> for source attribution
+  // and family preselection from compare-card deep links.
+  const [sourcePage, setSourcePage] = useState<string | null>(null)
+  const [sourceCta, setSourceCta] = useState<string | null>(null)
+  const [presetPackageSlug, setPresetPackageSlug] = useState<string | null>(null)
+  const [presetFamilySlug, setPresetFamilySlug] = useState<string | null>(null)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    setSourcePage(window.location.pathname)
+    const params = new URLSearchParams(window.location.search)
+    const cta = params.get('cta')
+    if (cta) setSourceCta(cta)
+    const family = params.get('family')
+    if (family) setPresetFamilySlug(family)
+    const pkg = params.get('package')
+    if (pkg) setPresetPackageSlug(pkg)
+    if (family) {
+      const matchEntry = Object.entries(QUOTE_SERVICE_TYPE_TO_FAMILY_SLUG).find(
+        ([, slug]) => slug === family
+      )
+      if (matchEntry) {
+        setForm(prev => ({ ...prev, serviceType: matchEntry[0] as QuoteServiceType }))
+      }
+    }
   }, [])
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -125,66 +153,65 @@ export default function GetQuoteWizard({ locale }: Props) {
   const droneEligible =
     form.serviceType !== '' && DRONE_ADDON_ELIGIBLE_SERVICES.includes(form.serviceType)
 
-  async function syncDraft(targetStep: number) {
-    setSavingDraft(true)
-    setSubmitError(null)
-
-    try {
-      const response = await fetch('/api/quotes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mode: 'draft',
-          quoteId,
-          locale,
-          formStepReached: targetStep,
-          serviceType: form.serviceType || null,
-          participantsCount: form.participantsCount ? Number(form.participantsCount) : null,
-          addDrone: form.addDrone,
-          country: form.country || null,
-          state: form.state || null,
-          city: form.city || null,
-          eventDate: form.eventDate || null,
-          fullName: form.fullName || null,
-          email: form.email || null,
-          whatsappPhone: form.whatsappPhone || null,
-          preferredContactMethod: form.preferredContactMethod || null,
-          callbackTimePreference: form.callbackTimePreference || null,
-          description: form.description || null,
-        }),
-      })
-
-      const json = await response.json()
-      if (!response.ok) {
-        throw new Error(json?.error || 'Unable to save draft')
-      }
-
-      if (json?.id) {
-        setQuoteId(json.id)
-      }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unable to save quote draft'
-      setSubmitError(message)
-      throw error
-    } finally {
-      setSavingDraft(false)
-    }
-  }
-
   async function nextStep() {
     if (!validateCurrentStep()) return
-
-    // Persist form progress as draft from step 2 onwards.
-    if (step >= 2) {
-      await syncDraft(Math.min(step + 1, maxStep))
-    }
-
     setStep((prev) => Math.min(prev + 1, maxStep))
   }
 
   function previousStep() {
     setErrors([])
     setStep((prev) => Math.max(prev - 1, 1))
+  }
+
+  function buildDetails(): { details: string; locationText: string } {
+    const lines: string[] = []
+    const serviceType = QUOTE_SERVICE_TYPES.find(t => t.value === form.serviceType)
+    const contactMethod = QUOTE_CONTACT_METHODS.find(c => c.value === form.preferredContactMethod)
+    const callbackWindow = QUOTE_CALLBACK_WINDOWS.find(w => w.value === form.callbackTimePreference)
+    const isEsLabel = isEs
+
+    if (serviceType) {
+      lines.push(
+        `${isEsLabel ? 'Servicio' : 'Service'}: ${
+          isEsLabel ? serviceType.labelEs : serviceType.labelEn
+        }`
+      )
+    }
+    if (form.participantsCount) {
+      lines.push(`${isEsLabel ? 'Personas' : 'People'}: ${form.participantsCount}`)
+    }
+    if (form.addDrone) {
+      lines.push(isEsLabel ? 'Extras: cobertura con drone' : 'Extras: drone coverage')
+    }
+    if (contactMethod) {
+      lines.push(
+        `${isEsLabel ? 'Contacto preferido' : 'Preferred contact'}: ${
+          isEsLabel ? contactMethod.labelEs : contactMethod.labelEn
+        }`
+      )
+    }
+    if (callbackWindow) {
+      lines.push(
+        `${isEsLabel ? 'Horario de llamada' : 'Callback window'}: ${
+          isEsLabel ? callbackWindow.labelEs : callbackWindow.labelEn
+        }`
+      )
+    }
+    if (presetPackageSlug) {
+      lines.push(`Package (preselected): ${presetPackageSlug}`)
+    }
+
+    const description = form.description.trim()
+    if (description) {
+      lines.push('')
+      lines.push(description)
+    }
+
+    const locationParts = [form.city, form.state, form.country].filter(Boolean)
+    return {
+      details: lines.join('\n'),
+      locationText: locationParts.join(', '),
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -195,28 +222,29 @@ export default function GetQuoteWizard({ locale }: Props) {
     setSubmitError(null)
 
     try {
-      const response = await fetch('/api/quotes', {
+      const familySlug =
+        presetFamilySlug ?? QUOTE_SERVICE_TYPE_TO_FAMILY_SLUG[form.serviceType as QuoteServiceType]
+      const { details, locationText } = buildDetails()
+
+      const payload: Record<string, unknown> = {
+        client_name: form.fullName,
+        client_email: form.email,
+        client_phone: form.whatsappPhone || undefined,
+        event_date: form.eventDate || undefined,
+        location_text: locationText || undefined,
+        notes: details,
+        locale: locale === 'en' ? 'en' : 'es',
+        source_page: sourcePage ?? undefined,
+        source_cta: sourceCta ?? undefined,
+        _form_started_at: FORM_STARTED_AT,
+      }
+      if (familySlug) payload.family_slug = familySlug
+      if (presetPackageSlug) payload.package_slug = presetPackageSlug
+
+      const response = await fetch('/api/quote-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mode: 'final',
-          quoteId,
-          locale,
-          formStepReached: 6,
-          serviceType: form.serviceType,
-          participantsCount: Number(form.participantsCount),
-          addDrone: form.addDrone,
-          country: form.country,
-          state: form.state,
-          city: form.city,
-          eventDate: form.eventDate,
-          fullName: form.fullName,
-          email: form.email,
-          whatsappPhone: form.whatsappPhone,
-          preferredContactMethod: form.preferredContactMethod,
-          callbackTimePreference: form.callbackTimePreference,
-          description: form.description,
-        }),
+        body: JSON.stringify(payload),
       })
 
       const json = await response.json()
@@ -229,12 +257,10 @@ export default function GetQuoteWizard({ locale }: Props) {
         window.dataLayer.push({
           event: 'quote_form_submitted',
           service_type: form.serviceType,
+          family_slug: familySlug ?? null,
+          package_slug: presetPackageSlug ?? null,
           locale,
         })
-      }
-
-      if (json?.id) {
-        setQuoteId(json.id)
       }
 
       setErrors([])

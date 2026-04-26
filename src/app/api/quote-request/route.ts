@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createServiceClient } from '@/lib/supabase/service'
+import { sendQuoteRequestNotification } from '@/lib/email/quote-requests'
 
 export const runtime = 'edge'
 
@@ -147,13 +148,60 @@ export async function POST(request: NextRequest) {
   const { data: inserted, error: insErr } = await supabase
     .from('quote_requests')
     .insert(insertPayload)
-    .select('id')
+    .select('id, created_at')
     .single()
 
   if (insErr) {
     console.error('quote-request insert error:', insErr)
     return NextResponse.json({ error: 'Failed to create quote request' }, { status: 500 })
   }
+
+  // Best-effort context lookup for the admin notification email. If either
+  // resolves to null we send what we have — never block the customer's
+  // success response.
+  let familyTitle: string | null = null
+  if (familyId) {
+    const { data: famRow } = await supabase
+      .from('service_families')
+      .select('title_es, title_en')
+      .eq('id', familyId)
+      .maybeSingle()
+    if (famRow) {
+      familyTitle = data.locale === 'es' ? famRow.title_es : famRow.title_en
+    }
+  }
+  let packageName: string | null = null
+  let packageStartingPriceUsd: number | null = null
+  if (packageId) {
+    const { data: pkgRow } = await supabase
+      .from('service_packages')
+      .select('name_es, name_en, starting_price_usd')
+      .eq('id', packageId)
+      .maybeSingle()
+    if (pkgRow) {
+      packageName = data.locale === 'es' ? pkgRow.name_es : pkgRow.name_en
+      packageStartingPriceUsd = Number(pkgRow.starting_price_usd)
+    }
+  }
+
+  // Fire and forget — admin notification failure never blocks the customer
+  await sendQuoteRequestNotification({
+    id: inserted.id,
+    customerName: data.client_name,
+    customerEmail: data.client_email,
+    customerPhone: data.client_phone ?? null,
+    locale: data.locale,
+    details,
+    eventDate: data.event_date ?? null,
+    familyTitle,
+    packageName,
+    packageStartingPriceUsd,
+    sourcePage: data.source_page ?? null,
+    sourceCta: data.source_cta ?? null,
+    submittedAt: inserted.created_at,
+  }).catch(err => {
+    console.error('quote-request admin notification dispatch failed:', err)
+  })
 
   return NextResponse.json({ id: inserted.id }, { status: 201 })
 }
