@@ -459,180 +459,311 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(faqSchema)} />
-      <main className="min-h-screen bg-slate-50 text-slate-900 dark:bg-gray-950 dark:text-white">
-        <section className="relative overflow-hidden border-b border-slate-200 dark:border-white/10">
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-200/30 via-sky-100/20 to-emerald-100/30 dark:from-sky-700/20 dark:via-cyan-600/10 dark:to-emerald-600/20" />
-          <div className="container relative mx-auto px-4 py-14 md:py-20">
-            <span className="inline-block rounded-full border border-sky-400/40 bg-sky-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-sky-700 dark:bg-sky-500/10 dark:text-sky-200">
-              {isEs ? 'Servicio Especializado' : 'Specialized Service'}
-            </span>
-            <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight md:text-6xl">
-              {isEs ? 'Fotografo de Cumpleanos en Santo Domingo, Punta Cana y Boca Chica' : 'Birthday Photographer in Santo Domingo, Punta Cana, and Boca Chica'}
-            </h1>
-            <p className="mt-5 max-w-3xl text-lg text-slate-700 dark:text-gray-300 md:text-xl">
-              {isEs
-                ? 'Cobertura profesional de cumpleaños infantiles, cumpleaños en playa, sesiones en estudio y quinceañeras. Creamos recuerdos reales con dirección clara y estilo premium.'
-                : 'Professional coverage for kids birthdays, beach birthdays, studio sessions, and quinceañeras. We create real memories with clear direction and premium style.'}
+      <main className="min-h-screen bg-canvas text-ink">
+        {/* ── HEADER ── matches the Bugatti monumental treatment of canonical
+             /services/[family] pages. */}
+        <section className="border-b border-hairline-soft py-16 md:py-24 lg:py-28">
+          <div className="container mx-auto px-4">
+            <nav>
+              <Link
+                href={`/${locale}/services`}
+                className="font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity"
+              >
+                ← {isEs ? 'Todos los servicios' : 'All services'}
+              </Link>
+            </nav>
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mt-10 mb-6">
+              {isEs ? 'Servicio especializado · Cumpleaños · Quinceañeras' : 'Specialized service · Birthdays · Quinceañeras'}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href={bookingLinks.event3h} target="_blank" rel="noopener noreferrer" className="rounded-full bg-sky-600 px-6 py-3 text-sm font-bold text-white hover:bg-sky-500">
-                {isEs ? 'Reservar Cobertura de Evento (3h)' : 'Book Event Coverage (3h)'}
+            <h1
+              className="font-display uppercase text-ink max-w-5xl"
+              style={{
+                fontSize: 'clamp(36px, 7vw, 112px)',
+                lineHeight: '0.95',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {isEs ? 'Fotógrafo de cumpleaños' : 'Birthday photographer'}
+            </h1>
+            <p className="text-ink-muted text-base md:text-lg max-w-3xl mt-8 leading-relaxed">
+              {isEs
+                ? 'Cobertura profesional de cumpleaños infantiles, en playa, sesiones en estudio y quinceañeras en Santo Domingo, Punta Cana y Boca Chica. Recuerdos reales con dirección clara y estilo premium.'
+                : 'Professional coverage for kids birthdays, beach birthdays, studio sessions, and quinceañeras across Santo Domingo, Punta Cana, and Boca Chica. Real memories with clear direction and premium style.'}
+            </p>
+            <div className="mt-10 flex flex-col sm:flex-row gap-3">
+              <a
+                href={bookingLinks.event3h}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
+              >
+                {isEs ? 'Cobertura de evento (3h)' : 'Event coverage (3h)'}
               </a>
-              <a href={bookingLinks.quincenara15} target="_blank" rel="noopener noreferrer" className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-slate-900 hover:bg-slate-100 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
-                {isEs ? 'Reservar Quinceañera' : 'Book Quinceañera'}
+              <a
+                href={bookingLinks.quincenara15}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+              >
+                {isEs ? 'Quinceañera' : 'Quinceañera'}
               </a>
-              <Link href={`/${locale}/portfolio?category=birthday`} className="rounded-full border border-emerald-500 px-6 py-3 text-sm font-bold text-emerald-700 hover:bg-emerald-50 dark:text-emerald-200 dark:hover:bg-emerald-500/10">
-                {isEs ? 'Ver Portafolio de Cumpleaños' : 'View Birthday Portfolio'}
+              <Link
+                href={`/${locale}/portfolio?category=birthday`}
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full border border-hairline-soft text-ink-muted hover:text-ink hover:border-hairline transition-colors duration-200"
+              >
+                {isEs ? 'Portafolio' : 'Portfolio'}
               </Link>
             </div>
           </div>
         </section>
 
-        <section className="container mx-auto px-4 py-12 md:py-16">
-          <h2 className="text-3xl font-extrabold md:text-4xl">
-            {isEs ? 'Posibilidades de sesiones de cumpleaños' : 'Birthday session possibilities'}
-          </h2>
-          <p className="mt-3 max-w-3xl text-base text-slate-600 dark:text-gray-300 md:text-lg">
-            {isEs
-              ? 'Cada cumpleaños tiene ritmo y energía propia. Estas galerías muestran escenarios reales que cubrimos en República Dominicana con enfoque en familia, emoción y narrativa visual.'
-              : 'Each birthday has its own pace and energy. These galleries show real scenarios we cover across the Dominican Republic with a focus on family, emotion, and visual storytelling.'}
-          </p>
+        {/* ── SCENARIOS ── photo galleries per session type. Image content
+             preserved byte-identical (URLs, alt, title); chrome restyled. */}
+        <section className="border-b border-hairline-soft py-16 md:py-20">
+          <div className="container mx-auto px-4">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Escenarios' : 'Scenarios'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink mb-6"
+              style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+            >
+              {isEs ? 'Posibilidades de sesión' : 'Session possibilities'}
+            </h2>
+            <p className="text-ink-muted text-base md:text-lg max-w-3xl mb-12 leading-relaxed">
+              {isEs
+                ? 'Cada cumpleaños tiene ritmo y energía propia. Estas galerías muestran escenarios reales que cubrimos en República Dominicana.'
+                : 'Each birthday has its own pace and energy. These galleries show real scenarios we cover across the Dominican Republic.'}
+            </p>
 
-          <div className="mt-10 space-y-12">
-            {scenarios.map((scenario) => (
-              <article key={scenario.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-gray-900 md:p-7">
-                <h3 className="text-2xl font-bold">{isEs ? scenario.title.es : scenario.title.en}</h3>
-                <p className="mt-3 text-slate-600 dark:text-gray-300">{isEs ? scenario.description.es : scenario.description.en}</p>
-                <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {scenario.images.map((image, index) => (
-                    <figure key={`${scenario.id}-${index}`} className="overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-black/30">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={image.url}
-                        alt={isEs ? image.alt.es : image.alt.en}
-                        title={isEs ? image.title.es : image.title.en}
-                        loading="lazy"
-                        className="block w-full h-auto"
-                      />
-                      <figcaption className="px-3 py-2 text-xs text-slate-600 dark:text-gray-300">
-                        {isEs ? image.title.es : image.title.en}
-                      </figcaption>
-                    </figure>
-                  ))}
-                </div>
-              </article>
-            ))}
+            <div className="space-y-16 md:space-y-20">
+              {scenarios.map((scenario, idx) => (
+                <article key={scenario.id}>
+                  <div className="mb-6 max-w-3xl">
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <h3
+                      className="font-display uppercase text-ink mt-3"
+                      style={{ fontSize: 'clamp(22px, 2.6vw, 32px)', lineHeight: '1.1' }}
+                    >
+                      {isEs ? scenario.title.es : scenario.title.en}
+                    </h3>
+                    <p className="text-ink-muted text-base leading-relaxed mt-4">
+                      {isEs ? scenario.description.es : scenario.description.en}
+                    </p>
+                  </div>
+                  <div className="grid gap-1 md:gap-2 md:grid-cols-2 lg:grid-cols-3">
+                    {scenario.images.map((image, index) => (
+                      <figure key={`${scenario.id}-${index}`} className="overflow-hidden bg-canvas">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={image.url}
+                          alt={isEs ? image.alt.es : image.alt.en}
+                          title={isEs ? image.title.es : image.title.en}
+                          loading="lazy"
+                          className="block w-full h-auto"
+                        />
+                        <figcaption className="px-1 py-2 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {isEs ? image.title.es : image.title.en}
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="border-y border-slate-200 bg-slate-100/70 py-12 dark:border-white/10 dark:bg-gray-900/60 md:py-16">
+        {/* ── BOOKING PACKAGES ── 4 package cards in hairline grid */}
+        <section className="border-b border-hairline-soft py-16 md:py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-extrabold md:text-4xl">{isEs ? 'Reservas y paquetes recomendados' : 'Recommended bookings and packages'}</h2>
-            <p className="mt-3 max-w-3xl text-slate-600 dark:text-gray-300">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Paquetes' : 'Packages'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink mb-6"
+              style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+            >
+              {isEs ? 'Reservas recomendadas' : 'Recommended bookings'}
+            </h2>
+            <p className="text-ink-muted text-base md:text-lg max-w-3xl mb-12 leading-relaxed">
               {isEs
                 ? 'Para cumpleaños generales recomendamos cobertura de evento 3 horas. Para quinceañeras puedes reservar paquete esencial o VIP según nivel de producción.'
                 : 'For general birthdays we recommend the 3-hour event coverage. For quinceañeras, choose Essential or VIP depending on production level.'}
             </p>
 
-            <div className="mt-8 grid gap-5 lg:grid-cols-2">
-              <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-gray-900">
-                <h3 className="text-xl font-bold">{isEs ? 'Cobertura de Evento - 3 horas' : 'Event Coverage - 3 hours'}</h3>
-                <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
-                  {isEs ? 'Servicio general para cumpleaños infantiles, escolares y familiares. Reserva con 50% para asegurar fecha.' : 'General service for kids, school, and family birthdays. 50% booking deposit to secure your date.'}
-                </p>
-                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600 dark:text-gray-300">
-                  <li>{isEs ? 'Cobertura documental de momentos clave, retratos grupales y detalles de decoracion.' : 'Documentary coverage of key moments, group portraits, and decor details.'}</li>
-                  <li>{isEs ? 'Entrega digital editada para compartir con familia e invitados.' : 'Edited digital delivery ready to share with family and guests.'}</li>
-                  <li>{isEs ? 'Reserva 50% para confirmar fecha y horario.' : '50% booking deposit required to lock date and time.'}</li>
-                </ul>
-                <a href={bookingLinks.event3h} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">
-                  {isEs ? 'Reservar cobertura de evento' : 'Book event coverage'}
-                </a>
-              </article>
+            <ul className="grid grid-cols-1 lg:grid-cols-2 border-t border-l border-hairline-soft">
+              {[
+                {
+                  bookingHref: bookingLinks.event3h,
+                  badge: isEs ? 'Cobertura · 3h' : 'Coverage · 3h',
+                  title: isEs ? 'Cobertura de evento — 3 horas' : 'Event Coverage — 3 hours',
+                  desc: isEs
+                    ? 'Servicio general para cumpleaños infantiles, escolares y familiares. Reserva con 50% para asegurar fecha.'
+                    : 'General service for kids, school, and family birthdays. 50% booking deposit to secure your date.',
+                  bullets: isEs
+                    ? ['Cobertura documental de momentos clave, retratos grupales y detalles de decoración.', 'Entrega digital editada para compartir con familia e invitados.', 'Reserva 50% para confirmar fecha y horario.']
+                    : ['Documentary coverage of key moments, group portraits, and decor details.', 'Edited digital delivery ready to share with family and guests.', '50% booking deposit required to lock date and time.'],
+                  ctaLabel: isEs ? 'Reservar' : 'Book',
+                  featured: false,
+                },
+                {
+                  bookingHref: bookingLinks.quincenara10,
+                  badge: isEs ? 'Quinceañera · 10 fotos' : 'Quinceañera · 10 photos',
+                  title: isEs ? 'Quinceañera: Paquete Esencial 10' : 'Quinceañera: Essential 10',
+                  desc: isEs
+                    ? '1 hora, maquillaje incluido, asesoría de vestuario y 10 fotos premium editadas.'
+                    : '1 hour, makeup included, wardrobe guidance, and 10 premium edited photos.',
+                  bullets: isEs
+                    ? ['Sesión de 1 hora en estudio o locación exterior.', 'Maquillaje y peinado básico con acabado natural.', 'Dirección experta de pose y expresión.', 'Álbum digital listo para compartir.']
+                    : ['1-hour session in studio or outdoor location.', 'Basic makeup and hairstyling with a natural finish.', 'Expert pose and expression direction.', 'Digital album ready to share.'],
+                  ctaLabel: isEs ? 'Reservar' : 'Book',
+                  featured: false,
+                },
+                {
+                  bookingHref: bookingLinks.quincenara15,
+                  badge: isEs ? 'Quinceañera · 15 fotos' : 'Quinceañera · 15 photos',
+                  title: isEs ? 'Quinceañera: Paquete Esencial 15' : 'Quinceañera: Essential 15',
+                  desc: isEs
+                    ? '1 hora, maquillaje incluido, dirección de pose y 15 fotos premium con look moderno y atemporal.'
+                    : '1 hour, makeup included, pose direction, and 15 premium photos with a modern timeless style.',
+                  bullets: isEs
+                    ? ['15 fotografías premium editadas con acabado profesional.', 'Asesoría de vestuario, colores y accesorios.', 'Sesión orientada a imagen moderna, fresca y atemporal.', 'Reserva del 50% para asegurar fecha.']
+                    : ['15 premium edited photos with professional finishing.', 'Wardrobe, color, and accessories guidance.', 'Session designed for a modern, fresh, and timeless visual style.', '50% booking deposit required to secure your date.'],
+                  ctaLabel: isEs ? 'Reservar' : 'Book',
+                  featured: false,
+                },
+                {
+                  bookingHref: bookingLinks.quincenaraVip,
+                  badge: isEs ? 'VIP exclusivo · 20 fotos' : 'VIP exclusive · 20 photos',
+                  title: isEs ? 'Quinceañera: Paquete VIP' : 'Quinceañera: VIP',
+                  desc: isEs
+                    ? '20 fotos premium, experiencia extendida, maquillaje y peinado profesional, atención VIP y entregables de lujo.'
+                    : '20 premium photos, extended experience, professional makeup/hair, VIP support, and luxury deliverables.',
+                  bullets: isEs
+                    ? ['Sesión extendida para múltiples looks y locaciones.', '20 fotos premium + impresiones físicas seleccionadas.', 'Maquillaje y peinado profesional completo con trato VIP.', 'Inversión referencial: USD 600 + ITBIS (18%), reserva 50%.']
+                    : ['Extended session for multiple looks and locations.', '20 premium photos plus selected physical prints.', 'Full professional makeup and hairstyling with VIP treatment.', 'Reference investment: USD 600 + 18% tax, with 50% booking deposit.'],
+                  ctaLabel: isEs ? 'Reservar VIP' : 'Book VIP',
+                  featured: true,
+                },
+              ].map((pkg) => (
+                <li
+                  key={pkg.title}
+                  className={`border-r border-b border-hairline-soft p-7 md:p-8 ${pkg.featured ? 'bg-ink/[0.03]' : ''}`}
+                >
+                  <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                    {pkg.badge}
+                  </span>
+                  <h3
+                    className="font-display uppercase text-ink mt-3"
+                    style={{ fontSize: 'clamp(20px, 2vw, 26px)', lineHeight: '1.1' }}
+                  >
+                    {pkg.title}
+                  </h3>
+                  <p className="text-ink-muted text-sm leading-relaxed mt-4">{pkg.desc}</p>
+                  <ul className="mt-5 space-y-2.5">
+                    {pkg.bullets.map((b, i) => (
+                      <li key={i} className="flex items-start gap-3 text-ink/85 text-sm">
+                        <span
+                          className="mt-2 inline-block w-2 h-px bg-ink/60 shrink-0"
+                          aria-hidden="true"
+                        />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href={pkg.bookingHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-7 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] px-6 py-3 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
+                  >
+                    {pkg.ctaLabel}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
-              <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-gray-900">
-                <h3 className="text-xl font-bold">{isEs ? 'Quinceañera: Paquete Esencial (10 fotos)' : 'Quinceañera: Essential Package (10 photos)'}</h3>
-                <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
-                  {isEs ? '1 hora, maquillaje incluido, asesoría de vestuario y 10 fotos premium editadas.' : '1 hour, makeup included, wardrobe guidance, and 10 premium edited photos.'}
-                </p>
-                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600 dark:text-gray-300">
-                  <li>{isEs ? 'Sesion de 1 hora en estudio o locacion exterior.' : '1-hour session in studio or outdoor location.'}</li>
-                  <li>{isEs ? 'Maquillaje y peinado basico con acabado natural.' : 'Basic makeup and hairstyling with a natural finish.'}</li>
-                  <li>{isEs ? 'Direccion experta de pose y expresion para estilo elegante.' : 'Expert pose and expression direction for an elegant style.'}</li>
-                  <li>{isEs ? 'Albun digital listo para compartir con familia y amigos.' : 'Digital album ready to share with family and friends.'}</li>
-                </ul>
-                <a href={bookingLinks.quincenara10} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500">
-                  {isEs ? 'Reservar Esencial 10' : 'Book Essential 10'}
-                </a>
-              </article>
-
-              <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-gray-900">
-                <h3 className="text-xl font-bold">{isEs ? 'Quinceañera: Paquete Esencial (15 fotos)' : 'Quinceañera: Essential Package (15 photos)'}</h3>
-                <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
-                  {isEs ? '1 hora, maquillaje incluido, dirección de pose y 15 fotos premium con look moderno y atemporal.' : '1 hour, makeup included, pose direction, and 15 premium photos with a modern timeless style.'}
-                </p>
-                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600 dark:text-gray-300">
-                  <li>{isEs ? '15 fotografias premium editadas con acabado profesional.' : '15 premium edited photos with professional finishing.'}</li>
-                  <li>{isEs ? 'Asesoria de vestuario, colores y accesorios.' : 'Wardrobe, color, and accessories guidance.'}</li>
-                  <li>{isEs ? 'Sesion orientada a imagen moderna, fresca y atemporal.' : 'Session designed for a modern, fresh, and timeless visual style.'}</li>
-                  <li>{isEs ? 'Reserva del 50% para asegurar fecha de sesion.' : '50% booking deposit required to secure your session date.'}</li>
-                </ul>
-                <a href={bookingLinks.quincenara15} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500">
-                  {isEs ? 'Reservar Esencial 15' : 'Book Essential 15'}
-                </a>
-              </article>
-
-              <article className="rounded-2xl border border-amber-400/50 bg-white p-6 shadow-sm dark:border-amber-300/30 dark:bg-gray-900">
-                <h3 className="text-xl font-bold">{isEs ? 'Quinceañera: Paquete VIP Exclusivo' : 'Quinceañera: VIP Exclusive Package'}</h3>
-                <p className="mt-2 text-sm text-slate-600 dark:text-gray-300">
-                  {isEs ? '20 fotos premium, experiencia extendida, maquillaje y peinado profesional, atención VIP y entregables de lujo.' : '20 premium photos, extended experience, professional makeup/hair, VIP support, and luxury deliverables.'}
-                </p>
-                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600 dark:text-gray-300">
-                  <li>{isEs ? 'Sesion extendida para multiples looks y locaciones.' : 'Extended session for multiple looks and locations.'}</li>
-                  <li>{isEs ? '20 fotos premium + impresiones fisicas seleccionadas.' : '20 premium photos plus selected physical prints.'}</li>
-                  <li>{isEs ? 'Maquillaje y peinado profesional completo con trato VIP.' : 'Full professional makeup and hairstyling with VIP treatment.'}</li>
-                  <li>{isEs ? 'Inversion referencial: USD 600 + ITBIS (18%), reserva 50%.' : 'Reference investment: USD 600 + 18% tax, with 50% booking deposit.'}</li>
-                </ul>
-                <a href={bookingLinks.quincenaraVip} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block rounded-full bg-amber-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-amber-400">
-                  {isEs ? 'Reservar VIP Quinceañera' : 'Book VIP Quinceañera'}
-                </a>
-              </article>
+        {/* ── FAQ ── drives FAQPage rich-result via the existing JSON-LD above */}
+        <section className="border-b border-hairline-soft py-16 md:py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                FAQ
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-12"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
+                {isEs ? 'Preguntas frecuentes' : 'Frequently asked'}
+              </h2>
+              <ul className="border-t border-hairline-soft">
+                {(isEs ? faqItems.es : faqItems.en).map((item, i) => (
+                  <li key={item.q} className="border-b border-hairline-soft py-6 md:py-7">
+                    <div className="flex items-start gap-4 md:gap-6">
+                      <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 w-8 mt-1">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <div className="flex-1">
+                        <h3 className="text-ink text-base md:text-lg leading-snug font-medium">
+                          {item.q}
+                        </h3>
+                        <p className="text-ink-muted text-sm md:text-base leading-relaxed mt-3">
+                          {item.a}
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
 
-        <section className="container mx-auto px-4 py-12 md:py-16">
-          <h2 className="text-3xl font-extrabold md:text-4xl">{isEs ? 'Preguntas frecuentes' : 'Frequently asked questions'}</h2>
-          <div className="mt-8 space-y-3">
-            {(isEs ? faqItems.es : faqItems.en).map((item) => (
-              <details key={item.q} className="rounded-xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-gray-900">
-                <summary className="cursor-pointer text-lg font-semibold">{item.q}</summary>
-                <p className="mt-3 text-slate-600 dark:text-gray-300">{item.a}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-
-        <section className="container mx-auto px-4 pb-20">
-          <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-100 via-cyan-50 to-slate-100 p-7 text-center dark:border-white/15 dark:bg-gradient-to-r dark:from-slate-900 dark:via-cyan-950 dark:to-slate-900">
-            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">
-              {isEs ? 'Listo para reservar tu fotógrafo de cumpleaños?' : 'Ready to book your birthday photographer?'}
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-slate-600 dark:text-gray-300">
-              {isEs
-                ? 'Te ayudamos a diseñar una cobertura clara según edad, locación y tipo de celebración. Reserva online o solicita una propuesta personalizada.'
-                : 'We help you design the right coverage based on age, location, and celebration style. Book online or request a custom proposal.'}
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <a href={bookingLinks.event3h} target="_blank" rel="noopener noreferrer" className="rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500">
-                {isEs ? 'Reservar ahora' : 'Book now'}
-              </a>
-              <Link href={`/${locale}/get-quote`} className="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-100 dark:border-white/30 dark:bg-transparent dark:text-white dark:hover:bg-white/10">
-                {isEs ? 'Solicitar presupuesto' : 'Request quote'}
-              </Link>
-              <Link href={`/${locale}/services/event-photography`} className="rounded-full border border-emerald-500 bg-white px-5 py-2.5 text-sm font-bold text-emerald-700 hover:bg-emerald-50 dark:bg-transparent dark:text-emerald-200 dark:hover:bg-emerald-500/10">
-                {isEs ? 'Ver cobertura de eventos' : 'See event coverage'}
-              </Link>
+        {/* ── BOTTOM CTA ── */}
+        <section className="py-20 md:py-24">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Reserva' : 'Booking'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-5"
+                style={{ fontSize: 'clamp(32px, 5vw, 56px)', lineHeight: '1.0' }}
+              >
+                {isEs ? '¿Listo?' : 'Ready?'}
+              </h2>
+              <p className="text-ink-muted text-base md:text-lg mb-10 leading-relaxed max-w-xl">
+                {isEs
+                  ? 'Te ayudamos a diseñar una cobertura clara según edad, locación y tipo de celebración.'
+                  : 'We help you design the right coverage based on age, location, and celebration style.'}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href={bookingLinks.event3h}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
+                >
+                  {isEs ? 'Reservar ahora' : 'Book now'}
+                </a>
+                <Link
+                  href={`/${locale}/get-quote?cta=birthday-photographer-bottom`}
+                  className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+                >
+                  {isEs ? 'Solicitar presupuesto' : 'Request quote'}
+                </Link>
+                <Link
+                  href={`/${locale}/services/birthday-event-photography`}
+                  className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline-soft text-ink-muted hover:text-ink hover:border-hairline transition-colors duration-200"
+                >
+                  {isEs ? 'Ver familia completa' : 'See full family'}
+                </Link>
+              </div>
             </div>
           </div>
         </section>
