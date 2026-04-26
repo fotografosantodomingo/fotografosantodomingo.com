@@ -32,13 +32,21 @@ export interface ReviewStats {
   rating_value: number
 }
 
-/** Resolve all locale-specific text fields at once. Call once per image per render. */
+/** Resolve all locale-specific text fields at once. Call once per image per render.
+ *
+ * If a non-default locale (currently only EN) is missing data on a given
+ * field, fall back to the ES value rather than rendering blank text. This
+ * prevents the "/en/portfolio shows nothing" failure mode when the
+ * portfolio_images table has incomplete EN translations.
+ */
 export function resolveLocale(img: PortfolioImage, locale: string) {
   const isEs = locale === 'es'
+  const pickEn = (en: string | null | undefined, es: string) =>
+    en && en.trim().length > 0 ? en : es
   return {
-    alt:         isEs ? img.alt_es         : img.alt_en,
-    title:       isEs ? img.title_es       : img.title_en,
-    caption:     isEs ? img.caption_es     : img.caption_en,
-    description: isEs ? img.description_es : img.description_en,
+    alt:         isEs ? img.alt_es         : pickEn(img.alt_en,         img.alt_es),
+    title:       isEs ? img.title_es       : pickEn(img.title_en,       img.title_es),
+    caption:     isEs ? img.caption_es     : pickEn(img.caption_en,     img.caption_es),
+    description: isEs ? img.description_es : pickEn(img.description_en, img.description_es),
   }
 }
