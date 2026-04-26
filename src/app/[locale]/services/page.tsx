@@ -87,6 +87,12 @@ export default async function ServicesPage({ params: { locale } }: Props) {
               }
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href={`/${locale}/book`}
+                className="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-6 py-3 font-bold text-gray-950 transition hover:bg-emerald-400"
+              >
+                {locale === 'es' ? 'Reservar Ahora' : 'Book Now'}
+              </Link>
               <Link href={`/${locale}/get-quote`} className="btn-primary">
                 {locale === 'es' ? 'Solicitar Presupuesto' : 'Request a Quote'}
               </Link>
@@ -180,7 +186,7 @@ export default async function ServicesPage({ params: { locale } }: Props) {
 
                   {/* Pricing */}
                   <div className="border-t border-gray-700 pt-6">
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <div className="text-2xl font-bold text-sky-400">
                           {service.pricing.starting}
@@ -189,9 +195,20 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                           {service.pricing.includes}
                         </div>
                       </div>
-                      <Link href={`/${locale}/get-quote`} className="btn-primary">
-                        {locale === 'es' ? 'Cotizar' : 'Get Quote'}
-                      </Link>
+                      <div className="flex gap-2">
+                        <Link
+                          href={`/${locale}/book?service=${service.bookingSlug}`}
+                          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-gray-950 transition hover:bg-emerald-400"
+                        >
+                          {locale === 'es' ? 'Reservar' : 'Book'}
+                        </Link>
+                        <Link
+                          href={`/${locale}/get-quote`}
+                          className="rounded-lg border border-gray-600 px-4 py-2 text-sm font-semibold text-gray-200 transition hover:border-gray-400 hover:text-white"
+                        >
+                          {locale === 'es' ? 'Cotizar' : 'Get Quote'}
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

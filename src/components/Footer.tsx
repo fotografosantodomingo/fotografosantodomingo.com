@@ -57,6 +57,15 @@ export default function Footer({ locale: localeProp }: { locale?: string } = {})
               {locale === 'es' ? 'Enlaces Rápidos' : 'Quick Links'}
             </h4>
             <ul className="space-y-2">
+              <li>
+                <Link
+                  href={`/${locale}/book`}
+                  className="inline-flex items-center gap-1 font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  {locale === 'es' ? '📸 Reservar Ahora' : '📸 Book Now'}
+                </Link>
+              </li>
+              <li><Link href={`/${locale}/prices`} className="text-gray-300 hover:text-white transition-colors">{locale === 'es' ? 'Precios' : 'Pricing'}</Link></li>
               <li><Link href={`/${locale}/services`} className="text-gray-300 hover:text-white transition-colors">{locale === 'es' ? 'Servicios' : 'Services'}</Link></li>
               <li><Link href={`/${locale}/portfolio`} className="text-gray-300 hover:text-white transition-colors">{locale === 'es' ? 'Portafolio' : 'Portfolio'}</Link></li>
               <li><Link href={`/${locale}/about`} className="text-gray-300 hover:text-white transition-colors">{locale === 'es' ? 'Nosotros' : 'About'}</Link></li>

@@ -405,10 +405,16 @@ export default function Navigation() {
               href="https://wa.me/18097209547"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+              className="text-sky-700 hover:text-sky-600 text-sm font-semibold px-3 py-2 transition-colors dark:text-sky-300 dark:hover:text-sky-200"
             >
               {t('whatsapp')}
             </a>
+            <Link
+              href={getLocalizedHref('/book')}
+              className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 text-sm font-bold px-4 py-2 rounded-lg transition-colors"
+            >
+              {t('book_now')}
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -513,8 +519,8 @@ export default function Navigation() {
                   {t('whatsapp')}
                 </a>
                 <Link
-                  href={getLocalizedHref('/get-quote')}
-                  className="bg-white hover:bg-gray-50 border border-gray-300 text-gray-900 font-semibold text-center px-4 py-3 rounded-lg transition-colors dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 dark:text-white"
+                  href={getLocalizedHref('/book')}
+                  className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-center px-4 py-3 rounded-lg transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {t('book_now')}

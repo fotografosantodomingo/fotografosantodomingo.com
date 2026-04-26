@@ -578,10 +578,10 @@ export default function PricesPage({ params: { locale } }: Props) {
                     <div className="flex gap-2 mt-auto pt-2">
                       {svc.bookable ? (
                         <Link
-                          href={`/${locale}/get-quote?service=${svc.slug}`}
-                          className="flex-1 text-center bg-sky-600 hover:bg-sky-500 text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors"
+                          href={`/${locale}/book?service=${svc.slug}`}
+                          className="flex-1 text-center bg-emerald-500 hover:bg-emerald-400 text-gray-950 text-sm font-bold py-2 px-3 rounded-lg transition-colors"
                         >
-                          {isEs ? 'Reservar' : 'Book Now'}
+                          {isEs ? 'Reservar' : 'Book'}
                         </Link>
                       ) : null}
                       <Link
@@ -640,8 +640,8 @@ export default function PricesPage({ params: { locale } }: Props) {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
-                href={`/${locale}/get-quote`}
-                className="bg-sky-600 hover:bg-sky-500 text-white font-semibold py-3 px-8 rounded-xl transition-colors"
+                href={`/${locale}/book`}
+                className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold py-3 px-8 rounded-xl transition-colors"
               >
                 {isEs ? 'Reservar Ahora' : 'Book Now'}
               </Link>

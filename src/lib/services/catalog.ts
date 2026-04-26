@@ -5,6 +5,8 @@ type ServicePricing = {
 
 export type ServiceCatalogItem = {
   id: 'wedding' | 'portrait' | 'drone' | 'event' | 'family' | 'commercial' | 'proposal'
+  /** Slug of the matching row in booking_services — used by /book?service= deep-link */
+  bookingSlug: string
   title: string
   subtitle: string
   description: string
@@ -37,6 +39,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
   return [
     {
       id: 'wedding',
+      bookingSlug: 'weddings',
       title: isEs ? 'Fotografia de Bodas' : 'Wedding Photography',
       subtitle: isEs ? 'El dia mas importante de tu vida' : 'Your most important day',
       description: isEs
@@ -60,6 +63,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
     },
     {
       id: 'portrait',
+      bookingSlug: 'corporate-portrait',
       title: isEs ? 'Retratos Corporativos' : 'Corporate Portraits',
       subtitle: isEs ? 'Profesionalismo y elegancia' : 'Professionalism and elegance',
       description: isEs
@@ -82,6 +86,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
     },
     {
       id: 'drone',
+      bookingSlug: 'drone-aerial',
       title: isEs ? 'Fotografia con Dron' : 'Drone Photography',
       subtitle: isEs ? 'Perspectivas unicas desde el cielo' : 'Unique perspectives from the sky',
       description: isEs
@@ -104,6 +109,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
     },
     {
       id: 'event',
+      bookingSlug: 'corporate-event',
       title: isEs ? 'Fotografia de Eventos' : 'Event Photography',
       subtitle: isEs ? 'Capturamos el ambiente y la energia' : 'We capture the atmosphere and energy',
       description: isEs
@@ -126,6 +132,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
     },
     {
       id: 'family',
+      bookingSlug: 'family-session',
       title: isEs ? 'Sesiones Familiares' : 'Family Sessions',
       subtitle: isEs ? 'Momentos preciosos para toda la vida' : 'Precious moments for life',
       description: isEs
@@ -148,6 +155,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
     },
     {
       id: 'commercial',
+      bookingSlug: 'commercial',
       title: isEs ? 'Fotografia Comercial' : 'Commercial Photography',
       subtitle: isEs ? 'Para negocios y marcas' : 'For businesses and brands',
       description: isEs
@@ -170,6 +178,7 @@ export function getServiceCatalog(locale: string): ServiceCatalogItem[] {
     },
     {
       id: 'proposal',
+      bookingSlug: 'proposal-photography',
       title: isEs ? 'Fotografía de Propuesta' : 'Proposal Photography',
       subtitle: isEs ? 'Modo ninja oculto en toda la RD' : 'Hidden ninja mode across Dominican Republic',
       description: isEs
