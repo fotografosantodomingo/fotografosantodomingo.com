@@ -173,65 +173,100 @@ export default async function PackageDetailPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
 
-      <main className="min-h-screen bg-gray-950 text-white">
-        <section className="border-b border-white/5 py-10">
+      <main className="min-h-screen bg-canvas text-ink">
+        {/* ── HEADER ── package hero with price block */}
+        <section className="border-b border-hairline-soft py-12 md:py-16 lg:py-20">
           <div className="container mx-auto px-4">
-            <nav className="text-xs text-gray-500">
-              <Link href={`/${locale}/services`} className="hover:text-gray-300">
+            <nav className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+              <Link href={`/${locale}/services`} className="hover:text-ink transition-opacity">
                 {isEs ? 'Servicios' : 'Services'}
               </Link>
-              <span className="mx-2">/</span>
-              <Link href={`/${locale}/services/${detail.family.slug}`} className="hover:text-gray-300">
+              <span className="mx-2 text-ink-muted/60">·</span>
+              <Link
+                href={`/${locale}/services/${detail.family.slug}`}
+                className="hover:text-ink transition-opacity"
+              >
                 {familyTitle}
               </Link>
             </nav>
-            <div className="mt-4 flex flex-wrap items-start justify-between gap-6">
+
+            <div className="mt-10 grid gap-10 md:grid-cols-[1fr_auto] md:gap-12 items-start">
               <div>
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">{detail.family.icon}</span>
-                  <h1 className="text-3xl font-bold md:text-4xl">{name}</h1>
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-3xl md:text-4xl" aria-hidden="true">{detail.family.icon}</span>
+                  {detail.popular_badge && (
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted border border-hairline-soft px-2 py-1">
+                      {detail.popular_badge.replace('_', ' ')}
+                    </span>
+                  )}
                 </div>
-                {desc && <p className="mt-2 max-w-2xl text-gray-400">{desc}</p>}
-                {detail.popular_badge && (
-                  <span className="mt-3 inline-block rounded-full bg-amber-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-300">
-                    {detail.popular_badge.replace('_', ' ')}
-                  </span>
+                <h1
+                  className="font-display uppercase text-ink"
+                  style={{
+                    fontSize: 'clamp(36px, 7vw, 96px)',
+                    lineHeight: '0.95',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {name}
+                </h1>
+                {desc && (
+                  <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-6 leading-relaxed">
+                    {desc}
+                  </p>
                 )}
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-5 text-right">
-                <div className="text-3xl font-bold text-emerald-300">
+
+              {/* Price block — flat, no card chassis, hairline only */}
+              <div className="border-l-0 md:border-l border-t md:border-t-0 border-hairline-soft pt-8 md:pt-0 md:pl-8 lg:pl-12 md:min-w-[240px]">
+                <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+                  {isEs ? 'Desde · USD' : 'From · USD'}
+                </p>
+                <div
+                  className="font-display text-ink"
+                  style={{ fontSize: 'clamp(56px, 6vw, 88px)', lineHeight: '1.0' }}
+                >
                   ${price.toFixed(0)}
                 </div>
-                <div className="text-xs text-gray-400">
-                  {isEs ? 'desde · USD' : 'starting · USD'}
-                </div>
-                <div className="mt-2 text-xs text-gray-500">
-                  {detail.minimum_billable_hours
-                    ? `${detail.minimum_billable_hours}h ${isEs ? 'mínimo' : 'minimum'}`
-                    : `${detail.duration_min} min`}
-                  {detail.photo_count
-                    ? ` · ${detail.photo_count} ${isEs ? 'fotos' : 'photos'}`
-                    : ''}
+                <div className="mt-4 space-y-1.5 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                  <div>
+                    {detail.minimum_billable_hours
+                      ? `${detail.minimum_billable_hours}h ${isEs ? 'mínimo' : 'minimum'}`
+                      : `${detail.duration_min} min`}
+                  </div>
+                  {detail.photo_count && (
+                    <div>
+                      {detail.photo_count} {isEs ? 'fotos' : 'photos'}
+                    </div>
+                  )}
+                  {detail.bookable_direct && (
+                    <div>
+                      {detail.deposit_percent}% {isEs ? 'depósito' : 'deposit'}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </section>
 
+        {/* ── INCLUSIONS ── */}
         {inclusions.length > 0 && (
-          <section className="py-10">
+          <section className="py-16 md:py-20">
             <div className="container mx-auto px-4">
-              <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-gray-400">
-                {isEs ? 'Incluye' : 'Includes'}
+              <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-10">
+                {isEs ? 'Qué incluye' : 'What’s included'}
               </h2>
-              <ul className="grid gap-3 md:grid-cols-2">
+              <ul className="grid gap-x-12 gap-y-5 md:grid-cols-2 max-w-4xl">
                 {inclusions.map((inc, i) => (
                   <li
                     key={i}
-                    className="flex items-start gap-3 rounded-lg border border-white/5 bg-white/5 p-4 text-sm text-gray-200"
+                    className="flex items-start gap-4 pb-5 border-b border-hairline-soft text-ink leading-relaxed"
                   >
-                    <span className="mt-0.5 text-emerald-400">✓</span>
-                    <span>{inc}</span>
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 mt-0.5 w-6">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="text-base">{inc}</span>
                   </li>
                 ))}
               </ul>
@@ -239,36 +274,38 @@ export default async function PackageDetailPage({ params }: Props) {
           </section>
         )}
 
-        <section className="border-t border-white/5 py-10">
+        {/* ── BOTTOM CTA ── pill discipline */}
+        <section className="border-t border-hairline-soft py-16 md:py-20">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                {detail.bookable_direct ? (
-                  <p className="text-sm text-gray-400">
-                    {isEs
-                      ? `Depósito del ${detail.deposit_percent}% para reservar — $${deposit} USD`
-                      : `${detail.deposit_percent}% deposit to book — $${deposit} USD`}
-                  </p>
-                ) : (
-                  <p className="text-sm text-gray-400">
-                    {isEs
-                      ? 'Este paquete se cotiza de forma personalizada.'
-                      : 'This package is custom-quoted.'}
-                  </p>
-                )}
+            <div className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
+              <div className="md:max-w-md">
+                <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-3">
+                  {detail.bookable_direct
+                    ? (isEs ? 'Reservar' : 'Book')
+                    : (isEs ? 'Cotización' : 'Quote')}
+                </p>
+                <p className="text-ink text-base md:text-lg leading-relaxed">
+                  {detail.bookable_direct
+                    ? (isEs
+                        ? `Depósito del ${detail.deposit_percent}% — $${deposit} USD para asegurar tu fecha.`
+                        : `${detail.deposit_percent}% deposit — $${deposit} USD to lock your date.`)
+                    : (isEs
+                        ? 'Este paquete se cotiza de forma personalizada.'
+                        : 'This package is custom-quoted.')}
+                </p>
               </div>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 shrink-0">
                 {detail.bookable_direct && (
                   <Link
                     href={`/${locale}/book?service=${detail.slug}`}
-                    className="rounded-lg bg-emerald-500 px-6 py-3 font-semibold text-gray-950 transition hover:bg-emerald-400"
+                    className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
                   >
                     {isEs ? 'Reservar ahora' : 'Book now'}
                   </Link>
                 )}
                 <Link
                   href={`/${locale}/get-quote?family=${detail.family.slug}&package=${detail.slug}&cta=package-detail`}
-                  className="rounded-lg border border-white/20 px-6 py-3 font-semibold text-white transition hover:border-white/40"
+                  className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
                 >
                   {isEs ? 'Solicitar presupuesto' : 'Request a quote'}
                 </Link>

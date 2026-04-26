@@ -151,72 +151,90 @@ export default async function ServicesPage({ params: { locale } }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
 
-      <main className="min-h-screen bg-gray-950 text-white">
-        <section className="border-b border-white/5 py-16">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="mx-auto max-w-3xl text-4xl font-bold md:text-5xl">
-              {isEs ? 'Nuestros Servicios Fotográficos' : 'Our Photography Services'}
+      <main className="min-h-screen bg-canvas text-ink">
+        {/* ── HEADER ── */}
+        <section className="border-b border-hairline-soft py-20 md:py-28 lg:py-32">
+          <div className="container mx-auto px-4">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-6">
+              {isEs ? 'Servicios' : 'Services'} · {families.length}
+            </p>
+            <h1
+              className="font-display uppercase text-ink max-w-5xl"
+              style={{
+                fontSize: 'clamp(40px, 9vw, 144px)',
+                lineHeight: '0.95',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {isEs ? 'Cada momento, su lente.' : 'Each moment, its lens.'}
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
+            <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-8">
               {isEs
                 ? 'Nueve familias de servicio. Reserva en línea o solicita un presupuesto personalizado.'
                 : 'Nine service families. Book online or request a custom quote.'}
             </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row">
               <Link
                 href={`/${locale}/book`}
-                className="rounded-lg bg-emerald-500 px-6 py-3 font-semibold text-gray-950 transition hover:bg-emerald-400"
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
               >
-                {isEs ? 'Reservar Ahora' : 'Book Now'}
+                {isEs ? 'Reservar ahora' : 'Book now'}
               </Link>
               <Link
                 href={`/${locale}/get-quote`}
-                className="rounded-lg border border-white/20 px-6 py-3 font-semibold text-white transition hover:border-white/40"
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
               >
-                {isEs ? 'Solicitar Presupuesto' : 'Request a Quote'}
+                {isEs ? 'Solicitar presupuesto' : 'Request a quote'}
               </Link>
             </div>
           </div>
         </section>
 
-        <section className="py-16">
+        {/* ── FAMILIES — hairline grid, no cards, no shadows ── */}
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
-            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
               {families.map(f => {
                 const title = isEs ? f.title_es : f.title_en
                 const tagline = isEs ? f.tagline_es : f.tagline_en
+                const priceLabel = f.starting_price_usd != null
+                  ? `${isEs ? 'Desde' : 'From'} $${Math.round(f.starting_price_usd)}`
+                  : (isEs ? 'Solo cotización' : 'Quote only')
                 return (
-                  <Link
-                    key={f.id}
-                    href={`/${locale}/services/${f.slug}`}
-                    className="group flex flex-col rounded-xl border border-white/10 bg-white/5 p-6 transition hover:border-emerald-400/50 hover:bg-white/10"
-                  >
-                    <div className="flex items-start justify-between">
-                      <span className="text-3xl">{f.icon}</span>
-                      {f.starting_price_usd != null ? (
-                        <span className="rounded-full bg-emerald-500/20 px-3 py-0.5 text-xs font-semibold text-emerald-300">
-                          {isEs ? 'Desde' : 'From'} ${Math.round(f.starting_price_usd)}
+                  <li key={f.id} className="border-r border-b border-hairline-soft">
+                    <Link
+                      href={`/${locale}/services/${f.slug}`}
+                      className="group flex flex-col h-full p-7 md:p-8 lg:p-10 hover:bg-ink/5 transition-colors duration-200"
+                    >
+                      <div className="flex items-start justify-between mb-6">
+                        <span className="text-2xl" aria-hidden="true">{f.icon}</span>
+                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {priceLabel}
                         </span>
-                      ) : (
-                        <span className="rounded-full border border-white/15 px-3 py-0.5 text-xs font-semibold text-gray-300">
-                          {isEs ? 'Solo cotización' : 'Quote only'}
-                        </span>
+                      </div>
+                      <h2
+                        className="font-display uppercase text-ink"
+                        style={{ fontSize: 'clamp(24px, 2.4vw, 32px)', lineHeight: '1.05' }}
+                      >
+                        {title}
+                      </h2>
+                      {tagline && (
+                        <p className="text-ink-muted text-sm leading-relaxed mt-3 flex-1">{tagline}</p>
                       )}
-                    </div>
-                    <h2 className="mt-3 text-xl font-semibold text-white">{title}</h2>
-                    {tagline && <p className="mt-2 text-sm text-gray-400">{tagline}</p>}
-                    <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-                      <span>
-                        {f.package_count} {isEs ? 'paquetes' : 'packages'}
-                      </span>
-                      <span className="text-emerald-300 group-hover:text-emerald-200">
-                        {isEs ? 'Ver paquetes →' : 'View packages →'}
-                      </span>
-                    </div>
-                  </Link>
+                      <div className="mt-8 flex items-center justify-between">
+                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {f.package_count} {isEs ? 'paquetes' : 'packages'}
+                        </span>
+                        <span className="font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                          {isEs ? 'Explorar' : 'Explore'}
+                          <span aria-hidden="true">→</span>
+                        </span>
+                      </div>
+                    </Link>
+                  </li>
                 )
               })}
-            </div>
+            </ul>
           </div>
         </section>
       </main>

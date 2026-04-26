@@ -171,19 +171,37 @@ export default async function FamilyPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
 
-      <main className="min-h-screen bg-gray-950 text-white">
-        <section className="border-b border-white/5 py-12">
+      <main className="min-h-screen bg-canvas text-ink">
+        {/* ── HEADER ── */}
+        <section className="border-b border-hairline-soft py-16 md:py-24 lg:py-28">
           <div className="container mx-auto px-4">
-            <nav className="text-xs text-gray-500">
-              <Link href={`/${locale}/services`} className="hover:text-gray-300">
+            <nav>
+              <Link
+                href={`/${locale}/services`}
+                className="font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity"
+              >
                 ← {isEs ? 'Todos los servicios' : 'All services'}
               </Link>
             </nav>
-            <div className="mt-4 flex items-start gap-4">
-              <span className="text-5xl">{family.icon}</span>
+            <div className="mt-10 flex items-start gap-6">
+              <span className="text-5xl md:text-6xl shrink-0" aria-hidden="true">{family.icon}</span>
               <div>
-                <h1 className="text-3xl font-bold md:text-4xl">{title}</h1>
-                {tagline && <p className="mt-2 max-w-2xl text-gray-400">{tagline}</p>}
+                <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-3">
+                  {isEs ? 'Familia' : 'Family'}
+                </p>
+                <h1
+                  className="font-display uppercase text-ink"
+                  style={{
+                    fontSize: 'clamp(36px, 7vw, 112px)',
+                    lineHeight: '0.95',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {title}
+                </h1>
+                {tagline && (
+                  <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-6">{tagline}</p>
+                )}
               </div>
             </div>
           </div>
@@ -210,19 +228,26 @@ export default async function FamilyPage({ params }: Props) {
           />
         )}
 
-        <section className="border-t border-white/5 py-12">
+        {/* ── BOTTOM RFQ CTA ── */}
+        <section className="border-t border-hairline-soft py-20 md:py-24">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-2xl font-semibold">
-              {isEs ? '¿No encuentras lo que buscas?' : 'Not finding what you need?'}
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Personalizado' : 'Custom'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink mx-auto max-w-3xl"
+              style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+            >
+              {isEs ? '¿Tu visión no encaja?' : 'Vision off the menu?'}
             </h2>
-            <p className="mt-2 text-gray-400">
+            <p className="text-ink-muted text-base md:text-lg mt-6 max-w-xl mx-auto">
               {isEs
-                ? 'Cuéntanos tus detalles y te enviamos un presupuesto personalizado.'
-                : 'Tell us about your project and we\'ll send a custom quote.'}
+                ? 'Cuéntanos los detalles y te enviamos un presupuesto a medida.'
+                : "Tell us the details and we'll send a tailored quote."}
             </p>
             <Link
               href={`/${locale}/get-quote?family=${family.slug}&cta=family-page-bottom`}
-              className="mt-6 inline-flex rounded-lg border border-white/20 px-6 py-3 font-semibold text-white hover:border-white/40"
+              className="mt-10 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
             >
               {isEs ? 'Solicitar presupuesto' : 'Request a quote'}
             </Link>
@@ -249,79 +274,93 @@ function PackageGrid({
   quoteOnly?: boolean
 }) {
   return (
-    <section className="py-12">
+    <section className="py-16 md:py-20">
       <div className="container mx-auto px-4">
-        <h2 className="mb-6 text-xs font-semibold uppercase tracking-widest text-gray-400">
+        <h2 className="mb-10 font-mono uppercase tracking-widest text-[11px] text-ink-muted">
           {heading}
         </h2>
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
           {packages.map(p => {
             const name = isEs ? p.name_es : p.name_en
             const desc = isEs ? p.description_short_es : p.description_short_en
             const inclusions = isEs ? p.inclusions_es : p.inclusions_en
             const price = Number(p.starting_price_usd)
             return (
-              <Link
-                key={p.id}
-                href={`/${locale}/services/${family.slug}/${p.slug}`}
-                className={`group flex flex-col rounded-xl border p-5 transition ${
-                  p.featured
-                    ? 'border-emerald-400/40 bg-emerald-500/5 hover:border-emerald-400/70'
-                    : 'border-white/10 bg-white/5 hover:border-white/30'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-lg font-semibold text-white">{name}</h3>
-                  {p.popular_badge && (
-                    <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-300">
-                      {p.popular_badge.replace('_', ' ')}
+              <li key={p.id} className="border-r border-b border-hairline-soft">
+                <Link
+                  href={`/${locale}/services/${family.slug}/${p.slug}`}
+                  className={`group flex flex-col h-full p-7 md:p-8 lg:p-10 hover:bg-ink/5 transition-colors duration-200 ${
+                    p.featured ? 'bg-ink/[0.03]' : ''
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-5 min-h-[24px]">
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {p.popular_badge
+                        ? p.popular_badge.replace('_', ' ')
+                        : p.featured
+                          ? (isEs ? 'Destacado' : 'Featured')
+                          : ''}
                     </span>
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {p.minimum_billable_hours
+                        ? `${p.minimum_billable_hours}h ${isEs ? 'mín' : 'min'}`
+                        : `${p.duration_min} min`}
+                    </span>
+                  </div>
+
+                  <h3
+                    className="font-display uppercase text-ink"
+                    style={{ fontSize: 'clamp(22px, 2.2vw, 30px)', lineHeight: '1.05' }}
+                  >
+                    {name}
+                  </h3>
+
+                  <div className="mt-5 mb-1 flex items-baseline gap-2">
+                    <span
+                      className="font-display text-ink"
+                      style={{ fontSize: 'clamp(36px, 4vw, 56px)', lineHeight: '1.0' }}
+                    >
+                      ${price.toFixed(0)}
+                    </span>
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {isEs ? 'USD desde' : 'USD start'}
+                    </span>
+                  </div>
+
+                  {desc && <p className="mt-4 text-sm text-ink-muted leading-relaxed">{desc}</p>}
+
+                  {inclusions.length > 0 && (
+                    <ul className="mt-6 space-y-2 text-sm text-ink/80 flex-1">
+                      {inclusions.slice(0, 4).map((inc, i) => (
+                        <li key={i} className="flex items-start gap-2.5">
+                          <span className="mt-1.5 inline-block w-2 h-px bg-ink/60 shrink-0" aria-hidden="true" />
+                          <span className="leading-snug">{inc}</span>
+                        </li>
+                      ))}
+                      {inclusions.length > 4 && (
+                        <li className="font-mono uppercase tracking-widest text-[10px] text-ink-muted pl-[18px]">
+                          +{inclusions.length - 4} {isEs ? 'más' : 'more'}
+                        </li>
+                      )}
+                    </ul>
                   )}
-                </div>
-                {desc && <p className="mt-2 text-sm text-gray-400">{desc}</p>}
 
-                <div className="mt-4 flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-emerald-300">
-                    ${price.toFixed(0)}
-                  </span>
-                  <span className="text-xs text-gray-400">
-                    {isEs ? 'desde' : 'starting'} ·{' '}
-                    {p.minimum_billable_hours
-                      ? `${p.minimum_billable_hours}h ${isEs ? 'mín' : 'min'}`
-                      : `${p.duration_min} min`}
-                  </span>
-                </div>
-
-                {inclusions.length > 0 && (
-                  <ul className="mt-4 space-y-1 text-xs text-gray-300">
-                    {inclusions.slice(0, 4).map((inc, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="mt-0.5 text-emerald-400">✓</span>
-                        <span>{inc}</span>
-                      </li>
-                    ))}
-                    {inclusions.length > 4 && (
-                      <li className="text-gray-500">
-                        +{inclusions.length - 4} {isEs ? 'más' : 'more'}
-                      </li>
+                  <div className="mt-8 pt-6 border-t border-hairline-soft flex items-center justify-between">
+                    <span className="font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                      {isEs ? 'Ver detalles' : 'View details'}
+                      <span aria-hidden="true">→</span>
+                    </span>
+                    {!quoteOnly && p.bookable_direct && (
+                      <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                        {p.deposit_percent}% {isEs ? 'depósito' : 'deposit'}
+                      </span>
                     )}
-                  </ul>
-                )}
-
-                <div className="mt-5 flex items-center justify-between text-sm">
-                  <span className="text-emerald-300 group-hover:text-emerald-200">
-                    {isEs ? 'Ver detalles →' : 'View details →'}
-                  </span>
-                  {!quoteOnly && p.bookable_direct && (
-                    <span className="text-xs text-gray-500">
-                      {isEs ? `${p.deposit_percent}% depósito` : `${p.deposit_percent}% deposit`}
-                    </span>
-                  )}
-                </div>
-              </Link>
+                  </div>
+                </Link>
+              </li>
             )
           })}
-        </div>
+        </ul>
       </div>
     </section>
   )
