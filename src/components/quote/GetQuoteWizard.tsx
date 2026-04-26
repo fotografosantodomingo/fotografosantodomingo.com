@@ -369,7 +369,12 @@ export default function GetQuoteWizard({ locale }: Props) {
           <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-6">
             {isEs ? 'Tipo de servicio' : 'Service type'}
           </h2>
-          <ul className="grid gap-0 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
+          {/* Mobile: 2-col compact tiles (icon + label, tight padding).
+              ≥sm:  2-col with breathing room.
+              ≥lg:  3-col full premium scale.
+              17 items × 2 cols mobile = 9 rows ≈ 540px scroll, well within
+              one viewport before the Continue pill. */}
+          <ul className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
             {QUOTE_SERVICE_TYPES.map((item) => {
               const active = form.serviceType === item.value
               return (
@@ -383,10 +388,11 @@ export default function GetQuoteWizard({ locale }: Props) {
                         addDrone: DRONE_ADDON_ELIGIBLE_SERVICES.includes(item.value) ? prev.addDrone : false,
                       }))
                     }}
-                    className={`group flex flex-col w-full h-full p-5 text-left hover:bg-ink/5 transition-colors duration-200 ${active ? 'bg-ink/10' : ''}`}
+                    aria-pressed={active}
+                    className={`group flex flex-col w-full h-full min-h-[80px] sm:min-h-[96px] p-3 sm:p-4 lg:p-5 text-left hover:bg-ink/5 transition-colors duration-200 ${active ? 'bg-ink/10' : ''}`}
                   >
-                    <div className="text-xl mb-3" aria-hidden="true">{item.icon}</div>
-                    <p className="font-mono uppercase tracking-widest text-[11px] text-ink leading-snug">
+                    <div className="text-base sm:text-lg lg:text-xl mb-1.5 sm:mb-2 lg:mb-3" aria-hidden="true">{item.icon}</div>
+                    <p className="font-mono uppercase tracking-widest text-[10px] sm:text-[11px] text-ink leading-tight">
                       {isEs ? item.labelEs : item.labelEn}
                     </p>
                   </button>

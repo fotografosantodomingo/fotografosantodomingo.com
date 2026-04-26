@@ -59,46 +59,54 @@ export default function CookieConsent() {
         <div
           role="dialog"
           aria-label={isEs ? 'Aviso de cookies' : 'Cookie notice'}
-          className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6"
+          className="fixed bottom-0 left-0 right-0 z-40"
         >
-          <div className="max-w-4xl mx-auto bg-gray-900 border border-gray-700 rounded-xl shadow-2xl p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4">
-            {/* Text */}
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-gray-300 leading-relaxed">
+          {/* Bugatti cookie strip — bg-canvas + 1px hairline top, no shadow,
+              no radius. Compact horizontal layout on desktop; stacked on
+              mobile but with mono-caps copy that respects the typographic
+              register. */}
+          <div className="bg-canvas border-t border-hairline-soft">
+            <div className="container mx-auto px-4 py-3.5 md:py-4 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
+              <p className="flex-1 min-w-0 text-xs md:text-sm text-ink-muted leading-snug">
                 {isEs ? (
                   <>
-                    Usamos cookies de Google Analytics para entender cómo se usa nuestro sitio y mejorar tu experiencia.
+                    Usamos cookies para analítica anónima.
                     {' '}
-                    <Link href={`/${locale}/privacy`} className="text-sky-400 hover:text-sky-300 underline whitespace-nowrap">
+                    <Link
+                      href={`/${locale}/privacy`}
+                      className="text-ink underline underline-offset-2 hover:opacity-70"
+                    >
                       Política de privacidad
                     </Link>
                   </>
                 ) : (
                   <>
-                    We use Google Analytics cookies to understand how our site is used and improve your experience.
+                    We use cookies for anonymous analytics.
                     {' '}
-                    <Link href={`/${locale}/privacy`} className="text-sky-400 hover:text-sky-300 underline whitespace-nowrap">
+                    <Link
+                      href={`/${locale}/privacy`}
+                      className="text-ink underline underline-offset-2 hover:opacity-70"
+                    >
                       Privacy policy
                     </Link>
                   </>
                 )}
               </p>
-            </div>
 
-            {/* Buttons */}
-            <div className="flex gap-3 shrink-0">
-              <button
-                onClick={decline}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 border border-gray-600 hover:border-gray-400 hover:text-gray-200 transition-colors"
-              >
-                {isEs ? 'Rechazar' : 'Decline'}
-              </button>
-              <button
-                onClick={accept}
-                className="px-5 py-2 rounded-lg text-sm font-semibold bg-sky-500 hover:bg-sky-400 text-white transition-colors"
-              >
-                {isEs ? 'Aceptar' : 'Accept'}
-              </button>
+              <div className="flex gap-2 shrink-0">
+                <button
+                  onClick={decline}
+                  className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[10px] px-4 py-2 rounded-full border border-hairline-soft text-ink-muted hover:text-ink hover:border-hairline transition-colors"
+                >
+                  {isEs ? 'Rechazar' : 'Decline'}
+                </button>
+                <button
+                  onClick={accept}
+                  className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[10px] px-4 py-2 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity"
+                >
+                  {isEs ? 'Aceptar' : 'Accept'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
