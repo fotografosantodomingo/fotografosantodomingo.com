@@ -15,6 +15,12 @@ const TAB_LABELS: Record<Tab, string> = {
   all: 'All',
 }
 
+type Snap = {
+  name_es?: string
+  name_en?: string
+  family_icon?: string
+} | null
+
 type BookingRow = {
   id: string
   starts_at: string
@@ -24,7 +30,8 @@ type BookingRow = {
   customer_email: string
   stripe_amount_usd: number | null
   deposit_amount_usd: number | null
-  service: { name_es: string; name_en: string; icon: string } | null
+  package_snapshot: Snap
+  family: { icon: string } | null
   staff: { name: string } | null
 }
 
@@ -63,7 +70,8 @@ export default async function AdminBookingsPage({
     .select(
       `id, starts_at, ends_at, status, customer_name, customer_email,
        stripe_amount_usd, deposit_amount_usd,
-       service:booking_services ( name_es, name_en, icon ),
+       package_snapshot,
+       family:service_families ( icon ),
        staff:staff_members ( name )`
     )
     .order('starts_at', { ascending: tab === 'upcoming' })
@@ -140,7 +148,8 @@ export default async function AdminBookingsPage({
                       {formatAst(row.starts_at)}
                     </td>
                     <td className="px-4 py-3 text-slate-700 dark:text-gray-200">
-                      {row.service?.icon} {row.service?.name_en ?? '—'}
+                      {(row.package_snapshot?.family_icon ?? row.family?.icon ?? '📷')}{' '}
+                      {row.package_snapshot?.name_en ?? '—'}
                     </td>
                     <td className="px-4 py-3">
                       <div className="text-slate-900 dark:text-white">{row.customer_name}</div>

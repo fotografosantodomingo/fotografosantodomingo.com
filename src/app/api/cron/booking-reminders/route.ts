@@ -29,6 +29,13 @@ export const runtime = 'edge'
  * Side effect: releases stale PENDING_PAYMENT bookings (>30 min old) on each run.
  */
 
+type Snap = {
+  name_es?: string
+  name_en?: string
+  family_icon?: string
+  duration_min?: number
+} | null
+
 type DbBooking = {
   id: string
   customer_name: string
@@ -38,25 +45,32 @@ type DbBooking = {
   ends_at: string
   stripe_amount_usd: number | null
   deposit_amount_usd: number | null
-  service: { name_es: string; name_en: string; icon: string; duration_min: number } | null
+  package_snapshot: Snap
+  family: { icon: string } | null
   staff: { name: string } | null
 }
 
+// Slice A · Step A4 — service info comes from package_snapshot. We still
+// JOIN service_families purely as a fallback for the family icon when a
+// snapshot is missing the family_icon key (older snapshots backfilled by
+// migration 016 did not include it).
 const SELECT_COLS = `id, customer_name, customer_email, locale, starts_at, ends_at,
   stripe_amount_usd, deposit_amount_usd,
-  service:booking_services ( name_es, name_en, icon, duration_min ),
+  package_snapshot,
+  family:service_families ( icon ),
   staff:staff_members ( name )` as const
 
 function toCtx(b: DbBooking): BookingEmailContext {
+  const snap = b.package_snapshot
   return {
     bookingId: b.id,
     customerName: b.customer_name,
     customerEmail: b.customer_email,
     locale: (b.locale ?? 'es') as 'es' | 'en',
-    serviceNameEs: b.service?.name_es ?? '',
-    serviceNameEn: b.service?.name_en ?? '',
-    serviceIcon: b.service?.icon ?? '📷',
-    durationMin: b.service?.duration_min ?? 60,
+    serviceNameEs: snap?.name_es ?? '',
+    serviceNameEn: snap?.name_en ?? '',
+    serviceIcon: snap?.family_icon ?? b.family?.icon ?? '📷',
+    durationMin: snap?.duration_min ?? 60,
     startsAt: b.starts_at,
     endsAt: b.ends_at,
     staffName: b.staff?.name ?? 'Babula Shots',
@@ -122,7 +136,7 @@ export async function GET(request: NextRequest) {
       .limit(50)
 
     if (error) throw error
-    for (const b of (data ?? []) as DbBooking[]) {
+    for (const b of (data ?? []) as unknown as DbBooking[]) {
       await sendBookingReminder24h(supabase, toCtx(b))
       stats.reminder_24h_sent++
     }
@@ -152,7 +166,7 @@ export async function GET(request: NextRequest) {
         .limit(50)
 
       if (error) throw error
-      for (const b of (data ?? []) as DbBooking[]) {
+      for (const b of (data ?? []) as unknown as DbBooking[]) {
         await sendBookingReminderSameDay(supabase, toCtx(b))
         stats.reminder_same_day_sent++
       }
@@ -177,7 +191,7 @@ export async function GET(request: NextRequest) {
       .limit(50)
 
     if (error) throw error
-    for (const b of (data ?? []) as DbBooking[]) {
+    for (const b of (data ?? []) as unknown as DbBooking[]) {
       await sendBookingPostSession(supabase, toCtx(b))
       stats.post_session_sent++
     }

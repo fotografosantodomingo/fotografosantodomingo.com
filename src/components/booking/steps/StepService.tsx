@@ -10,18 +10,24 @@ export type Service = {
   description_es: string | null
   description_en: string | null
   icon: string
-  category: string
   duration_min: number
   price_usd: number
   deposit_percent: number
+  photo_count: number | null
+  minimum_billable_hours: number | null
+  popular_badge: 'most_booked' | 'best_value' | null
+  featured: boolean
+  legacy_aliases: string[]
+  family_id: string
+  family_slug: string
+  family_title_es: string
+  family_title_en: string
 }
 
-const CATEGORIES: Array<{ key: string; labelEs: string; labelEn: string }> = [
-  { key: 'celebrations', labelEs: 'Celebraciones', labelEn: 'Celebrations' },
-  { key: 'portraits', labelEs: 'Retratos', labelEn: 'Portraits' },
-  { key: 'commercial', labelEs: 'Comercial', labelEn: 'Commercial' },
-  { key: 'specialty', labelEs: 'Especialidades', labelEn: 'Specialty' },
-]
+type ApiResponse = {
+  services: Service[]
+  families: Array<{ id: string; slug: string; title_es: string; title_en: string; icon: string }>
+}
 
 export default function StepService({
   locale,
@@ -32,16 +38,15 @@ export default function StepService({
   onPick: (s: Service) => void
   onLoaded?: (services: Service[]) => void
 }) {
-  const [services, setServices] = useState<Service[] | null>(null)
+  const [data, setData] = useState<ApiResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/bookings/services')
       .then(r => r.json())
-      .then(data => {
-        const list: Service[] = data.services ?? []
-        setServices(list)
-        onLoaded?.(list)
+      .then((d: ApiResponse) => {
+        setData(d)
+        onLoaded?.(d.services ?? [])
       })
       .catch(err => setError(err instanceof Error ? err.message : 'Failed to load'))
   }, [onLoaded])
@@ -54,7 +59,7 @@ export default function StepService({
     )
   }
 
-  if (!services) {
+  if (!data) {
     return (
       <div className="grid gap-3 sm:grid-cols-2">
         {Array.from({ length: 6 }).map((_, i) => (
@@ -64,10 +69,12 @@ export default function StepService({
     )
   }
 
-  const grouped: Record<string, Service[]> = {}
-  for (const s of services) {
-    if (!grouped[s.category]) grouped[s.category] = []
-    grouped[s.category].push(s)
+  // Group packages by family, preserve family sort_order from server
+  const packagesByFamily = new Map<string, Service[]>()
+  for (const s of data.services) {
+    const arr = packagesByFamily.get(s.family_id) ?? []
+    arr.push(s)
+    packagesByFamily.set(s.family_id, arr)
   }
 
   return (
@@ -76,13 +83,14 @@ export default function StepService({
         {locale === 'es' ? 'Elige tu servicio' : 'Choose your service'}
       </h2>
 
-      {CATEGORIES.map(cat => {
-        const list = grouped[cat.key] ?? []
+      {data.families.map(fam => {
+        const list = packagesByFamily.get(fam.id) ?? []
         if (list.length === 0) return null
+        const famTitle = locale === 'es' ? fam.title_es : fam.title_en
         return (
-          <section key={cat.key}>
+          <section key={fam.id}>
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
-              {locale === 'es' ? cat.labelEs : cat.labelEn}
+              {fam.icon} {famTitle}
             </h3>
             <div className="grid gap-3 sm:grid-cols-2">
               {list.map(s => {
@@ -106,7 +114,14 @@ export default function StepService({
                       <p className="mt-1 line-clamp-2 text-xs text-gray-400">{desc}</p>
                     )}
                     <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
-                      <span>{s.duration_min} min</span>
+                      <span>
+                        {s.duration_min} min
+                        {s.minimum_billable_hours
+                          ? locale === 'es'
+                            ? ` · mín ${s.minimum_billable_hours}h`
+                            : ` · min ${s.minimum_billable_hours}h`
+                          : ''}
+                      </span>
                       <span>
                         {locale === 'es'
                           ? `Depósito $${deposit.toFixed(0)}`

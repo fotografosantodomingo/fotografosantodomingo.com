@@ -107,12 +107,12 @@ export default function BookingWizard({
     if (!state.service || !state.slot) return
     setState(s => ({ ...s, details }))
 
-    // Create the booking + PaymentIntent
+    // Create the booking + PaymentIntent (canonical: package_id)
     const res = await fetch('/api/bookings', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        service_id: state.service.id,
+        package_id: state.service.id,
         starts_at: state.slot.startsAtUtc,
         customer_name: details.name,
         customer_email: details.email,
@@ -140,12 +140,17 @@ export default function BookingWizard({
     setConfirmed(true)
   }
 
-  // Service preselection from ?service=
+  // Service preselection from ?service= — match canonical package slug,
+  // legacy_aliases (so old ?service=wedding-photography still works), or
+  // family slug (jump to first package in that family).
   function onServicesLoaded(services: Service[]) {
     if (state.service || !preselectedServiceSlug) return
-    const match = services.find(s => s.slug === preselectedServiceSlug)
-    if (match) {
-      setState(s => ({ ...s, service: match }))
+    const slug = preselectedServiceSlug
+    const exact = services.find(s => s.slug === slug)
+    const viaAlias = exact ?? services.find(s => s.legacy_aliases?.includes(slug))
+    const viaFamily = viaAlias ?? services.find(s => s.family_slug === slug)
+    if (viaFamily) {
+      setState(s => ({ ...s, service: viaFamily }))
       setStepIdx(1) // jump straight to date step
     }
   }

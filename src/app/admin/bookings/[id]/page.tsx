@@ -7,6 +7,17 @@ import BookingActions from './BookingActions'
 
 export const dynamic = 'force-dynamic'
 
+type Snap = {
+  family_slug?: string
+  package_slug?: string
+  name_es?: string
+  name_en?: string
+  family_icon?: string
+  duration_min?: number
+  family_title_es?: string
+  family_title_en?: string
+} | null
+
 type BookingDetail = {
   id: string
   starts_at: string
@@ -27,16 +38,12 @@ type BookingDetail = {
   cancelled_at: string | null
   admin_notes: string | null
   created_at: string
-  service_id: string
+  service_id: string | null
   staff_id: string
-  service: {
-    id: string
-    slug: string
-    name_es: string
-    name_en: string
-    duration_min: number
-    icon: string
-  } | null
+  package_id: string | null
+  family_id: string | null
+  package_snapshot: Snap
+  family: { id: string; slug: string; title_es: string; title_en: string; icon: string } | null
   staff: { id: string; name: string } | null
 }
 
@@ -66,8 +73,9 @@ export default async function AdminBookingDetailPage({
       `id, starts_at, ends_at, status, locale, customer_name, customer_email, customer_phone,
        stripe_payment_intent_id, stripe_charge_id, stripe_amount_usd, deposit_amount_usd,
        refund_amount_usd, currency_display, terms_accepted_at, cancellation_reason,
-       cancelled_at, admin_notes, created_at, service_id, staff_id,
-       service:booking_services ( id, slug, name_es, name_en, duration_min, icon ),
+       cancelled_at, admin_notes, created_at, service_id, staff_id, package_id, family_id,
+       package_snapshot,
+       family:service_families ( id, slug, title_es, title_en, icon ),
        staff:staff_members ( id, name )`
     )
     .eq('id', params.id)
@@ -87,6 +95,10 @@ export default async function AdminBookingDetailPage({
   const status = BOOKING_STATUS_LABELS[booking.status]
   const depositCents = Math.round(Number(booking.deposit_amount_usd ?? 0) * 100)
   const alreadyRefundedUsd = Number(booking.refund_amount_usd ?? 0)
+  const snap = booking.package_snapshot
+  const displayIcon = snap?.family_icon ?? booking.family?.icon ?? '📷'
+  const displayName = snap?.name_en ?? '—'
+  const displayDurationMin = snap?.duration_min ?? 60
 
   // Email log
   const { data: emails } = await supabase
@@ -105,7 +117,7 @@ export default async function AdminBookingDetailPage({
           ← Back to bookings
         </Link>
         <h1 className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">
-          {booking.service?.icon} {booking.service?.name_en}
+          {displayIcon} {displayName}
         </h1>
         <div className="mt-1 flex items-center gap-3 text-sm">
           <span className={`font-semibold ${status.color}`}>{status.en}</span>
@@ -118,7 +130,7 @@ export default async function AdminBookingDetailPage({
       <BookingActions
         bookingId={booking.id}
         staffId={booking.staff_id}
-        durationMin={booking.service?.duration_min ?? 60}
+        durationMin={displayDurationMin}
         status={booking.status}
         depositCents={depositCents}
         alreadyRefundedUsd={alreadyRefundedUsd}
@@ -128,7 +140,7 @@ export default async function AdminBookingDetailPage({
         <Section title="Schedule">
           <Field label="Starts" value={fmtAst(booking.starts_at)} />
           <Field label="Ends" value={fmtAst(booking.ends_at)} />
-          <Field label="Duration" value={`${booking.service?.duration_min ?? '—'} min`} />
+          <Field label="Duration" value={`${displayDurationMin} min`} />
           <Field label="Staff" value={booking.staff?.name ?? '—'} />
         </Section>
 

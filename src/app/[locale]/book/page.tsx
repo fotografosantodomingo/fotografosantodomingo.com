@@ -47,9 +47,9 @@ type ServiceRow = {
   slug: string
   name_es: string
   name_en: string
-  description_es: string | null
-  description_en: string | null
-  price_usd: number
+  description_short_es: string | null
+  description_short_en: string | null
+  starting_price_usd: number
   duration_min: number
 }
 
@@ -57,13 +57,24 @@ async function buildJsonLd(locale: 'es' | 'en') {
   const isEs = locale === 'es'
   const supabase = createServiceClient()
   const { data } = await supabase
-    .from('booking_services')
-    .select('slug, name_es, name_en, description_es, description_en, price_usd, duration_min')
+    .from('service_packages')
+    .select(
+      'slug, name_es, name_en, description_short_es, description_short_en, starting_price_usd, duration_min'
+    )
     .eq('active', true)
-    .eq('bookable', true)
+    .eq('bookable_direct', true)
     .order('sort_order', { ascending: true })
 
-  const services = (data as ServiceRow[] | null) ?? []
+  const rows = (data as ServiceRow[] | null) ?? []
+  const services = rows.map(r => ({
+    slug: r.slug,
+    name_es: r.name_es,
+    name_en: r.name_en,
+    description_es: r.description_short_es,
+    description_en: r.description_short_en,
+    price_usd: Number(r.starting_price_usd),
+    duration_min: r.duration_min,
+  }))
 
   const breadcrumb = {
     '@context': 'https://schema.org',
