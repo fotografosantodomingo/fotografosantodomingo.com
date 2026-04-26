@@ -2,7 +2,7 @@
 
 Babula Shots is a professional photography studio in Santo Domingo, Dominican Republic. We provide wedding, portrait, event, family, commercial, and drone photography services with bilingual content (Spanish and English).
 
-Last updated: 2026-04-22
+Last updated: 2026-04-25
 
 ## Primary pages
 
@@ -18,6 +18,10 @@ Last updated: 2026-04-22
 - https://www.fotografosantodomingo.com/en/contact - Contact and booking details in English.
 - https://www.fotografosantodomingo.com/es/get-quote - Quote request flow in Spanish.
 - https://www.fotografosantodomingo.com/en/get-quote - Quote request flow in English.
+- https://www.fotografosantodomingo.com/es/book - Online booking wizard with live calendar, slot picker, and 50% deposit Stripe checkout (Spanish).
+- https://www.fotografosantodomingo.com/en/book - Online booking wizard with live calendar, slot picker, and 50% deposit Stripe checkout (English).
+- https://www.fotografosantodomingo.com/es/prices - Transparent service pricing in Spanish (50% deposit per service).
+- https://www.fotografosantodomingo.com/en/prices - Transparent service pricing in English (50% deposit per service).
 
 ## Content hubs
 
