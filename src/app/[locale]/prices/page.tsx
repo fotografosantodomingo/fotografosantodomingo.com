@@ -536,9 +536,48 @@ export default function PricesPage({ params: { locale } }: Props) {
           </div>
         </section>
 
+        {/* ── Sticky category jump-nav ──────────────────────────────────────
+             B3.6 — addresses /prices mobile long-scroll fatigue.
+             Anchors directly to each category + the Custom section.
+             Sticks to top-16 so it sits below the global Navigation
+             (which is sticky top-0 z-50). z-30 keeps it under the
+             mega-menu panel, above page content. Horizontal scroll on
+             narrow viewports prevents wrapping. ───────────────────── */}
+        <nav
+          className="sticky top-16 z-30 bg-canvas border-b border-hairline-soft -mx-px"
+          aria-label={isEs ? 'Categorías de precios' : 'Pricing categories'}
+        >
+          <div className="container mx-auto px-4">
+            <ul className="flex gap-6 md:gap-8 overflow-x-auto whitespace-nowrap py-3 md:py-3.5 -mx-4 px-4 scrollbar-thin">
+              {CATEGORIES.map((cat) => (
+                <li key={cat.key} className="shrink-0">
+                  <a
+                    href={`#${cat.key}`}
+                    className="font-mono uppercase tracking-widest text-[10px] md:text-[11px] text-ink-muted hover:text-ink transition-opacity"
+                  >
+                    {isEs ? cat.titleEs : cat.titleEn}
+                  </a>
+                </li>
+              ))}
+              <li className="shrink-0">
+                <a
+                  href="#custom"
+                  className="font-mono uppercase tracking-widest text-[10px] md:text-[11px] text-ink-muted hover:text-ink transition-opacity"
+                >
+                  {isEs ? 'Personalizado' : 'Custom'}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
         {/* ── Service categories ─────────────────────────────────────────────── */}
         {CATEGORIES.map((cat) => (
-          <section key={cat.key} className="border-b border-hairline-soft py-16 md:py-20">
+          <section
+            key={cat.key}
+            id={cat.key}
+            className="border-b border-hairline-soft py-16 md:py-20 scroll-mt-32"
+          >
             <div className="container mx-auto px-4">
               <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
                 {isEs ? 'Categoría' : 'Category'}
@@ -618,7 +657,7 @@ export default function PricesPage({ params: { locale } }: Props) {
         ))}
 
         {/* ── Custom / something special ──────────────────────────────────── */}
-        <section className="border-b border-hairline-soft py-16 md:py-20">
+        <section id="custom" className="border-b border-hairline-soft py-16 md:py-20 scroll-mt-32">
           <div className="container mx-auto px-4">
             <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
               {isEs ? 'Personalizado' : 'Custom'}
