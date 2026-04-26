@@ -25,8 +25,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Link href="/admin/availability" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
                   Availability
                 </Link>
-                <Link href="/admin/booking-services" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
-                  Services
+                <Link href="/admin/families" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
+                  Families
+                </Link>
+                <Link href="/admin/packages" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
+                  Packages
+                </Link>
+                <Link href="/admin/quote-requests" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
+                  Quote Requests
+                </Link>
+                <Link href="/admin/booking-services" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white" title="Legacy (frozen)">
+                  Services<span className="ml-1 text-xs text-slate-400">(legacy)</span>
                 </Link>
                 <Link href="/admin/quotes" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
                   Quotes
