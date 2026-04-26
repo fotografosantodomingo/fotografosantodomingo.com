@@ -1,9 +1,18 @@
 # Existing Service Reconciliation Map
 
-**Status**: Pre-Slice A readiness artifact #2
+**Status**: Pre-Slice A readiness artifact #2 — REVISED 2026-04-26 with 9 locked decisions
 **Produced**: 2026-04-26
 **Source of truth**: [BOOKING_REBUILD_BLUEPRINT.md](../BOOKING_REBUILD_BLUEPRINT.md)
 **Constraint**: Architectural Commitment #3 — family slugs MUST equal existing `/services/<slug>` URLs (SEO equity preservation)
+
+## 0 · Locked decisions affecting this document
+
+| # | Decision | Effect on reconciliation |
+|---|---|---|
+| 3 | birthday-photographer = SEO landing only, routes into `event-photography` | Already the default in §3.3 — confirmed |
+| 4 | real-estate + food/beverage stay under `commercial-photography` | Already the default in §3.5 — confirmed |
+| 5 | Beach + Video = dedicated SEO families; **Snoot = NOT a standalone family** (style inside portrait) | §2 family list reduced from 11 → 10 candidates. §3 adds note 3.9 covering Snoot's new home |
+| 6 | Custom Specialty = admin-only utility, **not a public-facing family** | §2 family list reduced from 10 → 9 public families; Custom Specialty noted as admin-only in §2.5 |
 
 This document maps the **18 currently-seeded `booking_services` rows** in production to candidate `service_families` and `service_packages` in the new normalized schema. It is **structural only** — no final package details, prices, or names are invented. The canonical XLS package matrix (awaited from user) will fill in the actual rows, durations, and inclusions.
 
@@ -28,11 +37,14 @@ Plus 1 service-detail page that doesn't follow that pattern:
 birthday-photographer    (lives at /services/birthday-photographer)
 ```
 
-The master file Section 5 proposes 12 families; only the 7 above (and possibly birthday) have SEO URLs. The other 5 families (Beach, Studio/Snoot, Video Production, Custom Specialty) need either:
-- (a) **new SEO URLs created** (no equity to preserve, OK to invent), or
-- (b) **rolled into existing families** as child packages
+The master file Section 5 proposes 12 families. After the 9 locked decisions:
+- **7 families** map to existing `/services/<slug>` SEO URLs (preserved as-is)
+- **2 new families** get fresh SEO URLs: `beach-photography`, `video-production` (Decision 5)
+- **Snoot folds into `portrait-photography`** as packages — not its own family (Decision 5)
+- **Custom Specialty stays as an admin-only DB row** with no public family page (Decision 6)
+- **Birthday-photographer keeps its SEO URL** but commercially routes into `event-photography` (Decision 3)
 
-This document defaults to (a) where the master file explicitly names a separate family, with a note flagging the SEO impact.
+This produces **9 publicly-visible families** + 1 admin-only family = 10 rows in `service_families`.
 
 ---
 
@@ -63,31 +75,53 @@ This document defaults to (a) where the master file explicitly names a separate 
 
 ## 2 · Candidate family list (after reconciliation + XLS expansion)
 
-The blueprint's `service_families` table will hold approximately **11 rows**. The 7 with existing SEO URLs are committed; the other 4 are tentative and depend on the XLS.
+The `service_families` table will hold **10 rows total**: 9 publicly visible families + 1 admin-only utility row (Custom Specialty). Per Decision 5, Snoot does NOT become its own family — it lives as packages under `portrait-photography`.
 
-| # | Family slug | SEO URL existing? | Source of children | Status |
-|---|---|---|---|---|
-| 1 | `wedding-photography` | ✅ yes | rows 1, 2 + XLS expansion (Essential / Full Day / Destination / Multi-day per master file §6.A) | committed |
-| 2 | `portrait-photography` | ✅ yes | rows 7, 11 + XLS expansion (Executive, Studio 10, SD Portrait, Combo, Zona Colonial, Anniversary, Christmas, Boudoir, AI Avatar per master file §6.C) | committed |
-| 3 | `event-photography` | ✅ yes | rows 3, 4, 5, 6, 12 + XLS variants | committed |
-| 4 | `family-photography` | ✅ yes | rows 8, 9, 10 + XLS variants (per master file §6.D) | committed |
-| 5 | `commercial-photography` | ✅ yes | rows 13, 14, 15 + XLS additions | committed |
-| 6 | `drone-services-photography-punta-cana` | ✅ yes | row 16 + XLS expansion (Quick / Standard / Commercial production per master file §6.G) | committed |
-| 7 | `proposal-photography` | ✅ yes | row 18 + XLS expansion (Ninja / Premium / Luxury per master file §6.F) | committed |
-| 8 | `beach-photography` (NEW) | ❌ no — needs new SEO URL | XLS only (Güibia, Caribbean, Saona, Minitas, Premium 15/20 per master file §6.B) | **awaiting XLS + user OK** |
-| 9 | `video-production` (NEW) | ❌ no — needs new SEO URL | row 17 + XLS variants | **awaiting XLS** |
-| 10 | `snoot-optical-creative` (NEW) | ❌ no — needs new SEO URL | XLS only (5 / 10 / 15 photos per master file §6.H) | **awaiting XLS** |
-| 11 | `custom-specialty` (NEW) | ❌ no — quote-only, may not need SEO URL | XLS only (Master file §6.J) | **awaiting XLS** |
+| # | Family slug | SEO URL existing? | Public visibility | Source of children | Status |
+|---|---|---|---|---|---|
+| 1 | `wedding-photography` | ✅ yes | public | rows 1, 2 + XLS expansion (Essential / Full Day / Destination / Multi-day per master file §6.A) | committed |
+| 2 | `portrait-photography` | ✅ yes | public | rows 7, 11 + XLS expansion (Executive, Studio 10, SD Portrait, Combo, Zona Colonial, Anniversary, Christmas, Boudoir, AI Avatar **+ Snoot 5/10/15 photos** per Decision 5) | committed |
+| 3 | `event-photography` | ✅ yes | public | rows 3, 4, 5, 6, 12 + XLS variants. **Birthday SEO page routes here** (Decision 3) | committed |
+| 4 | `family-photography` | ✅ yes | public | rows 8, 9, 10 + XLS variants (per master file §6.D) | committed |
+| 5 | `commercial-photography` | ✅ yes | public | rows 13, 14, 15 + XLS additions. **Real-estate + food/beverage live here** (Decision 4) | committed |
+| 6 | `drone-services-photography-punta-cana` | ✅ yes | public | row 16 + XLS expansion (Quick / Standard / Commercial production per master file §6.G) | committed |
+| 7 | `proposal-photography` | ✅ yes | public | row 18 + XLS expansion (Ninja / Premium / Luxury per master file §6.F) | committed |
+| 8 | `beach-photography` | ❌ NEW SEO URL needed | public | XLS only (Güibia, Caribbean, Saona, Minitas, Premium 15/20 per master file §6.B) | committed (Decision 5) |
+| 9 | `video-production` | ❌ NEW SEO URL needed | public | row 17 + XLS variants | committed (Decision 5) |
+| 10 | `custom-specialty` | ❌ no SEO URL | **admin-only** | XLS only (RFQ tagging utility) | committed (Decision 6) — see §2.5 |
 
-### Required new SEO URL decisions
+### 2.1 — Removed from earlier draft (Decision 5)
 
-For families 8–11 (Beach, Video, Snoot, Custom), each needs:
-- A new `/services/<slug>` SEO page created (full SEO content, not just a compare grid)
-- A new entry in `serviceLandingSlugs` in `src/lib/services/catalog.ts`
-- A sitemap entry
-- An hreflang pair
+`snoot-optical-creative` was previously listed as candidate family #10 with a new SEO URL. **Removed**. Snoot now lives as packages within `portrait-photography`:
+- Likely 3 packages per master file §6.H: Snoot 5 photos / Snoot 10 photos / Snoot Premium 15 photos
+- These packages share the portrait family's SEO URL (`/services/portrait-photography`) and compare page
+- They benefit from the existing portrait SEO authority instead of fragmenting search intent
 
-OR the user can decide to **not create SEO pages** for some (e.g., Custom Specialty). In that case, the family exists in DB and admin but has no public family page — it surfaces only via /services landing and a link to `/get-quote`.
+### 2.2 — New SEO URLs to create (Decision 5)
+
+Two families need fresh SEO URLs (no existing equity to preserve, safe to invent):
+
+| Family | New SEO URL | Slice that creates the page |
+|---|---|---|
+| `beach-photography` | `/services/beach-photography` | Slice B (alongside compare pages) |
+| `video-production` | `/services/video-production` | Slice B |
+
+Each needs:
+- Full SEO content page (not just a compare grid)
+- Entry in `serviceLandingSlugs` (`src/lib/services/catalog.ts`)
+- Sitemap entry (`src/app/sitemap.ts`)
+- Hreflang pair (ES + EN)
+- Internal linking from `/services` family navigator + footer + relevant blog posts
+
+### 2.5 — Custom Specialty as admin-only utility (Decision 6)
+
+Custom Specialty stays in the `service_families` table but with `active = false` for public surfaces. Its purpose:
+- Provides a `family_id` value for `quote_requests` rows that don't fit any other family (truly bespoke projects: theater, fashion, music video, art photography, etc.)
+- Surfaces in the admin /admin/quote-requests filter and reporting
+- **Never rendered on the public site** — no /services entry, no /prices entry, no compare page
+- Does not appear in JSON-LD on /book
+
+Implementation: insert with `active = false` so the public `service_families_public_read` RLS policy hides it. Admin's `service_families_admin_all` policy makes it visible in admin UI for tagging quote requests.
 
 ---
 
@@ -147,6 +181,18 @@ This preserves SEO equity AND aligns transactionally.
 - Clean 1:1 mapping. The single existing DB row becomes the "Ninja Standard" package per master file §6.F.
 - Master file proposes 3 packages (Ninja standard, Premium coordination, Luxury destination) — the XLS will define the other 2.
 
+### 3.9 Snoot Óptico packages → `portrait-photography` family (Decision 5)
+
+- **No existing DB row** for Snoot — comes entirely from the XLS per master file §6.H
+- **Decision 5 routes Snoot under `portrait-photography`** rather than its own family
+- Likely XLS rows: "Snoot Óptico — 5 fotos", "Snoot Óptico — 10 fotos", "Snoot Óptico Premium — 15 fotos" (these match the current /prices page entries that we previously flipped to `bookable: false`)
+- These become 3 child packages of `portrait-photography`, each with `popular_badge` differentiating them in compare:
+  - 5 photos → entry-level
+  - 10 photos → `popular_badge: 'most_booked'` (probable)
+  - 15 photos → `featured: true` + premium positioning
+- The /prices page can remove the dedicated "Studio & Creative Lighting" category header — these surface within the Portraits section instead
+- Once seeded, the `bookable: true` flag returns (currently false per the temporary fix)
+
 ---
 
 ## 4 · Mapping to the new schema (mechanical preview)
@@ -193,20 +239,17 @@ The full migration appears as artifact #5 (skeleton-only, no real seed values un
 
 ---
 
-## 5 · Open questions for the user
+## 5 · Open questions — RESOLVED
 
-Before Slice A starts:
+All four questions raised in the original draft have been answered by the user's locked decisions (2026-04-26):
 
-1. **Birthday handling**: confirm `/services/birthday-photographer` stays as SEO-only page routing into `event-photography` family — OR should it become its own family with its own SEO URL kept?
-2. **Real-estate / food / branding**: confirm they live under `commercial-photography` family — OR should we create a separate `real-estate-photography` family (with new SEO URL)?
-3. **Beach / Video / Snoot families**: confirm they should each get a new `/services/<slug>` SEO page, OR is it acceptable to expose them only via the family navigator and skip dedicated SEO pages?
-4. **Custom Specialty**: should this family have any public surface, or is it admin-only (used to tag custom RFQ-only quotes)?
-
-Default answers if no input:
-1. → SEO page stays, routes into event family
-2. → keep under commercial
-3. → yes, create dedicated SEO pages (full content needed; ranks for new keywords)
-4. → admin-only, no public surface
+1. **Birthday handling** — RESOLVED (Decision 3): `/services/birthday-photographer` stays as SEO-only page, routes into `event-photography` family. No new family created.
+2. **Real-estate / food / branding** — RESOLVED (Decision 4): keep under `commercial-photography` family for this rebuild. No split.
+3. **Beach / Video / Snoot families** — RESOLVED (Decision 5):
+   - Beach → dedicated family + new SEO URL `/services/beach-photography`
+   - Video → dedicated family + new SEO URL `/services/video-production`
+   - Snoot → NOT a family. Lives as 3 packages inside `portrait-photography`. See §3.9.
+4. **Custom Specialty** — RESOLVED (Decision 6): admin-only utility (`active = false` on public side). Used for tagging RFQ-only quotes. No public surface anywhere. See §2.5.
 
 ---
 
@@ -218,4 +261,4 @@ Default answers if no input:
 
 ---
 
-**End of reconciliation map. 18 existing rows mapped to 7 committed families + ~4 new families pending XLS.**
+**End of reconciliation map. 18 existing rows mapped to 9 public families + 1 admin-only utility family. Awaiting canonical XLS for package details.**
