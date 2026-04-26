@@ -6,6 +6,7 @@ import {
   LEGACY_SERVICE_SLUG_TO_FAMILY,
   resolveFamilySlug,
 } from '@/lib/services/legacy-aliases'
+import { getServiceContent } from '@/data/service-content'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'edge'
@@ -125,6 +126,10 @@ export default async function FamilyPage({ params }: Props) {
   const directPackages = packages.filter(p => p.bookable_direct)
   const quoteOnlyPackages = packages.filter(p => !p.bookable_direct)
 
+  // Optional rich SEO content for this family (recovered from pre-A6).
+  // Falls back to null for families that haven't been backfilled yet.
+  const content = getServiceContent(family.slug)
+
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -139,6 +144,10 @@ export default async function FamilyPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'Service',
     serviceType: title,
+    ...(content?.schemaAdditionalType ? { additionalType: content.schemaAdditionalType } : {}),
+    ...(content?.knowsAbout
+      ? { knowsAbout: isEs ? content.knowsAbout.es : content.knowsAbout.en }
+      : {}),
     provider: {
       '@type': 'LocalBusiness',
       '@id': `${BASE_URL}/#business`,
@@ -166,10 +175,29 @@ export default async function FamilyPage({ params }: Props) {
     },
   }
 
+  // FAQPage JSON-LD — recovered. Drives Google's FAQ rich-result feature.
+  const faqJsonLd = content?.faqs
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: content.faqs.map(f => ({
+          '@type': 'Question',
+          name: isEs ? f.question.es : f.question.en,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: isEs ? f.answer.es : f.answer.en,
+          },
+        })),
+      }
+    : null
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
+      {faqJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      )}
 
       <main className="min-h-screen bg-canvas text-ink">
         {/* ── HEADER ── */}
@@ -207,6 +235,36 @@ export default async function FamilyPage({ params }: Props) {
           </div>
         </section>
 
+        {/* ── DIFFERENTIATORS ── above the package grid: answers "why us"
+             before the visitor sees the price. */}
+        {content?.differentiators && content.differentiators.length > 0 && (
+          <section className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-8">
+                {isEs ? 'Por qué nosotros' : 'Why us'}
+              </p>
+              <ul className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-hairline-soft">
+                {content.differentiators.map((d, i) => (
+                  <li key={i} className="border-r border-b border-hairline-soft p-7 md:p-8">
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h3
+                      className="font-display uppercase text-ink mt-3"
+                      style={{ fontSize: 'clamp(20px, 2vw, 26px)', lineHeight: '1.1' }}
+                    >
+                      {isEs ? d.title.es : d.title.en}
+                    </h3>
+                    <p className="text-ink-muted text-sm leading-relaxed mt-3">
+                      {isEs ? d.proof.es : d.proof.en}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
         {directPackages.length > 0 && (
           <PackageGrid
             heading={isEs ? 'Paquetes para reservar online' : 'Packages bookable online'}
@@ -226,6 +284,378 @@ export default async function FamilyPage({ params }: Props) {
             isEs={isEs}
             quoteOnly
           />
+        )}
+
+        {/* ── LONG-FORM CONTENT ── the SEO ranking body. Editorial register:
+             intro paragraph, numbered sections with paragraphs + bullets. */}
+        {content?.longForm && (
+          <section className="border-b border-hairline-soft py-20 md:py-28">
+            <div className="container mx-auto px-4">
+              <div className="max-w-3xl">
+                <p className="text-ink text-lg md:text-xl leading-relaxed">
+                  {isEs ? content.longForm.intro.es : content.longForm.intro.en}
+                </p>
+              </div>
+              <div className="max-w-3xl mt-16 md:mt-20 space-y-16 md:space-y-20">
+                {content.longForm.sections.map((s, i) => (
+                  <div key={i}>
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h2
+                      className="font-display uppercase text-ink mt-4 mb-6"
+                      style={{ fontSize: 'clamp(24px, 3vw, 36px)', lineHeight: '1.05' }}
+                    >
+                      {isEs ? s.title.es : s.title.en}
+                    </h2>
+                    <div className="space-y-5 text-ink leading-relaxed">
+                      {(isEs ? s.paragraphs.es : s.paragraphs.en).map((p, j) => (
+                        <p key={j} className="text-base md:text-lg">{p}</p>
+                      ))}
+                    </div>
+                    {s.bullets && (
+                      <ul className="mt-7 space-y-3">
+                        {(isEs ? s.bullets.es : s.bullets.en).map((b, j) => (
+                          <li key={j} className="flex items-start gap-3 text-ink/85 text-base">
+                            <span
+                              className="mt-2.5 inline-block w-2 h-px bg-ink/60 shrink-0"
+                              aria-hidden="true"
+                            />
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── PROCESS STEPS ── how it works */}
+        {content?.processSteps && content.processSteps.length > 0 && (
+          <section className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Proceso' : 'Process'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-12"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
+                {isEs ? 'Cómo trabajamos' : 'How we work'}
+              </h2>
+              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-l border-hairline-soft">
+                {content.processSteps.map((step, i) => (
+                  <li key={i} className="border-r border-b border-hairline-soft p-6 md:p-7">
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h3
+                      className="font-display uppercase text-ink mt-3"
+                      style={{ fontSize: 'clamp(17px, 1.6vw, 22px)', lineHeight: '1.15' }}
+                    >
+                      {isEs ? step.title.es : step.title.en}
+                    </h3>
+                    <p className="text-ink-muted text-sm leading-relaxed mt-3">
+                      {isEs ? step.description.es : step.description.en}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
+        {/* ── LOCATIONS ── geographic SEO + venue depth + portfolio links */}
+        {content?.locations && content.locations.length > 0 && (
+          <section className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Locaciones' : 'Locations'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-3"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
+                {isEs ? 'Dónde trabajamos' : 'Where we work'}
+              </h2>
+              <p className="text-ink-muted text-base md:text-lg max-w-2xl mb-12">
+                {isEs
+                  ? 'Venues curados en toda República Dominicana con notas de luz y estilo.'
+                  : 'Curated venues across the Dominican Republic with light + style notes.'}
+              </p>
+              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
+                {content.locations.map((loc, i) => (
+                  <li key={i} className="border-r border-b border-hairline-soft">
+                    <Link
+                      href={`/${locale}${loc.href}`}
+                      className="group flex flex-col h-full p-6 md:p-7 hover:bg-ink/5 transition-colors duration-200"
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {loc.area}
+                        </span>
+                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                      </div>
+                      <h3
+                        className="font-display uppercase text-ink"
+                        style={{ fontSize: 'clamp(17px, 1.6vw, 22px)', lineHeight: '1.15' }}
+                      >
+                        {loc.venue}
+                      </h3>
+                      <p className="text-ink-muted text-sm mt-3">
+                        {isEs ? loc.style.es : loc.style.en}
+                      </p>
+                      <p className="text-ink/85 text-sm leading-relaxed mt-3 flex-1">
+                        {isEs ? loc.detail.es : loc.detail.en}
+                      </p>
+                      <div className="mt-5 pt-4 border-t border-hairline-soft font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                        {isEs ? 'Mejor luz' : 'Best light'} ·{' '}
+                        {isEs ? loc.bestLight.es : loc.bestLight.en}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
+        {/* ── SAMPLE TIMELINE ── operational depth */}
+        {content?.longForm?.timeline && (
+          <section className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Timeline' : 'Timeline'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-12 max-w-3xl"
+                style={{ fontSize: 'clamp(24px, 3vw, 36px)', lineHeight: '1.05' }}
+              >
+                {isEs ? content.longForm.timeline.title.es : content.longForm.timeline.title.en}
+              </h2>
+              <ul className="border-t border-hairline-soft max-w-4xl">
+                {content.longForm.timeline.rows.map((row, i) => (
+                  <li
+                    key={i}
+                    className="border-b border-hairline-soft py-5 md:py-6 grid grid-cols-1 md:grid-cols-[160px_180px_1fr] gap-3 md:gap-6"
+                  >
+                    <div className="font-mono uppercase tracking-widest text-[10px] text-ink-muted md:pt-1">
+                      {String(i + 1).padStart(2, '0')} · {isEs ? row.phase.es : row.phase.en}
+                    </div>
+                    <div className="text-ink text-sm md:text-base">
+                      {isEs ? row.timing.es : row.timing.en}
+                    </div>
+                    <div className="text-ink-muted text-sm md:text-base leading-relaxed">
+                      {isEs ? row.notes.es : row.notes.en}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
+        {/* ── TRUST SIGNALS + TESTIMONIALS + CASE STUDY ── */}
+        {content?.trust && (
+          <section className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Confianza · Experiencia' : 'Trust · Experience'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-10"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
+                {isEs ? '10+ temporadas en RD' : '10+ seasons in DR'}
+              </h2>
+
+              <div className="grid gap-10 lg:grid-cols-[2fr_1fr] mb-12">
+                <div>
+                  <p className="text-ink text-base md:text-lg leading-relaxed">
+                    {isEs ? content.trust.expertBio.es : content.trust.expertBio.en}
+                  </p>
+                  <ul className="mt-7 space-y-3">
+                    {(isEs ? content.trust.authoritySignals.es : content.trust.authoritySignals.en).map((sig, i) => (
+                      <li key={i} className="flex items-start gap-3 text-ink/85 text-base">
+                        <span
+                          className="mt-2.5 inline-block w-2 h-px bg-ink/60 shrink-0"
+                          aria-hidden="true"
+                        />
+                        <span>{sig}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {content.trust.caseStudy && (
+                  <div className="border border-hairline-soft p-6 md:p-7">
+                    <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-3">
+                      {isEs ? 'Caso real' : 'Case study'}
+                    </p>
+                    <h3
+                      className="font-display uppercase text-ink mb-5"
+                      style={{ fontSize: 'clamp(17px, 1.6vw, 20px)', lineHeight: '1.15' }}
+                    >
+                      {isEs ? content.trust.caseStudy.title.es : content.trust.caseStudy.title.en}
+                    </h3>
+                    <dl className="space-y-3 text-sm">
+                      <div>
+                        <dt className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {isEs ? 'Reto' : 'Challenge'}
+                        </dt>
+                        <dd className="text-ink mt-1">
+                          {isEs ? content.trust.caseStudy.challenge.es : content.trust.caseStudy.challenge.en}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {isEs ? 'Solución' : 'Solution'}
+                        </dt>
+                        <dd className="text-ink mt-1">
+                          {isEs ? content.trust.caseStudy.solution.es : content.trust.caseStudy.solution.en}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {isEs ? 'Resultado' : 'Result'}
+                        </dt>
+                        <dd className="text-ink mt-1">
+                          {isEs ? content.trust.caseStudy.result.es : content.trust.caseStudy.result.en}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                )}
+              </div>
+
+              {content.trust.testimonials.length > 0 && (
+                <ul className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-hairline-soft">
+                  {content.trust.testimonials.map((t, i) => (
+                    <li key={i} className="border-r border-b border-hairline-soft p-6 md:p-7">
+                      <p className="text-ink text-base leading-relaxed mb-5">
+                        &ldquo;{isEs ? t.quote.es : t.quote.en}&rdquo;
+                      </p>
+                      <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                        {isEs ? t.role.es : t.role.en}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* ── SEASONALITY ── practical knowledge */}
+        {content?.seasonality && (
+          <section className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Temporada · Clima · Luz' : 'Season · Weather · Light'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-10"
+                style={{ fontSize: 'clamp(24px, 3vw, 36px)', lineHeight: '1.05' }}
+              >
+                {isEs ? 'Cuándo programar' : 'When to schedule'}
+              </h2>
+              <ul className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-hairline-soft max-w-5xl">
+                {[
+                  {
+                    label: isEs ? 'Temporada ideal' : 'Best season',
+                    value: isEs ? content.seasonality.bestMonths.es : content.seasonality.bestMonths.en,
+                  },
+                  {
+                    label: isEs ? 'Precaución' : 'Caution',
+                    value: isEs ? content.seasonality.cautionMonths.es : content.seasonality.cautionMonths.en,
+                  },
+                  {
+                    label: isEs ? 'Luz · Golden hour' : 'Light · Golden hour',
+                    value: isEs ? content.seasonality.daylightNote.es : content.seasonality.daylightNote.en,
+                  },
+                ].map(({ label, value }) => (
+                  <li key={label} className="border-r border-b border-hairline-soft p-6 md:p-7">
+                    <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-3">
+                      {label}
+                    </p>
+                    <p className="text-ink text-base leading-relaxed">{value}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
+        {/* ── FAQ ── drives Google FAQ rich-result snippet via FAQPage JSON-LD */}
+        {content?.faqs && content.faqs.length > 0 && (
+          <section className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <div className="max-w-3xl">
+                <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                  FAQ
+                </p>
+                <h2
+                  className="font-display uppercase text-ink mb-12"
+                  style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+                >
+                  {isEs ? 'Preguntas frecuentes' : 'Frequently asked'}
+                </h2>
+                <ul className="border-t border-hairline-soft">
+                  {content.faqs.map((faq, i) => (
+                    <li key={i} className="border-b border-hairline-soft py-6 md:py-7">
+                      <div className="flex items-start gap-4 md:gap-6">
+                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 w-8 mt-1">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <div className="flex-1">
+                          <h3 className="text-ink text-base md:text-lg leading-snug font-medium">
+                            {isEs ? faq.question.es : faq.question.en}
+                          </h3>
+                          <p className="text-ink-muted text-sm md:text-base leading-relaxed mt-3">
+                            {isEs ? faq.answer.es : faq.answer.en}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── INTERNAL LINKS ── spoke navigation */}
+        {content?.internalLinks && content.internalLinks.length > 0 && (
+          <section className="border-b border-hairline-soft py-12 md:py-16">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-8">
+                {isEs ? 'Continuar' : 'Continue'}
+              </p>
+              <ul className="grid grid-cols-1 md:grid-cols-2 border-t border-l border-hairline-soft">
+                {content.internalLinks.map((link, i) => (
+                  <li key={i} className="border-r border-b border-hairline-soft">
+                    <Link
+                      href={`/${locale}${link.href}`}
+                      className="group flex flex-col p-6 md:p-7 hover:bg-ink/5 transition-colors duration-200"
+                    >
+                      <span className="font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                        {isEs ? link.label.es : link.label.en}
+                        <span aria-hidden="true">→</span>
+                      </span>
+                      <p className="text-ink-muted text-sm leading-relaxed mt-3">
+                        {isEs ? link.description.es : link.description.en}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
         )}
 
         {/* ── BOTTOM RFQ CTA ── */}
