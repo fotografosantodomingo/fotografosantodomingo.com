@@ -27,7 +27,6 @@ export default function Navigation() {
   const desktopMenuRef = useRef<HTMLDivElement | null>(null)
   const mobileMenuRef = useRef<HTMLDivElement | null>(null)
 
-  // Get current locale from pathname
   const locale = pathname.startsWith('/en') ? 'en' : 'es'
 
   const megaMenuCategories: MenuCategory[] = useMemo(() => {
@@ -38,8 +37,6 @@ export default function Navigation() {
       { href: '/services/event-photography', labelKey: 'items.eventPhotography', descriptionKey: 'descriptions.eventPhotography' },
       { href: '/services/commercial-photography', labelKey: 'items.commercialPhotography', descriptionKey: 'descriptions.commercialPhotography' },
       { href: '/services/family-photography', labelKey: 'items.familyPhotography', descriptionKey: 'descriptions.familyPhotography' },
-      // Studio Photography and Travel Photography nav items are temporarily removed
-      // until /services/studio-photography and /services/travel-photography hub pages exist.
       { href: '/services/drone-services-photography-punta-cana', labelKey: 'items.droneServices', descriptionKey: 'descriptions.droneServices' },
       { href: '/services/proposal-photography', labelKey: 'items.proposalPhotography', descriptionKey: 'descriptions.proposalPhotography' },
       { href: '/services', labelKey: 'items.additionalServices', descriptionKey: 'descriptions.additionalServices' },
@@ -85,11 +82,9 @@ export default function Navigation() {
 
   const switchLocale = locale === 'es' ? 'en' : 'es'
 
-  // Spoke pages have translated hub slugs (e.g. es: 'bodas/zona-colonial-...' vs en: 'weddings/zona-colonial-...')
-  // A simple locale-prefix replace would produce the wrong URL, so we look up the correct slug from spoke data.
   const buildSwitchPath = (): string => {
-    const pathAfterLocale = pathname.replace(`/${locale}`, '') // e.g. '/bodas/zona-colonial-santo-domingo'
-    const parts = pathAfterLocale.split('/').filter(Boolean) // ['bodas', 'zona-colonial-santo-domingo']
+    const pathAfterLocale = pathname.replace(`/${locale}`, '')
+    const parts = pathAfterLocale.split('/').filter(Boolean)
     if (parts.length === 2) {
       const [hub, spoke] = parts
       const spokeData = findSpokeByRoute(locale, hub, spoke)
@@ -98,7 +93,6 @@ export default function Navigation() {
         return `/${switchLocale}/${targetSlug}`
       }
     }
-    // Fallback: naive replace for all non-spoke pages (no translated path segments)
     return pathname.replace(`/${locale}`, `/${switchLocale}`) || `/${switchLocale}`
   }
 
@@ -279,30 +273,38 @@ export default function Navigation() {
     }
   }, [isMenuOpen])
 
+  // Bugatti class atoms — declared once for readability
+  const navLinkBase =
+    'font-mono uppercase tracking-widest text-[12px] md:text-[13px] text-ink/80 hover:text-ink transition-opacity'
+  const navLinkActive = 'text-ink'
+  const pillCtaBase =
+    'inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-5 py-2.5 rounded-full border border-hairline text-ink transition-colors duration-200 hover:bg-ink hover:text-canvas'
+  const pillSecondary =
+    'inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-3 py-1.5 rounded-md border border-hairline-soft text-ink/80 hover:text-ink hover:border-hairline transition-colors duration-200'
+
   return (
-    <nav className="bg-white/95 text-gray-900 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-950/95 dark:text-white dark:border-white/10">
+    <nav className="bg-canvas text-ink border-b border-hairline-soft sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16 gap-2">
-          {/* Logo */}
-          <Link href={`/${locale}`} className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-gray-900 dark:text-white">
-              Fotografo Santo Domingo
-            </span>
+          {/* Logo — restrained mono wordmark, no shouting */}
+          <Link
+            href={`/${locale}`}
+            className="font-mono uppercase tracking-[0.18em] text-[13px] md:text-[14px] text-ink hover:opacity-70 transition-opacity"
+            aria-label="Babula Shots — Fotógrafo Santo Domingo"
+          >
+            <span className="hidden sm:inline">Fotógrafo Santo Domingo</span>
+            <span className="sm:hidden">Babula Shots</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div ref={desktopMenuRef} className="hidden md:flex items-center gap-1" role="menubar" aria-label={t('services')}>
+          <div ref={desktopMenuRef} className="hidden md:flex items-center gap-2 lg:gap-4" role="menubar" aria-label={t('services')}>
             {baseNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={getLocalizedHref(item.href)}
                 role="menuitem"
                 aria-current={isHrefActive(item.href) ? 'page' : undefined}
-                className={`text-sm transition-colors px-3 py-2 rounded-lg ${
-                  isHrefActive(item.href)
-                    ? 'text-sky-500 dark:text-sky-400 font-semibold bg-sky-500/10'
-                    : 'text-gray-700 hover:text-sky-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-sky-400 dark:hover:bg-white/5'
-                }`}
+                className={`${navLinkBase} ${isHrefActive(item.href) ? navLinkActive + ' underline underline-offset-[6px] decoration-1' : ''} px-1 py-2`}
               >
                 {item.label}
               </Link>
@@ -322,11 +324,9 @@ export default function Navigation() {
                   <button
                     type="button"
                     role="menuitem"
-                    className={`inline-flex items-center gap-2 text-sm transition-colors px-3 py-2 rounded-lg ${
-                      isActive || isOpen
-                        ? 'text-sky-500 dark:text-sky-400 font-semibold bg-sky-500/10'
-                        : 'text-gray-700 hover:text-sky-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-sky-400 dark:hover:bg-white/5'
-                    }`}
+                    className={`${navLinkBase} ${
+                      isActive || isOpen ? navLinkActive : ''
+                    } inline-flex items-center gap-1.5 px-1 py-2`}
                     data-menu-category={category.key}
                     aria-expanded={isOpen}
                     aria-haspopup="true"
@@ -336,7 +336,7 @@ export default function Navigation() {
                   >
                     {t(category.labelKey)}
                     <svg
-                      className={`w-4 h-4 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+                      className={`w-3 h-3 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
                       viewBox="0 0 20 20"
                       fill="currentColor"
                       aria-hidden="true"
@@ -351,16 +351,17 @@ export default function Navigation() {
 
                   <div
                     id={`mega-panel-${category.key}`}
-                    className={`absolute left-1/2 top-full -translate-x-1/2 w-[min(1100px,90vw)] pt-3 transition-all duration-300 ease-in-out ${
-                      isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'
+                    className={`absolute left-1/2 top-full -translate-x-1/2 w-[min(1100px,90vw)] pt-3 transition-opacity duration-200 ease-out ${
+                      isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
                     }`}
                     role="menu"
                     aria-label={t(category.labelKey)}
                   >
-                    <div className="rounded-2xl border border-gray-200 bg-white/95 backdrop-blur-md shadow-2xl p-6 dark:border-white/10 dark:bg-gray-900/95">
-                      <div className="grid grid-cols-4 gap-4">
+                    {/* Bugatti panel: bg-canvas, hairline border, no shadow, no radius */}
+                    <div className="bg-canvas border border-hairline-soft p-8">
+                      <div className="grid grid-cols-4 gap-x-8 gap-y-2">
                         {getColumns(category.items).map((column, colIndex) => (
-                          <div key={`${category.key}-col-${colIndex}`} className="space-y-2">
+                          <div key={`${category.key}-col-${colIndex}`} className="space-y-1">
                             {column.map((item) => (
                               <Link
                                 key={item.href}
@@ -369,15 +370,15 @@ export default function Navigation() {
                                 data-menu-category={category.key}
                                 data-menu-panel-category={category.key}
                                 aria-current={isHrefActive(item.href) ? 'page' : undefined}
-                                className="block rounded-xl px-3 py-2.5 min-h-[44px] transition-colors hover:bg-gray-100 dark:hover:bg-white/5"
+                                className="block py-2.5 group"
                                 onClick={() => setOpenDesktopCategory(null)}
                                 onKeyDown={(event) => handlePanelItemKeyDown(event, category.key)}
                               >
-                                <p className="text-sm font-semibold text-gray-900 hover:text-sky-700 dark:text-gray-100 dark:hover:text-sky-300">
+                                <p className="font-mono uppercase tracking-widest text-[12px] text-ink group-hover:opacity-70 transition-opacity">
                                   {t(item.labelKey)}
                                 </p>
                                 {item.descriptionKey && (
-                                  <p className="text-xs text-gray-600 mt-1 leading-snug dark:text-gray-400">
+                                  <p className="text-xs text-ink-muted mt-1 leading-snug">
                                     {t(item.descriptionKey)}
                                   </p>
                                 )}
@@ -394,32 +395,30 @@ export default function Navigation() {
           </div>
 
           {/* Action Buttons */}
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden md:flex items-center gap-3">
             <Link
               href={switchPath}
-              className="text-sm text-gray-600 hover:text-gray-900 transition-colors px-3 py-1.5 rounded-lg border border-gray-300 hover:border-gray-400 dark:text-gray-400 dark:hover:text-white dark:border-white/10 dark:hover:border-white/20"
+              className={pillSecondary}
+              aria-label={`Switch language to ${switchLocale.toUpperCase()}`}
             >
-              {t('language_switch')}
+              {switchLocale.toUpperCase()}
             </Link>
             <a
               href="https://wa.me/18097209547"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-700 hover:text-sky-600 text-sm font-semibold px-3 py-2 transition-colors dark:text-sky-300 dark:hover:text-sky-200"
+              className="font-mono uppercase tracking-widest text-[12px] text-ink/80 hover:text-ink transition-opacity hidden lg:inline-block"
             >
               {t('whatsapp')}
             </a>
-            <Link
-              href={getLocalizedHref('/book')}
-              className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 text-sm font-bold px-4 py-2 rounded-lg transition-colors"
-            >
+            <Link href={getLocalizedHref('/book')} className={pillCtaBase}>
               {t('book_now')}
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-gray-700 dark:text-gray-300"
+            className="md:hidden p-2 text-ink"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
@@ -437,18 +436,23 @@ export default function Navigation() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div id="mobile-main-menu" ref={mobileMenuRef} className="md:hidden py-5 border-t border-gray-200 dark:border-white/10" role="dialog" aria-modal="true" aria-label={t('services')}>
-            <div className="flex flex-col space-y-2">
+          <div
+            id="mobile-main-menu"
+            ref={mobileMenuRef}
+            className="md:hidden py-5 border-t border-hairline-soft"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('services')}
+          >
+            <div className="flex flex-col gap-1">
               {baseNavItems.map((item) => (
                 <Link
                   key={item.href}
                   href={getLocalizedHref(item.href)}
                   aria-current={isHrefActive(item.href) ? 'page' : undefined}
-                  className={`px-3 py-2.5 rounded-lg transition-colors ${
-                    isHrefActive(item.href)
-                      ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-semibold'
-                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white'
-                  }`}
+                  className={`${navLinkBase} ${
+                    isHrefActive(item.href) ? navLinkActive : ''
+                  } py-3 min-h-[44px] flex items-center`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
@@ -459,18 +463,18 @@ export default function Navigation() {
                 const isOpen = !!openMobileCategories[category.key]
 
                 return (
-                  <div key={category.key} className="rounded-xl border border-gray-200 bg-gray-50 overflow-hidden dark:border-white/10 dark:bg-white/5">
+                  <div key={category.key} className="border-t border-hairline-soft">
                     <button
                       type="button"
-                      className="w-full min-h-[44px] px-3 py-3 text-left flex items-center justify-between text-gray-800 dark:text-gray-200"
+                      className="w-full min-h-[44px] py-3 flex items-center justify-between font-mono uppercase tracking-widest text-[12px] text-ink"
                       onClick={() => toggleMobileCategory(category.key)}
                       aria-expanded={isOpen}
                       aria-controls={`mobile-category-${category.key}`}
                       data-menu-category={category.key}
                     >
-                      <span className="font-semibold">{t(category.labelKey)}</span>
+                      <span>{t(category.labelKey)}</span>
                       <svg
-                        className={`w-5 h-5 transition-transform duration-[250ms] ${isOpen ? 'rotate-180' : ''}`}
+                        className={`w-4 h-4 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
                         viewBox="0 0 20 20"
                         fill="currentColor"
                         aria-hidden="true"
@@ -485,17 +489,17 @@ export default function Navigation() {
 
                     <div
                       id={`mobile-category-${category.key}`}
-                      className={`grid transition-all duration-[250ms] ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                      className={`grid transition-all duration-300 ease-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
                     >
                       <div className="overflow-hidden">
-                        <div className="pb-2 px-2 space-y-1">
+                        <div className="pb-3 pl-2 space-y-1">
                           {category.items.map((item) => (
                             <Link
                               key={item.href}
                               href={getLocalizedHref(item.href)}
                               data-menu-category={category.key}
                               aria-current={isHrefActive(item.href) ? 'page' : undefined}
-                              className="block min-h-[44px] rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white"
+                              className="block min-h-[40px] py-2 font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity"
                               onClick={() => setIsMenuOpen(false)}
                             >
                               {t(item.labelKey)}
@@ -508,29 +512,29 @@ export default function Navigation() {
                 )
               })}
 
-              <div className="flex flex-col gap-2 pt-4 border-t border-gray-200 mt-2 dark:border-white/10">
+              <div className="flex flex-col gap-3 pt-5 mt-2 border-t border-hairline-soft">
                 <a
                   href="https://wa.me/18097209547"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-center px-4 py-3 rounded-lg transition-colors"
+                  className={pillSecondary + ' w-full'}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {t('whatsapp')}
                 </a>
                 <Link
                   href={getLocalizedHref('/book')}
-                  className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-center px-4 py-3 rounded-lg transition-colors"
+                  className={pillCtaBase + ' w-full'}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {t('book_now')}
                 </Link>
                 <Link
                   href={switchPath}
-                  className="text-center text-gray-600 hover:text-gray-900 transition-colors py-2 dark:text-gray-400 dark:hover:text-white"
+                  className="text-center font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {t('language_switch')}
+                  {switchLocale.toUpperCase()}
                 </Link>
               </div>
             </div>

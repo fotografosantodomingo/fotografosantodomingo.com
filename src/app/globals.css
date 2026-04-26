@@ -19,6 +19,35 @@
   body {
     @apply font-sans text-gray-900;
   }
+
+  /* ================================================================
+     Bugatti tokens — mode-aware CSS custom properties
+     Phase B (redesign/bugatti-hero) — see DESIGN.md §2.
+     `:root` defaults to dark mode (matches the early-init script).
+     `html.light-mode` flips to a clean monochrome inversion.
+
+     Stored as RGB-triplet channels (no `rgb()` wrapper) so Tailwind
+     utilities can apply opacity modifiers via `<alpha-value>` —
+     enabling `bg-ink/5`, `text-ink/80`, etc. The hairline tokens
+     keep intrinsic alpha because they're always used at fixed
+     opacity for hairline borders.
+     ================================================================ */
+  :root,
+  html.dark {
+    --bugatti-canvas: 0 0 0;
+    --bugatti-ink: 255 255 255;
+    --bugatti-ink-muted: 153 153 153;
+    --bugatti-hairline: rgba(255, 255, 255, 0.6);
+    --bugatti-hairline-soft: rgba(255, 255, 255, 0.18);
+  }
+
+  html.light-mode {
+    --bugatti-canvas: 255 255 255;
+    --bugatti-ink: 0 0 0;
+    --bugatti-ink-muted: 107 107 107;
+    --bugatti-hairline: rgba(0, 0, 0, 0.6);
+    --bugatti-hairline-soft: rgba(0, 0, 0, 0.18);
+  }
 }
 
 @layer components {
