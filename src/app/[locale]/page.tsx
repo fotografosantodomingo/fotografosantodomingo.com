@@ -243,18 +243,28 @@ export default async function HomePage({ params: { locale } }: Props) {
       </section>
 
       {/* ── PORTFOLIO PREVIEW ── */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-20 md:py-24 bg-canvas border-t border-hairline-soft">
         <div className="container mx-auto px-0 md:px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">
-              {isEs ? 'Nuestro Trabajo' : 'Our Work'}
+          <div className="px-4 md:px-0 mb-10 md:mb-14">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Trabajo · Selección reciente' : 'Work · Recent selection'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink"
+              style={{
+                fontSize: 'clamp(36px, 7vw, 96px)',
+                lineHeight: '0.95',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {isEs ? 'Nuestro trabajo' : 'Our work'}
             </h2>
-            <p className="text-gray-400 text-lg">
-              {isEs ? 'Algunos momentos recientes del lente de Michal Babula' : 'Some recent moments through Michal Babula\'s lens'}
+            <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-6">
+              {isEs ? 'Algunos momentos recientes del lente de Michal Babula.' : 'Some recent moments through Michal Babula\'s lens.'}
             </p>
           </div>
 
-          <div className="mb-10">
+          <div className="mb-12">
             <div className="hidden md:grid relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid-cols-2 gap-0">
               {desktopWorkImages.map((src, index) => (
                 <Link key={`desktop-work-${index}`} href={`/${locale}/portfolio`} className="block">
@@ -294,15 +304,13 @@ export default async function HomePage({ params: { locale } }: Props) {
             </div>
           </div>
 
-          <div className="text-center">
+          <div className="text-center px-4 md:px-0">
             <Link
               href={`/${locale}/portfolio`}
-              className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white font-semibold px-8 py-4 rounded-xl transition-colors"
+              className="inline-flex items-center justify-center gap-2 font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
             >
               {isEs ? 'Ver portafolio completo' : 'View full portfolio'}
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
+              <span aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
@@ -376,43 +384,55 @@ export default async function HomePage({ params: { locale } }: Props) {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-20 md:py-24 bg-canvas border-t border-hairline-soft">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <span className="text-2xl font-bold text-yellow-400">4.9</span>
-              <div className="flex text-yellow-400">{'★★★★★'}</div>
-              <span className="text-gray-400 text-sm">(91 {isEs ? 'reseñas' : 'reviews'})</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold">
-              {isEs ? 'Lo que dicen nuestros clientes' : 'What our clients say'}
+          <div className="mb-12 md:mb-16">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Reseñas · 91 en Google · 4.9 ★' : 'Reviews · 91 on Google · 4.9 ★'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink"
+              style={{
+                fontSize: 'clamp(36px, 7vw, 96px)',
+                lineHeight: '0.95',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {isEs ? 'Lo que dicen' : 'What they say'}
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <ul className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-hairline-soft mb-12">
             {testimonials.map((t) => (
-              <div key={t.name} className="bg-gray-950 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
-                <div className="flex text-yellow-400 text-lg">{'★'.repeat(t.rating)}</div>
-                <p className="text-gray-300 leading-relaxed flex-1">&ldquo;{t.text}&rdquo;</p>
+              <li key={t.name} className="border-r border-b border-hairline-soft p-7 md:p-8 flex flex-col gap-5">
+                <span
+                  className="font-mono uppercase tracking-widest text-[10px] text-ink-muted"
+                  aria-label={`${t.rating} out of 5 stars`}
+                >
+                  {'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}
+                </span>
+                <p className="text-ink leading-relaxed flex-1 text-[15px]">
+                  &ldquo;{t.text}&rdquo;
+                </p>
                 <div>
-                  <p className="font-semibold text-white">{t.name}</p>
-                  <p className="text-xs text-gray-500">{t.role}</p>
+                  <p className="font-mono uppercase tracking-widest text-[11px] text-ink">{t.name}</p>
+                  <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mt-1">{t.role}</p>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
 
           <div className="text-center">
             <a
               href="https://g.page/r/babulashots/review"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border border-gray-700 hover:border-sky-500 text-gray-300 hover:text-white font-medium px-6 py-3 rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
             >
-              <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064 5.96 5.96 0 014.162 1.632l2.884-2.884A9.969 9.969 0 0012.545 2C7.021 2 2.543 6.477 2.543 12s4.478 10 10.002 10c8.396 0 10.249-7.85 9.426-11.748L12.545 10.24z"/>
               </svg>
-              {isEs ? 'Dejar una reseña en Google' : 'Leave a Google review'}
+              {isEs ? 'Reseña en Google' : 'Review on Google'}
             </a>
           </div>
         </div>
