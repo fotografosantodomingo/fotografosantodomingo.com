@@ -101,6 +101,31 @@ export type ServiceSeo = {
 }
 
 /**
+ * One geo coverage block. Renders inside the family page as an H2 anchor
+ * so URLs like `/services/wedding-photography#punta-cana` are linkable and
+ * deep-linkable. Each block carries:
+ *  - city slug → drives the #anchor + the `?city=<slug>` CTA attribution
+ *  - cityName → H2 + link labels
+ *  - intro → 120-180 word geo-specific paragraph (must NOT reuse family longForm.intro)
+ *  - venues → 6+ named real venues with one-line context
+ *  - miniFaq → 1-2 geo-specific Q&As (rolled into family FAQPage schema)
+ *  - bestSeasonNote → optional climate/timing note
+ *
+ * Drives:
+ *  - Visible "Where we shoot" section on the family page
+ *  - Service JSON-LD `areaServed` array (each city becomes a Place node)
+ *  - Per-geo CTA URLs that pre-fill the booking flow with the city
+ */
+export type GeoBlock = {
+  citySlug: string
+  cityName: Bilingual
+  intro: Bilingual
+  venues: BilingualList
+  miniFaq?: FaqItem[]
+  bestSeasonNote?: Bilingual
+}
+
+/**
  * Full SEO content payload for one family. All sections are optional —
  * the page renders only what's present, so a family can ship with just
  * a couple of sections and grow over time.
@@ -108,6 +133,8 @@ export type ServiceSeo = {
 export type ServiceContent = {
   /** Title + description + keywords for the family page's <head>. */
   seo?: ServiceSeo
+  /** Per-city geo coverage blocks rendered as H2-anchored sections. */
+  geoCoverage?: GeoBlock[]
   /** Used for FAQPage + Service knowsAbout JSON-LD. */
   knowsAbout?: BilingualList
   /** Used as Service.additionalType in JSON-LD (e.g. https://schema.org/WeddingService). */

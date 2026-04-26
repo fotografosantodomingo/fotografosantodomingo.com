@@ -68,12 +68,14 @@ export default function GetQuoteWizard({ locale }: Props) {
     return date.toISOString().split('T')[0]
   }, [])
 
-  // ?family=<slug>, ?package=<slug>, ?cta=<id> for source attribution
-  // and family preselection from compare-card deep links.
+  // ?family=<slug>, ?package=<slug>, ?city=<slug>, ?cta=<id> for source
+  // attribution and family preselection from compare-card and geo-block
+  // deep links.
   const [sourcePage, setSourcePage] = useState<string | null>(null)
   const [sourceCta, setSourceCta] = useState<string | null>(null)
   const [presetPackageSlug, setPresetPackageSlug] = useState<string | null>(null)
   const [presetFamilySlug, setPresetFamilySlug] = useState<string | null>(null)
+  const [attributionCity, setAttributionCity] = useState<string | null>(null)
   useEffect(() => {
     if (typeof window === 'undefined') return
     setSourcePage(window.location.pathname)
@@ -84,6 +86,8 @@ export default function GetQuoteWizard({ locale }: Props) {
     if (family) setPresetFamilySlug(family)
     const pkg = params.get('package')
     if (pkg) setPresetPackageSlug(pkg)
+    const city = params.get('city')
+    if (city) setAttributionCity(city)
     if (family) {
       const matchEntry = Object.entries(QUOTE_SERVICE_TYPE_TO_FAMILY_SLUG).find(
         ([, slug]) => slug === family
@@ -240,6 +244,7 @@ export default function GetQuoteWizard({ locale }: Props) {
       }
       if (familySlug) payload.family_slug = familySlug
       if (presetPackageSlug) payload.package_slug = presetPackageSlug
+      if (attributionCity) payload.attribution_city = attributionCity
 
       const response = await fetch('/api/quote-request', {
         method: 'POST',

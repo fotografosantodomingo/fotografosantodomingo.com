@@ -148,7 +148,7 @@ export default async function BookPage({
   searchParams,
 }: {
   params: { locale: string }
-  searchParams: { service?: string }
+  searchParams: { service?: string; city?: string }
 }) {
   const locale = (params.locale === 'en' ? 'en' : 'es') as 'es' | 'en'
   const schemas = await buildJsonLd(locale)
@@ -162,7 +162,11 @@ export default async function BookPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
-      <BookingWizard locale={locale} preselectedServiceSlug={searchParams.service} />
+      <BookingWizard
+        locale={locale}
+        preselectedServiceSlug={searchParams.service}
+        attributionCity={searchParams.city}
+      />
     </main>
   )
 }

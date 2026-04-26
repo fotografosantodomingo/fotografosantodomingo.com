@@ -164,7 +164,19 @@ export default async function FamilyPage({ params }: Props) {
       name: 'Fotografo Santo Domingo | Babula Shots',
       url: BASE_URL,
     },
-    areaServed: { '@type': 'Country', name: 'Dominican Republic' },
+    // areaServed expands when geoCoverage is present: country + each city
+    // becomes its own Place node, giving Google explicit per-city signals
+    // alongside the country-level reference.
+    areaServed: content?.geoCoverage && content.geoCoverage.length > 0
+      ? [
+          { '@type': 'Country', name: 'Dominican Republic' },
+          ...content.geoCoverage.map(geo => ({
+            '@type': 'City',
+            name: isEs ? geo.cityName.es : geo.cityName.en,
+            containedInPlace: { '@type': 'Country', name: 'Dominican Republic' },
+          })),
+        ]
+      : { '@type': 'Country', name: 'Dominican Republic' },
     description: tagline ?? title,
     url: `${BASE_URL}/${locale}/services/${family.slug}`,
     hasOfferCatalog: {
@@ -186,11 +198,17 @@ export default async function FamilyPage({ params }: Props) {
   }
 
   // FAQPage JSON-LD — recovered. Drives Google's FAQ rich-result feature.
-  const faqJsonLd = content?.faqs
+  // Includes both family-level FAQs and per-geo mini-FAQs so each city's
+  // questions surface in Search.
+  const allFaqs = [
+    ...(content?.faqs ?? []),
+    ...(content?.geoCoverage ?? []).flatMap(g => g.miniFaq ?? []),
+  ]
+  const faqJsonLd = allFaqs.length > 0
     ? {
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
-        mainEntity: content.faqs.map(f => ({
+        mainEntity: allFaqs.map(f => ({
           '@type': 'Question',
           name: isEs ? f.question.es : f.question.en,
           acceptedAnswer: {
@@ -338,6 +356,132 @@ export default async function FamilyPage({ params }: Props) {
                     )}
                   </div>
                 ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── GEO COVERAGE ── Tier-2 SEO geo capture: per-city H2 anchors,
+             named venues, mini-FAQ, and per-geo CTAs that flow `?city=`
+             into the booking + quote wizards for attribution. */}
+        {content?.geoCoverage && content.geoCoverage.length > 0 && (
+          <section className="border-b border-hairline-soft py-20 md:py-28">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Cobertura Geográfica' : 'Geographic Coverage'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-6"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
+                {isEs ? `Dónde cubrimos ${family.title_es.toLowerCase()}` : `Where we cover ${family.title_en.toLowerCase()}`}
+              </h2>
+              <p className="text-ink-muted text-base md:text-lg max-w-2xl mb-12">
+                {isEs
+                  ? 'Cobertura concentrada en las ciudades y resorts donde más bodas, eventos y producciones ocurren. Cada ciudad tiene su propio flujo, venues y notas de coordinación.'
+                  : 'Coverage focused on the cities and resorts where most weddings, events, and productions happen. Each city has its own flow, venues, and coordination notes.'}
+              </p>
+
+              {/* City quick-jump nav */}
+              <nav className="mb-12 flex flex-wrap gap-2">
+                {content.geoCoverage.map((geo) => (
+                  <a
+                    key={geo.citySlug}
+                    href={`#${geo.citySlug}`}
+                    className="inline-flex items-center font-mono uppercase tracking-widest text-[11px] px-4 py-2 rounded-full border border-hairline-soft text-ink-muted hover:text-ink hover:border-hairline transition-colors duration-200"
+                  >
+                    {isEs ? geo.cityName.es : geo.cityName.en}
+                  </a>
+                ))}
+              </nav>
+
+              <div className="space-y-20 md:space-y-24">
+                {content.geoCoverage.map((geo) => {
+                  const cityName = isEs ? geo.cityName.es : geo.cityName.en
+                  const familyTitle = isEs ? family.title_es : family.title_en
+                  const familyTitleLower = familyTitle.toLowerCase()
+                  const heading = isEs
+                    ? `${familyTitle} en ${cityName}`
+                    : `${familyTitle} in ${cityName}`
+                  return (
+                    <article key={geo.citySlug} id={geo.citySlug} className="scroll-mt-24">
+                      <h3
+                        className="font-display uppercase text-ink mb-6"
+                        style={{ fontSize: 'clamp(24px, 3vw, 36px)', lineHeight: '1.05' }}
+                      >
+                        {heading}
+                      </h3>
+
+                      <div className="max-w-3xl">
+                        <p className="text-ink text-base md:text-lg leading-relaxed">
+                          {isEs ? geo.intro.es : geo.intro.en}
+                        </p>
+                      </div>
+
+                      {geo.bestSeasonNote && (
+                        <p className="mt-6 max-w-3xl font-mono uppercase tracking-widest text-[11px] text-ink-muted leading-relaxed">
+                          {isEs ? geo.bestSeasonNote.es : geo.bestSeasonNote.en}
+                        </p>
+                      )}
+
+                      {/* Named venues */}
+                      <div className="mt-10">
+                        <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                          {isEs ? 'Venues que conocemos' : 'Venues we know'}
+                        </p>
+                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
+                          {(isEs ? geo.venues.es : geo.venues.en).map((venue, vi) => (
+                            <li key={vi} className="flex items-start gap-3 text-ink/85 text-sm leading-relaxed">
+                              <span
+                                className="mt-2 inline-block w-2 h-px bg-ink/60 shrink-0"
+                                aria-hidden="true"
+                              />
+                              <span>{venue}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Mini-FAQ for this geo */}
+                      {geo.miniFaq && geo.miniFaq.length > 0 && (
+                        <div className="mt-10 max-w-3xl">
+                          <ul className="border-t border-hairline-soft">
+                            {geo.miniFaq.map((q, qi) => (
+                              <li key={qi} className="border-b border-hairline-soft py-5">
+                                <h4 className="text-ink text-base md:text-lg leading-snug font-medium">
+                                  {isEs ? q.question.es : q.question.en}
+                                </h4>
+                                <p className="text-ink-muted text-sm md:text-base leading-relaxed mt-3">
+                                  {isEs ? q.answer.es : q.answer.en}
+                                </p>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Per-geo CTAs — carry ?city= for attribution */}
+                      <div className="mt-10 flex flex-col sm:flex-row gap-3">
+                        {family.bookable && (
+                          <Link
+                            href={`/${locale}/book?service=${family.slug}&city=${geo.citySlug}&cta=geo-block-${geo.citySlug}`}
+                            className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
+                          >
+                            {isEs ? `Reservar en ${cityName}` : `Book in ${cityName}`}
+                          </Link>
+                        )}
+                        {family.quoteable && (
+                          <Link
+                            href={`/${locale}/get-quote?family=${family.slug}&city=${geo.citySlug}&cta=geo-block-${geo.citySlug}`}
+                            className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+                          >
+                            {isEs ? `Cotizar ${familyTitleLower} en ${cityName}` : `Get quote for ${familyTitleLower} in ${cityName}`}
+                          </Link>
+                        )}
+                      </div>
+                    </article>
+                  )
+                })}
               </div>
             </div>
           </section>

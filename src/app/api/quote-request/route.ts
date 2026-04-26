@@ -38,6 +38,8 @@ const Body = z.object({
   locale: z.enum(['es', 'en']).default('es'),
   source_page: z.string().trim().max(200).optional(),
   source_cta: z.string().trim().max(100).optional(),
+  // Geo-block attribution from /services/<family>#<city> CTAs.
+  attribution_city: z.string().trim().min(1).max(100).optional(),
   // Anti-spam fields (clients should send empty honeypot + form-load timestamp)
   [HONEYPOT_FIELD]: z.string().max(0).optional(),
   _form_started_at: z.number().int().nonnegative().optional(),
@@ -142,6 +144,7 @@ export async function POST(request: NextRequest) {
     event_date: data.event_date ?? null,
     source_page: data.source_page ?? null,
     source_cta: data.source_cta ?? null,
+    attribution_city: data.attribution_city ?? null,
     status: 'NEW' as const,
   }
 

@@ -27,6 +27,10 @@ const BodySchema = z.object({
   customer_phone: z.string().trim().max(40).optional(),
   locale: z.enum(['es', 'en']).default('es'),
   terms_accepted: z.literal(true),
+  // Geo-block attribution. Set when the booking originates from a
+  // /services/<family>#<city> CTA (e.g. punta-cana). Optional + loose so
+  // adding a new city never requires another schema or API change.
+  attribution_city: z.string().trim().min(1).max(100).optional(),
 })
 
 /**
@@ -224,6 +228,7 @@ export async function POST(request: NextRequest) {
       currency_display: 'USD',
       terms_accepted: true,
       terms_accepted_at: new Date().toISOString(),
+      attribution_city: data.attribution_city ?? null,
     })
     .select('id, created_at')
     .single()
