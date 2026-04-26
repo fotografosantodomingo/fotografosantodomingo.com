@@ -33,9 +33,16 @@ const t = (locale: Locale, es: string, en: string) => (locale === 'es' ? es : en
 export default function BookingWizard({
   locale,
   preselectedServiceSlug,
+  attributionCity,
 }: {
   locale: Locale
   preselectedServiceSlug?: string
+  /**
+   * City slug captured from the geo coverage CTAs on family pages
+   * (?city=punta-cana, ?city=cap-cana, etc). Stored on the booking row as
+   * `attribution_city` so we can measure which geo blocks convert.
+   */
+  attributionCity?: string
 }) {
   const [stepIdx, setStepIdx] = useState(0)
   const [state, setState] = useState<State>({
@@ -119,6 +126,7 @@ export default function BookingWizard({
         customer_phone: details.phone || undefined,
         locale,
         terms_accepted: true,
+        ...(attributionCity ? { attribution_city: attributionCity } : {}),
       }),
     })
 
