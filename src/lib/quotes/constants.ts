@@ -72,3 +72,27 @@ export const QUOTE_CALLBACK_WINDOWS = [
   { value: 'AFTERNOON_12_5', labelEs: 'Tarde (12pm - 5pm)', labelEn: 'Afternoon (12pm - 5pm)' },
   { value: 'EVENING_5_8', labelEs: 'Noche (5pm - 8pm)', labelEn: 'Evening (5pm - 8pm)' },
 ]
+
+// Mapping wizard service-type → canonical service_families.slug.
+// Used by /api/quote-request submission so the RFQ lands attached to the
+// right family. Best-effort: OTHER and types without a clean canonical
+// match resolve to null and submit as a generic RFQ.
+export const QUOTE_SERVICE_TYPE_TO_FAMILY_SLUG: Record<QuoteServiceType, string | null> = {
+  WEDDINGS: 'wedding-photography',
+  ENGAGEMENT_SESSION: 'wedding-photography',
+  QUINCEANERAS: 'birthday-event-photography',
+  MATERNITY: 'family-beach-photography',
+  FAMILY: 'family-beach-photography',
+  BIRTHDAY_PARTY: 'birthday-event-photography',
+  BAPTISMS: 'birthday-event-photography',
+  GRADUATION: 'birthday-event-photography',
+  CHILDRENS_SESSIONS: 'family-beach-photography',
+  ARCHITECTURE: 'real-estate-drone-photography',
+  PORTRAITS: 'luxury-portrait-photography',
+  CORPORATE_EVENTS: 'corporate-event-photography',
+  CORPORATE_PORTRAITS: 'luxury-portrait-photography',
+  FOOD_AND_BEVERAGE: 'commercial-branding-photography',
+  VIDEO_PRODUCTION: 'custom-specialty-photography',
+  DRONE_AERIAL: 'real-estate-drone-photography',
+  OTHER: null,
+}

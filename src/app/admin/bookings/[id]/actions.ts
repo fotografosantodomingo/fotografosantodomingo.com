@@ -40,7 +40,8 @@ export async function cancelBooking(
       `id, status, locale, customer_name, customer_email,
        starts_at, ends_at,
        stripe_payment_intent_id, stripe_amount_usd, deposit_amount_usd, refund_amount_usd,
-       service:booking_services ( name_es, name_en, icon, duration_min ),
+       package_snapshot,
+       family:service_families ( icon ),
        staff:staff_members ( name )`
     )
     .eq('id', bookingId)
@@ -93,17 +94,24 @@ export async function cancelBooking(
   }
 
   // Send cancellation email (logs to booking_email_log; never blocks the action)
-  const svc = booking.service as { name_es: string; name_en: string; icon: string; duration_min: number } | null
-  const staff = booking.staff as { name: string } | null
+  type Snap = {
+    name_es?: string
+    name_en?: string
+    family_icon?: string
+    duration_min?: number
+  } | null
+  const snap = (booking.package_snapshot ?? null) as Snap
+  const fam = booking.family as unknown as { icon: string } | null
+  const staff = booking.staff as unknown as { name: string } | null
   const ctx: BookingEmailContext = {
     bookingId: booking.id,
     customerName: booking.customer_name,
     customerEmail: booking.customer_email,
     locale: (booking.locale ?? 'es') as 'es' | 'en',
-    serviceNameEs: svc?.name_es ?? '',
-    serviceNameEn: svc?.name_en ?? '',
-    serviceIcon: svc?.icon ?? '📷',
-    durationMin: svc?.duration_min ?? 60,
+    serviceNameEs: snap?.name_es ?? '',
+    serviceNameEn: snap?.name_en ?? '',
+    serviceIcon: snap?.family_icon ?? fam?.icon ?? '📷',
+    durationMin: snap?.duration_min ?? 60,
     startsAt: booking.starts_at,
     endsAt: booking.ends_at,
     staffName: staff?.name ?? 'Babula Shots',
@@ -175,10 +183,7 @@ export async function rescheduleBooking(
 
   const { data: booking, error: fetchErr } = await supabase
     .from('bookings')
-    .select(
-      `id, staff_id, status,
-       service:booking_services ( duration_min )`
-    )
+    .select(`id, staff_id, status, package_snapshot`)
     .eq('id', bookingId)
     .single()
 
@@ -190,18 +195,19 @@ export async function rescheduleBooking(
     return { error: `Cannot reschedule a ${booking.status} booking`, success: false }
   }
 
-  const service = booking.service as { duration_min: number } | null
-  if (!service?.duration_min) {
-    return { error: 'Service data missing', success: false }
+  const snap = (booking.package_snapshot ?? null) as { duration_min?: number } | null
+  const durationMin = snap?.duration_min ?? 0
+  if (!durationMin) {
+    return { error: 'Package snapshot missing duration', success: false }
   }
 
-  const endsAt = new Date(startsAt.getTime() + service.duration_min * 60_000)
+  const endsAt = new Date(startsAt.getTime() + durationMin * 60_000)
 
   // Verify the new slot is available (excluding the current booking from the check)
   const slots = await getAvailableSlots(supabase, {
     staffId: booking.staff_id,
     dateYmd: utcToAstDate(startsAt),
-    durationMin: service.duration_min,
+    durationMin,
   })
 
   const targetIso = startsAt.toISOString()

@@ -52,7 +52,7 @@ export default function TermsPage({ params: { locale } }: Props) {
         {/* Back link */}
         <Link
           href={`/${locale}`}
-          className="inline-flex items-center text-sky-400 hover:text-sky-300 text-sm mb-10 transition-colors"
+          className="inline-flex items-center text-ink hover:text-ink text-sm mb-10 transition-colors"
         >
           ← {isEs ? 'Volver al inicio' : 'Back to home'}
         </Link>
@@ -60,7 +60,7 @@ export default function TermsPage({ params: { locale } }: Props) {
         <h1 className="text-3xl font-bold text-white mb-2">
           {isEs ? 'Términos y Condiciones' : 'Terms and Conditions'}
         </h1>
-        <p className="text-gray-500 text-sm mb-10">
+        <p className="text-ink-muted/70 text-sm mb-10">
           {isEs ? 'Última actualización: 7 de abril de 2026' : 'Last updated: April 7, 2026'}
         </p>
 
@@ -89,8 +89,8 @@ export default function TermsPage({ params: { locale } }: Props) {
               : 'Fotografo Santo Domingo is a professional photography service based in Santo Domingo, Distrito Nacional, Dominican Republic. We provide professional photography services across the entire country including Santo Domingo, Punta Cana, Bávaro, Cap Cana, Isla Saona, Tortuga Bay, Casa de Campo, La Romana, Santiago, San Pedro de Macorís, Puerto Plata and any other location agreed upon with the client.'}
             </p>
             <p className="mt-3">{isEs
-              ? <>Puedes contactarnos en <ObfuscatedEmail locale="es" className="text-sky-400 hover:text-sky-300" /> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</>
-              : <>You can reach us at <ObfuscatedEmail locale="en" className="text-sky-400 hover:text-sky-300" /> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a>.</>}
+              ? <>Puedes contactarnos en <ObfuscatedEmail locale="es" className="text-ink hover:text-ink" /> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-ink hover:text-ink">+1 809 720 9547</a>.</>
+              : <>You can reach us at <ObfuscatedEmail locale="en" className="text-ink hover:text-ink" /> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-ink hover:text-ink">+1 809 720 9547</a>.</>}
             </p>
           </Section>
 
@@ -305,22 +305,22 @@ export default function TermsPage({ params: { locale } }: Props) {
               ? 'Para cualquier pregunta, inquietud o disputa sobre estos Términos y Condiciones, contáctanos:'
               : 'For any questions, concerns or disputes regarding these Terms and Conditions, please contact us:'}
             </p>
-            <address className="mt-4 not-italic text-gray-300 space-y-1">
+            <address className="mt-4 not-italic text-ink-muted space-y-1">
               <p className="font-semibold text-white">Fotografo Santo Domingo</p>
               <p>Santo Domingo, Distrito Nacional, República Dominicana</p>
-              <p>Email: <ObfuscatedEmail locale={locale} className="text-sky-400 hover:text-sky-300" /></p>
-              <p>WhatsApp: <a href="https://wa.me/18097209547" className="text-sky-400 hover:text-sky-300">+1 809 720 9547</a></p>
-              <p>Web: <a href="https://www.fotografosantodomingo.com" className="text-sky-400 hover:text-sky-300">www.fotografosantodomingo.com</a></p>
+              <p>Email: <ObfuscatedEmail locale={locale} className="text-ink hover:text-ink" /></p>
+              <p>WhatsApp: <a href="https://wa.me/18097209547" className="text-ink hover:text-ink">+1 809 720 9547</a></p>
+              <p>Web: <a href="https://www.fotografosantodomingo.com" className="text-ink hover:text-ink">www.fotografosantodomingo.com</a></p>
             </address>
           </Section>
 
         </div>
 
         {/* Footer nav */}
-        <div className="mt-14 pt-8 border-t border-gray-800 flex flex-wrap gap-4 text-sm text-gray-500">
-          <Link href={`/${locale}`} className="hover:text-gray-300 transition-colors">{isEs ? 'Inicio' : 'Home'}</Link>
-          <Link href={`/${locale}/privacy`} className="hover:text-gray-300 transition-colors">{isEs ? 'Política de Privacidad' : 'Privacy Policy'}</Link>
-          <Link href={`/${locale}/contact`} className="hover:text-gray-300 transition-colors">{isEs ? 'Contacto' : 'Contact'}</Link>
+        <div className="mt-14 pt-8 border-t border-gray-800 flex flex-wrap gap-4 text-sm text-ink-muted/70">
+          <Link href={`/${locale}`} className="hover:text-ink-muted transition-colors">{isEs ? 'Inicio' : 'Home'}</Link>
+          <Link href={`/${locale}/privacy`} className="hover:text-ink-muted transition-colors">{isEs ? 'Política de Privacidad' : 'Privacy Policy'}</Link>
+          <Link href={`/${locale}/contact`} className="hover:text-ink-muted transition-colors">{isEs ? 'Contacto' : 'Contact'}</Link>
         </div>
       </div>
     </main>
@@ -331,7 +331,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <section>
       <h2 className="text-xl font-semibold text-white mb-3 pb-2 border-b border-gray-800">{title}</h2>
-      <div className="text-gray-300 leading-relaxed">{children}</div>
+      <div className="text-ink-muted leading-relaxed">{children}</div>
     </section>
   )
 }

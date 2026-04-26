@@ -99,118 +99,142 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
   const featuredItems = images.filter((img) => img.featured)
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 dark:bg-gray-950 dark:text-white">
+    <main className="min-h-screen bg-canvas text-ink">
       {/* Hero */}
-      <section className="relative bg-white py-20 dark:bg-gray-950">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-sky-500/5 to-transparent" />
-        <div className="relative container mx-auto px-4 text-center max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            {locale === 'es' ? 'Nuestro Portafolio' : 'Our Portfolio'}
-          </h1>
-          <p className="text-xl text-slate-600 dark:text-gray-300 mb-8">
-            {locale === 'es'
-              ? 'Descubre nuestra colección de momentos capturados con pasión y profesionalismo'
-              : 'Discover our collection of moments captured with passion and professionalism'}
+      <section className="border-b border-hairline-soft py-20 md:py-28 lg:py-32">
+        <div className="container mx-auto px-4">
+          <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-6">
+            {locale === 'es' ? 'Portafolio · Selección' : 'Portfolio · Selection'}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <h1
+            className="font-display uppercase text-ink max-w-5xl"
+            style={{
+              fontSize: 'clamp(40px, 9vw, 144px)',
+              lineHeight: '0.95',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            {locale === 'es' ? 'Nuestro portafolio' : 'Our portfolio'}
+          </h1>
+          <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-8 leading-relaxed">
+            {locale === 'es'
+              ? 'Descubre nuestra colección de momentos capturados con pasión y profesionalismo.'
+              : 'Discover our collection of moments captured with passion and professionalism.'}
+          </p>
+          <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row">
             <a
               href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-4 rounded-lg font-semibold transition-colors"
+              className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
             >
-              {locale === 'es' ? 'Solicitar Sesión' : 'Book a Session'}
+              {locale === 'es' ? 'Reservar sesión' : 'Book a session'}
             </a>
-            <Link href={`/${locale}/services`} className="bg-slate-200 text-slate-900 px-8 py-4 rounded-lg font-semibold hover:bg-slate-300 transition-colors dark:bg-white/10 dark:text-white dark:hover:bg-white/20">
-              {locale === 'es' ? 'Ver Servicios' : 'View Services'}
+            <Link
+              href={`/${locale}/services`}
+              className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+            >
+              {locale === 'es' ? 'Ver servicios' : 'View services'}
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Featured Work */}
-      <section className="py-20 bg-slate-100 dark:bg-gray-900">
+      {/* Featured Work — full-bleed photograph */}
+      <section className="border-b border-hairline-soft py-12 md:py-16 bg-black">
         <div className="container mx-auto px-0 md:px-4">
-          <div className="mb-16">
-            <figure className="m-0">
-              <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
-                <Image
-                  src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/photo_sessions_dominican_republic_Photographer_in_santo_domingo_laidus"
-                  alt={locale === 'es'
-                    ? 'Fotografo en Santo Domingo Republica Dominicana sesion de fotos profesional'
-                    : 'Photographer in Santo Domingo Dominican Republic professional photo session'}
-                  title={locale === 'es'
-                    ? 'Sesion de fotos en Santo Domingo Republica Dominicana'
-                    : 'Photo session in Santo Domingo Dominican Republic'}
-                  width={2400}
-                  height={1350}
-                  className="w-full h-auto object-contain"
-                  priority
-                />
-              </div>
-            </figure>
-          </div>
+          <figure className="m-0">
+            <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
+              <Image
+                src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/photo_sessions_dominican_republic_Photographer_in_santo_domingo_laidus"
+                alt={locale === 'es'
+                  ? 'Fotografo en Santo Domingo Republica Dominicana sesion de fotos profesional'
+                  : 'Photographer in Santo Domingo Dominican Republic professional photo session'}
+                title={locale === 'es'
+                  ? 'Sesion de fotos en Santo Domingo Republica Dominicana'
+                  : 'Photo session in Santo Domingo Dominican Republic'}
+                width={2400}
+                height={1350}
+                className="w-full h-auto object-contain"
+                priority
+              />
+            </div>
+          </figure>
         </div>
       </section>
 
       {/* Filter + Grid */}
-      <section className="py-12 bg-white dark:bg-gray-950">
+      <section className="border-b border-hairline-soft py-16 md:py-20">
         <div className="container mx-auto px-0 md:px-4">
-          <div className="flex flex-wrap justify-center gap-4 mb-12 px-4 md:px-0">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setActiveFilter(category.id)}
-                className={`px-6 py-3 rounded-full font-medium transition-colors ${
-                  activeFilter === category.id
-                    ? 'bg-sky-600 text-white'
-                    : 'bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-white/10 dark:text-gray-300 dark:hover:bg-white/20'
-                }`}
-              >
-                {category.label}
-              </button>
-            ))}
+          <div className="px-4 md:px-0 mb-10">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {locale === 'es' ? 'Filtrar' : 'Filter'}
+            </p>
+            <ul className="flex flex-wrap gap-2 md:gap-3">
+              {categories.map((category) => {
+                const active = activeFilter === category.id
+                return (
+                  <li key={category.id}>
+                    <button
+                      onClick={() => setActiveFilter(category.id)}
+                      aria-pressed={active}
+                      className={`inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] px-5 py-2.5 rounded-full border transition-colors duration-200 ${
+                        active
+                          ? 'bg-ink text-canvas border-ink'
+                          : 'border-hairline text-ink hover:bg-ink hover:text-canvas'
+                      }`}
+                    >
+                      {category.label}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-2">
             {filteredItems.map((item, index) => {
               const loc = resolveLocale(item, locale)
               // First 2 items are above the fold — no lazy loading (better LCP)
               const isPriority = index < 2
               return (
                 <figure key={item.id} className="group cursor-pointer m-0" onClick={() => openLightbox(item)}>
-                  <div className="relative overflow-hidden md:rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                  <div className="relative overflow-hidden">
                     <Image
                       src={getThumbSrc(item)}
                       alt={loc.alt}
                       title={loc.title}
                       width={item.width || 1200}
                       height={item.height || 800}
-                      className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500"
                       loading={isPriority ? 'eager' : 'lazy'}
                       priority={isPriority}
                       onError={() => markFailed(item.id)}
                     />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-end">
-                      <div className="text-white p-4 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="text-lg font-bold mb-1">{loc.title}</p>
-                        <p className="text-sm opacity-90">{item.location}</p>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-end">
+                      <div className="px-4 py-3 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="font-mono uppercase tracking-widest text-[11px] text-white">
+                          {loc.title}
+                        </p>
+                        {item.location && (
+                          <p className="font-mono uppercase tracking-widest text-[10px] text-white/70 mt-1">
+                            {item.location}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
-                  {loc.caption && (
-                    <figcaption className="text-xs text-slate-600 dark:text-gray-500 mt-1 italic px-1 hidden md:block">
-                      {loc.caption}
-                    </figcaption>
-                  )}
                 </figure>
               )
             })}
           </div>
 
           {filteredItems.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-slate-500 dark:text-gray-500 text-lg">
+            <div className="text-center py-16 md:py-20 px-4">
+              <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+                {locale === 'es' ? 'Vacío' : 'Empty'}
+              </p>
+              <p className="text-base text-ink-muted">
                 {locale === 'es' ? 'No hay trabajos en esta categoría aún.' : 'No work in this category yet.'}
               </p>
             </div>
@@ -219,40 +243,71 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
       </section>
 
       {/* Stats */}
-      <section className="py-20 bg-slate-100 border-t border-slate-200 dark:bg-gray-900 dark:border-white/10">
+      <section className="border-b border-hairline-soft py-16 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">500+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Clientes satisfech@s' : 'Satisfied Clients'}</div></div>
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">10+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Años de Experiencia' : 'Years Experience'}</div></div>
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">20+</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Ubicaciones' : 'Locations Served'}</div></div>
-            <div><div className="text-4xl md:text-5xl font-bold mb-2">5★</div><div className="text-slate-600 dark:text-gray-400">{locale === 'es' ? 'Reseñas en Google' : 'Google Reviews'}</div></div>
+          <div className="grid grid-cols-2 md:grid-cols-4 border-t border-l border-hairline-soft max-w-4xl">
+            {[
+              { value: '500+', label: locale === 'es' ? 'Clientes' : 'Clients' },
+              { value: '10+', label: locale === 'es' ? 'Años' : 'Years' },
+              { value: '20+', label: locale === 'es' ? 'Ubicaciones' : 'Locations' },
+              { value: '5★', label: locale === 'es' ? 'Google' : 'Google' },
+            ].map(({ value, label }) => (
+              <div key={label} className="border-r border-b border-hairline-soft p-5 md:p-7">
+                <div
+                  className="font-display text-ink"
+                  style={{ fontSize: 'clamp(28px, 3vw, 40px)', lineHeight: '1' }}
+                >
+                  {value}
+                </div>
+                <div className="mt-3 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                  {label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-slate-100 text-slate-900 dark:bg-gray-900 dark:text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            {locale === 'es' ? '¿Te gusta lo que ves?' : 'Like what you see?'}
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
-            {locale === 'es'
-              ? 'Contáctanos para discutir tu proyecto fotográfico personalizado.'
-              : 'Contact us to discuss your custom photography project.'}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold transition-colors"
+      <section className="py-20 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {locale === 'es' ? 'Contacto' : 'Contact'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink mb-5"
+              style={{ fontSize: 'clamp(32px, 5vw, 56px)', lineHeight: '1.0' }}
             >
-              WhatsApp: {CONTACT_INFO.phone}
-            </a>
-            <Link href={`/${locale}/contact`} className="bg-sky-600 hover:bg-sky-700 text-white px-8 py-4 rounded-lg font-semibold transition-colors">
-              {locale === 'es' ? 'Enviar Mensaje' : 'Send Message'}
-            </Link>
+              {locale === 'es' ? '¿Te gusta lo que ves?' : 'Like what you see?'}
+            </h2>
+            <p className="text-ink-muted text-base md:text-lg mb-10 leading-relaxed max-w-xl">
+              {locale === 'es'
+                ? 'Contáctanos para discutir tu proyecto fotográfico personalizado.'
+                : 'Contact us to discuss your custom photography project.'}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a
+                href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-[#25D366] text-black hover:opacity-90 transition-opacity duration-200"
+              >
+                WhatsApp
+              </a>
+              <Link
+                href={`/${locale}/contact`}
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
+              >
+                {locale === 'es' ? 'Enviar mensaje' : 'Send message'}
+              </Link>
+              <Link
+                href={`/${locale}/get-quote`}
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+              >
+                {locale === 'es' ? 'Cotizar' : 'Get quote'}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -267,12 +322,12 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
           >
             {/* Top bar */}
             <div
-              className="flex items-center justify-between px-4 py-3 bg-white/95 dark:bg-black/80 border-b border-slate-200 dark:border-white/10 flex-shrink-0"
+              className="flex items-center justify-between px-4 py-3 bg-white/95 dark:bg-black/80 border-b border-slate-200 dark:border-hairline-soft flex-shrink-0"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={closeLightbox}
-                className="flex items-center gap-2 text-slate-900 hover:text-slate-700 dark:text-white dark:hover:text-gray-300 transition-colors font-medium text-sm"
+                className="flex items-center gap-2 text-slate-900 hover:text-slate-700 dark:text-white dark:hover:text-ink-muted transition-colors font-medium text-sm"
               >
                 <span className="text-xl leading-none">←</span>
                 {locale === 'es' ? 'Volver al portafolio' : 'Back to portfolio'}
@@ -280,15 +335,15 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
               <div className="text-slate-900 dark:text-white text-center flex-1 mx-4">
                 <p className="font-semibold text-sm truncate">{loc.title}</p>
                 {lightbox.location && (
-                  <p className="text-xs text-slate-500 dark:text-gray-400">{lightbox.location}</p>
+                  <p className="text-xs text-slate-500 dark:text-ink-muted">{lightbox.location}</p>
                 )}
-                <p className="text-xs text-slate-500 dark:text-gray-400 mt-0.5">
+                <p className="text-xs text-slate-500 dark:text-ink-muted mt-0.5">
                   {(lightboxIndex ?? 0) + 1} / {images.length}
                 </p>
               </div>
               <button
                 onClick={closeLightbox}
-                className="text-slate-900 hover:text-slate-700 dark:text-white dark:hover:text-gray-300 transition-colors text-2xl leading-none w-8 h-8 flex items-center justify-center"
+                className="text-slate-900 hover:text-slate-700 dark:text-white dark:hover:text-ink-muted transition-colors text-2xl leading-none w-8 h-8 flex items-center justify-center"
                 aria-label="Close"
               >
                 ✕

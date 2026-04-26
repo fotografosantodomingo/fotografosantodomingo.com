@@ -6,6 +6,7 @@ import HomeFaq from '@/components/HomeFaq'
 import { getFaqData } from '@/lib/faq-data'
 import { getReviewStats } from '@/lib/supabase/images'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
+import { createServiceClient } from '@/lib/supabase/service'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -64,12 +65,30 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
 }
 
 export default async function HomePage({ params: { locale } }: Props) {
-  const [t, reviewStats] = await Promise.all([
+  const supabase = createServiceClient()
+  const [t, reviewStats, familiesRes] = await Promise.all([
     getTranslations({ locale, namespace: 'hero' }),
     getReviewStats(),
+    supabase
+      .from('service_families')
+      .select('id, slug, title_es, title_en, tagline_es, tagline_en, icon, sort_order, bookable, quoteable')
+      .eq('active', true)
+      .order('sort_order', { ascending: true }),
   ])
 
   const isEs = locale === 'es'
+  type FamilyRow = {
+    id: string
+    slug: string
+    title_es: string
+    title_en: string
+    tagline_es: string | null
+    tagline_en: string | null
+    icon: string
+    bookable: boolean
+    quoteable: boolean
+  }
+  const families = (familiesRes.data ?? []) as FamilyRow[]
 
   const desktopWorkImages = [
     'https://res.cloudinary.com/dwewurxla/image/upload/w_1200,c_limit,f_auto,q_auto/v1776563769/sesion-fotos-pareja-playa-punta-cana_nniebt.webp',
@@ -114,74 +133,14 @@ export default async function HomePage({ params: { locale } }: Props) {
     },
   ]
 
-  const services = [
-    {
-      slug: 'wedding',
-      title: isEs ? 'Bodas & Pre-bodas' : 'Weddings & Pre-wedding',
-      desc: isEs ? 'Cobertura completa del día más importante de tu vida.' : 'Full coverage of the most important day of your life.',
-      icon: (
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-        </svg>
-      ),
-    },
-    {
-      slug: 'portrait',
-      title: isEs ? 'Retratos & Corporativos' : 'Portraits & Corporate',
-      desc: isEs ? 'Sesiones ejecutivas, familiares y de moda con luz profésional.' : 'Executive, family and fashion sessions with professional light.',
-      icon: (
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-        </svg>
-      ),
-    },
-    {
-      slug: 'drone',
-      title: isEs ? 'Drone & Aéreo' : 'Drone & Aerial',
-      desc: isEs ? 'Perspectivas únicas desde el cielo para eventos y propiedades.' : 'Unique sky-high perspectives for events and real estate.',
-      icon: (
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-        </svg>
-      ),
-    },
-    {
-      slug: 'quinceañera',
-      title: isEs ? 'Quinceañeras' : 'Quinceañeras',
-      desc: isEs ? 'Celebra los 15 años con una sesión de película.' : 'Celebrate the 15th birthday with a cinematic session.',
-      icon: (
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-        </svg>
-      ),
-    },
-    {
-      slug: 'commercial',
-      title: isEs ? 'Comercial & Producto' : 'Commercial & Product',
-      desc: isEs ? 'Fotografía para marcas, restaurantes, hoteles y comercios.' : 'Photography for brands, restaurants, hotels and businesses.',
-      icon: (
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
-        </svg>
-      ),
-    },
-    {
-      slug: 'event',
-      title: isEs ? 'Eventos & Celebraciones' : 'Events & Celebrations',
-      desc: isEs ? 'Cumpleaños, bautizos, graduaciones y eventos corporativos.' : 'Birthdays, baptisms, graduations and corporate events.',
-      icon: (
-        <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-        </svg>
-      ),
-    },
-  ]
-
   return (
-    <main className="min-h-screen bg-gray-950 text-white">
+    <main className="min-h-screen bg-canvas text-ink">
 
-      {/* ── HERO ── */}
-      <section className="hero-white-lock relative overflow-hidden bg-gray-950 pt-0 pb-20 md:pb-24 lg:pb-28">
+      {/* ── HERO ── Bugatti monumental hero. Photograph stays untouched.
+           Vignette overlay is the only "shadow" Bugatti permits (DESIGN.md §4).
+           Hero text remains white-on-photo in BOTH themes via .hero-white-* classes
+           (existing legibility lock from globals.css — preserved). */}
+      <section className="hero-white-lock relative overflow-hidden bg-black pt-0 pb-16 md:pb-20 lg:pb-24">
         <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
           <div className="hidden md:block relative w-full overflow-hidden" style={{ aspectRatio: '1200 / 675' }}>
             <img
@@ -197,6 +156,8 @@ export default async function HomePage({ params: { locale } }: Props) {
               loading="eager"
               decoding="async"
             />
+            {/* Bugatti legibility vignette — the only shadow in the system */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none" />
           </div>
           <div className="md:hidden relative w-full overflow-hidden" style={{ aspectRatio: '4 / 5' }}>
             <img
@@ -212,54 +173,69 @@ export default async function HomePage({ params: { locale } }: Props) {
               loading="eager"
               decoding="async"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none" />
           </div>
         </div>
 
-        <div className="relative container mx-auto px-4 text-center mt-10 md:mt-12 lg:mt-14">
+        <div className="relative container mx-auto px-4 text-center mt-10 md:mt-14 lg:mt-16">
 
-          {/* badge */}
-          <div className="hero-white-text inline-flex items-center gap-2 bg-black/35 border border-white/25 rounded-full px-4 py-1.5 text-sm text-white mb-8">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            {isEs ? 'Disponible para nuevas reservas · Santo Domingo, RD' : 'Available for new bookings · Santo Domingo, DR'}
+          {/* Availability badge — restyled as thin transparent pill, white pulse */}
+          <div className="hero-white-text inline-flex items-center gap-2.5 border border-white/40 rounded-full px-4 py-2 mb-10">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-white opacity-75 animate-ping" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
+            </span>
+            <span className="font-mono uppercase tracking-widest text-[10px] md:text-[11px] text-white">
+              {isEs ? 'Disponible · Santo Domingo, RD' : 'Available · Santo Domingo, DR'}
+            </span>
           </div>
 
-          <h1 className="hero-white-text text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-white">
+          {/* Monumental display headline — Bugatti scale curve */}
+          <h1
+            className="hero-white-text font-display uppercase font-normal text-white mb-8"
+            style={{
+              fontSize: 'clamp(48px, 11vw, 168px)',
+              lineHeight: '0.95',
+              letterSpacing: '-0.01em',
+            }}
+          >
             {t('title_main')}{' '}
-            <span className="hero-white-highlight bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="hero-white-highlight text-white">
               {t('title_highlight')}
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-white mb-10 leading-relaxed max-w-3xl mx-auto">
+          <p className="hero-white-text text-base md:text-lg text-white/85 mb-10 leading-relaxed max-w-2xl mx-auto">
             {t('subtitle')}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+          {/* Pill CTAs — Bugatti primary + secondary discipline */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-14">
             <Link
               href={`/${locale}/portfolio`}
-              className="bg-sky-600 hover:bg-sky-500 text-white font-semibold text-lg px-8 py-4 rounded-xl transition-colors"
+              className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors duration-200"
             >
               {t('cta_primary')}
             </Link>
             <Link
               href={`/${locale}/get-quote`}
-              className="bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold text-lg px-8 py-4 rounded-xl transition-colors"
+              className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] md:text-[13px] px-7 py-3.5 rounded-full border border-white text-white hover:bg-white hover:text-black transition-colors duration-200"
             >
               {t('cta_secondary')}
             </Link>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
+          {/* Stats — flat, no cards, mono caps labels under display numbers */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4 max-w-3xl mx-auto pt-10 border-t border-white/15">
             {[
               { value: t('stats_weddings'), label: isEs ? 'Clientes satisfech@s' : 'Satisfied clients' },
               { value: t('stats_years'),    label: isEs ? 'Años de experiencia' : 'Years experience' },
               { value: t('stats_locations'),label: isEs ? 'Ubicaciones' : 'Locations served' },
               { value: t('stats_reviews'),  label: isEs ? '91 reseñas en Google' : '91 Google reviews' },
             ].map(({ value, label }) => (
-              <div key={label} className="hero-white-card bg-black/35 rounded-2xl p-4 border border-white/20 backdrop-blur-[1px]">
-                <div className="hero-white-text text-3xl font-bold text-white mb-1">{value}</div>
-                <div className="hero-white-text text-xs text-white uppercase tracking-wider">{label}</div>
+              <div key={label} className="text-center">
+                <div className="hero-white-text font-display text-3xl md:text-4xl text-white">{value}</div>
+                <div className="hero-white-text font-mono uppercase tracking-widest text-[10px] text-white/70 mt-2">{label}</div>
               </div>
             ))}
           </div>
@@ -267,18 +243,28 @@ export default async function HomePage({ params: { locale } }: Props) {
       </section>
 
       {/* ── PORTFOLIO PREVIEW ── */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-20 md:py-24 bg-canvas border-t border-hairline-soft">
         <div className="container mx-auto px-0 md:px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">
-              {isEs ? 'Nuestro Trabajo' : 'Our Work'}
+          <div className="px-4 md:px-0 mb-10 md:mb-14">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Trabajo · Selección reciente' : 'Work · Recent selection'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink"
+              style={{
+                fontSize: 'clamp(36px, 7vw, 96px)',
+                lineHeight: '0.95',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {isEs ? 'Nuestro trabajo' : 'Our work'}
             </h2>
-            <p className="text-gray-400 text-lg">
-              {isEs ? 'Algunos momentos recientes del lente de Michal Babula' : 'Some recent moments through Michal Babula\'s lens'}
+            <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-6">
+              {isEs ? 'Algunos momentos recientes del lente de Michal Babula.' : 'Some recent moments through Michal Babula\'s lens.'}
             </p>
           </div>
 
-          <div className="mb-10">
+          <div className="mb-12">
             <div className="hidden md:grid relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid-cols-2 gap-0">
               {desktopWorkImages.map((src, index) => (
                 <Link key={`desktop-work-${index}`} href={`/${locale}/portfolio`} className="block">
@@ -318,95 +304,135 @@ export default async function HomePage({ params: { locale } }: Props) {
             </div>
           </div>
 
-          <div className="text-center">
+          <div className="text-center px-4 md:px-0">
             <Link
               href={`/${locale}/portfolio`}
-              className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white font-semibold px-8 py-4 rounded-xl transition-colors"
+              className="inline-flex items-center justify-center gap-2 font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
             >
               {isEs ? 'Ver portafolio completo' : 'View full portfolio'}
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
+              <span aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── SERVICES ── */}
-      <section className="py-20 bg-gray-950">
+      {/* ── SERVICE GATEWAY ── canonical 9 service_families.
+           Visually leads into /services/[family] per Phase B mission.
+           No cards: each family is a typographic block separated by hairlines. */}
+      <section className="py-24 md:py-32 bg-canvas">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">
-              {isEs ? 'Servicios' : 'Services'}
+          <div className="mb-14 md:mb-20">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Servicios · Nueve familias' : 'Services · Nine families'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink"
+              style={{
+                fontSize: 'clamp(40px, 7vw, 88px)',
+                lineHeight: '0.95',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {isEs ? 'Cada momento, su lente.' : 'Each moment, its lens.'}
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-6">
               {isEs
-                ? 'Fotografía profesional para cada momento especial, en Santo Domingo y toda República Dominicana.'
-                : 'Professional photography for every special moment, in Santo Domingo and all of Dominican Republic.'}
+                ? 'Reserva en línea o solicita un presupuesto personalizado. Cobertura en Santo Domingo y toda la República Dominicana.'
+                : 'Book online or request a custom quote. Coverage across Santo Domingo and the entire Dominican Republic.'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {services.map((svc) => (
-              <Link
-                key={svc.slug}
-                href={`/${locale}/services`}
-                className="group flex flex-col gap-4 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-sky-500/50 rounded-2xl p-6 transition-all duration-200"
-              >
-                <div className="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center group-hover:bg-sky-500/20 transition-colors">
-                  {svc.icon}
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg text-white mb-1">{svc.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{svc.desc}</p>
-                </div>
-                <span className="text-sky-400 text-sm font-medium mt-auto">
-                  {isEs ? 'Ver detalles →' : 'Learn more →'}
-                </span>
-              </Link>
-            ))}
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
+            {families.map((f) => {
+              const title = isEs ? f.title_es : f.title_en
+              const tagline = isEs ? f.tagline_es : f.tagline_en
+              return (
+                <li key={f.id} className="border-r border-b border-hairline-soft">
+                  <Link
+                    href={`/${locale}/services/${f.slug}`}
+                    className="group flex flex-col gap-3 p-7 md:p-8 lg:p-10 h-full hover:bg-ink/5 transition-colors duration-200"
+                  >
+                    <span className="text-2xl mb-1" aria-hidden="true">{f.icon}</span>
+                    <h3
+                      className="font-display uppercase text-ink"
+                      style={{ fontSize: 'clamp(24px, 2.4vw, 32px)', lineHeight: '1.05' }}
+                    >
+                      {title}
+                    </h3>
+                    {tagline && (
+                      <p className="text-ink-muted text-sm leading-relaxed flex-1">{tagline}</p>
+                    )}
+                    <span className="font-mono uppercase tracking-widest text-[11px] text-ink mt-4 inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                      {isEs ? 'Explorar' : 'Explore'}
+                      <span aria-hidden="true">→</span>
+                    </span>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+
+          <div className="mt-12 md:mt-16 text-center">
+            <Link
+              href={`/${locale}/services`}
+              className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+            >
+              {isEs ? 'Ver todos los servicios' : 'View all services'}
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-20 md:py-24 bg-canvas border-t border-hairline-soft">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <span className="text-2xl font-bold text-yellow-400">4.9</span>
-              <div className="flex text-yellow-400">{'★★★★★'}</div>
-              <span className="text-gray-400 text-sm">(91 {isEs ? 'reseñas' : 'reviews'})</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold">
-              {isEs ? 'Lo que dicen nuestros clientes' : 'What our clients say'}
+          <div className="mb-12 md:mb-16">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Reseñas · 91 en Google · 4.9 ★' : 'Reviews · 91 on Google · 4.9 ★'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink"
+              style={{
+                fontSize: 'clamp(36px, 7vw, 96px)',
+                lineHeight: '0.95',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {isEs ? 'Lo que dicen' : 'What they say'}
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <ul className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-hairline-soft mb-12">
             {testimonials.map((t) => (
-              <div key={t.name} className="bg-gray-950 border border-gray-800 rounded-2xl p-6 flex flex-col gap-4">
-                <div className="flex text-yellow-400 text-lg">{'★'.repeat(t.rating)}</div>
-                <p className="text-gray-300 leading-relaxed flex-1">&ldquo;{t.text}&rdquo;</p>
+              <li key={t.name} className="border-r border-b border-hairline-soft p-7 md:p-8 flex flex-col gap-5">
+                <span
+                  className="font-mono uppercase tracking-widest text-[10px] text-ink-muted"
+                  aria-label={`${t.rating} out of 5 stars`}
+                >
+                  {'★'.repeat(t.rating)}{'☆'.repeat(5 - t.rating)}
+                </span>
+                <p className="text-ink leading-relaxed flex-1 text-[15px]">
+                  &ldquo;{t.text}&rdquo;
+                </p>
                 <div>
-                  <p className="font-semibold text-white">{t.name}</p>
-                  <p className="text-xs text-gray-500">{t.role}</p>
+                  <p className="font-mono uppercase tracking-widest text-[11px] text-ink">{t.name}</p>
+                  <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mt-1">{t.role}</p>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
 
           <div className="text-center">
             <a
               href="https://g.page/r/babulashots/review"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border border-gray-700 hover:border-sky-500 text-gray-300 hover:text-white font-medium px-6 py-3 rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
             >
-              <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064 5.96 5.96 0 014.162 1.632l2.884-2.884A9.969 9.969 0 0012.545 2C7.021 2 2.543 6.477 2.543 12s4.478 10 10.002 10c8.396 0 10.249-7.85 9.426-11.748L12.545 10.24z"/>
               </svg>
-              {isEs ? 'Dejar una reseña en Google' : 'Leave a Google review'}
+              {isEs ? 'Reseña en Google' : 'Review on Google'}
             </a>
           </div>
         </div>
@@ -458,40 +484,45 @@ export default async function HomePage({ params: { locale } }: Props) {
           }),
         }}
       />
-      {/* ── BOOKING CTA ── */}
-      <section className="py-16 bg-gray-950 border-t border-gray-800">
+      {/* ── BOOKING CTA ── pill discipline, WhatsApp keeps brand green
+           (single intentional palette break — flagged in B1 proposal). */}
+      <section className="py-20 md:py-24 bg-canvas border-t border-hairline-soft">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                {isEs ? '¿Listo para reservar?' : 'Ready to book?'}
+          <div className="max-w-4xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-10">
+            <div className="md:max-w-md">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Reserva' : 'Booking'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-5"
+                style={{ fontSize: 'clamp(32px, 5vw, 56px)', lineHeight: '1.0' }}
+              >
+                {isEs ? '¿Listo?' : 'Ready?'}
               </h2>
-              <p className="text-gray-400">
+              <p className="text-ink-muted text-base leading-relaxed">
                 {isEs
                   ? 'Respondo en menos de 4 horas. También puedes reservar directamente online.'
                   : 'I reply within 4 hours. You can also book directly online.'}
               </p>
             </div>
-            <div className="flex flex-wrap gap-3 shrink-0">
-              <a
-                href="https://babulashotsrd.setmore.com/reserva"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-sky-500 hover:bg-sky-400 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+            <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+              <Link
+                href={`/${locale}/book`}
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
               >
                 {isEs ? 'Reservar sesión' : 'Book a session'}
-              </a>
+              </Link>
               <a
                 href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(isEs ? 'Hola, quiero reservar una sesión fotográfica.' : 'Hi, I would like to book a photography session.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-green-600 hover:bg-green-500 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-[#25D366] text-black hover:opacity-90 transition-opacity duration-200"
               >
                 WhatsApp
               </a>
               <Link
                 href={`/${locale}/get-quote`}
-                className="bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
+                className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
               >
                 {isEs ? 'Solicitar presupuesto' : 'Get quote'}
               </Link>

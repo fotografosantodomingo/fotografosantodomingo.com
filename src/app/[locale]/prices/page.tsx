@@ -449,176 +449,228 @@ export default function PricesPage({ params: { locale } }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
 
-      <main className="min-h-screen bg-neutral-950 text-white">
+      <main className="min-h-screen bg-canvas text-ink">
         {/* ── Hero ─────────────────────────────────────────────────────────── */}
-        <section className="pt-24 pb-12 px-4 text-center">
-          <div className="max-w-3xl mx-auto">
-            <p className="text-sky-400 text-sm font-semibold tracking-widest uppercase mb-3">
-              {isEs ? 'Precios transparentes · Santo Domingo, RD' : 'Transparent pricing · Santo Domingo, DR'}
+        <section className="border-b border-hairline-soft pt-20 md:pt-28 lg:pt-32 pb-16 md:pb-20">
+          <div className="container mx-auto px-4">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-6">
+              {isEs ? 'Precios · Santo Domingo, RD' : 'Pricing · Santo Domingo, DR'}
             </p>
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-              {isEs ? 'Precios y Servicios' : 'Pricing & Services'}
+            <h1
+              className="font-display uppercase text-ink max-w-5xl"
+              style={{
+                fontSize: 'clamp(40px, 9vw, 144px)',
+                lineHeight: '0.95',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {isEs ? 'Precios y servicios' : 'Pricing & services'}
             </h1>
-            <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
+            <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-8 leading-relaxed">
               {isEs
-                ? 'Todos los precios que ves son de partida. Cada sesión es única — contáctanos si tienes algo especial en mente.'
+                ? 'Todos los precios son de partida. Cada sesión es única — contáctanos si tienes algo especial en mente.'
                 : 'All prices shown are starting rates. Every session is unique — reach out if you have something special in mind.'}
             </p>
 
-            {/* quick stats */}
-            <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm">
+            {/* trust stats — flat, no icons-as-color */}
+            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 border-t border-l border-hairline-soft max-w-3xl">
               {[
-                { label: isEs ? '25+ servicios' : '25+ services', icon: '📷' },
-                { label: isEs ? '50% adelanto' : '50% deposit', icon: '💳' },
-                { label: 'USD · DOP', icon: '💱' },
-                { label: isEs ? 'Respuesta en 1 h' : '1-hour response', icon: '⚡' },
-              ].map(({ label, icon }) => (
-                <div key={label} className="flex items-center gap-1.5 text-neutral-300">
-                  <span>{icon}</span>
-                  <span>{label}</span>
+                { value: isEs ? '25+' : '25+', label: isEs ? 'Servicios' : 'Services' },
+                { value: '50%', label: isEs ? 'Adelanto' : 'Deposit' },
+                { value: 'USD', label: 'DOP · USD' },
+                { value: '1h', label: isEs ? 'Respuesta' : 'Response' },
+              ].map(({ value, label }) => (
+                <div key={label} className="border-r border-b border-hairline-soft p-5">
+                  <div className="font-display text-ink" style={{ fontSize: 'clamp(28px, 3vw, 40px)', lineHeight: '1' }}>
+                    {value}
+                  </div>
+                  <div className="mt-3 font-mono uppercase tracking-widest text-[10px] text-ink-muted">{label}</div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ── Policy banner ─────────────────────────────────────────────────── */}
-        <section className="px-4 pb-12">
-          <div className="max-w-4xl mx-auto bg-sky-950/60 border border-sky-800/50 rounded-2xl p-6">
-            <h2 className="text-base font-semibold text-sky-300 mb-4">
-              {isEs ? 'Política de Reserva y Pago' : 'Booking & Payment Policy'}
+        {/* ── Policy block ─────────────────────────────────────────────────── */}
+        <section className="border-b border-hairline-soft py-16 md:py-20">
+          <div className="container mx-auto px-4">
+            <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-8">
+              {isEs ? 'Política de reserva y pago' : 'Booking & payment policy'}
             </h2>
-            <div className="grid sm:grid-cols-2 gap-4 text-sm text-neutral-300">
-              <div className="flex gap-3">
-                <span className="text-sky-400 mt-0.5">✓</span>
-                <span>
-                  {isEs
-                    ? '50% de adelanto al reservar vía Stripe (tarjeta, Apple Pay, Google Pay)'
-                    : '50% deposit at booking via Stripe (card, Apple Pay, Google Pay)'}
+            <ul className="grid gap-x-12 gap-y-5 md:grid-cols-2 max-w-4xl">
+              {[
+                isEs
+                  ? '50% de adelanto al reservar vía Stripe (tarjeta, Apple Pay, Google Pay)'
+                  : '50% deposit at booking via Stripe (card, Apple Pay, Google Pay)',
+                isEs
+                  ? 'Saldo restante (50%) pagado en persona el día de la sesión'
+                  : 'Remaining balance (50%) paid in person on session day',
+                isEs
+                  ? 'Reprogramación gratuita hasta 3 días antes de la sesión'
+                  : 'Free rescheduling up to 3 days before the session',
+                isEs
+                  ? 'Sin reembolso si se cancela con menos de 24 h de anticipación'
+                  : 'No refund if cancelled within 24 hours of the session',
+              ].map((line, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-4 pb-5 border-b border-hairline-soft text-ink leading-relaxed"
+                >
+                  <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 mt-1 w-6">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="text-base">{line}</span>
+                </li>
+              ))}
+              <li className="md:col-span-2 flex items-start gap-4 text-ink-muted leading-relaxed text-sm">
+                <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 mt-1 w-6">
+                  USD
                 </span>
-              </div>
-              <div className="flex gap-3">
-                <span className="text-sky-400 mt-0.5">✓</span>
-                <span>
-                  {isEs
-                    ? 'Saldo restante (50%) pagado en persona el día de la sesión'
-                    : 'Remaining balance (50%) paid in person on session day'}
-                </span>
-              </div>
-              <div className="flex gap-3">
-                <span className="text-emerald-400 mt-0.5">↺</span>
-                <span>
-                  {isEs
-                    ? 'Reprogramación gratuita hasta 3 días antes de la sesión'
-                    : 'Free rescheduling up to 3 days before the session'}
-                </span>
-              </div>
-              <div className="flex gap-3">
-                <span className="text-amber-400 mt-0.5">!</span>
-                <span>
-                  {isEs
-                    ? 'Sin reembolso si se cancela con menos de 24 h de anticipación'
-                    : 'No refund if cancelled within 24 hours of the session'}
-                </span>
-              </div>
-              <div className="flex gap-3 sm:col-span-2">
-                <span className="text-neutral-400 mt-0.5">💱</span>
                 <span>
                   {isEs
                     ? 'Precio en USD. También aceptamos DOP al tipo de cambio del día. El cobro de Stripe siempre es en dólares.'
                     : 'Price in USD. We also accept DOP at the day\'s exchange rate. Stripe charge is always in dollars.'}
                 </span>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
         </section>
 
+        {/* ── Sticky category jump-nav ──────────────────────────────────────
+             B3.6 — addresses /prices mobile long-scroll fatigue.
+             Anchors directly to each category + the Custom section.
+             Sticks to top-16 so it sits below the global Navigation
+             (which is sticky top-0 z-50). z-30 keeps it under the
+             mega-menu panel, above page content. Horizontal scroll on
+             narrow viewports prevents wrapping. ───────────────────── */}
+        <nav
+          className="sticky top-16 z-30 bg-canvas border-b border-hairline-soft -mx-px"
+          aria-label={isEs ? 'Categorías de precios' : 'Pricing categories'}
+        >
+          <div className="container mx-auto px-4">
+            <ul className="flex gap-6 md:gap-8 overflow-x-auto whitespace-nowrap py-3 md:py-3.5 -mx-4 px-4 scrollbar-thin">
+              {CATEGORIES.map((cat) => (
+                <li key={cat.key} className="shrink-0">
+                  <a
+                    href={`#${cat.key}`}
+                    className="font-mono uppercase tracking-widest text-[10px] md:text-[11px] text-ink-muted hover:text-ink transition-opacity"
+                  >
+                    {isEs ? cat.titleEs : cat.titleEn}
+                  </a>
+                </li>
+              ))}
+              <li className="shrink-0">
+                <a
+                  href="#custom"
+                  className="font-mono uppercase tracking-widest text-[10px] md:text-[11px] text-ink-muted hover:text-ink transition-opacity"
+                >
+                  {isEs ? 'Personalizado' : 'Custom'}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
         {/* ── Service categories ─────────────────────────────────────────────── */}
         {CATEGORIES.map((cat) => (
-          <section key={cat.key} className="px-4 pb-16">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                <span className="w-8 h-0.5 bg-sky-500 inline-block" />
+          <section
+            key={cat.key}
+            id={cat.key}
+            className="border-b border-hairline-soft py-16 md:py-20 scroll-mt-32"
+          >
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Categoría' : 'Category'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-10 md:mb-12"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
                 {isEs ? cat.titleEs : cat.titleEn}
               </h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <ul className="grid sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
                 {cat.services.map((svc) => (
-                  <article
-                    key={svc.slug}
-                    className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 flex flex-col gap-4 hover:border-sky-800 transition-colors"
-                  >
-                    {/* header */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="text-2xl mb-1">{svc.icon}</div>
-                        <h3 className="font-semibold text-white leading-tight">
-                          {isEs ? svc.nameEs : svc.nameEn}
-                        </h3>
-                        <p className="text-xs text-neutral-500 mt-0.5">
+                  <li key={svc.slug} className="border-r border-b border-hairline-soft">
+                    <article className="flex flex-col h-full p-6 md:p-7">
+                      <div className="flex items-start justify-between gap-3 mb-5 min-h-[24px]">
+                        <span className="text-2xl" aria-hidden="true">{svc.icon}</span>
+                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
                           {isEs ? svc.durationEs : svc.durationEn}
-                        </p>
+                        </span>
                       </div>
-                      <div className="text-right shrink-0">
-                        <div className="text-sky-400 font-bold text-lg leading-tight">
-                          {isEs ? 'Desde' : 'From'}{' '}
-                          <span className="text-white">${svc.priceUsd.toLocaleString()}</span>
-                        </div>
-                        {svc.priceNote && (
-                          <div className="text-xs text-neutral-500">{svc.priceNote}</div>
-                        )}
-                        {/* TODO Phase 2: add live DOP equivalent via exchange rate API */}
-                        <div className="text-xs text-neutral-600 mt-0.5">USD</div>
-                      </div>
-                    </div>
 
-                    {/* includes */}
-                    <ul className="space-y-1.5 flex-1">
-                      {(isEs ? svc.includesEs : svc.includesEn).map((item) => (
-                        <li key={item} className="flex gap-2 text-sm text-neutral-400">
-                          <span className="text-sky-600 mt-0.5 shrink-0">✓</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* CTAs */}
-                    <div className="flex gap-2 mt-auto pt-2">
-                      {svc.bookable ? (
-                        <Link
-                          href={`/${locale}/book?service=${svc.slug}`}
-                          className="flex-1 text-center bg-emerald-500 hover:bg-emerald-400 text-gray-950 text-sm font-bold py-2 px-3 rounded-lg transition-colors"
-                        >
-                          {isEs ? 'Reservar' : 'Book'}
-                        </Link>
-                      ) : null}
-                      <Link
-                        href={`/${locale}/get-quote`}
-                        className="flex-1 text-center border border-neutral-700 hover:border-neutral-500 text-neutral-300 hover:text-white text-sm font-medium py-2 px-3 rounded-lg transition-colors"
+                      <h3
+                        className="font-display uppercase text-ink"
+                        style={{ fontSize: 'clamp(20px, 2vw, 26px)', lineHeight: '1.1' }}
                       >
-                        {isEs ? 'Cotizar' : 'Get Quote'}
-                      </Link>
-                    </div>
-                  </article>
+                        {isEs ? svc.nameEs : svc.nameEn}
+                      </h3>
+
+                      <div className="mt-4 mb-1 flex items-baseline gap-2">
+                        <span
+                          className="font-display text-ink"
+                          style={{ fontSize: 'clamp(32px, 3.5vw, 44px)', lineHeight: '1' }}
+                        >
+                          ${svc.priceUsd.toLocaleString()}
+                        </span>
+                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {isEs ? 'USD desde' : 'USD start'}
+                        </span>
+                      </div>
+                      {svc.priceNote && (
+                        <div className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mt-1">
+                          {svc.priceNote}
+                        </div>
+                      )}
+
+                      <ul className="mt-5 space-y-2 text-sm text-ink/85 flex-1">
+                        {(isEs ? svc.includesEs : svc.includesEn).map((item) => (
+                          <li key={item} className="flex items-start gap-2.5">
+                            <span className="mt-1.5 inline-block w-2 h-px bg-ink/60 shrink-0" aria-hidden="true" />
+                            <span className="leading-snug">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="mt-6 pt-5 border-t border-hairline-soft flex gap-2">
+                        {svc.bookable ? (
+                          <Link
+                            href={`/${locale}/book?service=${svc.slug}`}
+                            className="flex-1 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] py-3 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
+                          >
+                            {isEs ? 'Reservar' : 'Book'}
+                          </Link>
+                        ) : null}
+                        <Link
+                          href={`/${locale}/get-quote`}
+                          className="flex-1 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] py-3 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+                        >
+                          {isEs ? 'Cotizar' : 'Quote'}
+                        </Link>
+                      </div>
+                    </article>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </section>
         ))}
 
-        {/* ── Something special / Other ──────────────────────────────────────── */}
-        <section className="px-4 pb-20">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-              <span className="w-8 h-0.5 bg-sky-500 inline-block" />
-              {isEs ? 'Otro · Personalizado' : 'Other · Custom'}
-            </h2>
-            <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6">
-              <div className="text-5xl">✨</div>
-              <div className="flex-1 text-center sm:text-left">
-                <h3 className="font-semibold text-white text-xl mb-1">
-                  {isEs ? '¿Tienes algo especial en mente?' : 'Have something special in mind?'}
-                </h3>
-                <p className="text-neutral-400 text-sm">
+        {/* ── Custom / something special ──────────────────────────────────── */}
+        <section id="custom" className="border-b border-hairline-soft py-16 md:py-20 scroll-mt-32">
+          <div className="container mx-auto px-4">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Personalizado' : 'Custom'}
+            </p>
+            <div className="flex flex-col md:flex-row md:items-end gap-8 md:gap-10">
+              <div className="flex-1">
+                <h2
+                  className="font-display uppercase text-ink"
+                  style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+                >
+                  {isEs ? '¿Algo especial en mente?' : 'Something special in mind?'}
+                </h2>
+                <p className="text-ink-muted text-base md:text-lg mt-5 max-w-xl leading-relaxed">
                   {isEs
                     ? 'Si tu proyecto no encaja en ninguna categoría — teatro, moda, arte, video musical u otro — cuéntanos y lo hacemos a medida.'
                     : 'If your project doesn\'t fit any category — theater, fashion, art, music video, or other — tell us and we\'ll tailor it for you.'}
@@ -626,38 +678,46 @@ export default function PricesPage({ params: { locale } }: Props) {
               </div>
               <Link
                 href={`/${locale}/get-quote`}
-                className="shrink-0 bg-sky-600 hover:bg-sky-500 text-white font-medium py-3 px-6 rounded-xl transition-colors"
+                className="shrink-0 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
               >
-                {isEs ? 'Solicitar Cotización' : 'Request a Quote'}
+                {isEs ? 'Solicitar cotización' : 'Request a quote'}
               </Link>
             </div>
           </div>
         </section>
 
-        {/* ── Bottom CTA ─────────────────────────────────────────────────────── */}
-        <section className="px-4 pb-24">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl font-bold mb-3">
-              {isEs ? '¿Listo para reservar?' : 'Ready to book?'}
-            </h2>
-            <p className="text-neutral-400 mb-6 text-sm">
-              {isEs
-                ? 'Elige tu servicio, selecciona fecha y hora, y confirma con tu depósito del 50% en segundos.'
-                : 'Choose your service, pick a date and time, and confirm with your 50% deposit in seconds.'}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href={`/${locale}/book`}
-                className="bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold py-3 px-8 rounded-xl transition-colors"
+        {/* ── Bottom CTA ─────────────────────────────────────────────────── */}
+        <section className="py-20 md:py-24">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Reserva' : 'Booking'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-5"
+                style={{ fontSize: 'clamp(32px, 5vw, 56px)', lineHeight: '1.0' }}
               >
-                {isEs ? 'Reservar Ahora' : 'Book Now'}
-              </Link>
-              <Link
-                href={`/${locale}/contact`}
-                className="border border-neutral-700 hover:border-neutral-500 text-neutral-300 hover:text-white font-semibold py-3 px-8 rounded-xl transition-colors"
-              >
-                {isEs ? 'Hablar con Michal' : 'Talk to Michal'}
-              </Link>
+                {isEs ? '¿Listo?' : 'Ready?'}
+              </h2>
+              <p className="text-ink-muted mb-10 max-w-md mx-auto leading-relaxed">
+                {isEs
+                  ? 'Elige tu paquete, selecciona fecha y hora, y confirma con tu depósito del 50% en segundos.'
+                  : 'Choose your package, pick a date and time, and confirm with your 50% deposit in seconds.'}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link
+                  href={`/${locale}/book`}
+                  className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
+                >
+                  {isEs ? 'Reservar ahora' : 'Book now'}
+                </Link>
+                <Link
+                  href={`/${locale}/contact`}
+                  className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+                >
+                  {isEs ? 'Hablar con Michal' : 'Talk to Michal'}
+                </Link>
+              </div>
             </div>
           </div>
         </section>

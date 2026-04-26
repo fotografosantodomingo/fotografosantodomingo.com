@@ -21,9 +21,20 @@ module.exports = {
           800: '#075985',
           900: '#0c4a6e',
         },
+        // Bugatti tokens — flip per `<html.dark>` / `<html.light-mode>` via
+        // CSS custom properties defined in globals.css.
+        // ink/canvas use rgb() syntax so Tailwind opacity modifiers
+        // (bg-ink/5, text-ink/80) work; hairline uses intrinsic alpha.
+        canvas: 'rgb(var(--bugatti-canvas) / <alpha-value>)',
+        ink: 'rgb(var(--bugatti-ink) / <alpha-value>)',
+        'ink-muted': 'rgb(var(--bugatti-ink-muted) / <alpha-value>)',
+        hairline: 'var(--bugatti-hairline)',
+        'hairline-soft': 'var(--bugatti-hairline-soft)',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['var(--font-inter)', 'Inter', 'sans-serif'],
+        display: ['var(--font-bugatti-display)', 'Unbounded', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-bugatti-mono)', 'JetBrains Mono', 'ui-monospace', 'monospace'],
       },
     },
   },

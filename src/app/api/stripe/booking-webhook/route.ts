@@ -86,7 +86,8 @@ export async function POST(request: NextRequest) {
           `id, customer_name, customer_email, customer_phone, locale,
            starts_at, ends_at,
            stripe_amount_usd, deposit_amount_usd,
-           service:booking_services ( name_es, name_en, icon, duration_min ),
+           package_snapshot,
+           family:service_families ( icon ),
            staff:staff_members ( name )`
         )
         .maybeSingle()
@@ -99,18 +100,25 @@ export async function POST(request: NextRequest) {
 
       // updated is null when the row was already CONFIRMED — that's fine, no emails needed
       if (updated) {
-        const svc = updated.service as { name_es: string; name_en: string; icon: string; duration_min: number } | null
-        const staff = updated.staff as { name: string } | null
+        type Snap = {
+          name_es?: string
+          name_en?: string
+          family_icon?: string
+          duration_min?: number
+        } | null
+        const snap = (updated.package_snapshot ?? null) as Snap
+        const fam = updated.family as unknown as { icon: string } | null
+        const staff = updated.staff as unknown as { name: string } | null
 
         const ctx: BookingEmailContext = {
           bookingId: updated.id,
           customerName: updated.customer_name,
           customerEmail: updated.customer_email,
           locale: (updated.locale ?? 'es') as 'es' | 'en',
-          serviceNameEs: svc?.name_es ?? '',
-          serviceNameEn: svc?.name_en ?? '',
-          serviceIcon: svc?.icon ?? '📷',
-          durationMin: svc?.duration_min ?? 60,
+          serviceNameEs: snap?.name_es ?? '',
+          serviceNameEn: snap?.name_en ?? '',
+          serviceIcon: snap?.family_icon ?? fam?.icon ?? '📷',
+          durationMin: snap?.duration_min ?? 60,
           startsAt: updated.starts_at,
           endsAt: updated.ends_at,
           staffName: staff?.name ?? 'Babula Shots',

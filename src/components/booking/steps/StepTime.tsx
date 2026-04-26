@@ -48,44 +48,60 @@ export default function StepTime({
   }).format(new Date(`${date}T12:00:00-04:00`))
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="space-y-5">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">
+          <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted">
             {locale === 'es' ? 'Elige una hora' : 'Pick a time'}
           </h2>
-          <p className="text-xs capitalize text-gray-400">{dateLabel}</p>
+          <p
+            className="mt-3 font-display uppercase text-ink capitalize"
+            style={{ fontSize: 'clamp(20px, 3vw, 28px)', lineHeight: '1.1' }}
+          >
+            {dateLabel}
+          </p>
         </div>
-        <button onClick={onBack} className="text-sm text-gray-400 hover:text-white">
+        <button
+          onClick={onBack}
+          className="font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity shrink-0"
+        >
           ← {locale === 'es' ? 'Atrás' : 'Back'}
         </button>
       </div>
 
       {error && (
-        <div className="rounded-lg border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-200">
+        <div className="border border-hairline p-4 text-sm text-ink">
+          <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+            {locale === 'es' ? 'Error' : 'Error'}
+          </p>
           {error}
         </div>
       )}
 
       {!slots ? (
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 border-t border-l border-hairline-soft">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-10 animate-pulse rounded-md bg-white/5" />
+            <div key={i} className="h-12 border-r border-b border-hairline-soft animate-pulse" />
           ))}
         </div>
       ) : slots.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-white/10 p-8 text-center text-sm text-gray-400">
-          {locale === 'es'
-            ? 'No hay horarios disponibles ese día. Prueba otra fecha.'
-            : 'No times available on this date. Try another date.'}
+        <div className="border border-dashed border-hairline-soft p-10 text-center">
+          <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+            {locale === 'es' ? 'No disponible' : 'Not available'}
+          </p>
+          <p className="text-sm text-ink-muted">
+            {locale === 'es'
+              ? 'No hay horarios disponibles ese día. Prueba otra fecha.'
+              : 'No times available on this date. Try another date.'}
+          </p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 border-t border-l border-hairline-soft">
           {slots.map(slot => (
             <button
               key={slot.startsAtUtc}
               onClick={() => onPick(slot)}
-              className="rounded-md border border-white/10 bg-white/5 px-3 py-2.5 text-sm font-semibold text-white hover:border-emerald-400/50 hover:bg-emerald-500 hover:text-gray-950"
+              className="font-mono text-ink text-base py-4 border-r border-b border-hairline-soft hover:bg-ink hover:text-canvas transition-colors duration-150"
             >
               {slot.time}
             </button>
@@ -93,10 +109,10 @@ export default function StepTime({
         </div>
       )}
 
-      <p className="text-center text-xs text-gray-500">
+      <p className="text-center font-mono uppercase tracking-widest text-[10px] text-ink-muted">
         {locale === 'es'
-          ? 'Hora local — Santo Domingo (AST)'
-          : 'Local time — Santo Domingo (AST)'}
+          ? 'Hora local · Santo Domingo (AST)'
+          : 'Local time · Santo Domingo (AST)'}
       </p>
     </div>
   )

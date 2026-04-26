@@ -146,10 +146,13 @@ export default async function RootLayout({
       <ErrorBoundary>
         <Navigation />
         {children}
-        <aside className="border-t border-gray-800 bg-gray-950/95 px-4 py-3 text-center text-xs text-gray-400" aria-label="Page freshness">
+        <aside
+          className="border-t border-hairline-soft bg-canvas px-4 py-3 text-center font-mono uppercase tracking-widest text-[10px] text-ink-muted"
+          aria-label="Page freshness"
+        >
           {normalizedLocale === 'es'
-            ? `Última actualización del sitio: ${lastUpdatedLabel}`
-            : `Site last updated: ${lastUpdatedLabel}`}
+            ? `Última actualización · ${lastUpdatedLabel}`
+            : `Site last updated · ${lastUpdatedLabel}`}
         </aside>
         <Footer locale={normalizedLocale} />
       </ErrorBoundary>

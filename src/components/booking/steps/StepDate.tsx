@@ -146,46 +146,51 @@ export default function StepDate({
   const canGoNext = ymd(viewYear, viewMonth, daysInMonth) < maxDate
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
+        <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted">
           {locale === 'es' ? 'Elige una fecha' : 'Pick a date'}
         </h2>
-        <button onClick={onBack} className="text-sm text-gray-400 hover:text-white">
+        <button
+          onClick={onBack}
+          className="font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity"
+        >
           ← {locale === 'es' ? 'Atrás' : 'Back'}
         </button>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-        <div className="mb-3 flex items-center justify-between">
+      <div className="border border-hairline-soft p-4 md:p-5">
+        <div className="mb-4 flex items-center justify-between">
           <button
             onClick={gotoPrev}
             disabled={!canGoPrev}
-            className="rounded-md p-1.5 text-gray-300 hover:bg-white/10 disabled:opacity-30"
+            className="font-mono text-ink hover:opacity-70 disabled:opacity-25 transition-opacity p-1.5"
+            aria-label={locale === 'es' ? 'Mes anterior' : 'Previous month'}
           >
             ←
           </button>
-          <div className="text-sm font-semibold capitalize">
+          <div className="font-display uppercase text-ink" style={{ fontSize: '17px', lineHeight: '1' }}>
             {monthLabel(viewYear, viewMonth, locale)}
           </div>
           <button
             onClick={gotoNext}
             disabled={!canGoNext}
-            className="rounded-md p-1.5 text-gray-300 hover:bg-white/10 disabled:opacity-30"
+            className="font-mono text-ink hover:opacity-70 disabled:opacity-25 transition-opacity p-1.5"
+            aria-label={locale === 'es' ? 'Mes siguiente' : 'Next month'}
           >
             →
           </button>
         </div>
 
-        <div className="mb-2 grid grid-cols-7 gap-1 text-center text-xs text-gray-500">
+        <div className="mb-2 grid grid-cols-7 text-center font-mono uppercase tracking-widest text-[10px] text-ink-muted">
           {dayNames.map((d, i) => (
-            <div key={i}>{d}</div>
+            <div key={i} className="py-2">{d}</div>
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-px bg-hairline-soft border border-hairline-soft">
           {cells.map((cell, i) => {
-            if (!cell) return <div key={i} />
+            if (!cell) return <div key={i} className="aspect-square bg-canvas" />
             const inRange = cell.ymd >= minDate && cell.ymd <= maxDate
             const slotCount = availability[cell.ymd] ?? 0
             const hasSlots = slotCount > 0
@@ -197,8 +202,8 @@ export default function StepDate({
                 disabled={disabled}
                 className={
                   disabled
-                    ? 'aspect-square rounded-md text-sm text-gray-600'
-                    : 'aspect-square rounded-md bg-white/10 text-sm font-semibold text-white hover:bg-emerald-500 hover:text-gray-950'
+                    ? 'aspect-square bg-canvas font-mono text-sm text-ink/25'
+                    : 'aspect-square bg-canvas font-mono text-sm text-ink hover:bg-ink hover:text-canvas transition-colors duration-150'
                 }
                 title={hasSlots ? `${slotCount} slots` : undefined}
               >
@@ -209,12 +214,12 @@ export default function StepDate({
         </div>
       </div>
 
-      <p className="text-center text-xs text-gray-500">
+      <p className="text-center font-mono uppercase tracking-widest text-[10px] text-ink-muted">
         {loading
           ? locale === 'es' ? 'Cargando disponibilidad…' : 'Loading availability…'
           : locale === 'es'
-            ? 'Las fechas en gris no tienen horarios disponibles.'
-            : 'Greyed-out dates have no available slots.'}
+            ? 'Las fechas atenuadas no tienen horarios disponibles.'
+            : 'Dimmed dates have no available slots.'}
       </p>
     </div>
   )

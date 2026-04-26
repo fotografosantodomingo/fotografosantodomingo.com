@@ -55,12 +55,17 @@ export default function StepConfirmation({
 
   if (!booking) {
     return (
-      <div className="rounded-xl border border-white/10 bg-white/5 p-8 text-center">
-        <div className="text-3xl">⏳</div>
-        <p className="mt-4 text-lg font-semibold">
+      <div className="border border-hairline-soft p-10 text-center">
+        <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-5">
+          {locale === 'es' ? 'Procesando' : 'Processing'}
+        </p>
+        <p
+          className="font-display uppercase text-ink"
+          style={{ fontSize: 'clamp(20px, 3vw, 28px)', lineHeight: '1.1' }}
+        >
           {locale === 'es' ? 'Confirmando tu reserva…' : 'Confirming your booking…'}
         </p>
-        <p className="mt-2 text-sm text-gray-400">
+        <p className="mt-3 text-sm text-ink-muted">
           {locale === 'es'
             ? 'Esto solo toma unos segundos.'
             : 'This only takes a few seconds.'}
@@ -90,21 +95,22 @@ export default function StepConfirmation({
   const isPending = booking.status === 'PENDING_PAYMENT'
 
   return (
-    <div className="space-y-6">
-      <div
-        className={
-          isConfirmed
-            ? 'rounded-xl border border-emerald-500/40 bg-emerald-950/40 p-6 text-center'
-            : 'rounded-xl border border-amber-500/40 bg-amber-950/40 p-6 text-center'
-        }
-      >
-        <div className="text-5xl">{isConfirmed ? '✅' : '⏳'}</div>
-        <h2 className="mt-3 text-2xl font-bold">
+    <div className="space-y-8">
+      <div className="border border-hairline-soft p-8 md:p-10 text-center">
+        <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-5">
+          {isConfirmed
+            ? (locale === 'es' ? 'Confirmado' : 'Confirmed')
+            : (locale === 'es' ? 'En proceso' : 'Processing')}
+        </p>
+        <h2
+          className="font-display uppercase text-ink"
+          style={{ fontSize: 'clamp(28px, 5vw, 48px)', lineHeight: '1' }}
+        >
           {isConfirmed
             ? locale === 'es' ? '¡Reserva confirmada!' : 'Booking confirmed!'
             : locale === 'es' ? 'Procesando pago' : 'Payment processing'}
         </h2>
-        <p className="mt-2 text-sm text-gray-300">
+        <p className="mt-5 text-sm text-ink-muted leading-relaxed max-w-md mx-auto">
           {isConfirmed ? (
             locale === 'es'
               ? `Te enviamos los detalles a ${booking.customer_email}.`
@@ -117,11 +123,11 @@ export default function StepConfirmation({
         </p>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-white/5 p-5">
-        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-400">
+      <div>
+        <h3 className="mb-5 font-mono uppercase tracking-widest text-[11px] text-ink-muted">
           {locale === 'es' ? 'Detalles de tu cita' : 'Appointment details'}
         </h3>
-        <dl className="space-y-2 text-sm">
+        <dl className="border-t border-hairline-soft">
           <Row label={locale === 'es' ? 'Servicio' : 'Service'} value={`${booking.service?.icon} ${name}`} />
           <Row label={locale === 'es' ? 'Fecha' : 'Date'} value={dateLabel} />
           <Row label={locale === 'es' ? 'Hora' : 'Time'} value={`${timeLabel} AST`} />
@@ -141,18 +147,18 @@ export default function StepConfirmation({
         </dl>
       </div>
 
-      <div className="space-y-2">
+      <div className="flex flex-col gap-3">
         <a
           href="https://wa.me/18097209547"
           target="_blank"
           rel="noreferrer"
-          className="block w-full rounded-full bg-emerald-500 py-3 text-center font-semibold text-gray-950 hover:bg-emerald-400"
+          className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] py-3.5 rounded-full bg-[#25D366] text-black hover:opacity-90 transition-opacity duration-200"
         >
           {locale === 'es' ? 'Hablar por WhatsApp' : 'Message on WhatsApp'}
         </a>
         <a
           href={`/${locale}`}
-          className="block w-full rounded-full border border-white/10 py-3 text-center text-sm text-gray-300 hover:bg-white/5"
+          className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] py-3.5 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
         >
           {locale === 'es' ? 'Volver al inicio' : 'Back to home'}
         </a>
@@ -163,9 +169,9 @@ export default function StepConfirmation({
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex justify-between gap-3">
-      <dt className="text-gray-400">{label}</dt>
-      <dd className="text-right font-medium text-white">{value}</dd>
+    <div className="flex justify-between items-baseline gap-3 py-3.5 border-b border-hairline-soft">
+      <dt className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0">{label}</dt>
+      <dd className="text-right text-ink text-sm">{value}</dd>
     </div>
   )
 }

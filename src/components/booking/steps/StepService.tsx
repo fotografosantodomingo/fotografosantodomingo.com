@@ -10,18 +10,24 @@ export type Service = {
   description_es: string | null
   description_en: string | null
   icon: string
-  category: string
   duration_min: number
   price_usd: number
   deposit_percent: number
+  photo_count: number | null
+  minimum_billable_hours: number | null
+  popular_badge: 'most_booked' | 'best_value' | null
+  featured: boolean
+  legacy_aliases: string[]
+  family_id: string
+  family_slug: string
+  family_title_es: string
+  family_title_en: string
 }
 
-const CATEGORIES: Array<{ key: string; labelEs: string; labelEn: string }> = [
-  { key: 'celebrations', labelEs: 'Celebraciones', labelEn: 'Celebrations' },
-  { key: 'portraits', labelEs: 'Retratos', labelEn: 'Portraits' },
-  { key: 'commercial', labelEs: 'Comercial', labelEn: 'Commercial' },
-  { key: 'specialty', labelEs: 'Especialidades', labelEn: 'Specialty' },
-]
+type ApiResponse = {
+  services: Service[]
+  families: Array<{ id: string; slug: string; title_es: string; title_en: string; icon: string }>
+}
 
 export default function StepService({
   locale,
@@ -32,91 +38,113 @@ export default function StepService({
   onPick: (s: Service) => void
   onLoaded?: (services: Service[]) => void
 }) {
-  const [services, setServices] = useState<Service[] | null>(null)
+  const [data, setData] = useState<ApiResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/bookings/services')
       .then(r => r.json())
-      .then(data => {
-        const list: Service[] = data.services ?? []
-        setServices(list)
-        onLoaded?.(list)
+      .then((d: ApiResponse) => {
+        setData(d)
+        onLoaded?.(d.services ?? [])
       })
       .catch(err => setError(err instanceof Error ? err.message : 'Failed to load'))
   }, [onLoaded])
 
   if (error) {
     return (
-      <div className="rounded-lg border border-red-500/40 bg-red-950/40 p-4 text-sm text-red-200">
+      <div className="border border-hairline p-4 text-sm text-ink">
+        <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
+          {locale === 'es' ? 'Error' : 'Error'}
+        </p>
         {error}
       </div>
     )
   }
 
-  if (!services) {
+  if (!data) {
     return (
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-0 border-t border-l border-hairline-soft sm:grid-cols-2">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-28 animate-pulse rounded-xl bg-white/5" />
+          <div key={i} className="h-32 border-r border-b border-hairline-soft animate-pulse" />
         ))}
       </div>
     )
   }
 
-  const grouped: Record<string, Service[]> = {}
-  for (const s of services) {
-    if (!grouped[s.category]) grouped[s.category] = []
-    grouped[s.category].push(s)
+  // Group packages by family, preserve family sort_order from server
+  const packagesByFamily = new Map<string, Service[]>()
+  for (const s of data.services) {
+    const arr = packagesByFamily.get(s.family_id) ?? []
+    arr.push(s)
+    packagesByFamily.set(s.family_id, arr)
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-lg font-semibold">
-        {locale === 'es' ? 'Elige tu servicio' : 'Choose your service'}
+    <div className="space-y-10">
+      <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted">
+        {locale === 'es' ? 'Elige tu paquete' : 'Choose your package'}
       </h2>
 
-      {CATEGORIES.map(cat => {
-        const list = grouped[cat.key] ?? []
+      {data.families.map(fam => {
+        const list = packagesByFamily.get(fam.id) ?? []
         if (list.length === 0) return null
+        const famTitle = locale === 'es' ? fam.title_es : fam.title_en
         return (
-          <section key={cat.key}>
-            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
-              {locale === 'es' ? cat.labelEs : cat.labelEn}
+          <section key={fam.id}>
+            <h3 className="mb-4 flex items-center gap-2.5">
+              <span className="text-base" aria-hidden="true">{fam.icon}</span>
+              <span className="font-mono uppercase tracking-widest text-[11px] text-ink">{famTitle}</span>
             </h3>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <ul className="grid border-t border-l border-hairline-soft sm:grid-cols-2">
               {list.map(s => {
                 const name = locale === 'es' ? s.name_es : s.name_en
                 const desc = locale === 'es' ? s.description_es : s.description_en
                 const deposit = Number(s.price_usd) * (s.deposit_percent / 100)
                 return (
-                  <button
-                    key={s.id}
-                    onClick={() => onPick(s)}
-                    className="group flex flex-col rounded-xl border border-white/10 bg-white/5 p-4 text-left transition hover:border-emerald-400/50 hover:bg-white/10"
-                  >
-                    <div className="mb-1 flex items-start justify-between gap-2">
-                      <span className="text-2xl">{s.icon}</span>
-                      <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-semibold text-emerald-300">
-                        ${Number(s.price_usd).toFixed(0)}
-                      </span>
-                    </div>
-                    <h4 className="font-semibold text-white">{name}</h4>
-                    {desc && (
-                      <p className="mt-1 line-clamp-2 text-xs text-gray-400">{desc}</p>
-                    )}
-                    <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
-                      <span>{s.duration_min} min</span>
-                      <span>
-                        {locale === 'es'
-                          ? `Depósito $${deposit.toFixed(0)}`
-                          : `Deposit $${deposit.toFixed(0)}`}
-                      </span>
-                    </div>
-                  </button>
+                  <li key={s.id} className="border-r border-b border-hairline-soft">
+                    <button
+                      type="button"
+                      onClick={() => onPick(s)}
+                      className="group flex flex-col w-full h-full p-5 text-left hover:bg-ink/5 transition-colors duration-200"
+                    >
+                      <div className="mb-3 flex items-start justify-between gap-3 min-h-[20px]">
+                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                          {s.popular_badge ? s.popular_badge.replace('_', ' ') : ''}
+                        </span>
+                        <span className="font-display text-ink" style={{ fontSize: '24px', lineHeight: '1' }}>
+                          ${Number(s.price_usd).toFixed(0)}
+                        </span>
+                      </div>
+                      <h4
+                        className="font-display uppercase text-ink"
+                        style={{ fontSize: '17px', lineHeight: '1.15', letterSpacing: '0' }}
+                      >
+                        {name}
+                      </h4>
+                      {desc && (
+                        <p className="mt-2 line-clamp-2 text-sm text-ink-muted leading-snug">{desc}</p>
+                      )}
+                      <div className="mt-4 pt-3 border-t border-hairline-soft flex items-center justify-between font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                        <span>
+                          {s.duration_min} min
+                          {s.minimum_billable_hours
+                            ? locale === 'es'
+                              ? ` · mín ${s.minimum_billable_hours}h`
+                              : ` · min ${s.minimum_billable_hours}h`
+                            : ''}
+                        </span>
+                        <span>
+                          {locale === 'es'
+                            ? `Depósito $${deposit.toFixed(0)}`
+                            : `Deposit $${deposit.toFixed(0)}`}
+                        </span>
+                      </div>
+                    </button>
+                  </li>
                 )
               })}
-            </div>
+            </ul>
           </section>
         )
       })}

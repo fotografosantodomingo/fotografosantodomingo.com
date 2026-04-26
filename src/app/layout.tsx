@@ -1,9 +1,33 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Unbounded, JetBrains_Mono } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+// Bugatti Display substitute. Geometric extended display face for the
+// monumental hero scale (DESIGN.md §3 Note on Substitutes — Unbounded works
+// at the token values; cap practical max at ~200px instead of 288px).
+const bugattiDisplay = Unbounded({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-bugatti-display',
+  display: 'swap',
+})
+
+// Bugatti Monospace substitute. JetBrains Mono works at the token values
+// without adjustment per DESIGN.md §3.
+const bugattiMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-bugatti-mono',
+  display: 'swap',
+})
+
+// Body face — Inter. Used for paragraphs and inline reading copy.
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Fotografo Santo Domingo | Babula Shots',
@@ -34,7 +58,11 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang={locale} className="dark" suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={`dark ${bugattiDisplay.variable} ${bugattiMono.variable} ${inter.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
