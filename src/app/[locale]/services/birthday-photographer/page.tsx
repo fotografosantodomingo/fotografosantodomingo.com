@@ -382,8 +382,13 @@ function getBookingLinks(locale: string) {
   const cta = 'birthday-photographer-card'
   return {
     event3h: `/${locale}/book?service=signature-celebration&cta=${cta}`,
-    quincenara10: `/${locale}/get-quote?family=birthday-event-photography&package=quinceanera-essential-10&cta=${cta}`,
-    quincenara15: `/${locale}/get-quote?family=birthday-event-photography&package=quinceanera-essential-15&cta=${cta}`,
+    // Quinceañera 10/15-photo studio sessions have no canonical package
+     // (the canonical Quinceañera Premium is 4h ceremony coverage).
+     // Drop the package= query so the API doesn't reject with
+     // "Unknown package_slug for this family" — customer describes the
+     // photo-count tier in the quote freeform notes.
+    quincenara10: `/${locale}/get-quote?family=birthday-event-photography&cta=${cta}-q10`,
+    quincenara15: `/${locale}/get-quote?family=birthday-event-photography&cta=${cta}-q15`,
     quincenaraVip: `/${locale}/book?service=quinceanera-premium&cta=${cta}`,
   }
 }

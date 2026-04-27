@@ -45,20 +45,37 @@ const Body = z.object({
   _form_started_at: z.number().int().nonnegative().optional(),
 })
 
+/**
+ * Stable error codes the client maps to localized user-facing messages
+ * (see src/lib/quotes/error-messages.ts). When adding a new failure
+ * mode, add an entry here AND to the error-messages map so ES users
+ * get a translated message instead of an English string.
+ */
+type QuoteApiErrorCode =
+  | 'invalid_json'
+  | 'validation_failed'
+  | 'spam_blocked'
+  | 'unknown_family'
+  | 'unknown_package'
+  | 'family_lookup_failed'
+  | 'package_lookup_failed'
+  | 'insert_failed'
+
+function errorResponse(code: QuoteApiErrorCode, status: number, extra?: Record<string, unknown>) {
+  return NextResponse.json({ error: code, ...extra }, { status })
+}
+
 export async function POST(request: NextRequest) {
   let raw: unknown
   try {
     raw = await request.json()
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+    return errorResponse('invalid_json', 400)
   }
 
   const parsed = Body.safeParse(raw)
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Validation failed', details: parsed.error.flatten() },
-      { status: 400 }
-    )
+    return errorResponse('validation_failed', 400, { details: parsed.error.flatten() })
   }
 
   const data = parsed.data
@@ -66,7 +83,7 @@ export async function POST(request: NextRequest) {
   // Spam: honeypot must be empty/missing — Zod already enforces max(0), so any
   // value here is a bot. Reject silently with a generic 400.
   if (data[HONEYPOT_FIELD]) {
-    return NextResponse.json({ error: 'Bad request' }, { status: 400 })
+    return errorResponse('spam_blocked', 400)
   }
 
   // Spam: dwell-time check. If client sent a start timestamp, require at
@@ -74,7 +91,7 @@ export async function POST(request: NextRequest) {
   if (data._form_started_at !== undefined) {
     const dwell = Date.now() - data._form_started_at
     if (dwell < MIN_FORM_DWELL_MS) {
-      return NextResponse.json({ error: 'Bad request' }, { status: 400 })
+      return errorResponse('spam_blocked', 400)
     }
   }
 
@@ -94,10 +111,10 @@ export async function POST(request: NextRequest) {
 
     if (famErr) {
       console.error('quote-request family lookup error:', famErr)
-      return NextResponse.json({ error: 'Server error' }, { status: 500 })
+      return errorResponse('family_lookup_failed', 500)
     }
     if (!famRow) {
-      return NextResponse.json({ error: 'Unknown family_slug' }, { status: 400 })
+      return errorResponse('unknown_family', 400)
     }
     familyId = famRow.id
 
@@ -112,13 +129,10 @@ export async function POST(request: NextRequest) {
 
       if (pkgErr) {
         console.error('quote-request package lookup error:', pkgErr)
-        return NextResponse.json({ error: 'Server error' }, { status: 500 })
+        return errorResponse('package_lookup_failed', 500)
       }
       if (!pkgRow) {
-        return NextResponse.json(
-          { error: 'Unknown package_slug for this family' },
-          { status: 400 }
-        )
+        return errorResponse('unknown_package', 400)
       }
       packageId = pkgRow.id
     }
@@ -156,7 +170,7 @@ export async function POST(request: NextRequest) {
 
   if (insErr) {
     console.error('quote-request insert error:', insErr)
-    return NextResponse.json({ error: 'Failed to create quote request' }, { status: 500 })
+    return errorResponse('insert_failed', 500)
   }
 
   // Best-effort context lookup for the admin notification email. If either

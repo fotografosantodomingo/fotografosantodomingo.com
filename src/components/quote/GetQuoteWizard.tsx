@@ -15,6 +15,7 @@ import {
   SERVICE_QUESTIONS,
   formatServiceAnswersForNotes,
 } from '@/lib/quotes/service-questions'
+import { translateQuoteError } from '@/lib/quotes/error-messages'
 
 type Props = {
   locale: string
@@ -160,8 +161,18 @@ export default function GetQuoteWizard({ locale }: Props) {
 
     if (step === 6) {
       if (!form.fullName.trim()) stepErrors.push(isEs ? 'Nombre completo es obligatorio.' : 'Full name is required.')
-      if (!form.email.trim()) stepErrors.push(isEs ? 'Email es obligatorio.' : 'Email is required.')
-      if (!form.whatsappPhone.trim()) stepErrors.push(isEs ? 'WhatsApp es obligatorio.' : 'WhatsApp number is required.')
+      if (!form.email.trim()) {
+        stepErrors.push(isEs ? 'Email es obligatorio.' : 'Email is required.')
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim())) {
+        // Catches missing-TLD inputs like "name@gmail" before the API rejects.
+        stepErrors.push(isEs ? 'Email no válido — incluye @ y un dominio (ej: tu@gmail.com).' : 'Invalid email — include @ and a domain (e.g. you@gmail.com).')
+      }
+      if (!form.whatsappPhone.trim()) {
+        stepErrors.push(isEs ? 'WhatsApp es obligatorio.' : 'WhatsApp number is required.')
+      } else if (form.whatsappPhone.trim().length > 50) {
+        // Match the API's 50-char ceiling to avoid silent rejection.
+        stepErrors.push(isEs ? 'Número de WhatsApp demasiado largo (máx 50 caracteres).' : 'WhatsApp number too long (max 50 characters).')
+      }
     }
 
     if (step === 7) {
@@ -268,13 +279,22 @@ export default function GetQuoteWizard({ locale }: Props) {
         presetFamilySlug ?? QUOTE_SERVICE_TYPE_TO_FAMILY_SLUG[form.serviceType as QuoteServiceType]
       const { details, locationText } = buildDetails()
 
+      // API caps notes at 5000 chars. With 17 dynamic service questions
+      // + freeform description, full submissions can approach the limit.
+      // Truncate to 4500 with a marker so the API never silently rejects
+      // a payload that's just slightly oversized.
+      const NOTES_MAX = 4500
+      const safeNotes = details.length > NOTES_MAX
+        ? `${details.slice(0, NOTES_MAX - 32)}\n\n[notes truncated by client]`
+        : details
+
       const payload: Record<string, unknown> = {
         client_name: form.fullName,
         client_email: form.email,
         client_phone: form.whatsappPhone || undefined,
         event_date: form.eventDate || undefined,
         location_text: locationText || undefined,
-        notes: details,
+        notes: safeNotes,
         locale: locale === 'en' ? 'en' : 'es',
         source_page: sourcePage ?? undefined,
         source_cta: sourceCta ?? undefined,
@@ -292,7 +312,10 @@ export default function GetQuoteWizard({ locale }: Props) {
 
       const json = await response.json()
       if (!response.ok) {
-        throw new Error(json?.error || 'Unable to submit quote request')
+        // Server returns a stable error code (e.g. "unknown_package");
+        // translate to a localized user-facing message.
+        const localized = translateQuoteError(json?.error, isEs ? 'es' : 'en')
+        throw new Error(localized)
       }
 
       if (typeof window !== 'undefined') {
@@ -425,9 +448,19 @@ export default function GetQuoteWizard({ locale }: Props) {
                   <button
                     type="button"
                     onClick={() => {
+                      // If user changes service-type away from what
+                      // was preselected via URL, clear the package preset
+                      // (a package only makes sense for its original family —
+                      // sending it under a different family would 400 the API).
+                      // Also clear the dynamic answers because they're keyed
+                      // to the previous service-type's question schema.
+                      if (form.serviceType !== item.value) {
+                        setPresetPackageSlug(null)
+                      }
                       setForm((prev) => ({
                         ...prev,
                         serviceType: item.value,
+                        serviceAnswers: prev.serviceType === item.value ? prev.serviceAnswers : {},
                         addDrone: DRONE_ADDON_ELIGIBLE_SERVICES.includes(item.value) ? prev.addDrone : false,
                       }))
                     }}
