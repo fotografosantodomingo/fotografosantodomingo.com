@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { findSpokeByRoute } from '@/data/spoke-pages'
+import ThemeToggle from '@/components/ThemeToggle'
 
 type MenuItem = {
   href: string
@@ -286,15 +287,28 @@ export default function Navigation() {
     <nav className="bg-canvas text-ink border-b border-hairline-soft sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16 gap-2">
-          {/* Logo — restrained mono wordmark, no shouting */}
+          {/* Logo — unified to "Babula Shots" across desktop + mobile */}
           <Link
             href={`/${locale}`}
-            className="font-mono uppercase tracking-[0.18em] text-[13px] md:text-[14px] text-ink hover:opacity-70 transition-opacity"
+            className="font-mono uppercase tracking-[0.18em] text-[13px] md:text-[14px] text-ink hover:opacity-70 transition-opacity shrink-0"
             aria-label="Babula Shots — Fotógrafo Santo Domingo"
           >
-            <span className="hidden sm:inline">Fotógrafo Santo Domingo</span>
-            <span className="sm:hidden">Babula Shots</span>
+            Babula Shots
           </Link>
+
+          {/* Mobile-only header utilities — theme toggle + locale switcher next to logo.
+              Visible on mobile only (md:hidden). Desktop has its own theme toggle and
+              locale switcher slot further to the right. */}
+          <div className="md:hidden flex items-center gap-3 ml-auto mr-2">
+            <ThemeToggle />
+            <Link
+              href={switchPath}
+              className="font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity"
+              aria-label={`Switch language to ${switchLocale.toUpperCase()}`}
+            >
+              {switchLocale.toUpperCase()}
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div ref={desktopMenuRef} className="hidden md:flex items-center gap-2 lg:gap-4" role="menubar" aria-label={t('services')}>
@@ -529,13 +543,7 @@ export default function Navigation() {
                 >
                   {t('book_now')}
                 </Link>
-                <Link
-                  href={switchPath}
-                  className="text-center font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {switchLocale.toUpperCase()}
-                </Link>
+                {/* Locale switcher moved to mobile header (next to logo). */}
               </div>
             </div>
           </div>
