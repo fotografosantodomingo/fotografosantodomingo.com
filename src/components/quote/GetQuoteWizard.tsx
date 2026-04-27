@@ -11,6 +11,10 @@ import {
   type QuoteContactMethod,
   type QuoteServiceType,
 } from '@/lib/quotes/constants'
+import {
+  SERVICE_QUESTIONS,
+  formatServiceAnswersForNotes,
+} from '@/lib/quotes/service-questions'
 
 type Props = {
   locale: string
@@ -20,6 +24,8 @@ const FORM_STARTED_AT = typeof Date !== 'undefined' ? Date.now() : 0
 
 type FormState = {
   serviceType: QuoteServiceType | ''
+  /** Service-specific answers keyed by question.key from SERVICE_QUESTIONS. */
+  serviceAnswers: Record<string, string>
   participantsCount: string
   addDrone: boolean
   country: '' | 'US' | 'DO'
@@ -36,6 +42,7 @@ type FormState = {
 
 const INITIAL_STATE: FormState = {
   serviceType: '',
+  serviceAnswers: {},
   participantsCount: '',
   addDrone: false,
   country: '',
@@ -59,7 +66,7 @@ export default function GetQuoteWizard({ locale }: Props) {
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState<FormState>(INITIAL_STATE)
 
-  const maxStep = 6
+  const maxStep = 7
   const progress = Math.round((step / maxStep) * 100)
 
   const minDate = useMemo(() => {
@@ -109,7 +116,22 @@ export default function GetQuoteWizard({ locale }: Props) {
       stepErrors.push(isEs ? 'Selecciona un tipo de servicio.' : 'Please select a service type.')
     }
 
-    if (step === 2) {
+    // NEW step 2 — service-specific questions (drone safety, real-estate
+    // property type, portrait studio/outdoor + mood, etc.) Validates only
+    // the `required: true` questions for the selected serviceType.
+    if (step === 2 && form.serviceType) {
+      const questions = SERVICE_QUESTIONS[form.serviceType] ?? []
+      for (const q of questions) {
+        if (!q.required) continue
+        const v = form.serviceAnswers[q.key]
+        if (v == null || v === '') {
+          const label = isEs ? q.labelEs : q.labelEn
+          stepErrors.push(`${label} ${isEs ? 'es obligatorio.' : 'is required.'}`)
+        }
+      }
+    }
+
+    if (step === 3) {
       const participants = Number(form.participantsCount)
       if (!form.participantsCount.trim()) {
         stepErrors.push(isEs ? 'Indica cuantas personas incluye el servicio.' : 'Please provide how many people are included.')
@@ -118,13 +140,13 @@ export default function GetQuoteWizard({ locale }: Props) {
       }
     }
 
-    if (step === 3) {
+    if (step === 4) {
       if (!form.country) stepErrors.push(isEs ? 'Selecciona un pais.' : 'Please select a country.')
       if (!form.state) stepErrors.push(isEs ? 'Selecciona un estado/provincia.' : 'Please select a state/province.')
       if (!form.city) stepErrors.push(isEs ? 'Selecciona una ciudad.' : 'Please select a city.')
     }
 
-    if (step === 4) {
+    if (step === 5) {
       if (!form.eventDate) {
         stepErrors.push(isEs ? 'Selecciona una fecha de evento.' : 'Please choose an event date.')
       } else if (form.eventDate < minDate) {
@@ -136,13 +158,13 @@ export default function GetQuoteWizard({ locale }: Props) {
       }
     }
 
-    if (step === 5) {
+    if (step === 6) {
       if (!form.fullName.trim()) stepErrors.push(isEs ? 'Nombre completo es obligatorio.' : 'Full name is required.')
       if (!form.email.trim()) stepErrors.push(isEs ? 'Email es obligatorio.' : 'Email is required.')
       if (!form.whatsappPhone.trim()) stepErrors.push(isEs ? 'WhatsApp es obligatorio.' : 'WhatsApp number is required.')
     }
 
-    if (step === 6) {
+    if (step === 7) {
       if (!form.preferredContactMethod) stepErrors.push(isEs ? 'Selecciona metodo de contacto.' : 'Choose a contact method.')
       if (form.preferredContactMethod === 'PHONE_CALL' && !form.callbackTimePreference) {
         stepErrors.push(isEs ? 'Selecciona horario para llamada.' : 'Choose a callback window.')
@@ -203,6 +225,22 @@ export default function GetQuoteWizard({ locale }: Props) {
     }
     if (presetPackageSlug) {
       lines.push(`Package (preselected): ${presetPackageSlug}`)
+    }
+
+    // Per-service answers (drone safety, real-estate property type,
+    // portrait studio/outdoor + mood, etc) — formatted as one
+    // labeled line per answered question.
+    if (form.serviceType) {
+      const serviceAnswerBlock = formatServiceAnswersForNotes(
+        form.serviceType,
+        form.serviceAnswers,
+        isEs ? 'es' : 'en'
+      )
+      if (serviceAnswerBlock) {
+        lines.push('')
+        lines.push(`--- ${isEs ? 'Detalles del servicio' : 'Service details'} ---`)
+        lines.push(serviceAnswerBlock)
+      }
     }
 
     const description = form.description.trim()
@@ -408,7 +446,110 @@ export default function GetQuoteWizard({ locale }: Props) {
         </div>
       )}
 
-      {step === 2 && (
+      {/* NEW step 2 — service-specific questions per the SERVICE_QUESTIONS
+          schema. Renders dynamically based on form.serviceType. Required
+          fields are validated by validateCurrentStep above. */}
+      {step === 2 && form.serviceType && (
+        <div className="space-y-6">
+          <h2 className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-2">
+            {isEs ? 'Detalles del servicio' : 'Service details'}
+          </h2>
+          <p className="text-ink-muted text-sm">
+            {isEs
+              ? 'Responde lo que aplique. Los campos marcados con * son obligatorios.'
+              : 'Answer what applies. Fields marked with * are required.'}
+          </p>
+
+          {(SERVICE_QUESTIONS[form.serviceType] ?? []).map((q) => {
+            const value = form.serviceAnswers[q.key] ?? ''
+            const label = isEs ? q.labelEs : q.labelEn
+            const labelWithReq = q.required ? `${label} *` : label
+            const setAnswer = (next: string) =>
+              setForm((prev) => ({
+                ...prev,
+                serviceAnswers: { ...prev.serviceAnswers, [q.key]: next },
+              }))
+
+            if (q.type === 'select') {
+              return (
+                <FieldBlock key={q.key} label={labelWithReq}>
+                  <select
+                    className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink outline-none focus:border-ink transition-colors"
+                    value={value}
+                    onChange={(e) => setAnswer(e.target.value)}
+                  >
+                    <option value="">{isEs ? 'Selecciona…' : 'Select…'}</option>
+                    {q.options.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {isEs ? opt.labelEs : opt.labelEn}
+                      </option>
+                    ))}
+                  </select>
+                </FieldBlock>
+              )
+            }
+
+            if (q.type === 'text') {
+              return (
+                <FieldBlock key={q.key} label={labelWithReq}>
+                  <input
+                    type="text"
+                    className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors"
+                    value={value}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    placeholder={isEs ? q.placeholderEs : q.placeholderEn}
+                  />
+                </FieldBlock>
+              )
+            }
+
+            if (q.type === 'textarea') {
+              return (
+                <FieldBlock key={q.key} label={labelWithReq}>
+                  <textarea
+                    rows={q.rows ?? 3}
+                    className="w-full bg-transparent border border-hairline-soft px-3 py-2.5 text-base text-ink placeholder-ink-muted/50 outline-none focus:border-ink transition-colors"
+                    value={value}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    placeholder={isEs ? q.placeholderEs : q.placeholderEn}
+                  />
+                </FieldBlock>
+              )
+            }
+
+            // yes_no
+            return (
+              <FieldBlock key={q.key} label={labelWithReq}>
+                <div className="flex gap-2">
+                  {[
+                    { v: 'yes', l: isEs ? 'Sí' : 'Yes' },
+                    { v: 'no', l: isEs ? 'No' : 'No' },
+                  ].map(({ v, l }) => {
+                    const active = value === v
+                    return (
+                      <button
+                        key={v}
+                        type="button"
+                        onClick={() => setAnswer(v)}
+                        aria-pressed={active}
+                        className={`px-5 py-2.5 rounded-full font-mono uppercase tracking-widest text-[11px] border transition-colors ${
+                          active
+                            ? 'bg-ink text-canvas border-ink'
+                            : 'bg-transparent text-ink border-hairline hover:border-ink'
+                        }`}
+                      >
+                        {l}
+                      </button>
+                    )
+                  })}
+                </div>
+              </FieldBlock>
+            )
+          })}
+        </div>
+      )}
+
+      {step === 3 && (
         <div className="space-y-8">
           <FieldBlock label={isEs ? 'Cuántas personas incluye' : 'How many people'}>
             <input
@@ -447,7 +588,7 @@ export default function GetQuoteWizard({ locale }: Props) {
         </div>
       )}
 
-      {step === 3 && (
+      {step === 4 && (
         <div className="grid gap-6 md:grid-cols-3">
           <FieldBlock label={isEs ? 'País' : 'Country'}>
             <select
@@ -479,7 +620,7 @@ export default function GetQuoteWizard({ locale }: Props) {
         </div>
       )}
 
-      {step === 4 && (
+      {step === 5 && (
         <FieldBlock label={isEs ? 'Fecha del evento' : 'Event date'}>
           <input
             type="date"
@@ -491,7 +632,7 @@ export default function GetQuoteWizard({ locale }: Props) {
         </FieldBlock>
       )}
 
-      {step === 5 && (
+      {step === 6 && (
         <div className="grid gap-6 md:grid-cols-2">
           <FieldBlock label={isEs ? 'Nombre completo' : 'Full name'}>
             <input
@@ -524,7 +665,7 @@ export default function GetQuoteWizard({ locale }: Props) {
         </div>
       )}
 
-      {step === 6 && (
+      {step === 7 && (
         <div className="space-y-8">
           <div>
             <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
