@@ -1,12 +1,24 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import dynamic from 'next/dynamic'
 import StepService, { type Service } from './steps/StepService'
 import StepDate from './steps/StepDate'
 import StepTime, { type Slot } from './steps/StepTime'
 import StepDetails, { type Details } from './steps/StepDetails'
-import StepPayment from './steps/StepPayment'
 import StepConfirmation from './steps/StepConfirmation'
+
+// StepPayment pulls Stripe Elements (~50KB gzipped) which only matters
+// once the user is ready to pay. Lazy-loading drops the initial /book
+// bundle and keeps the wizard's first paint fast.
+const StepPayment = dynamic(() => import('./steps/StepPayment'), {
+  ssr: false,
+  loading: () => (
+    <div className="border border-hairline-soft p-6 text-sm text-ink-muted">
+      <p className="font-mono uppercase tracking-widest text-[10px] mb-2">…</p>
+    </div>
+  ),
+})
 
 type Locale = 'es' | 'en'
 

@@ -25,8 +25,12 @@ const globalSchema = {
       '@id': `${BASE_URL}/#website`,
       url: BASE_URL,
       name: 'Fotografo Santo Domingo | Babula Shots',
+      alternateName: ['Babula Shots', 'Fotografo Santo Domingo'],
+      description: 'Fotografía profesional en República Dominicana — bodas, retratos, drone, eventos y comercial en Santo Domingo, Punta Cana, Cap Cana y toda la isla. Reserva online o solicita cotización.',
       inLanguage: ['es', 'en'],
       publisher: { '@id': `${BASE_URL}/#business` },
+      // Sitelinks searchbox in Google SERPs. Blog search is the real
+      // search surface (src/app/[locale]/blog/page.tsx accepts ?q=).
       potentialAction: {
         '@type': 'SearchAction',
         target: { '@type': 'EntryPoint', urlTemplate: `${BASE_URL}/es/blog?q={search_term_string}` },

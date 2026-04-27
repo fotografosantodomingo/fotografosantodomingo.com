@@ -4,6 +4,7 @@ import Script from 'next/script'
 import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getPostBySlug, getRelatedPosts } from '@/lib/supabase/blog'
+import { getReviewStats } from '@/lib/supabase/images'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
@@ -325,6 +326,14 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const reviews = ((isEs ? post.reviews_es : post.reviews_en) || []) as ReviewItem[]
   const internalLinks = ((isEs ? post.internal_links_es : post.internal_links_en) || []) as InternalLink[]
 
+  // Dynamic review stats from the review_stats SQL view (aggregates the
+  // public.reviews table). Falls back to STATIC_REVIEW_STATS in
+  // src/lib/supabase/images.ts when the table is empty / view fails.
+  // Replaces 4 hardcoded "4.9 / 162" usages on this template.
+  const reviewStats = await getReviewStats()
+  const ratingValueDisplay = reviewStats.rating_value.toFixed(1)
+  const reviewCountDisplay = reviewStats.review_count.toString()
+
   const selectedFaq = faq.length > 0
     ? faq
     : contextualFallbackFaq(locale, post.service_type || '', post.location || post.geo_city || (isEs ? 'República Dominicana' : 'Dominican Republic'))
@@ -484,8 +493,8 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         ],
         aggregateRating: {
           '@type': 'AggregateRating',
-          ratingValue: '4.9',
-          reviewCount: '162',
+          ratingValue: ratingValueDisplay,
+          reviewCount: reviewCountDisplay,
           bestRating: '5',
           worstRating: '1',
         },
@@ -552,18 +561,21 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                 </a>
               </div>
               <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mt-5 inline-block text-sm font-semibold text-amber-300 hover:text-amber-200">
-                ⭐ 4.9 / 162 {isEs ? 'reseñas en Google' : 'Google reviews'}
+                ⭐ {ratingValueDisplay} / {reviewCountDisplay} {isEs ? 'reseñas verificadas' : 'verified reviews'}
               </a>
             </div>
           </div>
 
           <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden border-y border-white/10 bg-black/20">
+            {/* Above-the-fold cover image — eager + high priority for LCP. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={heroImageUrl}
               alt={coverImageAlt}
               title={coverImageTitle}
               className="h-auto w-full object-contain"
               loading="eager"
+              fetchPriority="high"
             />
           </div>
 
@@ -678,7 +690,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         <section className="container mx-auto px-4 pb-14">
           <h2 className="mb-2 text-3xl font-extrabold">{isEs ? 'Lo Que Dicen Nuestros Clientes' : 'What Our Clients Say'}</h2>
           <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="mb-6 inline-block text-sm font-semibold text-amber-300">
-            ⭐⭐⭐⭐⭐ 4.9 de 5 (162 reseñas en Google)
+            ⭐⭐⭐⭐⭐ {ratingValueDisplay} {isEs ? 'de' : 'of'} 5 ({reviewCountDisplay} {isEs ? 'reseñas verificadas' : 'verified reviews'})
           </a>
           <div className="grid gap-5 md:grid-cols-2">
             {selectedReviews.slice(0, 3).map((review, index) => (

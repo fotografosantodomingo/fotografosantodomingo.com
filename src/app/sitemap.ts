@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import { getAllSlugs } from '@/lib/supabase/blog'
 import { serviceLandingSlugs } from '@/lib/services/catalog'
 import { getPublishedSpokes, spokeTierToPriority } from '@/data/spoke-pages'
+import { createServiceClient } from '@/lib/supabase/service'
 
 export const runtime = 'edge'
 
@@ -9,8 +10,32 @@ const BASE_URL = 'https://www.fotografosantodomingo.com'
 
 export const revalidate = 0
 
+/**
+ * Loads all canonical (family_slug, package_slug) pairs from active rows
+ * for sitemap entries. Falls back to empty array on DB error so the
+ * sitemap response never 500s — partial coverage is better than none.
+ */
+async function loadPackagePairs(): Promise<Array<{ familySlug: string; packageSlug: string }>> {
+  try {
+    const supabase = createServiceClient()
+    const { data } = await supabase
+      .from('service_packages')
+      .select('slug, service_families!inner(slug, active)')
+      .eq('active', true)
+      .eq('service_families.active', true)
+    type Row = { slug: string; service_families: { slug: string; active: boolean } }
+    const rows = (data ?? []) as unknown as Row[]
+    return rows.map((r) => ({ familySlug: r.service_families.slug, packageSlug: r.slug }))
+  } catch {
+    return []
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const slugs = await getAllSlugs()
+  const [slugs, packagePairs] = await Promise.all([
+    getAllSlugs(),
+    loadPackagePairs(),
+  ])
 
   const serviceEntries: MetadataRoute.Sitemap = serviceLandingSlugs.flatMap((serviceSlug) => [
     {
@@ -39,6 +64,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
+    },
+  ])
+
+  // Per-package detail URLs (33 active packages × 2 locales = 66 entries
+   // typically). High SEO value — these are the leaf pages with full
+   // pricing, inclusions, and structured Service+Offer JSON-LD.
+  const packageEntries: MetadataRoute.Sitemap = packagePairs.flatMap((p) => [
+    {
+      url: `${BASE_URL}/es/services/${p.familySlug}/${p.packageSlug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/en/services/${p.familySlug}/${p.packageSlug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
     },
   ])
 
@@ -216,6 +259,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.95,
     },
     ...serviceEntries,
+    ...packageEntries,
     ...blogEntries,
     ...spokeEntries,
   ]
