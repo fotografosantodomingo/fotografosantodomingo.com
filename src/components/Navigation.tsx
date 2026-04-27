@@ -298,12 +298,14 @@ export default function Navigation() {
 
           {/* Mobile-only header utilities — theme toggle + locale switcher next to logo.
               Visible on mobile only (md:hidden). Desktop has its own theme toggle and
-              locale switcher slot further to the right. */}
-          <div className="md:hidden flex items-center gap-3 ml-auto mr-2">
+              locale switcher slot further to the right. Spacing tuned for thumb-reach
+              on small screens — generous gap between items and a hairline separator
+              before the hamburger so the locale link doesn't visually merge with it. */}
+          <div className="md:hidden flex items-center gap-5 ml-auto mr-4 pr-4 border-r border-hairline-soft">
             <ThemeToggle />
             <Link
               href={switchPath}
-              className="font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity"
+              className="font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity py-2 px-1 -mx-1"
               aria-label={`Switch language to ${switchLocale.toUpperCase()}`}
             >
               {switchLocale.toUpperCase()}
