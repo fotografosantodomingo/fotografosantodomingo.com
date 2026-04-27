@@ -24,6 +24,115 @@ export const commercialBrandingPhotographyContent: ServiceContent = {
     },
   },
   schemaAdditionalType: 'https://schema.org/ProfessionalService',
+
+  // ── GEO COVERAGE ────────────────────────────────────────────────────
+  // 2 cities (user-narrowed 2026-04-26 to highest-revenue intent):
+  // Santo Domingo (restaurants, agencies, urban brands), Punta Cana
+  // (hotel + hospitality marketing). Cap Cana and La Romana intentionally
+  // omitted — buyer concentration there is real-estate (covered separately).
+  geoCoverage: [
+    {
+      citySlug: 'santo-domingo',
+      cityName: { es: 'Santo Domingo', en: 'Santo Domingo' },
+      intro: {
+        es: 'Santo Domingo es el centro comercial y gastronómico de República Dominicana — restaurantes premium en Piantini, Naco y Zona Colonial, hoteles de cadena internacional, agencias de publicidad y marcas locales de retail y consumo. Cubrimos campañas de fotografía comercial con derechos de uso definidos: gastronomía profesional para menús y delivery, retail para e-commerce, hospitality para hoteles, y producciones editoriales para marcas. Trabajamos en estudio para producto controlado y on-location para hoteles, restaurantes y campañas con modelos.',
+        en: 'Santo Domingo is the Dominican Republic\'s commercial and gastronomic hub — premium restaurants in Piantini, Naco, and the Colonial Zone, international hotel chains, advertising agencies, and local retail and consumer brands. We cover commercial photography campaigns with defined usage rights: professional food photography for menus and delivery, retail for e-commerce, hospitality for hotels, and editorial productions for brands. We work in-studio for controlled product shots and on-location for hotels, restaurants, and model campaigns.',
+      },
+      venues: {
+        es: [
+          'Estudio comercial en Bella Vista — producto, retail y editorial controlado',
+          'Restaurantes en Piantini, Naco, Zona Colonial — fotografía gastronómica profesional',
+          'JW Marriott / Hilton / Embajador — campañas de hospitality y MICE',
+          'Plaza Central / Blue Mall — retail y storytelling de marca',
+          'Mercado Modelo — producciones gastronómicas con feel auténtico',
+          'Oficinas corporativas en Acrópolis / Torre Empresarial — branding corporativo',
+          'Estudios rental con cyclorama — moda, fashion brands, look book',
+        ],
+        en: [
+          'Commercial studio in Bella Vista — controlled product, retail, and editorial',
+          'Restaurants in Piantini, Naco, Colonial Zone — professional food photography',
+          'JW Marriott / Hilton / Embajador — hospitality and MICE campaigns',
+          'Plaza Central / Blue Mall — retail and brand storytelling',
+          'Mercado Modelo — gastronomic productions with authentic feel',
+          'Corporate offices in Acrópolis / Torre Empresarial — corporate branding',
+          'Rental studios with cyclorama — fashion brands, look books',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Producen contenido para marcas de restaurante en Santo Domingo?',
+            en: 'Do you produce content for restaurant brands in Santo Domingo?',
+          },
+          answer: {
+            es: 'Sí. Trabajamos con restaurantes en Piantini, Naco, Zona Colonial y Bella Vista produciendo sets gastronómicos profesionales: menú impreso, redes sociales, plataformas delivery (Uber Eats, PedidosYa), marketing de marca. Coordinamos con chef y food stylist según necesidad.',
+            en: 'Yes. We work with restaurants in Piantini, Naco, Colonial Zone, and Bella Vista producing professional food sets: printed menu, social media, delivery platforms (Uber Eats, PedidosYa), brand marketing. We coordinate with chef and food stylist as needed.',
+          },
+        },
+        {
+          question: {
+            es: '¿Pueden cubrir una campaña de marca de un día con equipo y props?',
+            en: 'Can you shoot a full-day brand campaign with team and props?',
+          },
+          answer: {
+            es: 'Sí. Coordinamos producción completa: fotógrafo principal, asistente de luz, food stylist o set designer según concepto, y manejo de derechos de uso definidos por contrato (web, social, impreso, OOH). Para campañas multi-día reservamos estudio y locaciones con anticipación.',
+            en: 'Yes. We coordinate full production: lead photographer, lighting assistant, food stylist or set designer per concept, and clearly defined usage rights by contract (web, social, print, OOH). For multi-day campaigns we book studio and locations in advance.',
+          },
+        },
+      ],
+    },
+    {
+      citySlug: 'punta-cana',
+      cityName: { es: 'Punta Cana', en: 'Punta Cana' },
+      intro: {
+        es: 'Punta Cana es la capital de hospitalidad del Caribe — resorts all-inclusive, hoteles boutique, restaurantes en resort, brands de wellness y experiencias turísticas. Cubrimos campañas de marketing hotelero (habitaciones, áreas comunes, beach club, gastronomía interna), producciones de marca para experiencias turísticas (tours, watersports, golf), y editorial de wellness y spa. Trabajamos con derechos de uso comerciales claros y entregamos sets optimizados para web hotelera, OTAs (Booking, Expedia), Instagram y campañas paid.',
+        en: 'Punta Cana is the Caribbean\'s hospitality capital — all-inclusive resorts, boutique hotels, in-resort restaurants, wellness brands, and tourism experiences. We cover hotel marketing campaigns (rooms, common areas, beach club, in-house dining), brand productions for tourism experiences (tours, watersports, golf), and wellness and spa editorial. We work with clear commercial usage rights and deliver sets optimized for hotel websites, OTAs (Booking, Expedia), Instagram, and paid campaigns.',
+      },
+      venues: {
+        es: [
+          'Hard Rock Hotel — campañas de marketing hotelero a gran escala',
+          'Iberostar Bávaro — producción de marca frente al mar',
+          'Tortuga Bay (Westin) — boutique hospitality marketing',
+          'Cap Cana resorts (Eden Roc, Sanctuary, Secrets) — campañas de lujo',
+          'Cocotal Golf Country Club — marketing de experiencia de golf',
+          'Restaurantes de resort (La Yola, Passion, etc.) — gastronomía interna',
+          'Spa y wellness centers de resort — editorial de bienestar',
+        ],
+        en: [
+          'Hard Rock Hotel — large-scale hotel marketing campaigns',
+          'Iberostar Bávaro — brand production facing the sea',
+          'Tortuga Bay (Westin) — boutique hospitality marketing',
+          'Cap Cana resorts (Eden Roc, Sanctuary, Secrets) — luxury campaigns',
+          'Cocotal Golf Country Club — golf experience marketing',
+          'Resort restaurants (La Yola, Passion, etc.) — in-house dining',
+          'Resort spa and wellness centers — wellness editorial',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Producen campañas de marketing hotelero en resorts de Punta Cana?',
+            en: 'Do you produce hotel marketing campaigns at Punta Cana resorts?',
+          },
+          answer: {
+            es: 'Sí. Trabajamos con resorts y boutique hotels para campañas multi-día: habitaciones, áreas comunes, beach club, gastronomía, spa, golf. Coordinamos con marketing del resort, talent (modelos cuando aplica), y producimos sets listos para web, OTAs y campañas paid.',
+            en: 'Yes. We work with resorts and boutique hotels on multi-day campaigns: rooms, common areas, beach club, dining, spa, golf. We coordinate with resort marketing, talent (models when applicable), and produce sets ready for web, OTAs, and paid campaigns.',
+          },
+        },
+        {
+          question: {
+            es: '¿Pueden cubrir un lanzamiento de producto multi-día en un resort?',
+            en: 'Can you cover a multi-day product launch at a resort?',
+          },
+          answer: {
+            es: 'Sí. Para lanzamientos en resorts coordinamos con el equipo de eventos del hotel, producimos cobertura del setup, evento y backstage, y entregamos sets diferenciados para prensa (entrega rápida 24h), social media (entrega 48h) y campaña post-evento (entrega 7 días).',
+            en: 'Yes. For resort launches we coordinate with the hotel\'s events team, produce setup, event, and backstage coverage, and deliver differentiated sets for press (24h fast turnaround), social media (48h), and post-event campaign (7 days).',
+          },
+        },
+      ],
+    },
+  ],
+
   knowsAbout: {
       es: ['fotografia comercial', 'produccion de campanas', 'contenido ecommerce', 'licenciamiento de imagen'],
       en: ['commercial photography', 'campaign production', 'ecommerce content', 'image licensing'],

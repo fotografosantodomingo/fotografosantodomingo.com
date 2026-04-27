@@ -24,6 +24,165 @@ export const luxuryPortraitPhotographyContent: ServiceContent = {
     },
   },
   schemaAdditionalType: 'https://schema.org/ProfessionalService',
+
+  // ── GEO COVERAGE ────────────────────────────────────────────────────
+  // 3 cities: Santo Domingo (HQ city for executives, finance, agencies),
+  // Punta Cana (resort residents, hospitality C-suite), Cap Cana (luxury
+  // residents, family office). Buyer = executives, personal brands,
+  // creators needing editorial-grade portraits and headshots.
+  geoCoverage: [
+    {
+      citySlug: 'santo-domingo',
+      cityName: { es: 'Santo Domingo', en: 'Santo Domingo' },
+      intro: {
+        es: 'Santo Domingo es el centro corporativo y financiero de República Dominicana — bancos, agencias, despachos legales, médicos privados y creadores de marca personal concentrados en Piantini, Naco, Bella Vista y Acrópolis. Cubrimos retratos editoriales con luz natural en oficinas corporativas, headshots en estudio privado, y sesiones de personal branding para LinkedIn, web y campañas. Para ejecutivos con agendas comprimidas ofrecemos sesión express con entrega en 48 horas.',
+        en: 'Santo Domingo is the Dominican Republic\'s corporate and financial center — banks, agencies, legal firms, private medical practices, and personal-brand creators concentrated in Piantini, Naco, Bella Vista, and Acrópolis. We cover editorial portraits with natural light in corporate offices, studio headshots, and personal branding sessions for LinkedIn, web, and campaigns. For executives with tight schedules we offer express sessions with 48-hour delivery.',
+      },
+      venues: {
+        es: [
+          'Estudio privado en Piantini — luz controlada para headshots y editorial',
+          'Torre Acrópolis — retratos en entorno corporativo de alto nivel',
+          'JW Marriott Santo Domingo — retratos ejecutivos en hotel de lujo',
+          'Hilton Santo Domingo — sesión con vista al Malecón como fondo',
+          'Plaza Naco / Plaza Lincoln — entorno financiero y corporativo',
+          'Zona Colonial — retratos editoriales con fondo histórico',
+          'Mirador Sur — sesión exterior natural al atardecer',
+        ],
+        en: [
+          'Private studio in Piantini — controlled light for headshots and editorial',
+          'Torre Acrópolis — portraits in a top-tier corporate environment',
+          'JW Marriott Santo Domingo — executive portraits in a luxury hotel',
+          'Hilton Santo Domingo — session with the Malecón as backdrop',
+          'Plaza Naco / Plaza Lincoln — financial and corporate environment',
+          'Colonial Zone — editorial portraits with historic backdrop',
+          'Mirador Sur — natural outdoor session at sunset',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Hacen sesiones de headshot en oficinas en Piantini o Naco?',
+            en: 'Do you do headshot sessions at offices in Piantini or Naco?',
+          },
+          answer: {
+            es: 'Sí. Llevamos kit de iluminación portátil y fondo plegable cuando la oficina no tiene buena luz natural. Sesión típica de 30-45 minutos por persona, ideal para equipos ejecutivos de 5-15 personas en una mañana.',
+            en: 'Yes. We bring portable lighting and a folding backdrop when the office lacks good natural light. Typical session: 30-45 minutes per person, ideal for 5-15 executive teams in a single morning.',
+          },
+        },
+        {
+          question: {
+            es: '¿Cuál es el tiempo de entrega para headshots listos para LinkedIn?',
+            en: 'What\'s the turnaround for LinkedIn-ready headshots?',
+          },
+          answer: {
+            es: 'Standard: 5 días hábiles con edición completa. Express: 48 horas con cargo adicional (ideal para anuncios de promoción, posts de prensa, perfiles para conferencias).',
+            en: 'Standard: 5 business days with full editing. Express: 48 hours with additional fee (ideal for promotion announcements, press posts, conference profiles).',
+          },
+        },
+      ],
+    },
+    {
+      citySlug: 'punta-cana',
+      cityName: { es: 'Punta Cana', en: 'Punta Cana' },
+      intro: {
+        es: 'Punta Cana atrae a ejecutivos del sector hotelero, residentes en comunidades como Punta Cana Village o Cap Cana, y profesionales internacionales que combinan trabajo y vida en el Caribe. Cubrimos retratos para gerentes de resort y equipo C-suite hospitality, sesiones de personal branding para hospedados temporalmente, y editorial para creadores de contenido. Trabajamos en suites del cliente, en exteriores con palmeras y arena al fondo, o en estudio rental en Bávaro cuando se necesita luz controlada.',
+        en: 'Punta Cana draws hospitality executives, residents in communities like Punta Cana Village or Cap Cana, and international professionals combining work and Caribbean living. We cover portraits for resort GMs and hospitality C-suite teams, personal branding sessions for temporary residents, and editorial for content creators. We work in client suites, outdoor with palm trees and sand backdrops, or at a Bávaro rental studio when controlled light is needed.',
+      },
+      venues: {
+        es: [
+          'Punta Cana Village — entorno corporativo en comunidad residencial',
+          'Hard Rock Hotel — retratos ejecutivos en suites y áreas privadas',
+          'Tortuga Bay (Westin) — sesión boutique con detalles de lujo',
+          'Cocotal Golf Country Club — retratos editoriales con campo de golf al fondo',
+          'Cana Bay — entorno de comunidad de golf premium',
+          'Playas privadas del cliente — sesión de personal branding con feel de destino',
+          'Estudio rental en Bávaro — luz controlada para headshots formales',
+        ],
+        en: [
+          'Punta Cana Village — corporate environment in a residential community',
+          'Hard Rock Hotel — executive portraits in suites and private areas',
+          'Tortuga Bay (Westin) — boutique session with luxury detailing',
+          'Cocotal Golf Country Club — editorial portraits with golf course backdrop',
+          'Cana Bay — premium golf community setting',
+          'Client private beaches — personal branding session with destination feel',
+          'Rental studio in Bávaro — controlled light for formal headshots',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Pueden hacer retratos ejecutivos en mi suite del resort?',
+            en: 'Can you shoot executive portraits in my resort suite?',
+          },
+          answer: {
+            es: 'Sí. Llevamos kit de iluminación compacto que cabe en suite estándar. Coordinamos con seguridad del resort previamente. Una sesión típica de 1 hora entrega 15-25 imágenes editadas para LinkedIn, web corporativa y campañas.',
+            en: 'Yes. We bring a compact lighting kit that fits in a standard suite. We coordinate with resort security in advance. A typical 1-hour session delivers 15-25 edited images for LinkedIn, corporate web, and campaigns.',
+          },
+        },
+        {
+          question: {
+            es: '¿Ofrecen entrega same-day para headshots corporativos urgentes?',
+            en: 'Do you offer same-day delivery for time-sensitive corporate headshots?',
+          },
+          answer: {
+            es: 'Sí, con cargo express. Entregamos sesión completa en 4-6 horas si se necesita para evento corporativo o anuncio mismo día. Coordinar con anticipación del horario de la sesión.',
+            en: 'Yes, with an express fee. We deliver a full session in 4-6 hours if needed for a same-day corporate event or announcement. Coordinate session timing in advance.',
+          },
+        },
+      ],
+    },
+    {
+      citySlug: 'cap-cana',
+      cityName: { es: 'Cap Cana', en: 'Cap Cana' },
+      intro: {
+        es: 'Cap Cana concentra residentes de alto poder adquisitivo, family offices y ejecutivos que combinan vivienda permanente con actividades de golf y marina. Cubrimos retratos en villas privadas de Hacienda Cap Cana, sesiones editoriales en Eden Roc y Sanctuary, y portraits con golf como fondo en Punta Espada. Para personal branding de ejecutivos con perfil internacional, Cap Cana entrega un fondo visual que comunica logro y discreción simultáneamente.',
+        en: 'Cap Cana concentrates high-net-worth residents, family offices, and executives combining permanent residence with golf and marina life. We cover portraits in private Hacienda Cap Cana villas, editorial sessions at Eden Roc and Sanctuary, and golf-backdrop portraits at Punta Espada. For international-profile executive personal branding, Cap Cana delivers a backdrop that conveys achievement and discretion simultaneously.',
+      },
+      venues: {
+        es: [
+          'Eden Roc Cap Cana — retratos ejecutivos en boutique de lujo',
+          'Sanctuary Cap Cana — sesión adults-only en setting sofisticado',
+          'Cap Cana Marina — retratos con yates y marina al fondo',
+          'Punta Espada Golf Course — sesión editorial con campo Jack Nicklaus',
+          'Hacienda Cap Cana — retratos en villas residenciales privadas',
+          'Juanillo Beach — personal branding con destino de lujo como fondo',
+          'Salones privados del cliente — sesión en entorno corporativo controlado',
+        ],
+        en: [
+          'Eden Roc Cap Cana — executive portraits in luxury boutique',
+          'Sanctuary Cap Cana — adults-only session in sophisticated setting',
+          'Cap Cana Marina — portraits with yachts and marina backdrop',
+          'Punta Espada Golf Course — editorial session at the Jack Nicklaus course',
+          'Hacienda Cap Cana — portraits in private residential villas',
+          'Juanillo Beach — personal branding with luxury-destination backdrop',
+          'Client private spaces — session in controlled corporate environment',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Fotografían en villas privadas de Cap Cana?',
+            en: 'Do you photograph at private Cap Cana villas?',
+          },
+          answer: {
+            es: 'Sí. Tenemos acreditación de seguridad de Cap Cana para entrar como fotógrafos comerciales. Coordinamos con el property manager o asistente del cliente con 24-48 horas de anticipación.',
+            en: 'Yes. We hold Cap Cana security accreditation to enter as commercial photographers. We coordinate with the property manager or client assistant 24-48 hours in advance.',
+          },
+        },
+        {
+          question: {
+            es: '¿Pueden crear sets formales y casuales en una misma sesión?',
+            en: 'Can you create both formal and casual portrait sets in one session?',
+          },
+          answer: {
+            es: 'Sí. Una sesión típica de 2-3 horas en Cap Cana entrega: set formal en interior con luz controlada (LinkedIn, web corporativa) + set casual en exterior con palmeras o marina al fondo (redes sociales personales, branding). Cambio de wardrobe entre sets.',
+            en: 'Yes. A typical 2-3 hour Cap Cana session delivers: formal indoor set with controlled light (LinkedIn, corporate web) + casual outdoor set with palm trees or marina backdrop (personal social, branding). Wardrobe change between sets.',
+          },
+        },
+      ],
+    },
+  ],
+
   knowsAbout: {
       es: ['headshots ejecutivos', 'retrato corporativo', 'personal branding', 'fotografia para LinkedIn'],
       en: ['executive headshots', 'corporate portraits', 'personal branding', 'LinkedIn photography'],

@@ -24,6 +24,115 @@ export const corporateEventPhotographyContent: ServiceContent = {
     },
   },
   schemaAdditionalType: 'https://schema.org/Event',
+
+  // ── GEO COVERAGE ────────────────────────────────────────────────────
+  // 2 cities (user-narrowed 2026-04-26): Santo Domingo (corporate HQ city,
+  // conference + awards venues), Punta Cana (incentive trips, MICE in
+  // resort settings). Cap Cana and Casa de Campo intentionally omitted —
+  // their corporate event volume rolls into Punta Cana coverage area.
+  geoCoverage: [
+    {
+      citySlug: 'santo-domingo',
+      cityName: { es: 'Santo Domingo', en: 'Santo Domingo' },
+      intro: {
+        es: 'Santo Domingo es la capital corporativa de República Dominicana — sede de conferencias internacionales, lanzamientos de marca, premiaciones de industria, asambleas de asociaciones profesionales y eventos del sector financiero, salud y gobierno. Cubrimos eventos en JW Marriott (Piantini), Hilton Santo Domingo (Malecón), Hotel El Embajador, Renaissance Jaragua, Centro de Convenciones Sambil, y salones corporativos de bancos y aseguradoras. Entregamos sets diferenciados para prensa (entrega 24 horas) y archivo institucional (galería completa editada en 7 días).',
+        en: 'Santo Domingo is the Dominican Republic\'s corporate capital — host city for international conferences, brand launches, industry awards, professional association assemblies, and finance, health, and government sector events. We cover events at JW Marriott (Piantini), Hilton Santo Domingo (Malecón), Hotel El Embajador, Renaissance Jaragua, Sambil Convention Center, and bank and insurance corporate halls. We deliver differentiated sets for press (24-hour turnaround) and institutional archive (full edited gallery in 7 days).',
+      },
+      venues: {
+        es: [
+          'JW Marriott Santo Domingo (Piantini) — eventos corporativos en salón principal',
+          'Hilton Santo Domingo (Malecón) — conferencias internacionales',
+          'Hotel El Embajador — premiaciones y eventos de gran escala clásicos',
+          'Renaissance Jaragua — eventos boutique en hotel histórico de lujo',
+          'Centro de Convenciones Sambil — asambleas de asociaciones profesionales',
+          'Salones corporativos de Banreservas / bancos privados — eventos del sector financiero',
+          'Activaciones outdoor en Malecón / Plaza Juan Barón — lanzamientos de marca',
+        ],
+        en: [
+          'JW Marriott Santo Domingo (Piantini) — corporate events in main ballroom',
+          'Hilton Santo Domingo (Malecón) — international conferences',
+          'Hotel El Embajador — large-scale classic awards and events',
+          'Renaissance Jaragua — boutique events at the historic luxury hotel',
+          'Sambil Convention Center — professional association assemblies',
+          'Banreservas / private bank corporate halls — financial sector events',
+          'Outdoor activations on Malecón / Plaza Juan Barón — brand launches',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Cubren conferencias multi-día en JW Marriott o Hilton Santo Domingo?',
+            en: 'Do you cover multi-day conferences at JW Marriott or Hilton Santo Domingo?',
+          },
+          answer: {
+            es: 'Sí. Para conferencias multi-día coordinamos cobertura por sesión: keynotes, paneles, networking, gala. Conocemos los flujos de seguridad y protocolo de cada hotel y nos integramos con el equipo de eventos del cliente desde el día -1.',
+            en: 'Yes. For multi-day conferences we coordinate coverage by session: keynotes, panels, networking, gala. We know the security and protocol flows at each hotel and integrate with the client\'s events team starting day -1.',
+          },
+        },
+        {
+          question: {
+            es: '¿Cuál es el tiempo de entrega para fotos listas para prensa después del evento?',
+            en: 'What\'s the turnaround for press-ready photos after the event?',
+          },
+          answer: {
+            es: 'Express: 24 horas para set de prensa de 30-50 fotos seleccionadas (mismo día con cargo adicional cuando se requiere). Standard: 7 días para galería completa editada con derechos de uso institucional definidos por contrato.',
+            en: 'Express: 24 hours for a press set of 30-50 selected photos (same-day with additional fee when required). Standard: 7 days for full edited gallery with institutional usage rights defined by contract.',
+          },
+        },
+      ],
+    },
+    {
+      citySlug: 'punta-cana',
+      cityName: { es: 'Punta Cana', en: 'Punta Cana' },
+      intro: {
+        es: 'Punta Cana es destino MICE consolidado del Caribe — viajes de incentivo de empresas multinacionales, retiros corporativos, conferencias en resort, gala dinners en playa y team-building en entorno tropical. Cubrimos eventos en Hard Rock Hotel Convention Center, Barceló Bávaro Convention Center, Iberostar Convention Center, y resorts de Cap Cana cuando el cliente busca exclusividad. Para incentivos multi-día coordinamos cobertura completa: bienvenida, sesiones diarias, actividades de team-building, gala dinner y cierre.',
+        en: 'Punta Cana is the Caribbean\'s established MICE destination — multinational incentive trips, corporate retreats, in-resort conferences, beach gala dinners, and tropical team-building. We cover events at Hard Rock Hotel Convention Center, Barceló Bávaro Convention Center, Iberostar Convention Center, and Cap Cana resorts when the client seeks exclusivity. For multi-day incentives we coordinate full coverage: welcome, daily sessions, team-building activities, gala dinner, and closing.',
+      },
+      venues: {
+        es: [
+          'Hard Rock Hotel Convention Center — conferencias y gala dinners de gran escala',
+          'Barceló Bávaro Convention Center — eventos internacionales hub',
+          'Iberostar Convention Center — retiros corporativos',
+          'Cap Cana resorts (Sanctuary, Eden Roc) — eventos premium MICE',
+          'Westin Puntacana — retiros corporativos boutique',
+          'Gala beach dinners en playas de resort — incentivos en playa',
+          'Outdoor team-building en playas y jardines de resort — activaciones',
+        ],
+        en: [
+          'Hard Rock Hotel Convention Center — large-scale conferences and gala dinners',
+          'Barceló Bávaro Convention Center — international event hub',
+          'Iberostar Convention Center — corporate retreats',
+          'Cap Cana resorts (Sanctuary, Eden Roc) — premium MICE events',
+          'Westin Puntacana — boutique corporate retreats',
+          'Beach gala dinners at resort beaches — beachside incentives',
+          'Outdoor team-building on resort beaches and gardens — activations',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Cubren viajes de incentivo multi-día en resorts de Punta Cana?',
+            en: 'Do you cover multi-day incentive trips at Punta Cana resorts?',
+          },
+          answer: {
+            es: 'Sí. Para incentivos típicos de 3-5 días coordinamos cobertura completa: llegada y bienvenida, sesiones de trabajo, actividades de team-building, excursiones, gala dinner y despedida. Entregamos cierre diario para que el equipo del cliente tenga material para comunicación interna y prensa durante el evento.',
+            en: 'Yes. For typical 3-5 day incentives we coordinate full coverage: arrival and welcome, work sessions, team-building activities, excursions, gala dinner, and farewell. We deliver daily wraps so the client\'s team has material for internal communication and press during the event.',
+          },
+        },
+        {
+          question: {
+            es: '¿Pueden entregar fotos same-day para comunicados de prensa durante el evento?',
+            en: 'Can you provide same-day photo delivery for press releases during the event?',
+          },
+          answer: {
+            es: 'Sí. Para eventos donde el cliente necesita comunicación inmediata, asignamos editor de campo que procesa sets seleccionados en 4-8 horas. Coordinar el flujo con el equipo de comunicación del cliente antes del evento.',
+            en: 'Yes. For events where the client needs immediate communication, we assign a field editor processing selected sets in 4-8 hours. Coordinate the flow with the client\'s communications team before the event.',
+          },
+        },
+      ],
+    },
+  ],
+
   knowsAbout: {
       es: ['fotografia de eventos corporativos', 'cobertura de conferencias', 'entrega express para prensa', 'fotografia de activaciones de marca'],
       en: ['corporate event photography', 'conference coverage', 'express PR delivery', 'brand activation photography'],

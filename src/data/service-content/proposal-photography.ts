@@ -24,6 +24,219 @@ export const proposalPhotographyContent: ServiceContent = {
     },
   },
   schemaAdditionalType: 'https://schema.org/Service',
+
+  // ── GEO COVERAGE ────────────────────────────────────────────────────
+  // 4 cities: Punta Cana, Cap Cana, Santo Domingo, Casa de Campo (Altos
+  // de Chavón). Hidden / surprise proposal coverage — discreet positioning,
+  // long-lens work, and same-day reveal sets are the format. Resort and
+  // restaurant access protocols are central to each block.
+  geoCoverage: [
+    {
+      citySlug: 'punta-cana',
+      cityName: { es: 'Punta Cana', en: 'Punta Cana' },
+      intro: {
+        es: 'Punta Cana es la capital de pedidas de mano sorpresa en el Caribe. Cubrimos propuestas en gazebos de playa de Hard Rock, Iberostar, Excellence y Paradisus, en restaurantes de Tortuga Bay (La Yola), y en las playas públicas de Bávaro y Macao al amanecer o atardecer. Trabajamos modo ninja con teleobjetivo desde 70 a 200 metros para que la pareja no nos vea hasta el momento del "sí". Coordinamos con wedding planners de hotel cuando aplica y respetamos las políticas de fotógrafo externo de cada resort.',
+        en: 'Punta Cana is the Caribbean\'s surprise-proposal capital. We cover proposals at Hard Rock, Iberostar, Excellence, and Paradisus beach gazebos, at Tortuga Bay restaurants (La Yola), and on the public Bávaro and Macao beaches at sunrise or sunset. We work ninja-style with telephoto from 70–200 meters so the couple doesn\'t see us until the "yes" moment. We coordinate with hotel wedding planners when applicable and respect each resort\'s outside-photographer policies.',
+      },
+      venues: {
+        es: [
+          'Hard Rock Punta Cana — gazebo de playa para propuesta privada',
+          'La Yola (Tortuga Bay / Westin) — propuesta en restaurante frente al mar',
+          'Iberostar Bávaro — propuesta al atardecer en gazebo de playa',
+          'Excellence Punta Cana — propuesta adults-only en zona privada',
+          'Bávaro Beach al amanecer — propuesta en playa pública sin multitud',
+          'Macao Beach — propuesta natural en playa al norte de Bávaro',
+          'Paradisus Palma Real — propuesta en gazebos privados del resort',
+        ],
+        en: [
+          'Hard Rock Punta Cana — beach gazebo for private proposal',
+          'La Yola (Tortuga Bay / Westin) — restaurant proposal facing the sea',
+          'Iberostar Bávaro — sunset proposal at the beach gazebo',
+          'Excellence Punta Cana — adults-only proposal in a private area',
+          'Bávaro Beach at sunrise — public-beach proposal without crowds',
+          'Macao Beach — natural beach proposal north of Bávaro',
+          'Paradisus Palma Real — proposal at the resort\'s private gazebos',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Cómo se mantienen escondidos durante una propuesta en resort?',
+            en: 'How do you stay hidden during a resort proposal?',
+          },
+          answer: {
+            es: 'Trabajamos con teleobjetivos 70-200mm o 100-400mm desde 70-200 metros. La pareja ve un fotógrafo más en la playa — nunca a alguien apuntándoles. Llegamos antes que tú para hacer scouting de ángulos discretos.',
+            en: 'We work with 70-200mm or 100-400mm telephotos from 70-200 meters away. The couple sees just another photographer on the beach — never someone pointing at them. We arrive before you to scout discreet angles.',
+          },
+        },
+        {
+          question: {
+            es: '¿Los resorts cobran por fotógrafo externo en propuestas?',
+            en: 'Do resorts charge fees for outside proposal photographers?',
+          },
+          answer: {
+            es: 'Algunos sí (Hard Rock, Iberostar, Hyatt). Otros lo permiten sin cargo si la propuesta es en playa pública adyacente. Lo confirmamos antes y te damos opciones según política del resort.',
+            en: 'Some do (Hard Rock, Iberostar, Hyatt). Others allow it without charge if the proposal is on the adjacent public beach. We confirm beforehand and give you options based on the resort\'s policy.',
+          },
+        },
+      ],
+      bestSeasonNote: {
+        es: 'Mejor temporada: noviembre a abril (clima estable). Para propuestas al amanecer cualquier mes funciona — la luz suave del Caribe a primera hora es uno de nuestros momentos favoritos del año.',
+        en: 'Best season: November–April (stable weather). For sunrise proposals any month works — the soft early-morning Caribbean light is one of our favorite moments of the year.',
+      },
+    },
+    {
+      citySlug: 'cap-cana',
+      cityName: { es: 'Cap Cana', en: 'Cap Cana' },
+      intro: {
+        es: 'Cap Cana es la apuesta de propuesta más exclusiva del Caribe — Juanillo Beach (consistentemente rankeada entre las mejores playas del mundo) ofrece arena blanca, agua turquesa y una orientación oeste perfecta para atardeceres. Sumamos propuestas en yates de Cap Cana Marina, sets en el campo de golf Punta Espada al sunset, y propuestas en cabanas privadas de Eden Roc o Sanctuary. Tenemos acreditación de seguridad para entrar al gated community como fotógrafos comerciales.',
+        en: 'Cap Cana is the Caribbean\'s most exclusive proposal play — Juanillo Beach (consistently ranked among the world\'s best beaches) offers white sand, turquoise water, and a west orientation perfect for sunsets. We add yacht proposals at Cap Cana Marina, sunset sets on the Punta Espada golf course, and proposals in Eden Roc or Sanctuary private cabanas. We hold security accreditation to enter the gated community as commercial photographers.',
+      },
+      venues: {
+        es: [
+          'Juanillo Beach — propuesta al atardecer en una de las mejores playas del Caribe',
+          'Sanctuary Cap Cana — propuesta adults-only en playa privada',
+          'Eden Roc Cap Cana — propuesta boutique en cabanas privadas',
+          'Cap Cana Marina — propuesta sobre yate al golden hour',
+          'Punta Espada Golf Course — propuesta cinematográfica al atardecer en el campo Jack Nicklaus',
+          'Secrets Cap Cana — propuesta adults-only con gazebo frente al mar',
+          'Hyatt Ziva / Zilara Cap Cana — propuesta en zona resort de lujo',
+        ],
+        en: [
+          'Juanillo Beach — sunset proposal on one of the Caribbean\'s top beaches',
+          'Sanctuary Cap Cana — adults-only proposal on a private beach',
+          'Eden Roc Cap Cana — boutique proposal in private cabanas',
+          'Cap Cana Marina — yacht-deck proposal at golden hour',
+          'Punta Espada Golf Course — cinematic sunset proposal on the Jack Nicklaus course',
+          'Secrets Cap Cana — adults-only proposal with oceanfront gazebo',
+          'Hyatt Ziva / Zilara Cap Cana — proposal in the luxury resort zone',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Pueden organizar una propuesta privada en Juanillo Beach?',
+            en: 'Can you arrange a private proposal at Juanillo Beach?',
+          },
+          answer: {
+            es: 'Sí. Coordinamos con anticipación el horario (sunset es el más demandado) y los puntos de cobertura. Para una propuesta verdaderamente privada recomendamos amanecer, cuando la playa está prácticamente vacía. Manejamos los detalles logísticos con seguridad de Cap Cana.',
+            en: 'Yes. We coordinate timing in advance (sunset is most popular) and coverage points. For a truly private proposal we recommend sunrise, when the beach is essentially empty. We handle logistics with Cap Cana security.',
+          },
+        },
+        {
+          question: {
+            es: '¿Tienen acceso a los resorts cerrados de Cap Cana para propuestas sorpresa?',
+            en: 'Do you have access to Cap Cana\'s gated resorts for surprise proposals?',
+          },
+          answer: {
+            es: 'Sí. Tenemos acreditación de seguridad de Cap Cana para entrar como fotógrafos comerciales en Sanctuary, Eden Roc, Secrets y Hyatt. Coordinamos el acceso 24-48 horas antes para evitar contratiempos en el portón.',
+            en: 'Yes. We hold Cap Cana security accreditation to enter Sanctuary, Eden Roc, Secrets, and Hyatt as commercial photographers. We coordinate access 24-48 hours in advance to avoid gate delays.',
+          },
+        },
+      ],
+    },
+    {
+      citySlug: 'santo-domingo',
+      cityName: { es: 'Santo Domingo', en: 'Santo Domingo' },
+      intro: {
+        es: 'Santo Domingo es el escenario de propuestas urbanas y románticas con peso histórico — Plaza España con la Catedral Primada al fondo, el Alcázar de Colón, la Calle Las Damas iluminada al atardecer. Sumamos propuestas en restaurantes rooftop con vista al Malecón y Mar Caribe, y propuestas íntimas en hoteles boutique de la Zona Colonial. Para parejas dominicanas o extranjeros que prefieren ciudad sobre playa, Santo Domingo entrega lo que ningún resort puede: 500 años de historia como fondo.',
+        en: 'Santo Domingo is the stage for urban, history-laden proposals — Plaza España with the Primada Cathedral behind, Alcázar de Colón, Calle Las Damas lit at sunset. We add proposals at rooftop restaurants with Malecón and Caribbean views, and intimate proposals in Colonial Zone boutique hotels. For Dominican couples or international visitors who prefer city over beach, Santo Domingo delivers what no resort can: 500 years of history as backdrop.',
+      },
+      venues: {
+        es: [
+          'Plaza España — propuesta histórica con la Catedral Primada al fondo',
+          'Alcázar de Colón — propuesta frente al palacio de Diego Colón',
+          'Mirador Sur — propuesta al atardecer en cliff con vista al mar',
+          'Calle Las Damas iluminada — propuesta nocturna en la calle empedrada más antigua del Nuevo Mundo',
+          'Adrian Tropical (Malecón) — propuesta en restaurante con vista al Caribe',
+          'Casas del XVI — propuesta íntima en boutique hotel de la Zona Colonial',
+          'JW Marriott rooftop — propuesta urbana con vista a Piantini',
+        ],
+        en: [
+          'Plaza España — historic proposal with the Primada Cathedral as backdrop',
+          'Alcázar de Colón — proposal in front of Diego Columbus\' palace',
+          'Mirador Sur — cliff sunset proposal with sea views',
+          'Calle Las Damas illuminated — nighttime proposal on the New World\'s oldest cobblestone street',
+          'Adrian Tropical (Malecón) — restaurant proposal with Caribbean views',
+          'Casas del XVI — intimate proposal at the Colonial Zone boutique hotel',
+          'JW Marriott rooftop — urban proposal with Piantini views',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Pueden hacer una propuesta oculta en un restaurante de Santo Domingo?',
+            en: 'Can you do a hidden proposal in a Santo Domingo restaurant?',
+          },
+          answer: {
+            es: 'Sí. Coordinamos previamente con el restaurante (varios en Piantini, Naco y Zona Colonial nos conocen) para un mesero que sepa el momento, una mesa con ángulo fotográfico y nuestra ubicación discreta. La pareja nunca nos ve antes del "sí".',
+            en: 'Yes. We coordinate in advance with the restaurant (several in Piantini, Naco, and the Colonial Zone know us) for a server who knows the moment, a table with the right photo angle, and our discreet position. The couple never sees us before the "yes."',
+          },
+        },
+        {
+          question: {
+            es: '¿Cubren propuestas en la Zona Colonial sin coordinar con autoridades?',
+            en: 'Do you cover proposals in the Colonial Zone without coordinating with authorities?',
+          },
+          answer: {
+            es: 'Sí, en zonas públicas como Plaza España, Calle Las Damas y Alcázar de Colón. La Zona Colonial es área pública abierta — no requerimos permisos para propuesta íntima. Para ceremonias o producciones formales, sí coordinamos con la oficina del Patrimonio Cultural.',
+            en: 'Yes, in public areas like Plaza España, Calle Las Damas, and Alcázar de Colón. The Colonial Zone is open public space — no permits needed for an intimate proposal. For ceremonies or formal productions, we do coordinate with the Cultural Heritage office.',
+          },
+        },
+      ],
+    },
+    {
+      citySlug: 'casa-de-campo',
+      cityName: { es: 'Casa de Campo', en: 'Casa de Campo' },
+      intro: {
+        es: 'Altos de Chavón es probablemente el escenario de propuesta más cinematográfico de República Dominicana — un pueblo mediterráneo del siglo XVI tallado a mano sobre el río Chavón, con anfiteatro, plazas empedradas, restaurantes románticos y vistas al atardecer sobre el cañón. Sumamos propuestas en Minitas Beach (playa privada del resort), restaurantes de Casa de Campo Marina, y al hoyo 18 de Teeth of the Dog al sunset. Para propuestas que quieren memoria visual única, Casa de Campo entrega un escenario que ningún resort all-inclusive puede igualar.',
+        en: 'Altos de Chavón is arguably the most cinematic proposal venue in the Dominican Republic — a hand-carved 16th-century Mediterranean village above the Chavón River, with amphitheater, cobblestone plazas, romantic restaurants, and sunset views over the canyon. We add proposals on Minitas Beach (the resort\'s private beach), at Casa de Campo Marina restaurants, and on Teeth of the Dog\'s 18th hole at sunset. For proposals that want a singular visual memory, Casa de Campo delivers a setting no all-inclusive resort can match.',
+      },
+      venues: {
+        es: [
+          'Altos de Chavón plaza principal — propuesta al atardecer en el pueblo mediterráneo',
+          'Altos de Chavón mirador del río Chavón — propuesta en cliff con vista al cañón',
+          'La Caña by Il Circo (Casa de Campo) — propuesta en restaurante boutique',
+          'Minitas Beach — propuesta privada en playa del resort',
+          'Casa de Campo Marina — propuesta al atardecer con yates al fondo',
+          'Iglesia de San Estanislao (atrio exterior) — propuesta romántica en setting histórico',
+          'Teeth of the Dog Golf hoyo 18 — propuesta cinematográfica al sunset en el campo Pete Dye',
+        ],
+        en: [
+          'Altos de Chavón main plaza — sunset proposal in the Mediterranean village',
+          'Altos de Chavón Chavón River viewpoint — cliff proposal with canyon views',
+          'La Caña by Il Circo (Casa de Campo) — boutique restaurant proposal',
+          'Minitas Beach — private resort-beach proposal',
+          'Casa de Campo Marina — sunset proposal with yachts as backdrop',
+          'St. Stanislaus Church (exterior courtyard) — romantic proposal in historic setting',
+          'Teeth of the Dog Golf 18th hole — cinematic sunset proposal on the Pete Dye course',
+        ],
+      },
+      miniFaq: [
+        {
+          question: {
+            es: '¿Por qué Altos de Chavón es el escenario de propuesta más fotogénico de RD?',
+            en: 'Why is Altos de Chavón the most photogenic proposal venue in DR?',
+          },
+          answer: {
+            es: 'Porque es uno de los pocos lugares del Caribe que ofrece arquitectura europea del siglo XVI tallada a mano, con orientación oeste sobre el río Chavón. Da 30+ ángulos diferentes en menos de un kilómetro: piedra, madera, escaleras, plazas, vista al cañón al atardecer. Visualmente es irrepetible.',
+            en: 'Because it\'s one of the few places in the Caribbean offering hand-carved 16th-century European architecture, oriented west over the Chavón River. It delivers 30+ different angles in under a kilometer: stone, wood, stairs, plazas, sunset canyon views. Visually it\'s unrepeatable.',
+          },
+        },
+        {
+          question: {
+            es: '¿Pueden coordinar una propuesta sorpresa en restaurante de Casa de Campo?',
+            en: 'Can you coordinate a surprise proposal at a Casa de Campo restaurant?',
+          },
+          answer: {
+            es: 'Sí. Trabajamos con La Caña, La Casita y otros restaurantes del resort para coordinar la mesa, el momento y nuestro ángulo discreto. Casa de Campo facilita el flujo cuando se solicita con anticipación.',
+            en: 'Yes. We work with La Caña, La Casita, and other resort restaurants to coordinate the table, the moment, and our discreet angle. Casa de Campo facilitates the flow when arranged in advance.',
+          },
+        },
+      ],
+    },
+  ],
+
   knowsAbout: {
       es: ['fotografia de propuesta sorpresa', 'modo ninja con teleobjetivo', 'propuesta en restaurante Santo Domingo', 'fotografia oculta de pedida de mano'],
       en: ['surprise proposal photography', 'ninja mode telephoto technique', 'restaurant proposal Santo Domingo', 'hidden engagement photography'],
