@@ -7,6 +7,7 @@ import {
   resolveFamilySlug,
 } from '@/lib/services/legacy-aliases'
 import { getServiceContent } from '@/data/service-content'
+import { GEO_PAGES } from '@/data/geo-pages'
 import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
 import { formatServicePrice } from '@/lib/currency/format'
 
@@ -468,7 +469,7 @@ export default async function FamilyPage({ params }: Props) {
                       )}
 
                       {/* Per-geo CTAs — carry ?city= for attribution */}
-                      <div className="mt-10 flex flex-col sm:flex-row gap-3">
+                      <div className="mt-10 flex flex-col sm:flex-row gap-3 flex-wrap">
                         {family.bookable && (
                           <Link
                             href={`/${locale}/book?service=${family.slug}&city=${geo.citySlug}&cta=geo-block-${geo.citySlug}`}
@@ -485,6 +486,24 @@ export default async function FamilyPage({ params }: Props) {
                             {isEs ? `Cotizar ${familyTitleLower} en ${cityName}` : `Get quote for ${familyTitleLower} in ${cityName}`}
                           </Link>
                         )}
+                        {/* Tier-1 dedicated geo URL deep-link — passes link
+                             equity to the standalone landing page when one
+                             exists for this (family, city) combo. */}
+                        {(() => {
+                          const dedicatedGeo = GEO_PAGES.find(
+                            (g) => g.familySlug === family.slug && g.citySlug === geo.citySlug
+                          )
+                          if (!dedicatedGeo) return null
+                          const slug = isEs ? dedicatedGeo.esSlug : dedicatedGeo.enSlug
+                          return (
+                            <Link
+                              href={`/${locale}/${slug}`}
+                              className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline-soft text-ink-muted hover:text-ink hover:border-hairline transition-colors duration-200"
+                            >
+                              {isEs ? `Página dedicada de ${cityName} →` : `${cityName} dedicated page →`}
+                            </Link>
+                          )
+                        })()}
                       </div>
                     </article>
                   )

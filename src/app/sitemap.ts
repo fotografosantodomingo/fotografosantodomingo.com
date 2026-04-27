@@ -3,6 +3,7 @@ import { getAllSlugs } from '@/lib/supabase/blog'
 import { serviceLandingSlugs } from '@/lib/services/catalog'
 import { getPublishedSpokes, spokeTierToPriority } from '@/data/spoke-pages'
 import { createServiceClient } from '@/lib/supabase/service'
+import { GEO_PAGES } from '@/data/geo-pages'
 
 export const runtime = 'edge'
 
@@ -82,6 +83,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
+    },
+  ])
+
+  // Tier-1 dedicated geo URLs (e.g. /es/fotografo-de-bodas-en-punta-cana,
+   // /en/punta-cana-wedding-photographer). These target exact-match local
+   // queries and are the highest-revenue-intent landing pages on the site.
+  const geoEntries: MetadataRoute.Sitemap = GEO_PAGES.flatMap((g) => [
+    {
+      url: `${BASE_URL}/es/${g.esSlug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: g.sitemapPriority,
+    },
+    {
+      url: `${BASE_URL}/en/${g.enSlug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: g.sitemapPriority,
     },
   ])
 
@@ -260,6 +279,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...serviceEntries,
     ...packageEntries,
+    ...geoEntries,
     ...blogEntries,
     ...spokeEntries,
   ]
