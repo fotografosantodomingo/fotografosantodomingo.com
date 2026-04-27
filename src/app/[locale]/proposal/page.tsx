@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { generateJsonLd, schemaGenerators } from '@/components/seo/JsonLd'
 import BookingCTA from '@/components/spoke/BookingCTA'
+import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
+import { formatServicePrice } from '@/lib/currency/format'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -129,7 +131,9 @@ const LOCATIONS_EN = [
   '✨ Restaurants, terraces, villas and more',
 ]
 
-export default function ProposalHubPage({ params: { locale } }: Props) {
+export default async function ProposalHubPage({ params: { locale } }: Props) {
+  const dopRate = await getUsdToDopRate()
+  const proposalPrice = formatServicePrice(250, locale, dopRate.usdToDop)
   const isEs = locale === 'es'
 
   const breadcrumbSchema = schemaGenerators.breadcrumb([
@@ -166,7 +170,9 @@ export default function ProposalHubPage({ params: { locale } }: Props) {
             <BookingCTA locale={locale} waMessage={waMsg} layout="horizontal" />
           </div>
           <p className="mt-6 text-sm text-neutral-500">
-            {isEs ? '📍 Toda República Dominicana · Desde $250 USD + 18% ITBIS' : '📍 All of Dominican Republic · From $250 USD + 18% ITBIS'}
+            {isEs
+              ? `📍 Toda República Dominicana · Desde ${proposalPrice.primary} + 18% ITBIS${proposalPrice.usdReference ? ` · ${proposalPrice.usdReference}` : ''}`
+              : `📍 All of Dominican Republic · From ${proposalPrice.primary} ${proposalPrice.primarySuffix ?? ''} + 18% tax`}
           </p>
         </section>
 
@@ -202,7 +208,16 @@ export default function ProposalHubPage({ params: { locale } }: Props) {
                     <p className="mt-2 flex-1 text-sm text-neutral-500 dark:text-neutral-400">
                       {isEs ? pkg.descEs : pkg.descEn}
                     </p>
-                    <p className="mt-4 text-sm font-bold text-amber-500">{pkg.price}</p>
+                    <p className="mt-4 text-sm font-bold text-amber-500">
+                      {proposalPrice.primary}
+                      {proposalPrice.primarySuffix && ` ${proposalPrice.primarySuffix}`}
+                      {' + ITBIS'}
+                      {proposalPrice.usdReference && (
+                        <span className="block text-xs font-normal text-neutral-500 dark:text-neutral-400 mt-0.5">
+                          {proposalPrice.usdReference}
+                        </span>
+                      )}
+                    </p>
                     <span className="mt-3 text-xs text-amber-500 group-hover:underline">
                       {isEs ? 'Ver más →' : 'Learn more →'}
                     </span>
@@ -296,8 +311,13 @@ export default function ProposalHubPage({ params: { locale } }: Props) {
                       {isEs ? 'Estándar' : 'Standard'}
                     </td>
                     <td className="px-5 py-4 font-bold text-amber-500 whitespace-nowrap">
-                      $250 USD
-                      <span className="block text-xs font-normal text-neutral-500 dark:text-neutral-400 mt-0.5">+ 18% ITBIS</span>
+                      {proposalPrice.primary}
+                      {proposalPrice.primarySuffix && ` ${proposalPrice.primarySuffix}`}
+                      <span className="block text-xs font-normal text-neutral-500 dark:text-neutral-400 mt-0.5">
+                        {proposalPrice.usdReference
+                          ? `${proposalPrice.usdReference} · + 18% ITBIS`
+                          : '+ 18% ITBIS'}
+                      </span>
                     </td>
                     <td className="px-5 py-4 text-neutral-600 dark:text-neutral-400">
                       {isEs

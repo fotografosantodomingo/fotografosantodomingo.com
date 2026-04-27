@@ -7,6 +7,8 @@ import {
   resolveFamilySlug,
 } from '@/lib/services/legacy-aliases'
 import { getServiceContent } from '@/data/service-content'
+import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
+import { formatServicePrice } from '@/lib/currency/format'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'edge'
@@ -126,7 +128,10 @@ export default async function FamilyPage({ params }: Props) {
     redirect(`/${locale}/services/${LEGACY_SERVICE_SLUG_TO_FAMILY[service]}`)
   }
 
-  const result = await loadFamily(service)
+  const [result, dopRate] = await Promise.all([
+    loadFamily(service),
+    getUsdToDopRate(),
+  ])
   if (!result) notFound()
   const { family, packages } = result
 
@@ -300,6 +305,7 @@ export default async function FamilyPage({ params }: Props) {
             family={family}
             locale={locale}
             isEs={isEs}
+            dopRate={dopRate.usdToDop}
           />
         )}
 
@@ -311,6 +317,7 @@ export default async function FamilyPage({ params }: Props) {
             locale={locale}
             isEs={isEs}
             quoteOnly
+            dopRate={dopRate.usdToDop}
           />
         )}
 
@@ -849,6 +856,7 @@ function PackageGrid({
   locale,
   isEs,
   quoteOnly,
+  dopRate,
 }: {
   heading: string
   packages: PackageRow[]
@@ -856,6 +864,8 @@ function PackageGrid({
   locale: string
   isEs: boolean
   quoteOnly?: boolean
+  /** USD→DOP rate (per 1 USD) for ES locale price display. */
+  dopRate: number
 }) {
   return (
     <section className="py-16 md:py-20">
@@ -899,17 +909,30 @@ function PackageGrid({
                     {name}
                   </h3>
 
-                  <div className="mt-5 mb-1 flex items-baseline gap-2">
-                    <span
-                      className="font-display text-ink"
-                      style={{ fontSize: 'clamp(36px, 4vw, 56px)', lineHeight: '1.0' }}
-                    >
-                      ${price.toFixed(0)}
-                    </span>
-                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
-                      {isEs ? 'USD desde' : 'USD start'}
-                    </span>
-                  </div>
+                  {(() => {
+                    const formatted = formatServicePrice(price, locale, dopRate)
+                    return (
+                      <div className="mt-5 mb-1">
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <span
+                            className="font-display text-ink"
+                            style={{ fontSize: 'clamp(36px, 4vw, 56px)', lineHeight: '1.0' }}
+                          >
+                            {formatted.primary}
+                          </span>
+                          <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                            {isEs ? 'desde' : 'start'}
+                            {formatted.primarySuffix ? ` · ${formatted.primarySuffix}` : ''}
+                          </span>
+                        </div>
+                        {formatted.usdReference && (
+                          <p className="mt-1 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                            {formatted.usdReference}
+                          </p>
+                        )}
+                      </div>
+                    )
+                  })()}
 
                   {desc && <p className="mt-4 text-sm text-ink-muted leading-relaxed">{desc}</p>}
 

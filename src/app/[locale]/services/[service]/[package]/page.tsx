@@ -6,6 +6,8 @@ import {
   LEGACY_SERVICE_SLUG_TO_FAMILY,
 } from '@/lib/services/legacy-aliases'
 import { getServiceContent } from '@/data/service-content'
+import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
+import { formatServicePrice, paymentDisclosureNote } from '@/lib/currency/format'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'edge'
@@ -134,7 +136,10 @@ export default async function PackageDetailPage({ params }: Props) {
     )
   }
 
-  const detail = await loadPackage(service, packageSlug)
+  const [detail, dopRate] = await Promise.all([
+    loadPackage(service, packageSlug),
+    getUsdToDopRate(),
+  ])
   if (!detail) notFound()
 
   const name = isEs ? detail.name_es : detail.name_en
@@ -143,6 +148,9 @@ export default async function PackageDetailPage({ params }: Props) {
   const inclusions = isEs ? detail.inclusions_es : detail.inclusions_en
   const price = Number(detail.starting_price_usd)
   const deposit = Math.round((price * detail.deposit_percent) / 100)
+  const formattedPrice = formatServicePrice(price, locale, dopRate.usdToDop)
+  const formattedDeposit = formatServicePrice(deposit, locale, dopRate.usdToDop)
+  const disclosure = paymentDisclosureNote(locale)
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -228,16 +236,22 @@ export default async function PackageDetailPage({ params }: Props) {
               </div>
 
               {/* Price block — flat, no card chassis, hairline only */}
-              <div className="border-l-0 md:border-l border-t md:border-t-0 border-hairline-soft pt-8 md:pt-0 md:pl-8 lg:pl-12 md:min-w-[240px]">
+              <div className="border-l-0 md:border-l border-t md:border-t-0 border-hairline-soft pt-8 md:pt-0 md:pl-8 lg:pl-12 md:min-w-[260px]">
                 <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-2">
-                  {isEs ? 'Desde · USD' : 'From · USD'}
+                  {isEs ? 'Desde' : 'From'}
+                  {formattedPrice.primarySuffix ? ` · ${formattedPrice.primarySuffix}` : ''}
                 </p>
                 <div
                   className="font-display text-ink"
-                  style={{ fontSize: 'clamp(56px, 6vw, 88px)', lineHeight: '1.0' }}
+                  style={{ fontSize: 'clamp(48px, 5.5vw, 80px)', lineHeight: '1.0' }}
                 >
-                  ${price.toFixed(0)}
+                  {formattedPrice.primary}
                 </div>
+                {formattedPrice.usdReference && (
+                  <p className="mt-2 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                    {formattedPrice.usdReference}
+                  </p>
+                )}
                 <div className="mt-4 space-y-1.5 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
                   <div>
                     {detail.minimum_billable_hours
@@ -255,6 +269,11 @@ export default async function PackageDetailPage({ params }: Props) {
                     </div>
                   )}
                 </div>
+                {disclosure && (
+                  <p className="mt-4 text-[10px] text-ink-muted leading-relaxed max-w-[240px]">
+                    {disclosure}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -297,8 +316,8 @@ export default async function PackageDetailPage({ params }: Props) {
                 <p className="text-ink text-base md:text-lg leading-relaxed">
                   {detail.bookable_direct
                     ? (isEs
-                        ? `Depósito del ${detail.deposit_percent}% — $${deposit} USD para asegurar tu fecha.`
-                        : `${detail.deposit_percent}% deposit — $${deposit} USD to lock your date.`)
+                        ? `Depósito del ${detail.deposit_percent}% — ${formattedDeposit.primary} para asegurar tu fecha.`
+                        : `${detail.deposit_percent}% deposit — ${formattedDeposit.primary} ${formattedDeposit.primarySuffix ?? ''} to lock your date.`)
                     : (isEs
                         ? 'Este paquete se cotiza de forma personalizada.'
                         : 'This package is custom-quoted.')}

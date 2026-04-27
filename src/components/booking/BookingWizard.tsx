@@ -34,6 +34,7 @@ export default function BookingWizard({
   locale,
   preselectedServiceSlug,
   attributionCity,
+  dopRate,
 }: {
   locale: Locale
   preselectedServiceSlug?: string
@@ -43,6 +44,12 @@ export default function BookingWizard({
    * `attribution_city` so we can measure which geo blocks convert.
    */
   attributionCity?: string
+  /**
+   * USD→DOP rate (per 1 USD) for ES locale price display in StepService
+   * and StepPayment. Fetched server-side in /book/page.tsx and passed
+   * down so the rate respects the same 24h cache as the rest of the site.
+   */
+  dopRate?: number
 }) {
   const [stepIdx, setStepIdx] = useState(0)
   const [state, setState] = useState<State>({
@@ -207,6 +214,7 @@ export default function BookingWizard({
                 locale={locale}
                 onPick={onPickService}
                 onLoaded={onServicesLoaded}
+                dopRate={dopRate}
               />
             )}
 
@@ -251,6 +259,7 @@ export default function BookingWizard({
                     Number(state.service.price_usd) * (state.service.deposit_percent / 100)
                   }
                   onSuccess={onPaymentSuccess}
+                  dopRate={dopRate}
                 />
               )}
           </div>

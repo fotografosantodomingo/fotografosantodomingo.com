@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { loadStripe, type Stripe } from '@stripe/stripe-js'
+import { formatServicePrice } from '@/lib/currency/format'
 import {
   Elements,
   PaymentElement,
@@ -24,12 +25,15 @@ export default function StepPayment({
   bookingId,
   depositUsd,
   onSuccess,
+  dopRate,
 }: {
   locale: 'es' | 'en'
   clientSecret: string
   bookingId: string
   depositUsd: number
   onSuccess: () => void
+  /** USD→DOP rate for displaying the DOP equivalent under the USD charge. */
+  dopRate?: number
 }) {
   const stripeJs = useMemo(() => getStripeJs(), [])
 
@@ -63,10 +67,19 @@ export default function StepPayment({
             USD
           </div>
         </div>
+        {/* DOP equivalent for ES users — Stripe still charges USD; this is
+             a courtesy reference at the day's rate. */}
+        {locale === 'es' && dopRate && dopRate > 0 && (
+          <p className="mt-2 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+            {formatServicePrice(depositUsd, 'es', dopRate).primary}
+            {' · '}
+            equivalente
+          </p>
+        )}
         <p className="mt-3 text-sm text-ink-muted leading-relaxed max-w-md">
           {locale === 'es'
-            ? 'Cargo seguro ahora. El saldo se paga el día de la sesión.'
-            : 'Secure charge now. Balance is paid on the session day.'}
+            ? 'Cargo seguro en USD vía Stripe. El saldo se paga el día de la sesión.'
+            : 'Secure USD charge via Stripe. Balance is paid on the session day.'}
         </p>
       </div>
 

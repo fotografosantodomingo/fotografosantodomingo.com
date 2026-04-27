@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
+import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
+import { formatServicePrice } from '@/lib/currency/format'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -470,8 +472,9 @@ const CATEGORIES: ServiceCategory[] = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function PricesPage({ params: { locale } }: Props) {
+export default async function PricesPage({ params: { locale } }: Props) {
   const isEs = locale === 'es'
+  const dopRate = await getUsdToDopRate()
 
   const breadcrumbSchema = schemaGenerators.breadcrumb([
     { name: isEs ? 'Inicio' : 'Home', url: `${BASE_URL}/${locale}` },
@@ -510,7 +513,7 @@ export default function PricesPage({ params: { locale } }: Props) {
               {[
                 { value: isEs ? '25+' : '25+', label: isEs ? 'Servicios' : 'Services' },
                 { value: '50%', label: isEs ? 'Adelanto' : 'Deposit' },
-                { value: 'USD', label: 'DOP · USD' },
+                { value: isEs ? 'DOP' : 'USD', label: isEs ? 'Cobro USD' : 'DOP accepted' },
                 { value: '1h', label: isEs ? 'Respuesta' : 'Response' },
               ].map(({ value, label }) => (
                 <div key={label} className="border-r border-b border-hairline-soft p-5">
@@ -639,17 +642,30 @@ export default function PricesPage({ params: { locale } }: Props) {
                         {isEs ? svc.nameEs : svc.nameEn}
                       </h3>
 
-                      <div className="mt-4 mb-1 flex items-baseline gap-2">
-                        <span
-                          className="font-display text-ink"
-                          style={{ fontSize: 'clamp(32px, 3.5vw, 44px)', lineHeight: '1' }}
-                        >
-                          ${svc.priceUsd.toLocaleString()}
-                        </span>
-                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
-                          {isEs ? 'USD desde' : 'USD start'}
-                        </span>
-                      </div>
+                      {(() => {
+                        const formatted = formatServicePrice(svc.priceUsd, locale, dopRate.usdToDop)
+                        return (
+                          <div className="mt-4 mb-1">
+                            <div className="flex items-baseline gap-2 flex-wrap">
+                              <span
+                                className="font-display text-ink"
+                                style={{ fontSize: 'clamp(32px, 3.5vw, 44px)', lineHeight: '1' }}
+                              >
+                                {formatted.primary}
+                              </span>
+                              <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                                {isEs ? 'desde' : 'start'}
+                                {formatted.primarySuffix ? ` · ${formatted.primarySuffix}` : ''}
+                              </span>
+                            </div>
+                            {formatted.usdReference && (
+                              <p className="mt-1 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                                {formatted.usdReference}
+                              </p>
+                            )}
+                          </div>
+                        )
+                      })()}
                       {svc.priceNote && (
                         <div className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mt-1">
                           {svc.priceNote}

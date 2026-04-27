@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { formatServicePrice } from '@/lib/currency/format'
 
 export type Service = {
   id: string
@@ -33,10 +34,13 @@ export default function StepService({
   locale,
   onPick,
   onLoaded,
+  dopRate,
 }: {
   locale: 'es' | 'en'
   onPick: (s: Service) => void
   onLoaded?: (services: Service[]) => void
+  /** USD→DOP rate for ES locale price display. Optional — falls back to USD when missing. */
+  dopRate?: number
 }) {
   const [data, setData] = useState<ApiResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -100,7 +104,9 @@ export default function StepService({
               {list.map(s => {
                 const name = locale === 'es' ? s.name_es : s.name_en
                 const desc = locale === 'es' ? s.description_es : s.description_en
-                const deposit = Number(s.price_usd) * (s.deposit_percent / 100)
+                const depositUsd = Number(s.price_usd) * (s.deposit_percent / 100)
+                const formattedPrice = formatServicePrice(Number(s.price_usd), locale, dopRate)
+                const formattedDeposit = formatServicePrice(depositUsd, locale, dopRate)
                 return (
                   <li key={s.id} className="border-r border-b border-hairline-soft">
                     <button
@@ -112,9 +118,16 @@ export default function StepService({
                         <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
                           {s.popular_badge ? s.popular_badge.replace('_', ' ') : ''}
                         </span>
-                        <span className="font-display text-ink" style={{ fontSize: '24px', lineHeight: '1' }}>
-                          ${Number(s.price_usd).toFixed(0)}
-                        </span>
+                        <div className="text-right">
+                          <span className="font-display text-ink block" style={{ fontSize: '20px', lineHeight: '1' }}>
+                            {formattedPrice.primary}
+                          </span>
+                          {formattedPrice.usdReference && (
+                            <span className="font-mono uppercase tracking-widest text-[9px] text-ink-muted block mt-0.5">
+                              {formattedPrice.usdReference}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <h4
                         className="font-display uppercase text-ink"
@@ -136,8 +149,8 @@ export default function StepService({
                         </span>
                         <span>
                           {locale === 'es'
-                            ? `Depósito $${deposit.toFixed(0)}`
-                            : `Deposit $${deposit.toFixed(0)}`}
+                            ? `Depósito ${formattedDeposit.primary}`
+                            : `Deposit ${formattedDeposit.primary}`}
                         </span>
                       </div>
                     </button>

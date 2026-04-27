@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createServiceClient } from '@/lib/supabase/service'
+import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
+import { formatServicePrice } from '@/lib/currency/format'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'edge'
@@ -121,7 +123,10 @@ async function loadFamilies(): Promise<FamilyAggregate[]> {
 }
 
 export default async function ServicesPage({ params: { locale } }: Props) {
-  const families = await loadFamilies()
+  const [families, dopRate] = await Promise.all([
+    loadFamilies(),
+    getUsdToDopRate(),
+  ])
   const isEs = locale === 'es'
 
   const breadcrumbJsonLd = {
@@ -201,9 +206,13 @@ export default async function ServicesPage({ params: { locale } }: Props) {
               {families.map(f => {
                 const title = isEs ? f.title_es : f.title_en
                 const tagline = isEs ? f.tagline_es : f.tagline_en
-                const priceLabel = f.starting_price_usd != null
-                  ? `${isEs ? 'Desde' : 'From'} $${Math.round(f.starting_price_usd)}`
-                  : (isEs ? 'Solo cotización' : 'Quote only')
+                const priceLabel = (() => {
+                  if (f.starting_price_usd == null) {
+                    return isEs ? 'Solo cotización' : 'Quote only'
+                  }
+                  const formatted = formatServicePrice(f.starting_price_usd, locale, dopRate.usdToDop)
+                  return `${isEs ? 'Desde' : 'From'} ${formatted.primary}`
+                })()
                 return (
                   <li key={f.id} className="border-r border-b border-hairline-soft">
                     <Link

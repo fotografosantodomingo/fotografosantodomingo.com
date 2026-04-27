@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import BookingWizard from '@/components/booking/BookingWizard'
 import { createServiceClient } from '@/lib/supabase/service'
+import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const BUSINESS_NAME = 'Fotografo Santo Domingo | Babula Shots'
@@ -151,7 +152,10 @@ export default async function BookPage({
   searchParams: { service?: string; city?: string }
 }) {
   const locale = (params.locale === 'en' ? 'en' : 'es') as 'es' | 'en'
-  const schemas = await buildJsonLd(locale)
+  const [schemas, dopRate] = await Promise.all([
+    buildJsonLd(locale),
+    getUsdToDopRate(),
+  ])
 
   return (
     <main className="min-h-screen bg-canvas text-ink">
@@ -166,6 +170,7 @@ export default async function BookPage({
         locale={locale}
         preselectedServiceSlug={searchParams.service}
         attributionCity={searchParams.city}
+        dopRate={dopRate.usdToDop}
       />
     </main>
   )
