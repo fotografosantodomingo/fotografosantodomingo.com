@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CONTACT_INFO, BOOKING_LINKS } from '@/lib/utils/constants'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
+import { getReviewStats } from '@/lib/supabase/images'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -15,8 +16,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Sobre Mí — Fotógrafo Santo Domingo | Babula Shots'
     : 'About — Photographer Santo Domingo | Babula Shots'
   const description = isEs
-    ? 'Conoce a Michal Babula, fotógrafo profesional en Santo Domingo desde 2015. Más de 500 clientes satisfech@s, 20+ locaciones y 91 reseñas cinco estrellas en Google.'
-    : 'Meet Michal Babula — professional photographer in Santo Domingo since 2015. Over 500 satisfied clients, 20+ locations, and 91 five-star Google reviews.'
+    ? 'Conoce a Michal Babula, fotógrafo profesional en Santo Domingo desde 2015. Más de 500 clientes satisfech@s en bodas, retratos, drone y eventos por toda República Dominicana.'
+    : 'Meet Michal Babula — professional photographer in Santo Domingo since 2015. Over 500 satisfied clients across weddings, portraits, drone, and events throughout the Dominican Republic.'
   return {
     title,
     description,
@@ -53,7 +54,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
   }
 }
 
-export default function AboutPage({ params: { locale } }: Props) {
+export default async function AboutPage({ params: { locale } }: Props) {
+  const reviewStats = await getReviewStats()
+  const ratingValueDisplay = reviewStats.rating_value.toFixed(1)
+  const reviewCountDisplay = reviewStats.review_count.toString()
   const testimonials = [
     {
       name: 'Kasia Sosenko',
@@ -98,8 +102,8 @@ export default function AboutPage({ params: { locale } }: Props) {
       icon: '📍',
     },
     {
-      number: '4.9★',
-      label: locale === 'es' ? '91 Reseñas en Google' : '91 Google Reviews',
+      number: `${ratingValueDisplay}★`,
+      label: locale === 'es' ? `${reviewCountDisplay} Reseñas verificadas` : `${reviewCountDisplay} Verified Reviews`,
       icon: '⭐',
     },
   ]
@@ -163,8 +167,8 @@ export default function AboutPage({ params: { locale } }: Props) {
                 </p>
                 <p>
                   {locale === 'es'
-                    ? 'Con más de 500 clientes satisfech@s, 91+ reseñas 5 estrellas en Google y clientes que regresan una y otra vez — me enorgullece ser tu fotógrafo de confianza en Santo Domingo.'
-                    : 'With 500+ satisfied clients, 91+ five-star Google reviews and clients who return again and again — I am proud to be your trusted photographer in Santo Domingo.'
+                    ? `Con más de 500 clientes satisfech@s, ${reviewCountDisplay}+ reseñas verificadas y clientes que regresan una y otra vez — me enorgullece ser tu fotógrafo de confianza en Santo Domingo.`
+                    : `With 500+ satisfied clients, ${reviewCountDisplay}+ verified reviews and clients who return again and again — I am proud to be your trusted photographer in Santo Domingo.`
                   }
                 </p>
               </div>
@@ -220,7 +224,7 @@ export default function AboutPage({ params: { locale } }: Props) {
               <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-gray-900 border border-hairline-soft rounded-full px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                 <span className="text-yellow-400 text-lg">⭐</span>
                 <span className="font-bold text-white">4.9</span>
-                <span className="text-ink-muted/70 text-sm">· 162+ reseñas</span>
+                <span className="text-ink-muted text-sm">· {reviewCountDisplay}+ {locale === 'es' ? 'reseñas' : 'reviews'}</span>
               </div>
             </div>
           </div>

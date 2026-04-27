@@ -464,7 +464,10 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           caption: coverImageCaption,
           description: coverImageDescription,
         },
-        author: { '@id': `${BASE_URL}/#business` },
+        // Author = Person node (Michal Babula) — strengthens E-E-A-T
+        // signal for YMYL/lifestyle content. Publisher stays the
+        // Organization. Both nodes are emitted globally via layout.tsx.
+        author: { '@id': `${BASE_URL}/#person` },
         publisher: { '@id': `${BASE_URL}/#business` },
         datePublished: post.published_at,
         dateModified: post.updated_at ?? post.published_at,
@@ -552,6 +555,26 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
             <div>
               <h1 className="mb-4 text-4xl font-black leading-tight md:text-5xl lg:text-6xl">{title}</h1>
               {excerpt && <p className="mb-6 text-lg text-gray-200 md:text-xl">{excerpt}</p>}
+
+              {/* Visible byline + publish date — E-E-A-T trust signal.
+                   Links to /about so Google can crawl the author entity. */}
+              <div className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-300">
+                <span>
+                  {isEs ? 'Por' : 'By'}{' '}
+                  <Link href={`/${locale}/about`} rel="author" className="font-semibold text-white underline-offset-4 hover:underline">
+                    Michal Babula
+                  </Link>
+                </span>
+                <span aria-hidden="true">·</span>
+                <time dateTime={post.published_at}>
+                  {new Date(post.published_at).toLocaleDateString(isEs ? 'es-DO' : 'en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+              </div>
+
               <div className="flex flex-wrap gap-3">
                 <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-3 text-sm font-bold text-gray-900 transition hover:bg-gray-200">
                   {isEs ? 'Reservar Sesión' : 'Book Session'}

@@ -344,11 +344,23 @@ export const schemaGenerators = {
       addressCountry: 'DO',
     },
     knowsAbout: locale === 'es'
-      ? ['fotografía de bodas', 'fotografía de retratos', 'fotografía con dron', 'fotografía de eventos', 'fotografía comercial']
-      : ['wedding photography', 'portrait photography', 'drone photography', 'event photography', 'commercial photography'],
+      ? ['fotografía de bodas', 'fotografía de retratos', 'fotografía con dron', 'fotografía de eventos', 'fotografía comercial', 'fotografía inmobiliaria', 'fotografía de propuesta de matrimonio', 'producción de campañas']
+      : ['wedding photography', 'portrait photography', 'drone photography', 'event photography', 'commercial photography', 'real estate photography', 'marriage proposal photography', 'campaign production'],
+    // sameAs strengthens entity recognition in Google's Knowledge Graph.
+    // Each link should resolve to a profile that confirms identity.
     sameAs: [
       'https://www.instagram.com/babulashotsrd',
+      'https://www.trustpilot.com/review/fotografosantodomingo.com',
+      'https://share.google/aJphPsrVL2VXH9EWH',
     ],
+    // Operating since 2015 per About page copy → 10+ years professional photography.
+    workLocation: [
+      { '@type': 'Place', name: 'Santo Domingo, República Dominicana' },
+      { '@type': 'Place', name: 'Punta Cana, La Altagracia' },
+      { '@type': 'Place', name: 'Cap Cana, La Altagracia' },
+      { '@type': 'Place', name: 'Casa de Campo, La Romana' },
+    ],
+    nationality: { '@type': 'Country', name: 'Dominican Republic' },
   }),
 
   // ----------------------------------------------------------

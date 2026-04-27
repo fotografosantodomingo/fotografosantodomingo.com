@@ -47,13 +47,13 @@ export default function Footer({ locale: localeProp }: { locale?: string } = {})
             </p>
             <ul className="space-y-2 text-sm text-ink-muted">
               <li className="flex gap-3">
-                <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted/70 shrink-0 w-12">
+                <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 w-12">
                   {isEs ? 'Oficina' : 'Office'}
                 </span>
                 <span>{t('contact.info.office')}</span>
               </li>
               <li className="flex gap-3">
-                <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted/70 shrink-0 w-12">
+                <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 w-12">
                   {isEs ? 'Tel' : 'Tel'}
                 </span>
                 <a href={`tel:${CONTACT_INFO.phone}`} className="text-ink hover:opacity-70 transition-opacity">
@@ -61,13 +61,13 @@ export default function Footer({ locale: localeProp }: { locale?: string } = {})
                 </a>
               </li>
               <li className="flex gap-3">
-                <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted/70 shrink-0 w-12">
+                <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 w-12">
                   Email
                 </span>
                 <ObfuscatedEmail locale={locale} className="text-ink hover:opacity-70 transition-opacity" />
               </li>
               <li className="flex gap-3">
-                <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted/70 shrink-0 w-12">
+                <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 w-12">
                   {isEs ? 'Resp.' : 'Reply'}
                 </span>
                 <span>{t('contact.info.response_time')}</span>
@@ -155,11 +155,13 @@ export default function Footer({ locale: localeProp }: { locale?: string } = {})
                   </span>
                 ))}
               </div>
+              {/* Trustpilot brand-color exception. Black text on #00B67A
+                   passes WCAG AA (~10.5:1) — white text was 2.63:1 (fail). */}
               <a
                 href={SOCIAL_LINKS.trustpilot}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center font-mono uppercase tracking-widest text-[11px] px-3 py-2.5 rounded-full bg-[#00B67A] text-white hover:opacity-90 transition-opacity"
+                className="inline-flex w-full items-center justify-center font-mono uppercase tracking-widest text-[11px] font-semibold px-3 py-2.5 rounded-full bg-[#00B67A] text-black hover:opacity-90 transition-opacity"
               >
                 {isEs ? 'Ver en Trustpilot' : 'View on Trustpilot'}
               </a>
