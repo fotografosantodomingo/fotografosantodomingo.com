@@ -61,6 +61,7 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
 // ─── Service data ─────────────────────────────────────────────────────────────
 
 interface PricedService {
+  /** Stable identifier for cta tracking (legacy slugs preserved for analytics). */
   slug: string
   icon: string
   nameEs: string
@@ -71,7 +72,21 @@ interface PricedService {
   priceNote?: string // e.g. "per hour" / "por hora"
   includesEs: string[]
   includesEn: string[]
-  bookable: boolean // true = "Book Now", false = "Get Quote"
+  /**
+   * Canonical service_families.slug — drives the /get-quote family
+   * preselection. Always required so the quote wizard lands the user
+   * on the right family even when no exact canonical package matches.
+   */
+  familySlug: string
+  /**
+   * When set: render Reserve button → /book?service=<canonicalPackageSlug>.
+   * When unset: render Quote button only → /get-quote?family=<familySlug>.
+   *
+   * SET ONLY when the canonical service_packages row matches both the
+   * displayed price and duration (otherwise users land on a wrong
+   * calendar / price). Audited 2026-04-26 — only 2 entries qualify.
+   */
+  canonicalPackageSlug?: string
 }
 
 interface ServiceCategory {
@@ -97,7 +112,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 1000,
         includesEs: ['Cobertura completa del día', 'Sesión de compromiso incluida', 'Álbum profesional + galería online'],
         includesEn: ['Full wedding day coverage', 'Engagement session included', 'Professional album + online gallery'],
-        bookable: true,
+        familySlug: 'wedding-photography',
+        // Canonical essential-wedding is $900 (vs $1000 here) — route to quote
       },
       {
         slug: 'engagement-session',
@@ -109,7 +125,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 180,
         includesEs: ['Sesión en locación a elección', '40 fotos editadas en alta res.', 'Galería online privada'],
         includesEn: ['Session at chosen location', '40 edited high-res photos', 'Private online gallery'],
-        bookable: true,
+        familySlug: 'wedding-photography',
+        // No engagement-only canonical package — route to quote (was wrongly resolving to essential-portrait)
       },
       {
         slug: 'quinceaneras',
@@ -121,7 +138,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 800,
         includesEs: ['Ceremonia, vals y celebración', '80 fotos editadas', 'Álbum diseñado'],
         includesEn: ['Ceremony, waltz, and celebration', '80 edited photos', 'Designed album'],
-        bookable: true,
+        familySlug: 'birthday-event-photography',
+        // Canonical quinceanera-premium is $500 (vs $800 here) — route to quote
       },
       {
         slug: 'baptism',
@@ -133,7 +151,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 250,
         includesEs: ['Ceremonia + celebración familiar', 'Fotos grupales organizadas', 'Galería online'],
         includesEn: ['Ceremony + family celebration', 'Organized group photos', 'Online gallery'],
-        bookable: true,
+        familySlug: 'birthday-event-photography',
+        // Canonical essential-event is $200/1hr (vs $250/2hr here) — route to quote
       },
       {
         slug: 'graduation',
@@ -145,7 +164,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 200,
         includesEs: ['Sesión individual o grupal', '30 fotos editadas', 'Entrega rápida 24h'],
         includesEn: ['Individual or group session', '30 edited photos', 'Fast 24h delivery'],
-        bookable: true,
+        familySlug: 'birthday-event-photography',
+        canonicalPackageSlug: 'essential-event', // EXACT MATCH: $200, 1hr
       },
       {
         slug: 'birthday-party',
@@ -157,7 +177,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 300,
         includesEs: ['Cobertura completa del evento', 'Detalles, decoración y personas', 'Galería digital'],
         includesEn: ['Full event coverage', 'Details, decor, and people', 'Digital gallery'],
-        bookable: true,
+        familySlug: 'birthday-event-photography',
+        // Canonical signature-celebration is $350 (vs $300 here) — route to quote
       },
     ],
   },
@@ -176,8 +197,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 150,
         includesEs: ['10 fotos editadas premium', 'Playa Güibia cerca del Malecón, Santo Domingo', 'Mejor en golden hour (amanecer/atardecer)'],
         includesEn: ['10 premium edited photos', 'Güibia Beach near the Malecón, Santo Domingo', 'Best at golden hour (sunrise/sunset)'],
-        // Not yet in booking_services — quote-only until added to DB
-        bookable: false,
+        familySlug: 'family-beach-photography',
+        // No canonical match — quote-only
       },
       {
         slug: 'beach-session-caribbean',
@@ -189,8 +210,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 300,
         includesEs: ['10 fotos premium editadas', 'Boca Chica, Juan Dolio, La Romana, Punta Cana, Puerto Plata', 'Dirección fotográfica profesional + consejos de outfits'],
         includesEn: ['10 premium edited photos', 'Boca Chica, Juan Dolio, La Romana, Punta Cana, Puerto Plata', 'Professional photography direction + outfit advice'],
-        // Not yet in booking_services — quote-only until added to DB
-        bookable: false,
+        familySlug: 'family-beach-photography',
+        // No canonical match — quote-only
       },
       {
         slug: 'beach-session-saona',
@@ -202,8 +223,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 400,
         includesEs: ['25 fotos editadas en alta resolución', 'Transporte en lancha o catamarán incluido', 'Almuerzo buffet + bebidas incluidas'],
         includesEn: ['25 professionally edited photos', 'Fast boat or catamaran transport included', 'Buffet lunch + drinks included'],
-        // Not yet in booking_services — quote-only until added to DB
-        bookable: false,
+        familySlug: 'family-beach-photography',
+        // No canonical match — quote-only
       },
     ],
   },
@@ -222,7 +243,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 100,
         includesEs: ['Sesión en locación o estudio', '15 fotos editadas en alta res.', 'Entrega en 48h'],
         includesEn: ['Session on location or studio', '15 edited high-res photos', 'Delivery in 48h'],
-        bookable: true,
+        familySlug: 'luxury-portrait-photography',
+        // Canonical essential-portrait is $250 (vs $100 here) — route to quote
       },
       {
         slug: 'family-session',
@@ -234,7 +256,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 200,
         includesEs: ['Hasta 10 personas', '40 fotos editadas', 'Galería online privada'],
         includesEn: ['Up to 10 people', '40 edited photos', 'Private online gallery'],
-        bookable: true,
+        familySlug: 'family-beach-photography',
+        // Canonical essential-family is $350/1hr (vs $200/2hr here) — route to quote
       },
       {
         slug: 'maternity',
@@ -246,7 +269,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 150,
         includesEs: ['Sesión íntima en locación', '30 fotos editadas', 'Galería privada'],
         includesEn: ['Intimate location session', '30 edited photos', 'Private gallery'],
-        bookable: true,
+        familySlug: 'family-beach-photography',
+        // Canonical essential-family is $350 (vs $150 here) — route to quote
       },
       {
         slug: 'children-session',
@@ -258,7 +282,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 150,
         includesEs: ['Ambiente relajado y divertido', '20 fotos editadas', 'Galería digital'],
         includesEn: ['Relaxed and fun environment', '20 edited photos', 'Digital gallery'],
-        bookable: true,
+        familySlug: 'family-beach-photography',
+        // Canonical essential-family is $350 (vs $150 here) — route to quote
       },
       {
         slug: 'corporate-portrait',
@@ -270,7 +295,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 180,
         includesEs: ['Múltiples looks y fondos', 'Uso comercial autorizado', 'Entrega en 24–48h'],
         includesEn: ['Multiple looks and backgrounds', 'Commercial usage rights', 'Delivery in 24–48h'],
-        bookable: true,
+        familySlug: 'luxury-portrait-photography',
+        // Canonical essential-portrait is $250 (vs $180 here) — route to quote
       },
       {
         slug: 'boudoir-session',
@@ -282,8 +308,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 400,
         includesEs: ['Estudio privado o habitación de hotel de lujo', 'Iluminación profesional + dirección experta y cómoda', 'Galería privada entregada en 48–72h'],
         includesEn: ['Private studio or luxury hotel room', 'Professional lighting + expert, comfortable direction', 'Private gallery delivered in 48–72h'],
-        // Not yet in booking_services — quote-only until added to DB
-        bookable: false,
+        familySlug: 'luxury-portrait-photography',
+        // No canonical match — quote-only
       },
     ],
   },
@@ -303,7 +329,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceNote: '/hr',
         includesEs: ['Cobertura completa del evento', 'Fotos grupales y de detalle', 'Galería para la empresa'],
         includesEn: ['Full event coverage', 'Group and detail shots', 'Corporate gallery'],
-        bookable: true,
+        familySlug: 'corporate-event-photography',
+        // Canonical hourly-premium is $200/hr (vs $300/hr here) — route to quote
       },
       {
         slug: 'commercial',
@@ -316,7 +343,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceNote: '/hr',
         includesEs: ['Productos, hoteles, restaurantes', 'Derechos de uso comercial', 'Edición profesional'],
         includesEn: ['Products, hotels, restaurants', 'Commercial usage rights', 'Professional editing'],
-        bookable: true,
+        familySlug: 'commercial-branding-photography',
+        // Canonical essential-commercial is $400 (vs $250/hr here) — route to quote
       },
       {
         slug: 'food-and-beverage',
@@ -328,7 +356,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 250,
         includesEs: ['Sesión en estudio o locación', '30 imágenes editadas', 'Apta para redes y menús'],
         includesEn: ['Studio or on-location session', '30 edited images', 'Ready for social & menus'],
-        bookable: true,
+        familySlug: 'commercial-branding-photography',
+        // Canonical essential-commercial is $400/1hr (vs $250/2hr here) — route to quote
       },
       {
         slug: 'real-estate',
@@ -340,7 +369,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 150,
         includesEs: ['Interior y exterior', 'Hasta 3 propiedades', 'Opción con dron disponible'],
         includesEn: ['Interior and exterior', 'Up to 3 properties', 'Drone option available'],
-        bookable: true,
+        familySlug: 'real-estate-drone-photography',
+        // Canonical essential-listing is $200/90min (vs $150/2hr here) — route to quote
       },
     ],
   },
@@ -359,8 +389,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 150,
         includesEs: ['Técnica de iluminación Snoot Óptico', '5 fotos editadas en alta resolución', 'Efectos dramáticos y cinematográficos'],
         includesEn: ['Snoot Optical lighting technique', '5 edited high-res photos', 'Dramatic cinematic lighting effects'],
-        // Not yet in booking_services — quote-only until added to DB
-        bookable: false,
+        familySlug: 'custom-specialty-photography',
+        // Specialty creative lighting — quote-only
       },
       {
         slug: 'snoot-optico-10',
@@ -372,8 +402,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 200,
         includesEs: ['10 fotos con iluminación Snoot', 'Mayor variedad de ángulos y looks', 'Book, branding personal, productos premium'],
         includesEn: ['10 photos with Snoot lighting', 'Greater variety of angles and looks', 'Model book, personal branding, premium products'],
-        // Not yet in booking_services — quote-only until added to DB
-        bookable: false,
+        familySlug: 'custom-specialty-photography',
+        // Specialty creative lighting — quote-only
       },
       {
         slug: 'snoot-optico-premium',
@@ -385,8 +415,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 250,
         includesEs: ['15 fotos Snoot Óptico', '2h con cambios de look y vestuario', 'Entrega digital lista para uso inmediato'],
         includesEn: ['15 photos with Snoot Optical', '2h with look and wardrobe changes', 'Digital delivery ready for immediate use'],
-        // Not yet in booking_services — quote-only until added to DB
-        bookable: false,
+        familySlug: 'custom-specialty-photography',
+        // Specialty creative lighting — quote-only
       },
     ],
   },
@@ -405,7 +435,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 160,
         includesEs: ['Piloto certificado DJI Mavic 3 Pro', 'Video 5K ultra HD + edición profesional', 'Entrega en 48h o material crudo el mismo día'],
         includesEn: ['Certified DJI Mavic 3 Pro pilot', '5K ultra HD video + professional editing', 'Delivery in 48h or raw material same day'],
-        bookable: true,
+        familySlug: 'real-estate-drone-photography',
+        // No drone-only canonical at $160/2hr — route to quote (was wrongly resolving to essential-listing)
       },
       {
         slug: 'video-production',
@@ -417,7 +448,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 800,
         includesEs: ['Rodaje + edición profesional', 'Montaje musical incluido', 'Entrega en formatos web/social'],
         includesEn: ['Shoot + professional editing', 'Music arrangement included', 'Delivered in web/social formats'],
-        bookable: true,
+        familySlug: 'custom-specialty-photography',
+        // Canonical rfq is quote-only ($0 placeholder) — route to quote
       },
       {
         slug: 'proposal-photography',
@@ -429,7 +461,8 @@ const CATEGORIES: ServiceCategory[] = [
         priceUsd: 250,
         includesEs: ['Modo ninja 100% oculto', 'Teleobjetivo 400–600 mm', 'Galería esa misma noche'],
         includesEn: ['100% hidden ninja mode', '400–600 mm telephoto lens', 'Gallery that same night'],
-        bookable: true,
+        familySlug: 'proposal-photography',
+        canonicalPackageSlug: 'secret-beach-proposal', // EXACT MATCH: $250, 2hr
       },
     ],
   },
@@ -633,16 +666,16 @@ export default function PricesPage({ params: { locale } }: Props) {
                       </ul>
 
                       <div className="mt-6 pt-5 border-t border-hairline-soft flex gap-2">
-                        {svc.bookable ? (
+                        {svc.canonicalPackageSlug ? (
                           <Link
-                            href={`/${locale}/book?service=${svc.slug}`}
+                            href={`/${locale}/book?service=${svc.canonicalPackageSlug}&cta=prices-page-${svc.slug}`}
                             className="flex-1 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] py-3 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
                           >
                             {isEs ? 'Reservar' : 'Book'}
                           </Link>
                         ) : null}
                         <Link
-                          href={`/${locale}/get-quote`}
+                          href={`/${locale}/get-quote?family=${svc.familySlug}&cta=prices-page-${svc.slug}`}
                           className="flex-1 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] py-3 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
                         >
                           {isEs ? 'Cotizar' : 'Quote'}
