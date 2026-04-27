@@ -1,16 +1,13 @@
-import { Resend } from 'resend'
+/**
+ * Contact / newsletter / quote-submission / proposal email senders.
+ *
+ * Renamed-but-not-renamed: the file is still called resend.ts to avoid
+ * touching every import site in the app, but the actual transport is now
+ * Hostinger SMTP via worker-mailer (see ./smtp.ts). The public function
+ * names + signatures are unchanged.
+ */
 
-// Resend API key — set RESEND_API_KEY in Vercel env vars
-// Domain fotografosantodomingo.com is verified in Resend — using real from address.
-
-// Lazy getter — avoids "Missing API key" crash during Next.js build-time static render
-function getResend(): Resend | null {
-  if (!process.env.RESEND_API_KEY) {
-    console.error('[email/resend] RESEND_API_KEY missing — contact/newsletter notification will NOT be sent. Set it in Cloudflare Pages → Settings → Environment Variables.')
-    return null
-  }
-  return new Resend(process.env.RESEND_API_KEY)
-}
+import { sendMail } from './smtp'
 
 const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
 const PRIMARY_ADMIN_EMAIL = 'info@fotografosantodomingo.com'
@@ -37,17 +34,11 @@ export interface ContactData {
 }
 
 export async function sendContactNotification(data: ContactData) {
-  const client = getResend()
-  if (!client) {
-    console.warn('RESEND_API_KEY not set — contact notification skipped')
-    return
-  }
-
   const serviceLabel = data.service
     ? data.service.charAt(0).toUpperCase() + data.service.slice(1)
     : 'Not specified'
 
-  await client.emails.send({
+  await sendMail({
     from: FROM,
     to: PRIMARY_ADMIN_EMAIL,
     ...(getAdminSecondaryRecipient() ? { bcc: getAdminSecondaryRecipient() } : {}),
@@ -118,12 +109,9 @@ export async function sendContactNotification(data: ContactData) {
 }
 
 export async function sendContactConfirmation(data: ContactData) {
-  const client = getResend()
-  if (!client) return
-
   const isEs = data.locale === 'es'
 
-  await client.emails.send({
+  await sendMail({
     from: FROM,
     to: data.email,
     subject: isEs
@@ -184,18 +172,12 @@ export async function sendNewsletterWelcome(data: {
   name?: string
   locale?: string
 }) {
-  const client = getResend()
-  if (!client) {
-    console.warn('RESEND_API_KEY not set — newsletter welcome skipped')
-    return
-  }
-
   const isEs = (data.locale ?? 'es') === 'es'
   const greeting = data.name
     ? (isEs ? `Hola ${data.name}` : `Hi ${data.name}`)
     : (isEs ? 'Hola' : 'Hi there')
 
-  await client.emails.send({
+  await sendMail({
     from: FROM,
     to: data.email,
     subject: isEs
@@ -283,15 +265,9 @@ function formatServiceLabel(serviceType: string, locale: string) {
 }
 
 export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
-  const client = getResend()
-  if (!client) {
-    console.warn('RESEND_API_KEY not set — quote admin notification skipped')
-    return
-  }
-
   const serviceLabel = formatServiceLabel(data.serviceType, data.locale)
 
-  await client.emails.send({
+  await sendMail({
     from: FROM,
     to: PRIMARY_ADMIN_EMAIL,
     ...(getAdminSecondaryRecipient() ? { bcc: getAdminSecondaryRecipient() } : {}),
@@ -345,16 +321,10 @@ export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
 }
 
 export async function sendQuoteSubmissionConfirmation(data: QuoteEmailPayload) {
-  const client = getResend()
-  if (!client) {
-    console.warn('RESEND_API_KEY not set — quote customer confirmation skipped')
-    return
-  }
-
   const isEs = data.locale === 'es'
   const serviceLabel = formatServiceLabel(data.serviceType, data.locale)
 
-  await client.emails.send({
+  await sendMail({
     from: FROM,
     to: data.email,
     subject: isEs ? 'Recibimos tu solicitud de presupuesto' : 'We received your quote request',
@@ -392,12 +362,6 @@ export type ProposalEmailData = {
 }
 
 export async function sendProposalEmail(data: ProposalEmailData): Promise<void> {
-  const client = getResend()
-  if (!client) {
-    console.warn('RESEND_API_KEY not set — proposal email skipped')
-    return
-  }
-
   const isEs = data.locale === 'es'
   const serviceLabel = formatServiceLabel(data.serviceType, data.locale)
   const expiryDate = new Date(data.proposalExpiresAt).toLocaleDateString(
@@ -405,7 +369,7 @@ export async function sendProposalEmail(data: ProposalEmailData): Promise<void> 
     { month: 'long', day: 'numeric', year: 'numeric' }
   )
 
-  await client.emails.send({
+  await sendMail({
     from: FROM,
     to: data.email,
     subject: isEs

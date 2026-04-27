@@ -7,27 +7,16 @@
  * the per-row reminder flags so cron callers can dedupe before invoking.
  */
 
-import { Resend } from 'resend'
+import { sendMail } from './smtp'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { BOOKING_TIMEZONE, REVIEW_LINKS } from '@/lib/bookings/constants'
 import type { BookingEmailType } from '@/lib/bookings/constants'
 
-// ─── Resend client (mirrors resend.ts) ───────────────────────────────────────
+// ─── SMTP transport (Hostinger via worker-mailer; see ./smtp.ts) ─────────────
 
-const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
+const FROM = { name: 'Babula Shots', email: 'noreply@fotografosantodomingo.com' }
 const PRIMARY_ADMIN_EMAIL = 'info@fotografosantodomingo.com'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL
-
-function getResend(): Resend | null {
-  if (!process.env.RESEND_API_KEY) {
-    // Loud, structured log so Cloudflare Pages function logs make it
-    // obvious when the env var is missing (was silently swallowed before,
-    // which made "no email arrived" diagnosis impossible).
-    console.error('[email/bookings] RESEND_API_KEY missing — booking notification will NOT be sent. Set it in Cloudflare Pages → Settings → Environment Variables for both Production and Preview.')
-    return null
-  }
-  return new Resend(process.env.RESEND_API_KEY)
-}
 
 function getAdminBcc(): string | undefined {
   const a = ADMIN_EMAIL.trim().toLowerCase()
@@ -174,17 +163,12 @@ export async function sendBookingConfirmation(
   supabase: SupabaseClient,
   ctx: BookingEmailContext
 ): Promise<void> {
-  const client = getResend()
-  if (!client) {
-    console.warn('RESEND_API_KEY not set — booking confirmation skipped')
-    return
-  }
 
   const isEs = ctx.locale === 'es'
   const balance = (ctx.fullPriceUsd - ctx.depositUsd).toFixed(2)
 
   try {
-    const { data, error } = await client.emails.send({
+    const result = await sendMail({
       from: FROM,
       to: ctx.customerEmail,
       subject: isEs
@@ -233,13 +217,13 @@ export async function sendBookingConfirmation(
       `,
     })
 
-    if (error) throw error
+    if (result.error) throw new Error(result.error)
     await logBookingEmail(supabase, {
       bookingId: ctx.bookingId,
       emailType: 'CONFIRMATION',
       recipientEmail: ctx.customerEmail,
       locale: ctx.locale,
-      resendId: data?.id,
+      resendId: result.id,
     })
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
@@ -262,13 +246,10 @@ export async function sendBookingAdminAlert(
   supabase: SupabaseClient,
   ctx: BookingEmailContext & { customerPhone: string | null }
 ): Promise<void> {
-  const client = getResend()
-  if (!client) return
-
   const adminUrl = `${BASE_URL}/admin/bookings/${ctx.bookingId}`
 
   try {
-    const { data, error } = await client.emails.send({
+    const result = await sendMail({
       from: FROM,
       to: PRIMARY_ADMIN_EMAIL,
       ...(getAdminBcc() ? { bcc: getAdminBcc() } : {}),
@@ -320,13 +301,13 @@ export async function sendBookingAdminAlert(
       `,
     })
 
-    if (error) throw error
+    if (result.error) throw new Error(result.error)
     await logBookingEmail(supabase, {
       bookingId: ctx.bookingId,
       emailType: 'ADMIN_ALERT',
       recipientEmail: PRIMARY_ADMIN_EMAIL,
       locale: 'es',
-      resendId: data?.id,
+      resendId: result.id,
     })
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
@@ -349,13 +330,10 @@ export async function sendBookingReminder24h(
   supabase: SupabaseClient,
   ctx: BookingEmailContext
 ): Promise<void> {
-  const client = getResend()
-  if (!client) return
-
   const isEs = ctx.locale === 'es'
 
   try {
-    const { data, error } = await client.emails.send({
+    const result = await sendMail({
       from: FROM,
       to: ctx.customerEmail,
       subject: isEs
@@ -390,14 +368,14 @@ export async function sendBookingReminder24h(
       `,
     })
 
-    if (error) throw error
+    if (result.error) throw new Error(result.error)
     await supabase.from('bookings').update({ reminder_24h_sent: true }).eq('id', ctx.bookingId)
     await logBookingEmail(supabase, {
       bookingId: ctx.bookingId,
       emailType: 'REMINDER_24H',
       recipientEmail: ctx.customerEmail,
       locale: ctx.locale,
-      resendId: data?.id,
+      resendId: result.id,
     })
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
@@ -420,13 +398,10 @@ export async function sendBookingReminderSameDay(
   supabase: SupabaseClient,
   ctx: BookingEmailContext
 ): Promise<void> {
-  const client = getResend()
-  if (!client) return
-
   const isEs = ctx.locale === 'es'
 
   try {
-    const { data, error } = await client.emails.send({
+    const result = await sendMail({
       from: FROM,
       to: ctx.customerEmail,
       subject: isEs
@@ -461,14 +436,14 @@ export async function sendBookingReminderSameDay(
       `,
     })
 
-    if (error) throw error
+    if (result.error) throw new Error(result.error)
     await supabase.from('bookings').update({ reminder_same_day_sent: true }).eq('id', ctx.bookingId)
     await logBookingEmail(supabase, {
       bookingId: ctx.bookingId,
       emailType: 'REMINDER_SAME_DAY',
       recipientEmail: ctx.customerEmail,
       locale: ctx.locale,
-      resendId: data?.id,
+      resendId: result.id,
     })
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
@@ -491,13 +466,10 @@ export async function sendBookingPostSession(
   supabase: SupabaseClient,
   ctx: BookingEmailContext
 ): Promise<void> {
-  const client = getResend()
-  if (!client) return
-
   const isEs = ctx.locale === 'es'
 
   try {
-    const { data, error } = await client.emails.send({
+    const result = await sendMail({
       from: FROM,
       to: ctx.customerEmail,
       subject: isEs
@@ -530,14 +502,14 @@ export async function sendBookingPostSession(
       `,
     })
 
-    if (error) throw error
+    if (result.error) throw new Error(result.error)
     await supabase.from('bookings').update({ post_session_sent: true }).eq('id', ctx.bookingId)
     await logBookingEmail(supabase, {
       bookingId: ctx.bookingId,
       emailType: 'POST_SESSION',
       recipientEmail: ctx.customerEmail,
       locale: ctx.locale,
-      resendId: data?.id,
+      resendId: result.id,
     })
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
@@ -560,13 +532,10 @@ export async function sendBookingCancellation(
   supabase: SupabaseClient,
   ctx: BookingEmailContext & { reason: string; refundUsd: number }
 ): Promise<void> {
-  const client = getResend()
-  if (!client) return
-
   const isEs = ctx.locale === 'es'
 
   try {
-    const { data, error } = await client.emails.send({
+    const result = await sendMail({
       from: FROM,
       to: ctx.customerEmail,
       subject: isEs
@@ -613,13 +582,13 @@ export async function sendBookingCancellation(
       `,
     })
 
-    if (error) throw error
+    if (result.error) throw new Error(result.error)
     await logBookingEmail(supabase, {
       bookingId: ctx.bookingId,
       emailType: 'CANCELLATION',
       recipientEmail: ctx.customerEmail,
       locale: ctx.locale,
-      resendId: data?.id,
+      resendId: result.id,
     })
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)

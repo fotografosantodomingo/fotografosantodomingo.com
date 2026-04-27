@@ -1,21 +1,12 @@
-import { Resend } from 'resend'
+import { sendMail } from './smtp'
 
 /**
  * Admin notification for new public RFQ submissions to /api/quote-request.
  *
  * Slice A · Step A5 — fires once per insert into public.quote_requests.
- * Resend domain fotografosantodomingo.com is already verified.
+ * Sends via Hostinger SMTP (see ./smtp.ts).
  */
 
-function getResend(): Resend | null {
-  if (!process.env.RESEND_API_KEY) {
-    console.error('[email/quote-requests] RESEND_API_KEY missing — quote-request notification will NOT be sent. Set it in Cloudflare Pages → Settings → Environment Variables.')
-    return null
-  }
-  return new Resend(process.env.RESEND_API_KEY)
-}
-
-const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
 const PRIMARY_ADMIN_EMAIL = 'info@fotografosantodomingo.com'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL
 
@@ -52,12 +43,6 @@ function escape(value: string | null | undefined): string {
 export async function sendQuoteRequestNotification(
   data: QuoteRequestNotificationData
 ): Promise<void> {
-  const client = getResend()
-  if (!client) {
-    console.warn('RESEND_API_KEY not set — quote-request notification skipped')
-    return
-  }
-
   const detailLines = data.details
     .split('\n')
     .map(line => `<p style="margin:0 0 6px 0;">${escape(line)}</p>`)
@@ -110,8 +95,8 @@ export async function sendQuoteRequestNotification(
   try {
     const secondary = getAdminSecondaryRecipient()
     const recipients = secondary ? [PRIMARY_ADMIN_EMAIL, secondary] : [PRIMARY_ADMIN_EMAIL]
-    await client.emails.send({
-      from: FROM,
+    await sendMail({
+      from: { name: 'Babula Shots', email: 'noreply@fotografosantodomingo.com' },
       to: recipients,
       replyTo: data.customerEmail,
       subject,

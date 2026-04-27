@@ -173,9 +173,20 @@ const nextConfig = {
     ]
   },
 
-  webpack: (config, { dev }) => {
+  webpack: (config, { dev, isServer }) => {
     if (!dev) {
       config.cache = false
+    }
+    // `cloudflare:sockets` is a virtual module that only resolves at
+    // runtime inside the Cloudflare Workers/Pages environment. Mark it
+    // as an external so Webpack doesn't try to bundle it during build.
+    // Required by `worker-mailer` (Hostinger SMTP transport).
+    if (isServer) {
+      config.externals = config.externals || []
+      // Use commonjs externalization so Webpack emits `require('cloudflare:sockets')`
+      // (a runtime call) instead of `module.exports = cloudflare:sockets` (an
+      // invalid identifier that breaks minification).
+      config.externals.push({ 'cloudflare:sockets': 'commonjs cloudflare:sockets' })
     }
     return config
   },
