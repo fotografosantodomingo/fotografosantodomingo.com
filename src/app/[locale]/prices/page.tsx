@@ -666,14 +666,17 @@ export default function PricesPage({ params: { locale } }: Props) {
                       </ul>
 
                       <div className="mt-6 pt-5 border-t border-hairline-soft flex gap-2">
-                        {svc.canonicalPackageSlug ? (
-                          <Link
-                            href={`/${locale}/book?service=${svc.canonicalPackageSlug}&cta=prices-page-${svc.slug}`}
-                            className="flex-1 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] py-3 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
-                          >
-                            {isEs ? 'Reservar' : 'Book'}
-                          </Link>
-                        ) : null}
+                        {/* Primary CTA: deep-link into the family page so the user
+                             sees the full package compare grid (canonical pricing).
+                             Replaces the old "Reservar" button which was landing
+                             users on wrong calendars due to slug mismatches. */}
+                        <Link
+                          href={`/${locale}/services/${svc.familySlug}?from=prices&cta=prices-page-${svc.slug}`}
+                          className="flex-1 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] py-3 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
+                        >
+                          {isEs ? 'Ver paquetes' : 'See packages'}
+                        </Link>
+                        {/* Secondary CTA: always /get-quote with family preselected. */}
                         <Link
                           href={`/${locale}/get-quote?family=${svc.familySlug}&cta=prices-page-${svc.slug}`}
                           className="flex-1 inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] py-3 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"

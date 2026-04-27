@@ -8,7 +8,10 @@ import { Resend } from 'resend'
  */
 
 function getResend(): Resend | null {
-  if (!process.env.RESEND_API_KEY) return null
+  if (!process.env.RESEND_API_KEY) {
+    console.error('[email/quote-requests] RESEND_API_KEY missing — quote-request notification will NOT be sent. Set it in Cloudflare Pages → Settings → Environment Variables.')
+    return null
+  }
   return new Resend(process.env.RESEND_API_KEY)
 }
 

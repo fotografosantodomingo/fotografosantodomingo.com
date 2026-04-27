@@ -5,7 +5,10 @@ import { Resend } from 'resend'
 
 // Lazy getter — avoids "Missing API key" crash during Next.js build-time static render
 function getResend(): Resend | null {
-  if (!process.env.RESEND_API_KEY) return null
+  if (!process.env.RESEND_API_KEY) {
+    console.error('[email/resend] RESEND_API_KEY missing — contact/newsletter notification will NOT be sent. Set it in Cloudflare Pages → Settings → Environment Variables.')
+    return null
+  }
   return new Resend(process.env.RESEND_API_KEY)
 }
 

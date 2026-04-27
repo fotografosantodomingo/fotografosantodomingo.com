@@ -19,7 +19,13 @@ const PRIMARY_ADMIN_EMAIL = 'info@fotografosantodomingo.com'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL
 
 function getResend(): Resend | null {
-  if (!process.env.RESEND_API_KEY) return null
+  if (!process.env.RESEND_API_KEY) {
+    // Loud, structured log so Cloudflare Pages function logs make it
+    // obvious when the env var is missing (was silently swallowed before,
+    // which made "no email arrived" diagnosis impossible).
+    console.error('[email/bookings] RESEND_API_KEY missing — booking notification will NOT be sent. Set it in Cloudflare Pages → Settings → Environment Variables for both Production and Preview.')
+    return null
+  }
   return new Resend(process.env.RESEND_API_KEY)
 }
 
