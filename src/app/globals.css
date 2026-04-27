@@ -136,8 +136,10 @@ html.light-mode .border-gray-800  { border-color: #f1f5f9; }
 html.light-mode .border-white\/10 { border-color: rgba(0, 0, 0, 0.08); }
 html.light-mode .border-white\/20 { border-color: rgba(0, 0, 0, 0.12); }
 
-/* Navigation border */
-html.light-mode nav { border-bottom-color: rgba(0, 0, 0, 0.08); }
+/* Navigation border — REMOVED override that weakened nav border-bottom in
+   light mode. Was rgba(0,0,0,0.08), making the white-on-white sticky
+   header invisible against the page. Now inherits border-hairline-soft
+   (0.18 alpha) from the Bugatti tokens, matching the rest of the UI. */
 
 /* --- Footer specific --- */
 html.light-mode footer { background-color: #f1f5f9; }

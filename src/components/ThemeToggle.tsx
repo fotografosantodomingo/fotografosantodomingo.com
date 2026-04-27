@@ -33,8 +33,8 @@ export default function ThemeToggle() {
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       className="flex items-center gap-2 group"
     >
-      {/* Sun / Moon icon */}
-      <span className="text-gray-400 group-hover:text-white transition-colors">
+      {/* Sun / Moon icon — uses Bugatti tokens so it inverts cleanly per mode. */}
+      <span className="text-ink-muted group-hover:text-ink transition-colors">
         {isDark ? (
           // Moon
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -48,14 +48,14 @@ export default function ThemeToggle() {
         )}
       </span>
 
-      {/* Sliding pill toggle */}
+      {/* Sliding pill toggle — monochrome Bugatti, no sky-blue accent. Track
+          uses ink at low opacity (subtle in both modes); knob uses ink so it
+          inverts (white knob on dark mode, black knob on light mode). */}
       <div
-        className={`relative w-10 h-5 rounded-full transition-colors duration-300 ${
-          isDark ? 'bg-gray-700' : 'bg-sky-500'
-        }`}
+        className="relative w-10 h-5 rounded-full bg-ink/15 group-hover:bg-ink/25 transition-colors duration-300 border border-hairline-soft"
       >
         <span
-          className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-300 ${
+          className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-ink transition-transform duration-300 ${
             isDark ? 'translate-x-0' : 'translate-x-5'
           }`}
         />
