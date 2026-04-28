@@ -104,11 +104,14 @@ export async function sendMail(msg: MailMessage): Promise<SendResult> {
       secure: true,
     })
 
+    // worker-mailer's Email constructor uses `reply` (not `replyTo`)
+    // for the Reply-To header. Map it here so admin alerts that pass
+    // replyTo: customerEmail still produce a working Reply-To.
     await mailer.send({
       from,
       to,
       ...(bcc && bcc.length ? { bcc } : {}),
-      ...(replyTo ? { replyTo } : {}),
+      ...(replyTo ? { reply: replyTo } : {}),
       subject: msg.subject,
       ...(msg.html ? { html: msg.html } : {}),
       ...(msg.text ? { text: msg.text } : {}),
@@ -118,8 +121,36 @@ export async function sendMail(msg: MailMessage): Promise<SendResult> {
     // fabricate one from the timestamp for local logging dedupe.
     return { ok: true, id: `smtp-${Date.now()}` }
   } catch (e) {
-    const errorMsg = e instanceof Error ? e.message : String(e)
-    console.error('[email/smtp] send failed:', errorMsg)
+    // worker-mailer throws plain objects on SMTP rejection (not Error
+    // subclasses), so `String(e)` would yield "[object Object]" and the
+    // real reason would be lost. Extract any useful payload manually:
+    //   - .message (Error-like)
+    //   - .reason / .response / .responseCode (worker-mailer SMTP shape)
+    //   - JSON.stringify with own-property capture as last resort.
+    const errorMsg = extractErrorMessage(e)
+    console.error('[email/smtp] send failed:', errorMsg, e)
     return { ok: false, id: null, error: errorMsg }
   }
+}
+
+function extractErrorMessage(e: unknown): string {
+  if (e == null) return 'Unknown error'
+  if (typeof e === 'string') return e
+  if (e instanceof Error) return e.message || e.name || 'Error'
+  if (typeof e === 'object') {
+    const o = e as Record<string, unknown>
+    if (typeof o.message === 'string' && o.message) return o.message
+    if (typeof o.reason === 'string' && o.reason) {
+      const code = typeof o.responseCode === 'number' ? ` [SMTP ${o.responseCode}]` : ''
+      const resp = typeof o.response === 'string' ? `: ${o.response}` : ''
+      return `${o.reason}${code}${resp}`
+    }
+    if (typeof o.response === 'string') return o.response
+    try {
+      return JSON.stringify(e, Object.getOwnPropertyNames(e))
+    } catch {
+      return Object.prototype.toString.call(e)
+    }
+  }
+  return String(e)
 }
