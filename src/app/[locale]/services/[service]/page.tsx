@@ -10,6 +10,7 @@ import { getServiceContent } from '@/data/service-content'
 import { GEO_PAGES } from '@/data/geo-pages'
 import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
 import { formatServicePrice } from '@/lib/currency/format'
+import { getRelatedPostsForFamily } from '@/lib/supabase/blog'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'edge'
@@ -49,6 +50,34 @@ type PackageRow = {
   featured: boolean
   popular_badge: 'most_booked' | 'best_value' | null
   sort_order: number
+}
+
+type FamilyTileRow = {
+  slug: string
+  title_es: string
+  title_en: string
+  tagline_es: string | null
+  tagline_en: string | null
+  icon: string
+}
+
+/**
+ * Load all active families (slug + title + tagline + icon) for the
+ * sibling-families internal-link block at the bottom of each family
+ * page. Falls back to [] on error so the page never 500s.
+ */
+async function loadAllFamilyTitles(): Promise<FamilyTileRow[]> {
+  try {
+    const supabase = createServiceClient()
+    const { data } = await supabase
+      .from('service_families')
+      .select('slug, title_es, title_en, tagline_es, tagline_en, icon')
+      .eq('active', true)
+      .order('sort_order', { ascending: true })
+    return (data ?? []) as unknown as FamilyTileRow[]
+  } catch {
+    return []
+  }
 }
 
 async function loadFamily(slug: string): Promise<{
@@ -129,12 +158,20 @@ export default async function FamilyPage({ params }: Props) {
     redirect(`/${locale}/services/${LEGACY_SERVICE_SLUG_TO_FAMILY[service]}`)
   }
 
-  const [result, dopRate] = await Promise.all([
+  const canonicalForRelated = LEGACY_SERVICE_SLUG_TO_FAMILY[service] ?? service
+  const [result, dopRate, relatedPosts, allFamilies] = await Promise.all([
     loadFamily(service),
     getUsdToDopRate(),
+    getRelatedPostsForFamily(canonicalForRelated, isEs ? 'es' : 'en'),
+    loadAllFamilyTitles(),
   ])
   if (!result) notFound()
   const { family, packages } = result
+  // Sibling families = other active families excluding the current one,
+  // for the "Explore other services" cross-family internal link block.
+  const siblingFamilies = allFamilies
+    .filter((f) => f.slug !== family.slug)
+    .slice(0, 6)
 
   const title = isEs ? family.title_es : family.title_en
   const tagline = isEs ? family.tagline_es : family.tagline_en
@@ -863,6 +900,112 @@ export default async function FamilyPage({ params }: Props) {
             </Link>
           </div>
         </section>
+
+        {/* ── RELATED BLOG POSTS ── pulls 3 most-recent posts whose
+             service_type matches one of the family's blog tag variants
+             (see FAMILY_SLUG_TO_BLOG_SERVICE_TYPES). Renders only when
+             at least one post exists — silently hidden if the family
+             has no blog content yet. */}
+        {relatedPosts.length > 0 && (
+          <section className="border-t border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Del blog' : 'From the blog'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-12"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
+                {isEs
+                  ? `Historias y guías de ${(isEs ? family.title_es : family.title_en).toLowerCase()}`
+                  : `${family.title_en} stories and guides`}
+              </h2>
+              <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {relatedPosts.map((post) => (
+                  <li key={post.id}>
+                    <Link
+                      href={`/${locale}/blog/${post.slug}`}
+                      className="group block border border-hairline-soft p-6 h-full hover:bg-ink/5 transition-colors duration-200"
+                    >
+                      {post.location && (
+                        <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted mb-3">
+                          {post.location}
+                        </p>
+                      )}
+                      <h3
+                        className="font-display uppercase text-ink"
+                        style={{ fontSize: 'clamp(18px, 1.8vw, 24px)', lineHeight: '1.15' }}
+                      >
+                        {post.title}
+                      </h3>
+                      {post.excerpt && (
+                        <p className="text-ink-muted text-sm leading-relaxed mt-3 line-clamp-3">
+                          {post.excerpt}
+                        </p>
+                      )}
+                      <p className="mt-5 pt-4 border-t border-hairline-soft font-mono uppercase tracking-widest text-[10px] text-ink-muted group-hover:text-ink transition-colors">
+                        {isEs ? 'Leer →' : 'Read →'}
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href={`/${locale}/blog`}
+                className="mt-10 inline-flex items-center font-mono uppercase tracking-widest text-[11px] text-ink-muted hover:text-ink transition-opacity"
+              >
+                {isEs ? 'Ver todo el blog →' : 'See all blog posts →'}
+              </Link>
+            </div>
+          </section>
+        )}
+
+        {/* ── EXPLORE OTHER SERVICES ── cross-family internal links.
+             Lifts family-page total href count significantly + helps
+             Google understand the topical cluster around photography. */}
+        {siblingFamilies.length > 0 && (
+          <section className="border-t border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Explorar' : 'Explore'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-12"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
+                {isEs ? 'Otros servicios fotográficos' : 'Other photography services'}
+              </h2>
+              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
+                {siblingFamilies.map((f) => (
+                  <li key={f.slug} className="border-r border-b border-hairline-soft">
+                    <Link
+                      href={`/${locale}/services/${f.slug}`}
+                      className="group block p-7 md:p-8 hover:bg-ink/5 transition-colors duration-200"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <span className="text-2xl" aria-hidden="true">{f.icon}</span>
+                        <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted group-hover:text-ink transition-colors">
+                          →
+                        </span>
+                      </div>
+                      <h3
+                        className="font-display uppercase text-ink"
+                        style={{ fontSize: 'clamp(18px, 1.8vw, 24px)', lineHeight: '1.15' }}
+                      >
+                        {isEs ? f.title_es : f.title_en}
+                      </h3>
+                      {(isEs ? f.tagline_es : f.tagline_en) && (
+                        <p className="text-ink-muted text-sm leading-relaxed mt-3">
+                          {isEs ? f.tagline_es : f.tagline_en}
+                        </p>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
       </main>
     </>
   )

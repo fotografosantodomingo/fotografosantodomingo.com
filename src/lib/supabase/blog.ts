@@ -161,6 +161,74 @@ export async function getAllSlugs(): Promise<Array<{ slug_es: string; slug_en: s
   return data
 }
 
+/**
+ * Map a canonical service_families.slug to candidate blog post
+ * service_type values. Blog posts predate the canonical seed and use a
+ * looser tag vocabulary, so we accept multiple variants per family.
+ * Used by family-page internal-link sections to surface related posts.
+ */
+const FAMILY_SLUG_TO_BLOG_SERVICE_TYPES: Record<string, string[]> = {
+  'wedding-photography': ['wedding', 'weddings', 'wedding-photography', 'bodas'],
+  'proposal-photography': ['proposal', 'proposal-photography', 'engagement'],
+  'family-beach-photography': ['family', 'family-photography', 'beach', 'maternity', 'children'],
+  'luxury-portrait-photography': ['portrait', 'portraits', 'portrait-photography', 'corporate-portrait'],
+  'commercial-branding-photography': ['commercial', 'commercial-photography', 'food', 'brand', 'restaurant'],
+  'real-estate-drone-photography': ['real-estate', 'drone', 'drone-photography', 'aerial', 'real-estate-photography'],
+  'corporate-event-photography': ['event', 'event-photography', 'corporate-event', 'conference'],
+  'birthday-event-photography': ['birthday', 'birthday-photography', 'quinceanera', 'baptism', 'graduation'],
+  'custom-specialty-photography': ['video', 'video-production', 'editorial', 'custom'],
+}
+
+/**
+ * Surface up to 3 related blog posts for a canonical family page.
+ * Returns [] when the family has no blog content tagged yet.
+ */
+export async function getRelatedPostsForFamily(
+  familySlug: string,
+  locale: 'es' | 'en',
+  excludeSlug?: string
+): Promise<PublishedPostListItem[]> {
+  const candidateTypes = FAMILY_SLUG_TO_BLOG_SERVICE_TYPES[familySlug] ?? []
+  if (candidateTypes.length === 0) return []
+
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('blog_posts')
+    .select(
+      'id, slug_es, slug_en, title_es, title_en, excerpt_es, excerpt_en, cover_image_url, cover_image_thumbnail_url, cover_image_alt_es, cover_image_alt_en, cover_image_title_es, cover_image_title_en, cover_image_caption_es, cover_image_caption_en, cover_image_description_es, cover_image_description_en, published_at, service_type, location'
+    )
+    .eq('status', 'published')
+    .in('service_type', candidateTypes)
+    .order('published_at', { ascending: false })
+    .limit(6)
+
+  if (error || !data) {
+    console.error('getRelatedPostsForFamily failed:', error)
+    return []
+  }
+
+  return data
+    .filter((post) => post.slug_es !== excludeSlug && post.slug_en !== excludeSlug)
+    .slice(0, 3)
+    .map((post) => ({
+      id: post.id,
+      slug: locale === 'es' ? post.slug_es : post.slug_en,
+      slug_es: post.slug_es,
+      slug_en: post.slug_en,
+      title: locale === 'es' ? post.title_es : post.title_en,
+      excerpt: locale === 'es' ? post.excerpt_es : post.excerpt_en,
+      cover_image_url: post.cover_image_url,
+      cover_image_thumbnail_url: post.cover_image_thumbnail_url,
+      cover_image_alt: locale === 'es' ? post.cover_image_alt_es : post.cover_image_alt_en,
+      cover_image_title: locale === 'es' ? post.cover_image_title_es : post.cover_image_title_en,
+      cover_image_caption: locale === 'es' ? post.cover_image_caption_es : post.cover_image_caption_en,
+      cover_image_description: locale === 'es' ? post.cover_image_description_es : post.cover_image_description_en,
+      published_at: post.published_at,
+      service_type: post.service_type,
+      location: post.location,
+    }))
+}
+
 export async function getRelatedPosts(
   serviceType: string,
   excludeSlug: string,
