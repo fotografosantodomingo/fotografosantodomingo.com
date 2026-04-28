@@ -35,7 +35,7 @@ BEGIN
   END IF;
 
   INSERT INTO public.blog_posts (
-  slug_es, slug_en,
+  slug, slug_es, slug_en,
   title_es, title_en,
   excerpt_es, excerpt_en,
   meta_description_es, meta_description_en,
@@ -54,6 +54,7 @@ VALUES
 -- Targets: "boda altos de chavón", "casa de campo wedding photographer"
 -- ═══════════════════════════════════════════════════════════════════
 (
+  'fotografo-bodas-altos-de-chavon-casa-de-campo',
   'fotografo-bodas-altos-de-chavon-casa-de-campo',
   'altos-de-chavon-casa-de-campo-wedding-photographer-guide',
 
@@ -129,6 +130,7 @@ The least-discussed piece of a Casa de Campo wedding is resort coordination. Cas
 -- Targets: "permisos drone punta cana", "drone permits punta cana"
 -- ═══════════════════════════════════════════════════════════════════
 (
+  'permisos-drone-fotografia-punta-cana-puj',
   'permisos-drone-fotografia-punta-cana-puj',
   'drone-permits-photography-punta-cana-puj-airport',
 
@@ -209,6 +211,7 @@ The most common client question: "Will the shot turn out fine if we fly at low a
 -- ═══════════════════════════════════════════════════════════════════
 (
   'propuesta-sorpresa-sanctuary-cap-cana-juanillo-beach',
+  'propuesta-sorpresa-sanctuary-cap-cana-juanillo-beach',
   'sanctuary-cap-cana-juanillo-beach-surprise-proposal',
 
   'Propuesta Sorpresa en Sanctuary Cap Cana y Juanillo Beach: Logística y Estrategia Fotográfica',
@@ -288,6 +291,7 @@ The reason we shoot this venue so often is simple: the photos coming out of a Ju
 -- ═══════════════════════════════════════════════════════════════════
 (
   'fotografo-bodas-catedral-primada-zona-colonial-santo-domingo',
+  'fotografo-bodas-catedral-primada-zona-colonial-santo-domingo',
   'catedral-primada-zona-colonial-santo-domingo-wedding-photographer',
 
   'Boda en la Catedral Primada de América: Fotografía en la Primera Catedral del Nuevo Mundo',
@@ -362,6 +366,7 @@ Couples marrying at the Catedral Primada typically continue to a reception at a 
 -- Targets: "fotos quinceañera santo domingo", "quinceañera santo domingo photographer"
 -- ═══════════════════════════════════════════════════════════════════
 (
+  'fotografo-quinceaneras-santo-domingo-locaciones-paquetes',
   'fotografo-quinceaneras-santo-domingo-locaciones-paquetes',
   'quinceanera-photographer-santo-domingo-locations-packages',
 
