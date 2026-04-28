@@ -190,11 +190,17 @@ export default async function HomePage({ params: { locale } }: Props) {
             </span>
           </div>
 
-          {/* Monumental display headline — Bugatti scale curve */}
+          {/* Monumental display headline — Bugatti scale curve.
+               Trimmed clamp range: was 48px–168px (11vw) which made the
+               longer EN string "Professional Photography in Santo Domingo,
+               DR" overflow on both mobile and desktop. New range
+               accommodates the 47-char EN string while keeping the ES
+               "Fotografía Profesional en Santo Domingo, RD" still
+               monumental. */}
           <h1
             className="hero-white-text font-display uppercase font-normal text-white mb-8"
             style={{
-              fontSize: 'clamp(48px, 11vw, 168px)',
+              fontSize: 'clamp(38px, 8vw, 120px)',
               lineHeight: '0.95',
               letterSpacing: '-0.01em',
             }}
