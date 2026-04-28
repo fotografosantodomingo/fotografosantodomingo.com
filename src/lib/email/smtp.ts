@@ -86,7 +86,14 @@ export async function sendMail(msg: MailMessage): Promise<SendResult> {
   }
 
   const host = process.env.SMTP_HOST ?? 'smtp.hostinger.com'
-  const port = Number(process.env.SMTP_PORT ?? 465)
+  // Default to STARTTLS on port 587 — Cloudflare Workers' outbound TCP
+  // socket API (`cloudflare:sockets`) frequently produces a "proxy
+  // request failed" error when connecting to port 465 implicit-TLS.
+  // Port 587 with STARTTLS upgrade is the universally-supported
+  // alternative; Hostinger SMTP listens on both. Override via
+  // SMTP_PORT env var if needed.
+  const port = Number(process.env.SMTP_PORT ?? 587)
+  const useImplicitTls = port === 465
   const user = process.env.SMTP_USER ?? fromEmail
   const from = msg.from ? parseAddress(msg.from) : defaultFrom()
   const to = normalizeRecipients(msg.to)
@@ -101,7 +108,12 @@ export async function sendMail(msg: MailMessage): Promise<SendResult> {
       authType: 'plain',
       host,
       port,
-      secure: true,
+      // For 465 → secure:true (implicit SSL from start).
+      // For 587 → secure:false + startTls:true (upgrade after EHLO).
+      // worker-mailer chooses the right `cloudflare:sockets` mode based
+      // on these two flags (see Email/SMTP source in node_modules).
+      secure: useImplicitTls,
+      startTls: !useImplicitTls,
     })
 
     // worker-mailer's Email constructor uses `reply` (not `replyTo`)
