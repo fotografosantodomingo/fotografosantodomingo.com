@@ -123,6 +123,11 @@ export type GeoBlock = {
   venues: BilingualList
   miniFaq?: FaqItem[]
   bestSeasonNote?: Bilingual
+  /** Optional gallery rendered full-bleed ABOVE the intro on the dedicated
+   *  geo URL ([locale]/[hub]/page.tsx). One entry per image — Cloudinary
+   *  URLs preferred. Each renders edge-to-edge with no crop, stacked on
+   *  both desktop and mobile. Leave empty/undefined to skip the section. */
+  images?: string[]
 }
 
 /**

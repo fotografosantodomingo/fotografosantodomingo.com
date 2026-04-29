@@ -34,6 +34,10 @@ export const realEstateDronePhotographyContent: ServiceContent = {
     {
       citySlug: 'punta-cana',
       cityName: { es: 'Punta Cana', en: 'Punta Cana' },
+      images: [
+        'https://res.cloudinary.com/dwewurxla/image/upload/v1777428637/Foto%CC%81grafo_Inmobiliario_en_Punta_Cana_Drone_xdv4io.webp',
+        'https://res.cloudinary.com/dwewurxla/image/upload/v1777428637/Foto_video_coon_drone_real_estate_service_punta_cana_fupina.webp',
+      ],
       intro: {
         es: 'Punta Cana concentra el mayor inventario de propiedades vacacionales y residenciales de la región este — desde condos frente al mar en Bávaro hasta lotes en comunidades de golf como Cocotal y Punta Blanca. Cubrimos fotografía interior con luz natural balanceada, sets de drone aéreo para mostrar contexto de playa y resort, y twilight para listados de alta gama. Manejamos las zonas restringidas y de altitud limitada que el Aeropuerto Internacional de Punta Cana (PUJ) impone en Bávaro central, y volamos sin restricción en zonas libres como Cabeza de Toro y Macao cuando la propiedad lo permite.',
         en: 'Punta Cana holds the eastern region\'s largest inventory of vacation and residential properties — from beachfront condos in Bávaro to lots in golf communities like Cocotal and Punta Blanca. We cover interior photography with balanced natural light, drone aerial sets showing beach and resort context, and twilight for high-end listings. We handle the restricted and altitude-limited zones around Punta Cana International Airport (PUJ) in central Bávaro, and fly unrestricted in free zones like Cabeza de Toro and Macao when the property allows.',

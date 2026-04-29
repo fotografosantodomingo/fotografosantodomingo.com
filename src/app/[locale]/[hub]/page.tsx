@@ -287,6 +287,28 @@ export default async function GeoPageRoute({ params }: Props) {
           </div>
         </section>
 
+        {/* ── GEO IMAGES ── Optional full-bleed gallery above the intro.
+            Renders edge-to-edge with no crop on desktop and mobile so wide
+            drone shots aren't sliced. Source data lives in the family's
+            geoCoverage[citySlug].images array. */}
+        {geoBlock?.images && geoBlock.images.length > 0 && (
+          <section className="border-b border-hairline-soft bg-canvas">
+            {geoBlock.images.map((src, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={`${src}-${i}`}
+                src={src}
+                alt={isEs
+                  ? `${cityName} — fotografía inmobiliaria y drone profesional ${i + 1}`
+                  : `${cityName} — professional real-estate and drone photography ${i + 1}`}
+                className="block h-auto w-full"
+                loading={i === 0 ? 'eager' : 'lazy'}
+                fetchPriority={i === 0 ? 'high' : 'auto'}
+              />
+            ))}
+          </section>
+        )}
+
         {/* ── INTRO ── 120-180 word geo-specific intro */}
         {intro && (
           <section className="border-b border-hairline-soft py-16 md:py-20">
