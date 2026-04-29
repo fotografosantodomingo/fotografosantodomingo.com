@@ -11,6 +11,7 @@ import { sendMail } from './smtp'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { BOOKING_TIMEZONE, REVIEW_LINKS } from '@/lib/bookings/constants'
 import type { BookingEmailType } from '@/lib/bookings/constants'
+import { googleCalendarUrl, icsUrl } from '@/lib/bookings/ics'
 
 // ─── SMTP transport (Hostinger via worker-mailer; see ./smtp.ts) ─────────────
 
@@ -125,6 +126,39 @@ function shellClose() {
   `
 }
 
+function calendarButtons(ctx: BookingEmailContext) {
+  const isEs = ctx.locale === 'es'
+  const title = `${serviceName(ctx)} — Babula Shots`
+  const description = isEs
+    ? `Sesión confirmada con Babula Shots. Punto de encuentro y detalles finales por WhatsApp +1 (809) 720-9547.`
+    : `Confirmed session with Babula Shots. Meeting point and final details via WhatsApp +1 (809) 720-9547.`
+  const gCalUrl = googleCalendarUrl({
+    bookingId: ctx.bookingId,
+    title,
+    description,
+    startsAt: ctx.startsAt,
+    endsAt: ctx.endsAt,
+    customerEmail: ctx.customerEmail,
+    customerName: ctx.customerName,
+  })
+  const appleIcsUrl = icsUrl(ctx.bookingId)
+  return `
+    <div style="text-align:center;margin:18px 0 22px">
+      <p style="margin:0 0 12px;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">
+        ${isEs ? 'Añadir a tu calendario' : 'Add to your calendar'}
+      </p>
+      <a href="${gCalUrl}" target="_blank" rel="noopener noreferrer"
+         style="display:inline-block;background:#4285F4;color:#ffffff;padding:11px 20px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px;margin:0 4px 8px">
+        Google Calendar
+      </a>
+      <a href="${appleIcsUrl}" target="_blank"
+         style="display:inline-block;background:#0f172a;color:#ffffff;padding:11px 20px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px;margin:0 4px 8px">
+        ${isEs ? 'Apple / Outlook' : 'Apple / Outlook'}
+      </a>
+    </div>
+  `
+}
+
 function appointmentCard(ctx: BookingEmailContext) {
   const isEs = ctx.locale === 'es'
   return `
@@ -207,7 +241,9 @@ export async function sendBookingConfirmation(
             : 'We will send you a reminder 24 hours before and another on the morning of the session. To reschedule or ask anything, just reply to this email or message us on WhatsApp.'}
         </p>
 
-        <div style="text-align:center;margin:22px 0 6px">
+        ${calendarButtons(ctx)}
+
+        <div style="text-align:center;margin:6px 0 6px">
           <a href="https://wa.me/18097209547"
              style="display:inline-block;background:#22c55e;color:#ffffff;padding:12px 22px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px">
             ${isEs ? 'Escribir por WhatsApp' : 'Message us on WhatsApp'}
@@ -290,6 +326,8 @@ export async function sendBookingAdminAlert(
             <td style="padding:6px 0;color:#334155">$${(ctx.fullPriceUsd - ctx.depositUsd).toFixed(2)} USD</td>
           </tr>
         </table>
+
+        ${calendarButtons({ ...ctx, locale: 'es' })}
 
         <div style="text-align:center">
           <a href="${adminUrl}"
