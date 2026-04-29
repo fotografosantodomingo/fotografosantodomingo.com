@@ -1,21 +1,14 @@
 import { sendMail } from './smtp'
+import { getAdminRecipients } from './admin-recipients'
 
 /**
  * Admin notification for new public RFQ submissions to /api/quote-request.
  *
- * Slice A · Step A5 — fires once per insert into public.quote_requests.
- * Sends via Hostinger SMTP (see ./smtp.ts).
+ * Fires once per insert into public.quote_requests; sends via the Brevo
+ * HTTP transport in ./smtp.ts. Recipients are pulled from the shared
+ * admin-recipients module so booking, quote, and contact alerts always
+ * reach the same operator inboxes.
  */
-
-const PRIMARY_ADMIN_EMAIL = 'info@fotografosantodomingo.com'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL
-
-function getAdminSecondaryRecipient() {
-  const normalizedPrimary = PRIMARY_ADMIN_EMAIL.trim().toLowerCase()
-  const normalizedAdmin = ADMIN_EMAIL.trim().toLowerCase()
-  if (!normalizedAdmin || normalizedAdmin === normalizedPrimary) return undefined
-  return ADMIN_EMAIL.trim()
-}
 
 export type QuoteRequestNotificationData = {
   id: string
@@ -93,11 +86,9 @@ export async function sendQuoteRequestNotification(
   }`
 
   try {
-    const secondary = getAdminSecondaryRecipient()
-    const recipients = secondary ? [PRIMARY_ADMIN_EMAIL, secondary] : [PRIMARY_ADMIN_EMAIL]
     await sendMail({
       from: { name: 'Babula Shots', email: 'noreply@fotografosantodomingo.com' },
-      to: recipients,
+      to: getAdminRecipients(),
       replyTo: data.customerEmail,
       subject,
       html,

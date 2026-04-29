@@ -5,6 +5,7 @@ import { loadStripe, type Stripe } from '@stripe/stripe-js'
 import { formatServicePrice } from '@/lib/currency/format'
 import {
   Elements,
+  ExpressCheckoutElement,
   PaymentElement,
   useElements,
   useStripe,
@@ -205,9 +206,68 @@ function PaymentForm({
     }
   }, [bookingId, onSuccess])
 
+  // Express Checkout — surfaces Apple Pay (Safari/iOS) and Google Pay
+  // (Chrome/Android) as native one-tap buttons above the card form.
+  // Stripe only renders buttons the device + browser actually support;
+  // if neither is available, the element collapses to nothing.
+  async function onExpressConfirm() {
+    if (!stripe || !elements) return
+    setSubmitting(true)
+    setError(null)
+    const { error: submitErr } = await elements.submit()
+    if (submitErr) {
+      setError(submitErr.message ?? 'Payment validation failed')
+      setSubmitting(false)
+      return
+    }
+    const result = await stripe.confirmPayment({
+      elements,
+      redirect: 'if_required',
+      confirmParams: {
+        return_url: `${window.location.origin}/${locale}/book?paid=${bookingId}`,
+      },
+    })
+    if (result.error) {
+      setError(result.error.message ?? 'Payment failed')
+      setSubmitting(false)
+      return
+    }
+    if (result.paymentIntent?.status === 'succeeded') {
+      onSuccess()
+      return
+    }
+    onSuccess()
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <PaymentElement options={{ layout: 'tabs' }} />
+      <ExpressCheckoutElement
+        onConfirm={onExpressConfirm}
+        options={{
+          buttonHeight: 48,
+          buttonTheme: { applePay: 'white-outline', googlePay: 'white' },
+        }}
+      />
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+          <div className="w-full border-t border-hairline-soft" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-canvas px-3 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+            {locale === 'es' ? 'O paga con tarjeta' : 'Or pay with card'}
+          </span>
+        </div>
+      </div>
+      <PaymentElement
+        options={{
+          layout: 'tabs',
+          // Wallets first, then card. Stripe still gates by what's enabled
+          // in Dashboard → Settings → Payment methods, so this is harmless
+          // when a method isn't enabled.
+          paymentMethodOrder: ['apple_pay', 'google_pay', 'link', 'card'],
+          wallets: { applePay: 'auto', googlePay: 'auto' },
+        }}
+      />
 
       {error && (
         <div className="border border-hairline p-4 text-sm text-ink">

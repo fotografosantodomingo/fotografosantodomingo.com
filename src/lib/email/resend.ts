@@ -8,17 +8,9 @@
  */
 
 import { sendMail } from './smtp'
+import { getAdminRecipients } from './admin-recipients'
 
 const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
-const PRIMARY_ADMIN_EMAIL = 'info@fotografosantodomingo.com'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL
-
-function getAdminSecondaryRecipient() {
-  const normalizedPrimary = PRIMARY_ADMIN_EMAIL.trim().toLowerCase()
-  const normalizedAdmin = ADMIN_EMAIL.trim().toLowerCase()
-  if (!normalizedAdmin || normalizedAdmin === normalizedPrimary) return undefined
-  return ADMIN_EMAIL.trim()
-}
 
 export interface ContactData {
   id: string
@@ -40,8 +32,7 @@ export async function sendContactNotification(data: ContactData) {
 
   await sendMail({
     from: FROM,
-    to: PRIMARY_ADMIN_EMAIL,
-    ...(getAdminSecondaryRecipient() ? { bcc: getAdminSecondaryRecipient() } : {}),
+    to: getAdminRecipients(),
     replyTo: data.email,
     subject: `📸 Nueva consulta de ${data.name} — ${serviceLabel}`,
     html: `
@@ -269,8 +260,7 @@ export async function sendQuoteSubmissionNotification(data: QuoteEmailPayload) {
 
   await sendMail({
     from: FROM,
-    to: PRIMARY_ADMIN_EMAIL,
-    ...(getAdminSecondaryRecipient() ? { bcc: getAdminSecondaryRecipient() } : {}),
+    to: getAdminRecipients(),
     replyTo: data.email,
     subject: `Nueva solicitud de presupuesto: ${data.fullName} - ${serviceLabel}`,
     html: `

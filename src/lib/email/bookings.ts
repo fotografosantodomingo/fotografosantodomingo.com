@@ -12,18 +12,11 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { BOOKING_TIMEZONE, REVIEW_LINKS } from '@/lib/bookings/constants'
 import type { BookingEmailType } from '@/lib/bookings/constants'
 import { googleCalendarUrl, icsUrl } from '@/lib/bookings/ics'
+import { getAdminRecipients, getPrimaryAdminRecipient } from './admin-recipients'
 
-// ─── SMTP transport (Hostinger via worker-mailer; see ./smtp.ts) ─────────────
+// ─── Brevo HTTP transport (see ./smtp.ts) ────────────────────────────────────
 
 const FROM = { name: 'Babula Shots', email: 'noreply@fotografosantodomingo.com' }
-const PRIMARY_ADMIN_EMAIL = 'info@fotografosantodomingo.com'
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || PRIMARY_ADMIN_EMAIL
-
-function getAdminBcc(): string | undefined {
-  const a = ADMIN_EMAIL.trim().toLowerCase()
-  const p = PRIMARY_ADMIN_EMAIL.trim().toLowerCase()
-  return a && a !== p ? ADMIN_EMAIL.trim() : undefined
-}
 
 // ─── Email log helper ────────────────────────────────────────────────────────
 
@@ -284,11 +277,12 @@ export async function sendBookingAdminAlert(
 ): Promise<void> {
   const adminUrl = `${BASE_URL}/admin/bookings/${ctx.bookingId}`
 
+  const adminRecipients = getAdminRecipients()
+
   try {
     const result = await sendMail({
       from: FROM,
-      to: PRIMARY_ADMIN_EMAIL,
-      ...(getAdminBcc() ? { bcc: getAdminBcc() } : {}),
+      to: adminRecipients,
       replyTo: ctx.customerEmail,
       subject: `📅 Nueva reserva — ${ctx.serviceNameEs} · ${ctx.customerName}`,
       html: `
@@ -343,7 +337,7 @@ export async function sendBookingAdminAlert(
     await logBookingEmail(supabase, {
       bookingId: ctx.bookingId,
       emailType: 'ADMIN_ALERT',
-      recipientEmail: PRIMARY_ADMIN_EMAIL,
+      recipientEmail: adminRecipients.join(', '),
       locale: 'es',
       resendId: result.id,
     })
@@ -353,7 +347,7 @@ export async function sendBookingAdminAlert(
     await logBookingEmail(supabase, {
       bookingId: ctx.bookingId,
       emailType: 'ADMIN_ALERT',
-      recipientEmail: PRIMARY_ADMIN_EMAIL,
+      recipientEmail: adminRecipients.join(', '),
       locale: 'es',
       error: msg,
     })
