@@ -1,11 +1,53 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { createServiceClient } from '@/lib/supabase/service'
+import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
+import { formatServicePrice } from '@/lib/currency/format'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'edge'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
+const FAMILY_SLUG = 'luxury-portrait-photography'
+
+type PackageRow = {
+  id: string
+  slug: string
+  name_es: string
+  name_en: string
+  description_short_es: string | null
+  description_short_en: string | null
+  inclusions_es: string[]
+  inclusions_en: string[]
+  duration_min: number
+  starting_price_usd: number
+  deposit_percent: number
+  minimum_billable_hours: number | null
+  bookable_direct: boolean
+  custom_quote_allowed: boolean
+  featured: boolean
+  popular_badge: 'most_booked' | 'best_value' | null
+  sort_order: number
+}
+
+async function loadPortraitPackages(): Promise<PackageRow[]> {
+  const supabase = createServiceClient()
+  const { data: family } = await supabase
+    .from('service_families')
+    .select('id')
+    .eq('slug', FAMILY_SLUG)
+    .eq('active', true)
+    .maybeSingle()
+  if (!family) return []
+  const { data: packages } = await supabase
+    .from('service_packages')
+    .select('id, slug, name_es, name_en, description_short_es, description_short_en, inclusions_es, inclusions_en, duration_min, starting_price_usd, deposit_percent, minimum_billable_hours, bookable_direct, custom_quote_allowed, featured, popular_badge, sort_order')
+    .eq('family_id', (family as { id: string }).id)
+    .eq('active', true)
+    .order('sort_order', { ascending: true })
+  return (packages ?? []) as PackageRow[]
+}
 
 const HERO_DESKTOP = 'https://res.cloudinary.com/dwewurxla/image/upload/v1777431039/editorial_sesioon_de_fotos_santoo_domingo_fotografo_profesional_republica_dominicana_neupwn.webp'
 const HERO_MOBILE = 'https://res.cloudinary.com/dwewurxla/image/upload/v1777431069/sesion_de_fotos_en_estudio_fotografico_santo_domingo_h0b3ap.webp'
@@ -56,14 +98,21 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
   }
 }
 
-export default function PhotoStudioPage({ params: { locale } }: Props) {
+export default async function PhotoStudioPage({ params: { locale } }: Props) {
   if (locale !== 'es' && locale !== 'en') notFound()
   const isEs = locale === 'es'
 
   const pricesUrl = `${BASE_URL}/${locale}/prices`
-  const familyUrl = `/${locale}/services/luxury-portrait-photography`
-  const quoteUrl = `/${locale}/get-quote?family=luxury-portrait-photography&from=studio`
-  const bookUrl = `/${locale}/services/luxury-portrait-photography`
+  const familyUrl = `/${locale}/services/${FAMILY_SLUG}`
+  const quoteUrl = `/${locale}/get-quote?family=${FAMILY_SLUG}&from=studio`
+  const bookUrl = `/${locale}/services/${FAMILY_SLUG}`
+
+  const [packages, dopRate] = await Promise.all([
+    loadPortraitPackages(),
+    getUsdToDopRate(),
+  ])
+  const directPackages = packages.filter(p => p.bookable_direct)
+  const quoteOnlyPackages = packages.filter(p => !p.bookable_direct)
 
   // JSON-LD Service + BreadcrumbList for SEO
   const jsonLd = {
@@ -87,7 +136,9 @@ export default function PhotoStudioPage({ params: { locale } }: Props) {
         offers: {
           '@type': 'Offer',
           priceCurrency: 'USD',
-          price: 100,
+          // Lowest direct-bookable starting price across luxury-portrait-photography
+          // packages. Computed at render time so the schema follows actual catalog.
+          price: directPackages[0]?.starting_price_usd ?? 250,
           availability: 'https://schema.org/InStock',
           url: `${BASE_URL}/${locale}/photo-studio-santo-domingo`,
         },
@@ -295,47 +346,32 @@ export default function PhotoStudioPage({ params: { locale } }: Props) {
           </div>
         </section>
 
-        {/* ── PRICES ── must mirror /prices and luxury-portrait-photography family ── */}
-        <section className="border-b border-hairline-soft py-16 md:py-24">
+        {/* ── PACKAGES ── pulled live from service_packages so prices stay
+             in sync with the luxury-portrait-photography family page. */}
+        {directPackages.length > 0 && (
+          <PackageGrid
+            heading={isEs ? 'Paquetes para reservar online' : 'Packages bookable online'}
+            packages={directPackages}
+            locale={locale}
+            isEs={isEs}
+            dopRate={dopRate.usdToDop}
+          />
+        )}
+
+        {quoteOnlyPackages.length > 0 && (
+          <PackageGrid
+            heading={isEs ? 'Solo por cotización personalizada' : 'Custom quote only'}
+            packages={quoteOnlyPackages}
+            locale={locale}
+            isEs={isEs}
+            quoteOnly
+            dopRate={dopRate.usdToDop}
+          />
+        )}
+
+        <section className="border-b border-hairline-soft py-10 md:py-12">
           <div className="container mx-auto px-4">
-            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-6">
-              {isEs ? 'Precios' : 'Pricing'}
-            </p>
-            <h2
-              className="font-display uppercase text-ink mb-10"
-              style={{ fontSize: 'clamp(28px, 4vw, 56px)', lineHeight: '1.0' }}
-            >
-              {isEs ? 'Mismas tarifas que la página de precios' : 'Same rates as the pricing page'}
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6 max-w-5xl">
-              <article className="border border-hairline-soft p-7">
-                <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">{isEs ? 'Sesión base' : 'Base session'}</p>
-                <h3 className="font-display uppercase text-ink mt-3" style={{ fontSize: 'clamp(22px, 2.4vw, 30px)', lineHeight: '1.1' }}>
-                  {isEs ? 'Retratos · 1 hora' : 'Portrait · 1 hour'}
-                </h3>
-                <p className="mt-4 text-ink text-3xl font-display">$100 USD</p>
-                <ul className="mt-5 space-y-2 text-ink/80 text-sm leading-relaxed">
-                  <li>• {isEs ? 'Sesión en estudio o locación' : 'Studio or location session'}</li>
-                  <li>• {isEs ? '15 fotos editadas en alta resolución' : '15 edited high-res photos'}</li>
-                  <li>• {isEs ? 'Entrega en 48 horas' : '48-hour delivery'}</li>
-                </ul>
-              </article>
-              <article className="border border-hairline-soft p-7">
-                <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">{isEs ? 'Editorial / Campaña' : 'Editorial / Campaign'}</p>
-                <h3 className="font-display uppercase text-ink mt-3" style={{ fontSize: 'clamp(22px, 2.4vw, 30px)', lineHeight: '1.1' }}>
-                  {isEs ? 'Cotización personalizada' : 'Custom quote'}
-                </h3>
-                <p className="mt-4 text-ink-muted text-base leading-relaxed">
-                  {isEs
-                    ? 'Lookbooks, campañas y proyectos editoriales se cotizan según horas de estudio, número de looks, MUA, retoque y entregables.'
-                    : 'Lookbooks, campaigns, and editorial projects are quoted by studio hours, number of looks, MUA, retouching, and deliverables.'}
-                </p>
-                <Link href={quoteUrl} className="mt-5 inline-flex font-mono uppercase tracking-widest text-[11px] text-ink hover:opacity-70">
-                  {isEs ? 'Pedir cotización →' : 'Get a quote →'}
-                </Link>
-              </article>
-            </div>
-            <p className="mt-8 max-w-3xl text-ink-muted text-sm leading-relaxed">
+            <p className="max-w-3xl text-ink-muted text-sm leading-relaxed">
               {isEs ? 'Ver el catálogo completo en la ' : 'See the full catalog on the '}
               <Link href={`/${locale}/prices`} className="underline hover:text-ink">
                 {isEs ? 'página de precios' : 'pricing page'}
@@ -400,5 +436,137 @@ export default function PhotoStudioPage({ params: { locale } }: Props) {
         </section>
       </main>
     </>
+  )
+}
+
+// ── PackageGrid ──────────────────────────────────────────────────────
+// Mirrors the layout used on /[locale]/services/[service]/page.tsx so the
+// studio page advertises the same packages with identical visual treatment
+// — staying scoped to luxury-portrait-photography, the editorial / studio
+// family. Cards link to the canonical package URLs (or the quote form for
+// custom-only packages) so the funnel matches the family page.
+function PackageGrid({
+  heading,
+  packages,
+  locale,
+  isEs,
+  quoteOnly,
+  dopRate,
+}: {
+  heading: string
+  packages: PackageRow[]
+  locale: string
+  isEs: boolean
+  quoteOnly?: boolean
+  dopRate: number
+}) {
+  return (
+    <section className="border-b border-hairline-soft py-16 md:py-20">
+      <div className="container mx-auto px-4">
+        <h2 className="mb-10 font-mono uppercase tracking-widest text-[11px] text-ink-muted">
+          {heading}
+        </h2>
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
+          {packages.map(p => {
+            const name = isEs ? p.name_es : p.name_en
+            const desc = isEs ? p.description_short_es : p.description_short_en
+            const inclusions = isEs ? p.inclusions_es : p.inclusions_en
+            const price = Number(p.starting_price_usd)
+            const href = quoteOnly
+              ? `/${locale}/get-quote?family=${FAMILY_SLUG}&package=${p.slug}&from=studio`
+              : `/${locale}/services/${FAMILY_SLUG}/${p.slug}?from=studio`
+            return (
+              <li key={p.id} className="border-r border-b border-hairline-soft">
+                <Link
+                  href={href}
+                  className={`group flex flex-col h-full p-7 md:p-8 lg:p-10 hover:bg-ink/5 transition-colors duration-200 ${
+                    p.featured ? 'bg-ink/[0.03]' : ''
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-5 min-h-[24px]">
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {p.popular_badge
+                        ? p.popular_badge.replace('_', ' ')
+                        : p.featured
+                          ? (isEs ? 'Destacado' : 'Featured')
+                          : ''}
+                    </span>
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {p.minimum_billable_hours
+                        ? `${p.minimum_billable_hours}h ${isEs ? 'mín' : 'min'}`
+                        : `${p.duration_min} min`}
+                    </span>
+                  </div>
+
+                  <h3
+                    className="font-display uppercase text-ink"
+                    style={{ fontSize: 'clamp(22px, 2.2vw, 30px)', lineHeight: '1.05' }}
+                  >
+                    {name}
+                  </h3>
+
+                  {(() => {
+                    const formatted = formatServicePrice(price, locale, dopRate)
+                    return (
+                      <div className="mt-5 mb-1">
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <span
+                            className="font-display text-ink"
+                            style={{ fontSize: 'clamp(36px, 4vw, 56px)', lineHeight: '1.0' }}
+                          >
+                            {formatted.primary}
+                          </span>
+                          <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                            {isEs ? 'desde' : 'start'}
+                            {formatted.primarySuffix ? ` · ${formatted.primarySuffix}` : ''}
+                          </span>
+                        </div>
+                        {formatted.usdReference && (
+                          <p className="mt-1 font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                            {formatted.usdReference}
+                          </p>
+                        )}
+                      </div>
+                    )
+                  })()}
+
+                  {desc && <p className="mt-4 text-sm text-ink-muted leading-relaxed">{desc}</p>}
+
+                  {inclusions.length > 0 && (
+                    <ul className="mt-6 space-y-2 text-sm text-ink/80 flex-1">
+                      {inclusions.slice(0, 4).map((inc, i) => (
+                        <li key={i} className="flex items-start gap-2.5">
+                          <span className="mt-1.5 inline-block w-2 h-px bg-ink/60 shrink-0" aria-hidden="true" />
+                          <span className="leading-snug">{inc}</span>
+                        </li>
+                      ))}
+                      {inclusions.length > 4 && (
+                        <li className="font-mono uppercase tracking-widest text-[10px] text-ink-muted pl-[18px]">
+                          +{inclusions.length - 4} {isEs ? 'más' : 'more'}
+                        </li>
+                      )}
+                    </ul>
+                  )}
+
+                  <div className="mt-8 pt-6 border-t border-hairline-soft flex items-center justify-between">
+                    <span className="font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                      {quoteOnly
+                        ? (isEs ? 'Pedir cotización' : 'Get a quote')
+                        : (isEs ? 'Ver detalles' : 'View details')}
+                      <span aria-hidden="true">→</span>
+                    </span>
+                    {!quoteOnly && p.bookable_direct && (
+                      <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                        {p.deposit_percent}% {isEs ? 'depósito' : 'deposit'}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    </section>
   )
 }
