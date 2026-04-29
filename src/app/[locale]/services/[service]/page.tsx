@@ -306,6 +306,59 @@ export default async function FamilyPage({ params }: Props) {
           </div>
         </section>
 
+        {/* ── STUDIO SUBPAGE CTA ── only on luxury-portrait-photography.
+             Drives traffic to /{locale}/photo-studio-santo-domingo, the
+             dedicated fashion-editorial / fine-art studio landing page.
+             Hero image is responsive: desktop vs mobile crop served via
+             Tailwind hidden classes (no <picture> needed since both files
+             are already viewport-tuned). */}
+        {family.slug === 'luxury-portrait-photography' && (
+          <section className="border-b border-hairline-soft bg-canvas">
+            <div className="grid md:grid-cols-2">
+              <div className="bg-canvas">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://res.cloudinary.com/dwewurxla/image/upload/v1777431039/editorial_sesioon_de_fotos_santoo_domingo_fotografo_profesional_republica_dominicana_neupwn.webp"
+                  alt={isEs ? 'Sesión editorial en estudio fotográfico Santo Domingo, República Dominicana' : 'Editorial studio photo session, Santo Domingo, Dominican Republic'}
+                  className="hidden md:block h-full w-full object-cover"
+                  loading="lazy"
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://res.cloudinary.com/dwewurxla/image/upload/v1777431069/sesion_de_fotos_en_estudio_fotografico_santo_domingo_h0b3ap.webp"
+                  alt={isEs ? 'Sesión de fotos en estudio fotográfico Santo Domingo' : 'Photo studio session, Santo Domingo'}
+                  className="block md:hidden h-auto w-full"
+                  loading="lazy"
+                />
+              </div>
+              <div className="px-6 md:px-12 py-16 md:py-24 flex flex-col justify-center">
+                <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                  {isEs ? 'Página dedicada' : 'Dedicated page'}
+                </p>
+                <h2
+                  className="font-display uppercase text-ink"
+                  style={{ fontSize: 'clamp(28px, 4vw, 56px)', lineHeight: '1.0' }}
+                >
+                  {isEs ? 'Estudio · Fashion Editorial' : 'Studio · Fashion Editorial'}
+                </h2>
+                <p className="text-ink-muted text-base md:text-lg leading-relaxed mt-6 max-w-md">
+                  {isEs
+                    ? 'Sesiones controladas en estudio en Santo Domingo: fashion editorial, retrato creativo y fotografía artística. Iluminación profesional, fondos editoriales y dirección de arte.'
+                    : 'Controlled studio sessions in Santo Domingo: fashion editorial, creative portraiture, and fine-art photography. Pro lighting, editorial backdrops, and art direction.'}
+                </p>
+                <div className="mt-8">
+                  <Link
+                    href={`/${locale}/photo-studio-santo-domingo`}
+                    className="inline-flex items-center justify-center rounded-full bg-ink px-7 py-3.5 font-mono uppercase tracking-widest text-[12px] md:text-[13px] text-canvas hover:opacity-90 transition-opacity"
+                  >
+                    {isEs ? 'Conocer el estudio →' : 'Discover the studio →'}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* ── HERO GALLERY ── Optional full-bleed photos rendered just before
              the "Why us" section. Edge-to-edge, no crop, same on desktop and
              mobile. Source: ServiceContent.heroGallery in src/data/service-content/. */}
