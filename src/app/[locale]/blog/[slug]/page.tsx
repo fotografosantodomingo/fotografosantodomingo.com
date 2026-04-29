@@ -10,7 +10,6 @@ import { CONTACT_INFO } from '@/lib/utils/constants'
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const GOOGLE_REVIEWS_URL = 'https://share.google/aJphPsrVL2VXH9EWH'
 const WHATSAPP_URL = `https://wa.me/${CONTACT_INFO.whatsapp}`
-const SETMORE_BASE_URL = 'https://babulashotsrd.setmore.com/'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -29,70 +28,87 @@ type ServiceOffer = {
   nameEn: string
   descriptionEs: string
   descriptionEn: string
-  price: string
-  path: string
+  /** Starting price in USD — kept numeric for JSON-LD; rendered via priceLabel for humans. */
+  priceUsd: number
+  priceLabelEs: string
+  priceLabelEn: string
+  /** Canonical service-family slug — drives /{locale}/services/{familySlug} on-site URL.
+   *  Matches the resolver in src/lib/services/legacy-aliases.ts. */
+  familySlug: string
   icon: string
 }
 
 const SERVICE_OFFERS: Record<string, ServiceOffer[]> = {
   wedding: [
     {
-      nameEs: 'Wedding Essential',
-      nameEn: 'Wedding Essential',
-      descriptionEs: 'Cobertura de boda esencial para capturar la historia completa con estilo editorial.',
-      descriptionEn: 'Essential wedding coverage to capture the full story with an editorial style.',
-      price: 'Desde $499 USD',
-      path: 'services/449806f6-d719-40a4-abf7-81078df1667c',
+      nameEs: 'Bodas',
+      nameEn: 'Wedding Photography',
+      descriptionEs: 'Cobertura completa del día con sesión de compromiso incluida y álbum profesional.',
+      descriptionEn: 'Full wedding day coverage with engagement session included and professional album.',
+      priceUsd: 1000,
+      priceLabelEs: 'Desde $1,000 USD · 4 horas',
+      priceLabelEn: 'From $1,000 USD · 4 hours',
+      familySlug: 'wedding-photography',
       icon: '💍',
     },
     {
-      nameEs: 'Wedding Signature',
-      nameEn: 'Wedding Signature',
-      descriptionEs: 'Dirección creativa y narrativa completa para parejas que quieren un resultado premium.',
-      descriptionEn: 'Creative direction and complete storytelling for couples who want a premium result.',
-      price: 'Desde $899 USD',
-      path: 'services/95520777-9dc8-4721-9dd3-f33d3bc78256',
-      icon: '✨',
+      nameEs: 'Sesión de Compromiso',
+      nameEn: 'Engagement Session',
+      descriptionEs: 'Sesión en locación a elección con 40 fotos editadas en alta resolución.',
+      descriptionEn: 'Session at chosen location with 40 edited high-res photos.',
+      priceUsd: 180,
+      priceLabelEs: 'Desde $180 USD · 1 hora',
+      priceLabelEn: 'From $180 USD · 1 hour',
+      familySlug: 'wedding-photography',
+      icon: '💑',
     },
   ],
   saona: [
     {
-      nameEs: 'Sesión Isla Saona',
-      nameEn: 'Saona Island Session',
-      descriptionEs: 'Experiencia fotográfica en playa virgen con dirección ligera y resultados naturales.',
-      descriptionEn: 'Beach photography experience with light direction and natural results.',
-      price: 'Desde $390 USD',
-      path: 'services/ecff4d69-6861-4df3-b52b-407f1b117ff7',
+      nameEs: 'Sesión Exclusiva Isla Saona',
+      nameEn: 'Isla Saona Exclusive Session',
+      descriptionEs: 'Experiencia de día completo con transporte en lancha o catamarán y almuerzo buffet incluidos.',
+      descriptionEn: 'Full-day experience with boat or catamaran transport and buffet lunch included.',
+      priceUsd: 400,
+      priceLabelEs: 'Desde $400 USD · 4 horas',
+      priceLabelEn: 'From $400 USD · 4 hours',
+      familySlug: 'family-beach-photography',
       icon: '🏝️',
     },
     {
-      nameEs: 'Pre-boda Premium',
-      nameEn: 'Pre-wedding Premium',
-      descriptionEs: 'Sesión romántica para parejas con look editorial y localizaciones exclusivas.',
-      descriptionEn: 'Romantic couple session with editorial style and exclusive locations.',
-      price: 'Desde $450 USD',
-      path: 'services/1506c6a5-1494-4d7d-bb5b-9f5b80a4d057',
-      icon: '📸',
+      nameEs: 'Sesión Playa Caribeña',
+      nameEn: 'Caribbean Beach Session',
+      descriptionEs: 'Sesión de 1 hora en Boca Chica, Juan Dolio, La Romana, Punta Cana o Puerto Plata.',
+      descriptionEn: 'One-hour session in Boca Chica, Juan Dolio, La Romana, Punta Cana, or Puerto Plata.',
+      priceUsd: 300,
+      priceLabelEs: 'Desde $300 USD · 1 hora',
+      priceLabelEn: 'From $300 USD · 1 hour',
+      familySlug: 'family-beach-photography',
+      icon: '🌊',
     },
   ],
   general: [
     {
-      nameEs: 'Sesión Premium',
-      nameEn: 'Premium Session',
-      descriptionEs: 'Sesiones personalizadas para parejas, retratos y contenido de marca.',
-      descriptionEn: 'Custom sessions for couples, portraits, and brand content.',
-      price: 'Desde $290 USD',
-      path: 'reserva',
-      icon: '📷',
+      nameEs: 'Retratos',
+      nameEn: 'Portrait Session',
+      descriptionEs: 'Sesión en locación o estudio con 15 fotos editadas en alta resolución y entrega en 48h.',
+      descriptionEn: 'Session on location or studio with 15 edited high-res photos and 48h delivery.',
+      priceUsd: 100,
+      priceLabelEs: 'Desde $100 USD · 1 hora',
+      priceLabelEn: 'From $100 USD · 1 hour',
+      familySlug: 'luxury-portrait-photography',
+      icon: '🧑‍💼',
     },
     {
-      nameEs: 'Cobertura de Eventos',
-      nameEn: 'Event Coverage',
-      descriptionEs: 'Cobertura documental y elegante para eventos sociales y corporativos.',
-      descriptionEn: 'Documentary and elegant coverage for social and corporate events.',
-      price: 'Desde $350 USD',
-      path: 'products=76f13f08-20be-43f2-8dd4-4e8902a2bc43',
-      icon: '🎉',
+      nameEs: 'Fiesta de Cumpleaños',
+      nameEn: 'Birthday Party Coverage',
+      descriptionEs: 'Cobertura completa del evento — detalles, decoración y personas con galería digital.',
+      descriptionEn: 'Full event coverage — details, decor, and people with digital gallery.',
+      priceUsd: 300,
+      priceLabelEs: 'Desde $300 USD · 2 horas',
+      priceLabelEn: 'From $300 USD · 2 hours',
+      familySlug: 'corporate-event-photography',
+      icon: '🎂',
     },
   ],
 }
@@ -205,9 +221,10 @@ function fallbackReviews(locale: string): ReviewItem[] {
 function fallbackInternalLinks(locale: string): InternalLink[] {
   return [
     { text: locale === 'es' ? 'Servicios de fotografía en República Dominicana' : 'Photography Services in the Dominican Republic', url: `/${locale}/services` },
+    { text: locale === 'es' ? 'Precios y paquetes' : 'Pricing & packages', url: `/${locale}/prices` },
     { text: locale === 'es' ? 'Ver portafolio completo' : 'See full portfolio', url: `/${locale}/portfolio` },
+    { text: locale === 'es' ? 'Pedir cotización' : 'Get a quote', url: `/${locale}/get-quote` },
     { text: locale === 'es' ? 'Contactar al fotógrafo' : 'Contact the photographer', url: `/${locale}/contact` },
-    { text: locale === 'es' ? 'Guía de sesiones en playa' : 'Beach session guide', url: 'https://babulashotsrd.com/ceremonia-de-matrimonio-en-la-playa-como-preparar/' },
   ]
 }
 
@@ -342,7 +359,14 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
 
   const serviceKey = (post.service_type || '').toLowerCase().includes('saona') ? 'saona' : (post.service_type || 'general')
   const serviceOffers = SERVICE_OFFERS[serviceKey] || SERVICE_OFFERS.general
-  const setmoreUrl = post.setmore_service_url || `${SETMORE_BASE_URL}${serviceOffers[0]?.path || 'reserva'}`
+  // On-site primary CTA — drives users to the canonical pricing page (full catalog
+  // with current prices). The legacy post.setmore_service_url field is intentionally
+  // ignored: blog posts must never link to external booking systems with stale prices.
+  const primaryServicePath = serviceOffers[0]?.familySlug
+    ? `/${locale}/services/${serviceOffers[0].familySlug}`
+    : `/${locale}/prices`
+  const bookUrl = `${BASE_URL}${primaryServicePath}`
+  const pricesUrl = `${BASE_URL}/${locale}/prices`
   const servicePageLink = getServicePageLink(post)
 
   // For gallery we prefer the source built from public_id to avoid inherited crop transforms.
@@ -516,8 +540,9 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         offers: {
           '@type': 'Offer',
           priceCurrency: 'USD',
+          price: serviceOffers[0]?.priceUsd ?? undefined,
           availability: 'https://schema.org/InStock',
-          url: setmoreUrl,
+          url: bookUrl,
         },
       },
       {
@@ -576,9 +601,12 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-3 text-sm font-bold text-gray-900 transition hover:bg-gray-200">
-                  {isEs ? 'Reservar Sesión' : 'Book Session'}
-                </a>
+                <Link href={primaryServicePath} className="rounded-full bg-white px-5 py-3 text-sm font-bold text-gray-900 transition hover:bg-gray-200">
+                  {isEs ? 'Ver servicio y precios' : 'View service & pricing'}
+                </Link>
+                <Link href={`/${locale}/get-quote?family=${serviceOffers[0]?.familySlug ?? ''}`} className="rounded-full border border-sky-400 bg-sky-500/20 px-5 py-3 text-sm font-bold text-sky-100 transition hover:bg-sky-500/30">
+                  {isEs ? 'Pedir cotización' : 'Get a quote'}
+                </Link>
                 <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-400 bg-green-500/20 px-5 py-3 text-sm font-bold text-green-200 transition hover:bg-green-500/30">
                   WhatsApp
                 </a>
@@ -684,17 +712,27 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         <section className="container mx-auto px-4 pb-14">
           <h2 className="mb-6 text-3xl font-extrabold">{isEs ? `Servicios de Fotografía en ${locationLabel}` : `Photography Services in ${locationLabel}`}</h2>
           <div className="grid gap-5 md:grid-cols-2">
-            {serviceOffers.map((offer) => (
-              <article key={offer.path} className="rounded-2xl border border-white/10 bg-gray-900 p-6">
+            {serviceOffers.map((offer, idx) => (
+              <article key={`${offer.familySlug}-${idx}`} className="rounded-2xl border border-white/10 bg-gray-900 p-6">
                 <div className="mb-3 text-2xl">{offer.icon}</div>
                 <h3 className="mb-2 text-xl font-bold">{isEs ? offer.nameEs : offer.nameEn}</h3>
                 <p className="mb-4 text-gray-300">{isEs ? offer.descriptionEs : offer.descriptionEn}</p>
-                <p className="mb-4 text-sm font-semibold text-emerald-300">{offer.price}</p>
-                <a href={`${SETMORE_BASE_URL}${offer.path}`} target="_blank" rel="noopener noreferrer" className="inline-block rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:border-sky-300 hover:text-sky-300">
-                  {isEs ? 'Reservar este servicio' : 'Book this service'}
-                </a>
+                <p className="mb-4 text-sm font-semibold text-emerald-300">{isEs ? offer.priceLabelEs : offer.priceLabelEn}</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link href={`/${locale}/services/${offer.familySlug}`} className="inline-block rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:border-sky-300 hover:text-sky-300">
+                    {isEs ? 'Ver detalles' : 'View details'}
+                  </Link>
+                  <Link href={`/${locale}/get-quote?family=${offer.familySlug}`} className="inline-block rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-400">
+                    {isEs ? 'Pedir cotización' : 'Get a quote'}
+                  </Link>
+                </div>
               </article>
             ))}
+          </div>
+          <div className="mt-6 text-center">
+            <Link href={pricesUrl.replace(BASE_URL, '')} className="inline-block rounded-full border border-white/30 px-5 py-2 text-sm font-semibold text-white hover:border-sky-400 hover:text-sky-300">
+              {isEs ? 'Ver todos los precios →' : 'See all pricing →'}
+            </Link>
           </div>
         </section>
 
@@ -702,7 +740,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-100 via-cyan-50 to-slate-100 p-7 text-center dark:border-white/15 dark:bg-gradient-to-r dark:from-slate-900 dark:via-cyan-950 dark:to-slate-900">
             <h2 className="mb-4 text-2xl font-extrabold text-slate-900 dark:text-white">{isEs ? `¿Listo para tu sesión en ${locationLabel}?` : `Ready for your session in ${locationLabel}?`}</h2>
             <div className="flex flex-wrap justify-center gap-3">
-              <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">{isEs ? 'Reservar ahora' : 'Book now'}</a>
+              <Link href={primaryServicePath} className="rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">{isEs ? 'Reservar ahora' : 'Book now'}</Link>
               <a href="https://calendly.com/info-vym7/video-llamada" target="_blank" rel="noopener noreferrer" className="rounded-full border border-slate-300 px-5 py-2 text-sm font-bold text-slate-700 dark:border-white/30 dark:text-white">{isEs ? 'Videollamada' : 'Video call'}</a>
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-500 px-5 py-2 text-sm font-bold text-green-700 dark:border-green-400 dark:text-green-200">WhatsApp</a>
               <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-amber-500 px-5 py-2 text-sm font-bold text-amber-700 dark:border-amber-400 dark:text-amber-200">Google</a>
@@ -786,7 +824,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-100 via-cyan-50 to-slate-100 p-7 text-center dark:border-white/15 dark:bg-gradient-to-r dark:from-slate-900 dark:via-cyan-950 dark:to-slate-900">
             <h2 className="mb-4 text-2xl font-extrabold text-slate-900 dark:text-white">{isEs ? 'Reserva tu fecha hoy mismo' : 'Book your date today'}</h2>
             <div className="flex flex-wrap justify-center gap-3">
-              <a href={setmoreUrl} target="_blank" rel="noopener noreferrer" className="rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">{isEs ? 'Reservar ahora' : 'Book now'}</a>
+              <Link href={primaryServicePath} className="rounded-full bg-white px-5 py-2 text-sm font-bold text-gray-900">{isEs ? 'Reservar ahora' : 'Book now'}</Link>
               <a href="https://calendly.com/info-vym7/video-llamada" target="_blank" rel="noopener noreferrer" className="rounded-full border border-slate-300 px-5 py-2 text-sm font-bold text-slate-700 dark:border-white/30 dark:text-white">{isEs ? 'Videollamada' : 'Video call'}</a>
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-green-500 px-5 py-2 text-sm font-bold text-green-700 dark:border-green-400 dark:text-green-200">WhatsApp</a>
               <a href={GOOGLE_REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="rounded-full border border-amber-500 px-5 py-2 text-sm font-bold text-amber-700 dark:border-amber-400 dark:text-amber-200">Google</a>
