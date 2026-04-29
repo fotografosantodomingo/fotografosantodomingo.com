@@ -167,17 +167,48 @@ export default function BookingWizard({
     setConfirmed(true)
   }
 
-  // Service preselection from ?service= — match canonical package slug,
-  // legacy_aliases (so old ?service=wedding-photography still works), or
-  // family slug (jump to first package in that family).
+  // Service preselection from ?service=
+  //
+  // Resolution order (first match wins):
+  //   1. Composite `<family>__<package>` — exact disambiguated lookup. The
+  //      package detail page emits this form so packages with shared slugs
+  //      (e.g. five 'essential' rows) route correctly.
+  //   2. Plain slug — exact package match. Logs a warning if multiple
+  //      packages share the slug, since a bare slug is ambiguous.
+  //   3. legacy_aliases — historic deep-links (e.g. ?service=portrait,
+  //      ?service=engagement-session) keep working.
+  //   4. family slug — jump to the first package in that family
+  //      (geo-page CTAs use this form).
   function onServicesLoaded(services: Service[]) {
     if (state.service || !preselectedServiceSlug) return
-    const slug = preselectedServiceSlug
-    const exact = services.find(s => s.slug === slug)
-    const viaAlias = exact ?? services.find(s => s.legacy_aliases?.includes(slug))
-    const viaFamily = viaAlias ?? services.find(s => s.family_slug === slug)
-    if (viaFamily) {
-      setState(s => ({ ...s, service: viaFamily }))
+    const raw = preselectedServiceSlug
+
+    let picked: Service | undefined
+
+    if (raw.includes('__')) {
+      const [familySlug, pkgSlug] = raw.split('__')
+      picked = services.find(
+        s => s.family_slug === familySlug && s.slug === pkgSlug
+      )
+    }
+
+    if (!picked) {
+      const slugMatches = services.filter(s => s.slug === raw)
+      if (slugMatches.length > 1) {
+        console.warn(
+          `[booking] ?service=${raw} matches ${slugMatches.length} packages across families. ` +
+          `Use the composite form ?service=<family>__<package> to disambiguate. ` +
+          `Picking first match: ${slugMatches[0].family_slug}/${slugMatches[0].slug}.`
+        )
+      }
+      picked = slugMatches[0]
+    }
+
+    if (!picked) picked = services.find(s => s.legacy_aliases?.includes(raw))
+    if (!picked) picked = services.find(s => s.family_slug === raw)
+
+    if (picked) {
+      setState(s => ({ ...s, service: picked }))
       setStepIdx(1) // jump straight to date step
     }
   }

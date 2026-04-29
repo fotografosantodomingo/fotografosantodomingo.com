@@ -326,7 +326,11 @@ export default async function PackageDetailPage({ params }: Props) {
               <div className="flex flex-col sm:flex-row gap-3 shrink-0">
                 {detail.bookable_direct && (
                   <Link
-                    href={`/${locale}/book?service=${detail.slug}`}
+                    // Composite param `<family>__<package>` disambiguates
+                    // packages that share a slug across families (e.g. five
+                    // 'essential' packages live under different families).
+                    // Wizard parses on `__` to resolve the exact row.
+                    href={`/${locale}/book?service=${detail.family.slug}__${detail.slug}`}
                     className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full bg-ink text-canvas hover:opacity-80 transition-opacity duration-200"
                   >
                     {isEs ? 'Reservar ahora' : 'Book now'}

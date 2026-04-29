@@ -61,18 +61,23 @@ type ServiceRow = {
 async function buildJsonLd(locale: 'es' | 'en') {
   const isEs = locale === 'es'
   const supabase = createServiceClient()
+  // Pull family_slug too so JSON-LD offer URLs use the disambiguated
+  // `<family>__<package>` form. Package slugs alone collide across
+  // families (5 'essential', 5 'premium', 4 'luxury', 6 'custom').
   const { data } = await supabase
     .from('service_packages')
     .select(
-      'slug, name_es, name_en, description_short_es, description_short_en, starting_price_usd, duration_min'
+      'slug, name_es, name_en, description_short_es, description_short_en, starting_price_usd, duration_min, family:service_families!inner(slug)'
     )
     .eq('active', true)
     .eq('bookable_direct', true)
     .order('sort_order', { ascending: true })
 
-  const rows = (data as ServiceRow[] | null) ?? []
+  type RowWithFamily = ServiceRow & { family: { slug: string } | null }
+  const rows = (data as RowWithFamily[] | null) ?? []
   const services = rows.map(r => ({
     slug: r.slug,
+    family_slug: r.family?.slug ?? '',
     name_es: r.name_es,
     name_en: r.name_en,
     description_es: r.description_short_es,
@@ -113,7 +118,7 @@ async function buildJsonLd(locale: 'es' | 'en') {
         '@type': 'Offer',
         priceCurrency: 'USD',
         price: Number(svc.price_usd).toFixed(2),
-        url: `${BASE_URL}/${locale}/book?service=${svc.slug}`,
+        url: `${BASE_URL}/${locale}/book?service=${svc.family_slug}__${svc.slug}`,
         availability: 'https://schema.org/InStock',
         category: 'Photography',
         itemOffered: {
