@@ -25,6 +25,14 @@ export const realEstateDronePhotographyContent: ServiceContent = {
   },
   schemaAdditionalType: 'https://schema.org/ProfessionalService',
 
+  // ── HERO GALLERY ────────────────────────────────────────────────────
+  // Renders full-bleed above the "Why us" section on /services/real-estate-drone-photography.
+  heroGallery: [
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777428995/Babula_Shots_Rd_-2_jhaama.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777428995/Babula_Shots_Rd_-3_vqbvmf.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777428995/Babula_Shots_Rd_s9lkak.webp',
+  ],
+
   // ── GEO COVERAGE ────────────────────────────────────────────────────
   // 4 cities (user-approved 2026-04-26): Punta Cana, Cap Cana, Bavaro,
   // La Romana / Casa de Campo. Real-estate-specific framing — listing

@@ -144,6 +144,10 @@ export type ServiceContent = {
   knowsAbout?: BilingualList
   /** Used as Service.additionalType in JSON-LD (e.g. https://schema.org/WeddingService). */
   schemaAdditionalType?: string
+  /** Optional full-bleed hero gallery rendered on the family page just
+   *  above the "Why us" / differentiators section. Edge-to-edge, no crop,
+   *  same on desktop and mobile. Cloudinary URLs preferred. */
+  heroGallery?: string[]
   /** Eyebrow + value-prop content above the long-form. */
   differentiators?: Differentiator[]
   /** Numbered process / how-it-works. */

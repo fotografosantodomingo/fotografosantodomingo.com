@@ -306,6 +306,27 @@ export default async function FamilyPage({ params }: Props) {
           </div>
         </section>
 
+        {/* ── HERO GALLERY ── Optional full-bleed photos rendered just before
+             the "Why us" section. Edge-to-edge, no crop, same on desktop and
+             mobile. Source: ServiceContent.heroGallery in src/data/service-content/. */}
+        {content?.heroGallery && content.heroGallery.length > 0 && (
+          <section className="border-b border-hairline-soft bg-canvas">
+            {content.heroGallery.map((src, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={`${src}-${i}`}
+                src={src}
+                alt={isEs
+                  ? `${title} — galería ${i + 1}`
+                  : `${title} — gallery ${i + 1}`}
+                className="block h-auto w-full"
+                loading={i === 0 ? 'eager' : 'lazy'}
+                fetchPriority={i === 0 ? 'high' : 'auto'}
+              />
+            ))}
+          </section>
+        )}
+
         {/* ── DIFFERENTIATORS ── above the package grid: answers "why us"
              before the visitor sees the price. */}
         {content?.differentiators && content.differentiators.length > 0 && (
