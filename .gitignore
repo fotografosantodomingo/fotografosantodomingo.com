@@ -54,6 +54,10 @@ database/*.sqlite
 # Local DB / data snapshots — never commit live customer data
 /_backups/
 
+# CSV / catalog exports for external tools (Tawk.to KB, etc.)
+# Regenerate with: python3 scripts/_export-services-csv.py
+/_exports/
+
 # Service account keys and secrets
 loyal-network-*.json
 # Ignore all JSON except project-required ones
