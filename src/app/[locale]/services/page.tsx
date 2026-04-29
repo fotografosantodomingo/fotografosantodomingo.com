@@ -199,6 +199,76 @@ export default async function ServicesPage({ params: { locale } }: Props) {
           </div>
         </section>
 
+        {/* ── ADDITIONAL SERVICES ── single-row spotlight pointing to dedicated
+             landing pages (/beach-photo-sessions, /photo-studio-santo-domingo)
+             that exist on top of the regular family hub. New cards can be
+             appended without disturbing the families grid below. */}
+        <section className="border-b border-hairline-soft py-12 md:py-16">
+          <div className="container mx-auto px-4">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-8">
+              {isEs ? 'Servicios adicionales' : 'Additional services'}
+            </p>
+            <ul className="grid grid-cols-1 md:grid-cols-2 border-t border-l border-hairline-soft">
+              <li className="border-r border-b border-hairline-soft">
+                <Link
+                  href={`/${locale}/beach-photo-sessions`}
+                  className="group flex flex-col h-full p-7 md:p-8 lg:p-10 hover:bg-ink/5 transition-colors duration-200"
+                >
+                  <div className="flex items-start justify-between mb-5">
+                    <span className="text-2xl" aria-hidden="true">🏖️</span>
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {isEs ? 'Desde $250 USD' : 'From $250 USD'}
+                    </span>
+                  </div>
+                  <h2
+                    className="font-display uppercase text-ink"
+                    style={{ fontSize: 'clamp(24px, 2.4vw, 32px)', lineHeight: '1.05' }}
+                  >
+                    {isEs ? 'Sesiones de fotos en la playa' : 'Beach photo sessions'}
+                  </h2>
+                  <p className="mt-4 text-ink-muted text-sm leading-relaxed flex-1">
+                    {isEs
+                      ? 'Cubrimos toda la costa dominicana — Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Isla Saona, Las Terrenas, Cabarete y más. Tres paquetes: mediodía, estándar y golden hour editorial.'
+                      : 'We cover the entire Dominican coast — Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Saona Island, Las Terrenas, Cabarete and beyond. Three packages: mid-day, standard, and editorial golden hour.'}
+                  </p>
+                  <span className="mt-6 font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                    {isEs ? 'Ver sesiones en la playa' : 'See beach sessions'}
+                    <span aria-hidden="true">→</span>
+                  </span>
+                </Link>
+              </li>
+              <li className="border-r border-b border-hairline-soft">
+                <Link
+                  href={`/${locale}/photo-studio-santo-domingo`}
+                  className="group flex flex-col h-full p-7 md:p-8 lg:p-10 hover:bg-ink/5 transition-colors duration-200"
+                >
+                  <div className="flex items-start justify-between mb-5">
+                    <span className="text-2xl" aria-hidden="true">📸</span>
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {isEs ? 'Desde $250 USD' : 'From $250 USD'}
+                    </span>
+                  </div>
+                  <h2
+                    className="font-display uppercase text-ink"
+                    style={{ fontSize: 'clamp(24px, 2.4vw, 32px)', lineHeight: '1.05' }}
+                  >
+                    {isEs ? 'Estudio · Fashion editorial' : 'Studio · Fashion editorial'}
+                  </h2>
+                  <p className="mt-4 text-ink-muted text-sm leading-relaxed flex-1">
+                    {isEs
+                      ? 'Estudio profesional en Santo Domingo: fashion editorial, retrato creativo y fotografía artística con iluminación controlada y dirección de arte.'
+                      : 'Professional studio in Santo Domingo: fashion editorial, creative portraiture, and fine-art photography with controlled lighting and art direction.'}
+                  </p>
+                  <span className="mt-6 font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                    {isEs ? 'Ver el estudio' : 'See the studio'}
+                    <span aria-hidden="true">→</span>
+                  </span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </section>
+
         {/* ── FAMILIES — hairline grid, no cards, no shadows ── */}
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
