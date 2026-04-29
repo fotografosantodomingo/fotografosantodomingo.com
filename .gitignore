@@ -51,6 +51,9 @@ database/*.sqlite
 !scripts/
 !scripts/smoke-test.sh
 
+# Local DB / data snapshots — never commit live customer data
+/_backups/
+
 # Service account keys and secrets
 loyal-network-*.json
 # Ignore all JSON except project-required ones
