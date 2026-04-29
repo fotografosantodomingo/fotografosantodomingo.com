@@ -160,7 +160,10 @@ type Props = { params: { locale: string } }
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
   if (locale !== 'es' && locale !== 'en') return { title: 'Not found' }
   const isEs = locale === 'es'
-  const title = isEs
+  // `title.absolute` bypasses the layout's "%s | Babula Shots" template.
+  // Without it the rendered <title> doubles to "...| Babula Shots | Babula Shots"
+  // because the page string already includes the brand for OG sharing.
+  const titleAbsolute = isEs
     ? 'Sesiones de Fotos en la Playa · República Dominicana | Babula Shots'
     : 'Beach Photo Sessions · Dominican Republic | Babula Shots'
   const description = isEs
@@ -169,8 +172,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
   const keywords = isEs
     ? 'sesion de fotos en la playa, fotografo de playa republica dominicana, fotos punta cana playa, sesion isla saona, fotografo bavaro, golden hour playa rd, fotos boda playa, fotografo profesional costa caribe'
     : 'beach photo session dominican republic, punta cana beach photographer, saona island photo session, bavaro beach photographer, golden hour beach photography, dominican coast photographer, caribbean beach session'
+  const ogImage = PHOTOS[0].src
+  const ogAlt = PHOTOS[0].alt[isEs ? 'es' : 'en']
   return {
-    title,
+    title: { absolute: titleAbsolute },
     description,
     keywords,
     alternates: {
@@ -184,11 +189,17 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     openGraph: {
       type: 'website',
       url: `${BASE_URL}/${locale}/beach-photo-sessions`,
-      title,
+      title: titleAbsolute,
       description,
       siteName: 'Babula Shots',
-      images: [{ url: PHOTOS[0].src, width: 1600, height: 900, alt: PHOTOS[0].alt[isEs ? 'es' : 'en'] }],
+      images: [{ url: ogImage, width: 1600, height: 900, alt: ogAlt }],
       locale: isEs ? 'es_DO' : 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: titleAbsolute,
+      description,
+      images: [ogImage],
     },
   }
 }
@@ -215,7 +226,81 @@ export default async function BeachPhotoSessionsPage({ params: { locale } }: Pro
 
   const pageUrl = `${BASE_URL}/${locale}/beach-photo-sessions`
 
-  // JSON-LD: Service + AggregateOffer + ItemList of bookable offers + Breadcrumb
+  // ── FAQs ────────────────────────────────────────────────────────────
+  // 8 long-tail questions covering pricing, location, timing, prep, group
+  // sessions, deposits, and travel. Each Q/A pair is rendered visually as
+  // an accordion AND emitted into FAQPage JSON-LD for rich-result eligibility.
+  const FAQS: { q: string; a: string }[] = isEs
+    ? [
+        {
+          q: '¿Cuánto cuesta una sesión de fotos en la playa en República Dominicana?',
+          a: 'Tres paquetes a precio fijo: $250 USD por una sesión de mediodía con 10 fotos editadas, $330 por sesión estándar de 1 hora con 20 fotos y mezcla de luz natural + flash, y $400 por la sesión Golden Hour al amanecer o atardecer con 20 fotos super-editadas y corrección de color cinematográfica. Para proyectos a medida — multi-locación, drone, grupos extendidos o conceptos editoriales — manejamos cotización personalizada.',
+        },
+        {
+          q: '¿Cuál es la mejor playa de Punta Cana para una sesión de fotos?',
+          a: 'Depende de la estética. Bávaro y Cabeza de Toro tienen arena blanca clásica con palmeras alineadas — excelente para retratos editoriales y boda destino. Macao es más virgen, con olas mayores y aspecto cinematográfico al atardecer. Juanillo (Cap Cana) es exclusiva, sin multitudes, ideal para sesiones premium. Puntos de hotel privado funcionan si tu alojamiento lo permite — ayudamos a coordinar con el property manager.',
+        },
+        {
+          q: '¿Cuándo es la golden hour (hora dorada) en la República Dominicana?',
+          a: 'En la costa este (Punta Cana, Bávaro) la hora dorada del atardecer cae entre 5:30 PM y 6:30 PM aproximadamente, con variación de ±20 minutos según el mes. El amanecer dorado es entre 6:00 AM y 7:00 AM. Reservamos la sesión Golden Hour con un margen de 75 minutos antes de la hora pico para llegar, calibrar y aprovechar la mejor luz. Si la sesión es en la costa norte (Las Terrenas, Cabarete), los tiempos se desplazan unos minutos y los confirmamos al cerrar la fecha.',
+        },
+        {
+          q: '¿Viajan a Isla Saona, Bayahíbe o playas remotas?',
+          a: 'Sí. Isla Saona es uno de nuestros destinos más solicitados — la sesión exclusiva se cotiza dentro del paquete Custom porque incluye transporte en lancha o catamarán y logística de día completo. Bayahíbe, La Romana, Las Terrenas, Samaná y Bahía de las Águilas también están en cobertura, con un complemento transparente de transporte. Si tu playa no figura en la página, escríbenos por WhatsApp y la cotizamos.',
+        },
+        {
+          q: '¿Cuántas fotos recibo y en qué tiempo?',
+          a: 'Mediodía: 10 fotos editadas, entrega en 48 horas vía galería privada online. Estándar: 20 fotos editadas con retoque de piel y color, entrega en 5–7 días. Golden Hour: 20 fotos super-editadas con corrección de color cinematográfica más 5 cortes verticales listos para Reels o Stories, entrega en 7–10 días. Todas las galerías se entregan en alta resolución con licencia de uso personal.',
+        },
+        {
+          q: '¿Qué debo llevar a una sesión en la playa?',
+          a: 'Recomendamos 2 outfits que contrasten con el azul del mar — colores tierra, blanco, beige o estampados sutiles funcionan muy bien. Trae bloqueador solar, agua, cepillo y accesorios simples. Si la sesión incluye agua, considera un cambio extra y toalla. Aplicamos dirección de pose y expresión durante toda la sesión, así que no necesitas experiencia previa frente a la cámara.',
+        },
+        {
+          q: '¿Pueden hacer fotos grupales o familiares en la playa?',
+          a: 'Sí. Hasta 5 personas entran en los paquetes estándar; para grupos más grandes (familias extendidas, grupos de amigas, despedidas, etc.) usamos el paquete Custom con tiempo extra y dirección coreografiada para que cada persona quede bien. Coordinamos outfits y posiciones antes del shoot para evitar el efecto “foto escolar”.',
+        },
+        {
+          q: '¿Cómo funciona el depósito y la cancelación?',
+          a: 'Cobramos 50 % de depósito vía Stripe (tarjeta, Apple Pay o Google Pay) para confirmar la fecha. El saldo se paga el día de la sesión por transferencia, efectivo o tarjeta. El depósito es reembolsable hasta 7 días antes de la sesión; dentro de la ventana de 7 días es transferible a otra fecha sin costo adicional. Cancelaciones por clima severo (huracán, tormenta tropical) siempre se reagendan sin penalidad.',
+        },
+      ]
+    : [
+        {
+          q: 'How much does a beach photo session cost in the Dominican Republic?',
+          a: 'Three flat-rate packages: $250 USD for a mid-day session with 10 edited photos, $330 for a 1-hour standard session with 20 photos and mixed natural light + fill flash, and $400 for the Golden Hour session at sunrise or sunset with 20 super-edited photos and cinematic color grading. For custom projects — multi-location, drone, large groups, or editorial concepts — we offer a custom quote.',
+        },
+        {
+          q: 'Which Punta Cana beach is best for a photo session?',
+          a: 'It depends on the aesthetic. Bávaro and Cabeza de Toro have the classic white sand and palm-line look — great for editorial portraits and destination weddings. Macao is more rugged with bigger waves and cinematic sunsets. Juanillo (Cap Cana) is exclusive and uncrowded, ideal for premium sessions. Private hotel beaches work if your stay allows — we help coordinate with the property manager.',
+        },
+        {
+          q: 'When is golden hour in the Dominican Republic?',
+          a: 'On the east coast (Punta Cana, Bávaro), sunset golden hour runs roughly 5:30 PM to 6:30 PM, give or take 20 minutes by month. Sunrise golden hour is around 6:00 AM to 7:00 AM. We book the Golden Hour session 75 minutes before peak so we have time to arrive, calibrate, and shoot the best light. North-coast locations (Las Terrenas, Cabarete) shift by a few minutes — we confirm exact times when locking the date.',
+        },
+        {
+          q: 'Do you travel to Saona Island, Bayahíbe, or remote beaches?',
+          a: 'Yes. Saona Island is one of our most-requested destinations — the exclusive session is quoted under the Custom package because it includes boat or catamaran transport and full-day logistics. Bayahíbe, La Romana, Las Terrenas, Samaná, and Bahía de las Águilas are all covered, with transparent transport add-ons. If your beach isn’t listed, message us on WhatsApp and we’ll quote it.',
+        },
+        {
+          q: 'How many photos do I get and how fast?',
+          a: 'Mid-day: 10 edited photos delivered in 48 hours via a private online gallery. Standard: 20 edited photos with skin and color retouching, delivered in 5–7 days. Golden Hour: 20 super-edited photos with cinematic color grading plus 5 vertical Reels-ready crops, delivered in 7–10 days. All galleries ship in high resolution with personal-use licensing.',
+        },
+        {
+          q: 'What should I wear for a beach photo session?',
+          a: 'Two outfits that contrast with the blue ocean — earth tones, white, beige, or subtle prints work best. Bring sunscreen, water, a brush, and simple accessories. If the session includes water, plan an extra change of clothes and a towel. We direct pose and expression throughout the session, so no previous on-camera experience is needed.',
+        },
+        {
+          q: 'Can you do family or group beach photos?',
+          a: 'Yes. The standard packages cover up to 5 people; for larger groups (extended families, bachelorette parties, friend groups) we use the Custom package with extra time and choreographed direction so everyone looks their best. We coordinate outfits and positions before the shoot to avoid the “school photo” feel.',
+        },
+        {
+          q: 'How does the deposit and cancellation policy work?',
+          a: 'We charge a 50% deposit via Stripe (card, Apple Pay, or Google Pay) to lock the date. The balance is paid on the session day by transfer, cash, or card. The deposit is refundable up to 7 days before the session; inside the 7-day window it’s transferable to another date at no extra cost. Severe-weather cancellations (hurricane, tropical storm) are always rescheduled with no penalty.',
+        },
+      ]
+
+  // JSON-LD: Service + AggregateOffer + ItemList of bookable offers + Breadcrumb + FAQ
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -287,6 +372,15 @@ export default async function BeachPhotoSessionsPage({ params: { locale } }: Pro
           caption: p.caption[isEs ? 'es' : 'en'],
         })),
       },
+      {
+        '@type': 'FAQPage',
+        '@id': `${pageUrl}#faq`,
+        mainEntity: FAQS.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
     ],
   }
 
@@ -333,39 +427,25 @@ export default async function BeachPhotoSessionsPage({ params: { locale } }: Pro
           </div>
         </section>
 
-        {/* ── PHOTO GRID ── 2 columns desktop / 1 column mobile, full-bleed
-             matching the home-page "Nuestro trabajo" section. */}
+        {/* ── PHOTO GRID ── Single set of <img> tags rendered once in HTML.
+             Tailwind's responsive grid switches between 1 col (mobile) and
+             2 cols (md+) without duplicating the markup, so crawlers see 10
+             images, not 20, and every Cloudinary fetch happens at most once.
+             Full-bleed (w-screen + negative margins) matching the home-page
+             "Nuestro trabajo" section. */}
         <section className="border-b border-hairline-soft">
-          <div className="hidden md:grid relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid-cols-2 gap-0">
+          <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-1 md:grid-cols-2 gap-0">
             {PHOTOS.map((p, i) => (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                key={`d-${i}`}
-                src={p.src}
-                alt={p.alt[isEs ? 'es' : 'en']}
-                title={p.caption[isEs ? 'es' : 'en']}
-                width={2400}
-                height={1350}
-                sizes="(min-width: 768px) 50vw, 100vw"
-                loading={i < 2 ? 'eager' : 'lazy'}
-                fetchPriority={i === 0 ? 'high' : 'auto'}
-                decoding="async"
-                className="w-full h-auto object-contain block"
-              />
-            ))}
-          </div>
-          <div className="md:hidden relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-1 gap-0">
-            {PHOTOS.map((p, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={`m-${i}`}
+                key={p.src}
                 src={p.src}
                 alt={p.alt[isEs ? 'es' : 'en']}
                 title={p.caption[isEs ? 'es' : 'en']}
                 width={1600}
                 height={900}
-                sizes="100vw"
-                loading={i < 1 ? 'eager' : 'lazy'}
+                sizes="(min-width: 768px) 50vw, 100vw"
+                loading={i < 2 ? 'eager' : 'lazy'}
                 fetchPriority={i === 0 ? 'high' : 'auto'}
                 decoding="async"
                 className="w-full h-auto object-contain block"
@@ -495,6 +575,42 @@ export default async function BeachPhotoSessionsPage({ params: { locale } }: Pro
               </Link>
               .
             </p>
+          </div>
+        </section>
+
+        {/* ── FAQ ── matches the FAQPage JSON-LD above. <details> elements
+             are crawled as text by Google even when collapsed, so the SEO
+             value is preserved without penalising LCP. */}
+        <section className="border-b border-hairline-soft py-16 md:py-24">
+          <div className="container mx-auto px-4">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-6">
+              {isEs ? 'Preguntas frecuentes' : 'Frequently asked questions'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink mb-10"
+              style={{ fontSize: 'clamp(28px, 4vw, 56px)', lineHeight: '1.0' }}
+            >
+              {isEs ? 'Antes de reservar' : 'Before you book'}
+            </h2>
+            <div className="space-y-3 max-w-4xl">
+              {FAQS.map((f, i) => (
+                <details
+                  key={i}
+                  className="border border-hairline-soft rounded-md p-5 md:p-6 group"
+                  {...(i === 0 ? { open: true } : {})}
+                >
+                  <summary className="cursor-pointer list-none flex items-start justify-between gap-4 font-mono uppercase tracking-widest text-[11px] md:text-[12px] text-ink hover:opacity-80">
+                    <span className="leading-relaxed normal-case font-display text-ink text-base md:text-lg tracking-normal">
+                      {f.q}
+                    </span>
+                    <span aria-hidden="true" className="shrink-0 text-ink-muted group-open:rotate-45 transition-transform duration-200">
+                      +
+                    </span>
+                  </summary>
+                  <p className="mt-4 text-ink/85 text-base leading-relaxed">{f.a}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
 

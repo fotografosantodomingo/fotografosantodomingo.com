@@ -5,9 +5,13 @@
  * invisible to email-harvesting spiders while working perfectly for real users.
  *
  * HOW IT WORKS
- *   - Server HTML: renders a neutral placeholder ("Loading contact...")
- *   - After hydration: assembles the address from parts and renders a mailto link
- *   - Bots that only read static HTML never see a complete email string
+ *   - Server HTML: renders a clickable <a> with the dictionary label "Email"
+ *     (or the user-supplied `label` prop) and an inert href. Looks polished
+ *     to humans and to crawlers — never the awkward "Loading contact..." flash
+ *     it used to show before hydration.
+ *   - After hydration: useEffect rewrites the href to mailto:info@... and
+ *     swaps the visible text to the assembled address (unless `label` is set).
+ *   - Bots that only read static HTML never see a complete email string.
  *
  * USAGE
  *   <ObfuscatedEmail locale={locale} />
@@ -37,23 +41,21 @@ export default function ObfuscatedEmail({ className, label, locale = 'en' }: Pro
     setEmail(`${user}@${domain}.${tld}`)
   }, [])
 
-  if (!email) {
-    return (
-      <span className={className} aria-label="email address">
-        {locale === 'es' ? 'Cargando contacto...' : 'Loading contact...'}
-      </span>
-    )
-  }
+  // Pre-hydration fallback — bots and the SSR pass see this. Rendering as
+  // an <a> (rather than the old "Loading contact..." span) keeps the visual
+  // continuity through hydration: same tag, same classes, no layout shift.
+  const fallbackLabel = label ?? (locale === 'es' ? 'Correo' : 'Email')
 
   return (
     <a
-      href={`mailto:${email}`}
+      href={email ? `mailto:${email}` : '#contact'}
       className={className}
+      aria-label={locale === 'es' ? 'enviar correo' : 'email address'}
       onClick={(e) => {
-        e.currentTarget.href = `mailto:${email}`
+        if (email) e.currentTarget.href = `mailto:${email}`
       }}
     >
-      {label ?? email}
+      {email ? (label ?? email) : fallbackLabel}
     </a>
   )
 }
