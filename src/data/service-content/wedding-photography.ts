@@ -27,6 +27,30 @@ export const weddingPhotographyContent: ServiceContent = {
 
   schemaAdditionalType: 'https://schema.org/WeddingService',
 
+  // ── MOBILE HERO IMAGE ──────────────────────────────────────────────
+  // Vertical/landscape shot rendered only on mobile, just below the hero
+  // copy. Desktop visitors don't see it (the hero typography fills the
+  // viewport on large screens already).
+  mobileHeroImage:
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-fotos-playa-blanca-punta-cana_ggc81c.webp',
+
+  // ── LONG-FORM GALLERY ──────────────────────────────────────────────
+  // 9 wedding shots rendered as a 2-col desktop / 1-col mobile full-bleed
+  // grid above the long-form intro paragraph. Order is intentional —
+  // strong opener (trash-the-dress), pre-boda, beach ceremony, drone,
+  // resort scenes, then editorial close.
+  longFormGallery: [
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/trash-the-dress-republica-dominicana-fotografo_zccwla.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-preboda-playas-dominicanas-fotografo_pxexhp.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-de-fotos-boda-juan-dolio-rd_yb6u8a.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557414/fotografo-profesional-bayahibe-boda-playa_mctgis.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557414/fotografo-bodas-punta-cana-dominican-republic_ddvngs.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557413/fotografia-aerea-boda-playa-republica-dominicana_izspr3.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557413/fotografo-bodas-la-romana-casa-de-campo_bwd0s2.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557413/fotografo-boda-cabarete-republica-dominicana_fnmbvz.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557416/wedding-photographer-cap-cana-luxury-resort_h5arx2.webp',
+  ],
+
   // ── GEO COVERAGE ────────────────────────────────────────────────────
   // 4 cities. Each block renders as an H2-anchored section on the family
   // page (#punta-cana, #santo-domingo, #cap-cana, #casa-de-campo) and

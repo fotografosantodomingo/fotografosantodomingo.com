@@ -148,6 +148,15 @@ export type ServiceContent = {
    *  above the "Why us" / differentiators section. Edge-to-edge, no crop,
    *  same on desktop and mobile. Cloudinary URLs preferred. */
   heroGallery?: string[]
+  /** Optional single image rendered immediately below the hero on MOBILE
+   *  ONLY (`md:hidden`). Use when the hero photo is too horizontal for
+   *  small screens and you want a vertical/square crop above the fold for
+   *  phone visitors. */
+  mobileHeroImage?: string
+  /** Optional gallery rendered between the package grids and the longForm
+   *  intro paragraph. 2 columns on desktop full-bleed, 1 column full-width
+   *  on mobile, matching the homepage "Nuestro trabajo" pattern. */
+  longFormGallery?: string[]
   /** Eyebrow + value-prop content above the long-form. */
   differentiators?: Differentiator[]
   /** Numbered process / how-it-works. */

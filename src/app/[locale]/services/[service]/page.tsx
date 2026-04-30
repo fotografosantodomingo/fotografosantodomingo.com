@@ -306,6 +306,24 @@ export default async function FamilyPage({ params }: Props) {
           </div>
         </section>
 
+        {/* ── MOBILE HERO IMAGE ── Single full-bleed shot rendered ONLY on
+             phones (md:hidden). Desktop visitors see the typographic hero
+             alone since their viewport already supports it; phone screens
+             benefit from a vertical/landscape image to fill the gap below
+             the hero copy. Source: ServiceContent.mobileHeroImage. */}
+        {content?.mobileHeroImage && (
+          <section className="md:hidden border-b border-hairline-soft bg-canvas">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={content.mobileHeroImage}
+              alt={isEs ? `${title} — fotografía profesional en República Dominicana` : `${title} — professional photography in the Dominican Republic`}
+              className="block h-auto w-full"
+              loading="eager"
+              fetchPriority="high"
+            />
+          </section>
+        )}
+
         {/* ── STUDIO SUBPAGE CTA ── only on luxury-portrait-photography.
              Drives traffic to /{locale}/photo-studio-santo-domingo, the
              dedicated fashion-editorial / fine-art studio landing page.
@@ -431,6 +449,34 @@ export default async function FamilyPage({ params }: Props) {
             quoteOnly
             dopRate={dopRate.usdToDop}
           />
+        )}
+
+        {/* ── LONG-FORM GALLERY ── Optional full-bleed photo grid between
+             the package grids and the long-form intro paragraph. 2 cols on
+             desktop, 1 col on mobile, single set of <img> tags so crawlers
+             see N photos not 2N (same lesson as /beach-photo-sessions).
+             Source: ServiceContent.longFormGallery. */}
+        {content?.longFormGallery && content.longFormGallery.length > 0 && (
+          <section className="border-b border-hairline-soft bg-canvas">
+            <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-1 md:grid-cols-2 gap-0">
+              {content.longFormGallery.map((src, i) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={src}
+                  src={src}
+                  alt={isEs
+                    ? `${title} — galería ${i + 1}`
+                    : `${title} — gallery ${i + 1}`}
+                  width={1600}
+                  height={900}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-auto object-contain block"
+                />
+              ))}
+            </div>
+          </section>
         )}
 
         {/* ── LONG-FORM CONTENT ── the SEO ranking body. Editorial register:
