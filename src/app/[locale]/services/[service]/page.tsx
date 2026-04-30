@@ -343,45 +343,42 @@ export default async function FamilyPage({ params }: Props) {
              are already viewport-tuned). */}
         {family.slug === 'commercial-branding-photography' && (
           <section className="border-b border-hairline-soft bg-canvas">
-            <div className="grid md:grid-cols-2">
-              <div className="bg-canvas">
+            {/* Compact layout: small fixed-width portrait on the left, copy
+                + CTA on the right. Image is no longer half-screen. */}
+            <div className="container mx-auto px-4 py-12 md:py-16">
+              <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-12">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://res.cloudinary.com/dwewurxla/image/upload/v1777564259/Babula_Shots_RD_retratos_profesonal_10_ulwcfr.webp"
+                  src="https://res.cloudinary.com/dwewurxla/image/upload/v1777564250/Babula_Shots_Rd_-3_atumo9.webp"
                   alt={isEs ? 'Retratos corporativos y LinkedIn en Santo Domingo, República Dominicana' : 'Corporate and LinkedIn portraits in Santo Domingo, Dominican Republic'}
-                  className="hidden md:block h-full w-full object-cover"
+                  width={1200}
+                  height={1500}
+                  className="block w-40 sm:w-52 md:w-64 h-auto object-cover rounded-md shrink-0"
                   loading="lazy"
                 />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://res.cloudinary.com/dwewurxla/image/upload/v1777564258/Babula_Shots_RD_retratos_profesonal_2_ewbn3k.webp"
-                  alt={isEs ? 'Headshots profesionales para LinkedIn — Santo Domingo' : 'Professional LinkedIn headshots — Santo Domingo'}
-                  className="block md:hidden h-auto w-full"
-                  loading="lazy"
-                />
-              </div>
-              <div className="px-6 md:px-12 py-16 md:py-24 flex flex-col justify-center">
-                <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
-                  {isEs ? 'Página dedicada' : 'Dedicated page'}
-                </p>
-                <h2
-                  className="font-display uppercase text-ink"
-                  style={{ fontSize: 'clamp(28px, 4vw, 56px)', lineHeight: '1.0' }}
-                >
-                  {isEs ? 'Retratos Corporativos · LinkedIn · Marca Personal' : 'Corporate · LinkedIn · Personal Brand Portraits'}
-                </h2>
-                <p className="text-ink-muted text-base md:text-lg leading-relaxed mt-6 max-w-md">
-                  {isEs
-                    ? 'Headshots para LinkedIn, retratos para ejecutivos y sesiones de marca personal. En estudio o servicio in-house en tu oficina con kit completo de iluminación.'
-                    : 'LinkedIn headshots, executive portraits, and personal-branding sessions. In studio or on-site at your office with a full lighting kit.'}
-                </p>
-                <div className="mt-8">
-                  <Link
-                    href={`/${locale}/business-portraits-santo-domingo`}
-                    className="inline-flex items-center justify-center rounded-full bg-ink px-7 py-3.5 font-mono uppercase tracking-widest text-[12px] md:text-[13px] text-canvas hover:opacity-90 transition-opacity"
+                <div className="flex-1">
+                  <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-3">
+                    {isEs ? 'Página dedicada' : 'Dedicated page'}
+                  </p>
+                  <h2
+                    className="font-display uppercase text-ink"
+                    style={{ fontSize: 'clamp(24px, 3.2vw, 40px)', lineHeight: '1.05' }}
                   >
-                    {isEs ? 'Ver retratos corporativos →' : 'See corporate portraits →'}
-                  </Link>
+                    {isEs ? 'Retratos Corporativos · LinkedIn · Marca Personal' : 'Corporate · LinkedIn · Personal Brand Portraits'}
+                  </h2>
+                  <p className="text-ink-muted text-sm md:text-base leading-relaxed mt-4 max-w-2xl">
+                    {isEs
+                      ? 'Headshots para LinkedIn, retratos para ejecutivos y sesiones de marca personal. En estudio o servicio in-house en tu oficina con kit completo de iluminación.'
+                      : 'LinkedIn headshots, executive portraits, and personal-branding sessions. In studio or on-site at your office with a full lighting kit.'}
+                  </p>
+                  <div className="mt-6">
+                    <Link
+                      href={`/${locale}/business-portraits-santo-domingo`}
+                      className="inline-flex items-center justify-center rounded-full bg-ink px-6 py-3 font-mono uppercase tracking-widest text-[12px] text-canvas hover:opacity-90 transition-opacity"
+                    >
+                      {isEs ? 'Ver retratos corporativos →' : 'See corporate portraits →'}
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
