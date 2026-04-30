@@ -208,7 +208,35 @@ export default async function ServicesPage({ params: { locale } }: Props) {
             <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-8">
               {isEs ? 'Servicios adicionales' : 'Additional services'}
             </p>
-            <ul className="grid grid-cols-1 md:grid-cols-2 border-t border-l border-hairline-soft">
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-hairline-soft">
+              <li className="border-r border-b border-hairline-soft">
+                <Link
+                  href={`/${locale}/business-portraits-santo-domingo`}
+                  className="group flex flex-col h-full p-7 md:p-8 lg:p-10 hover:bg-ink/5 transition-colors duration-200"
+                >
+                  <div className="flex items-start justify-between mb-5">
+                    <span className="text-2xl" aria-hidden="true">💼</span>
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {isEs ? 'Desde $400 USD' : 'From $400 USD'}
+                    </span>
+                  </div>
+                  <h2
+                    className="font-display uppercase text-ink"
+                    style={{ fontSize: 'clamp(24px, 2.4vw, 32px)', lineHeight: '1.05' }}
+                  >
+                    {isEs ? 'Retratos corporativos · LinkedIn' : 'Corporate portraits · LinkedIn'}
+                  </h2>
+                  <p className="mt-4 text-ink-muted text-sm leading-relaxed flex-1">
+                    {isEs
+                      ? 'Headshots para LinkedIn, retratos para ejecutivos y sesiones de marca personal. En estudio o servicio in-house en tu oficina con kit completo de iluminación.'
+                      : 'LinkedIn headshots, executive portraits, and personal-branding sessions. In studio or on-site at your office with a full lighting kit.'}
+                  </p>
+                  <span className="mt-6 font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                    {isEs ? 'Ver retratos corporativos' : 'See corporate portraits'}
+                    <span aria-hidden="true">→</span>
+                  </span>
+                </Link>
+              </li>
               <li className="border-r border-b border-hairline-soft">
                 <Link
                   href={`/${locale}/beach-photo-sessions`}
