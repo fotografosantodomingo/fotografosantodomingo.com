@@ -267,6 +267,34 @@ export default async function ServicesPage({ params: { locale } }: Props) {
               </li>
               <li className="border-r border-b border-hairline-soft">
                 <Link
+                  href={`/${locale}/drone-construction-supervision`}
+                  className="group flex flex-col h-full p-7 md:p-8 lg:p-10 hover:bg-ink/5 transition-colors duration-200"
+                >
+                  <div className="flex items-start justify-between mb-5">
+                    <span className="text-2xl" aria-hidden="true">🚁</span>
+                    <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                      {isEs ? 'Desde $200 USD' : 'From $200 USD'}
+                    </span>
+                  </div>
+                  <h2
+                    className="font-display uppercase text-ink"
+                    style={{ fontSize: 'clamp(24px, 2.4vw, 32px)', lineHeight: '1.05' }}
+                  >
+                    {isEs ? 'Supervisión de obras con drone' : 'Drone construction supervision'}
+                  </h2>
+                  <p className="mt-4 text-ink-muted text-sm leading-relaxed flex-1">
+                    {isEs
+                      ? 'Inspección aérea técnica con criterio de ingeniería civil. Reportes de avance, evidencia georreferenciada y contratos mensuales para constructoras y desarrolladores.'
+                      : 'Technical aerial inspection with civil-engineering criterion. Progress reports, geo-tagged evidence, and monthly retainer contracts for builders and developers.'}
+                  </p>
+                  <span className="mt-6 font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                    {isEs ? 'Ver supervisión de obras' : 'See construction supervision'}
+                    <span aria-hidden="true">→</span>
+                  </span>
+                </Link>
+              </li>
+              <li className="border-r border-b border-hairline-soft">
+                <Link
                   href={`/${locale}/photo-studio-santo-domingo`}
                   className="group flex flex-col h-full p-7 md:p-8 lg:p-10 hover:bg-ink/5 transition-colors duration-200"
                 >

@@ -341,6 +341,48 @@ export default async function FamilyPage({ params }: Props) {
              Hero image is responsive: desktop vs mobile crop served via
              Tailwind hidden classes (no <picture> needed since both files
              are already viewport-tuned). */}
+        {family.slug === 'real-estate-drone-photography' && (
+          <section className="border-b border-hairline-soft bg-canvas">
+            <div className="container mx-auto px-4 py-12 md:py-16">
+              <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-12">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://res.cloudinary.com/dwewurxla/image/upload/v1777428637/Foto%CC%81grafo_Inmobiliario_en_Punta_Cana_Drone_xdv4io.webp"
+                  alt={isEs ? 'Inspección aérea de obra con drone profesional en República Dominicana' : 'Professional drone construction inspection in the Dominican Republic'}
+                  width={1600}
+                  height={900}
+                  className="block w-full md:w-80 lg:w-96 h-auto object-cover rounded-md shrink-0"
+                  loading="lazy"
+                />
+                <div className="flex-1">
+                  <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-3">
+                    {isEs ? 'Página dedicada' : 'Dedicated page'}
+                  </p>
+                  <h2
+                    className="font-display uppercase text-ink"
+                    style={{ fontSize: 'clamp(24px, 3.2vw, 40px)', lineHeight: '1.05' }}
+                  >
+                    {isEs ? 'Supervisión de Obras con Drone' : 'Drone Construction Supervision'}
+                  </h2>
+                  <p className="text-ink-muted text-sm md:text-base leading-relaxed mt-4 max-w-2xl">
+                    {isEs
+                      ? 'Inspección aérea técnica para obras: reportes de avance, evidencia georreferenciada y documentación recurrente para constructoras y desarrolladores. Criterio de ingeniería civil, no sólo cobertura visual.'
+                      : 'Technical aerial inspection for construction projects: progress reports, geo-tagged evidence, and recurring documentation for builders and developers. Civil-engineering criterion, not just visual coverage.'}
+                  </p>
+                  <div className="mt-6">
+                    <Link
+                      href={`/${locale}/drone-construction-supervision`}
+                      className="inline-flex items-center justify-center rounded-full bg-ink px-6 py-3 font-mono uppercase tracking-widest text-[12px] text-canvas hover:opacity-90 transition-opacity"
+                    >
+                      {isEs ? 'Ver supervisión de obras →' : 'See construction supervision →'}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {family.slug === 'commercial-branding-photography' && (
           <section className="border-b border-hairline-soft bg-canvas">
             {/* Compact layout: small fixed-width portrait on the left, copy
