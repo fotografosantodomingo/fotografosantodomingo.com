@@ -25,6 +25,23 @@ export const corporateEventPhotographyContent: ServiceContent = {
   },
   schemaAdditionalType: 'https://schema.org/Event',
 
+  // ── LONG-FORM GALLERY ──────────────────────────────────────────────
+  // 8 corporate-event shots rendered as a 2-col desktop / 1-col mobile
+  // full-bleed grid above the long-form intro paragraph. Mix of hotel
+  // ballroom, conference, branded experience, and editorial coverage in
+  // Santo Domingo to telegraph the "in-room speed + editorial criterion"
+  // promise the intro copy makes.
+  longFormGallery: [
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559771/servicio_de_fotografia_de_eventos_en_hotel_en_santo_domingo_yshzed.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559770/republica_dominicana_fotgrafo_commercial_ac8s9h.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559769/fotografo_profesioanl_para_eventos_zunpvf.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559770/hotel_sheraton_fotografo_de_eventos_commerciales_en_santo_domingo_republica_dominicana-8_ql8rb8.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559769/fotografo_para_empresas_en_santo_domingo_republica_dominicana_d7brmx.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559769/fotografo_de_eventos_commerciales_en_santo_domingo_republica_dominicana-catital_wwen96.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559768/fotografo_commercial_santo_domingo_etadfe.webp',
+    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559768/fotografia_de_eventos_santo_domingo_lzdjba.webp',
+  ],
+
   // ── GEO COVERAGE ────────────────────────────────────────────────────
   // 2 cities (user-narrowed 2026-04-26): Santo Domingo (corporate HQ city,
   // conference + awards venues), Punta Cana (incentive trips, MICE in
