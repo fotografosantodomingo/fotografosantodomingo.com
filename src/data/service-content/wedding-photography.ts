@@ -31,8 +31,15 @@ export const weddingPhotographyContent: ServiceContent = {
   // Vertical/landscape shot rendered only on mobile, just below the hero
   // copy. Desktop visitors don't see it (the hero typography fills the
   // viewport on large screens already).
-  mobileHeroImage:
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-fotos-playa-blanca-punta-cana_ggc81c.webp',
+  mobileHeroImage: {
+    src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-fotos-playa-blanca-punta-cana_ggc81c.webp',
+    alt: {
+      es: 'Sesión de fotos en playa blanca de Punta Cana — fotógrafo de bodas Babula Shots',
+      en: 'Photo session on Punta Cana white-sand beach — wedding photographer Babula Shots',
+    },
+    width: 900,
+    height: 1600,
+  },
 
   // ── LONG-FORM GALLERY ──────────────────────────────────────────────
   // 9 wedding shots rendered as a 2-col desktop / 1-col mobile full-bleed
@@ -40,15 +47,78 @@ export const weddingPhotographyContent: ServiceContent = {
   // strong opener (trash-the-dress), pre-boda, beach ceremony, drone,
   // resort scenes, then editorial close.
   longFormGallery: [
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/trash-the-dress-republica-dominicana-fotografo_zccwla.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-preboda-playas-dominicanas-fotografo_pxexhp.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-de-fotos-boda-juan-dolio-rd_yb6u8a.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557414/fotografo-profesional-bayahibe-boda-playa_mctgis.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557414/fotografo-bodas-punta-cana-dominican-republic_ddvngs.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557413/fotografia-aerea-boda-playa-republica-dominicana_izspr3.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557413/fotografo-bodas-la-romana-casa-de-campo_bwd0s2.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557413/fotografo-boda-cabarete-republica-dominicana_fnmbvz.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777557416/wedding-photographer-cap-cana-luxury-resort_h5arx2.webp',
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/trash-the-dress-republica-dominicana-fotografo_zccwla.webp',
+      alt: {
+        es: 'Sesión trash the dress en República Dominicana — fotógrafo profesional de bodas',
+        en: 'Trash the dress session in the Dominican Republic — professional wedding photographer',
+      },
+      caption: { es: 'Trash the dress · República Dominicana', en: 'Trash the dress · Dominican Republic' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-preboda-playas-dominicanas-fotografo_pxexhp.webp',
+      alt: {
+        es: 'Sesión de pre-boda en playas dominicanas — fotógrafo profesional',
+        en: 'Pre-wedding photo session on Dominican beaches — professional photographer',
+      },
+      caption: { es: 'Pre-boda · Playas Dominicanas', en: 'Pre-wedding · Dominican Beaches' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-de-fotos-boda-juan-dolio-rd_yb6u8a.webp',
+      alt: {
+        es: 'Sesión de fotos de boda en Juan Dolio, República Dominicana',
+        en: 'Wedding photo session in Juan Dolio, Dominican Republic',
+      },
+      caption: { es: 'Boda · Juan Dolio', en: 'Wedding · Juan Dolio' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557414/fotografo-profesional-bayahibe-boda-playa_mctgis.webp',
+      alt: {
+        es: 'Fotógrafo profesional de bodas en la playa de Bayahíbe, La Romana',
+        en: 'Professional beach wedding photographer in Bayahíbe, La Romana',
+      },
+      caption: { es: 'Boda · Bayahíbe — La Romana', en: 'Wedding · Bayahíbe — La Romana' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557414/fotografo-bodas-punta-cana-dominican-republic_ddvngs.webp',
+      alt: {
+        es: 'Fotógrafo de bodas en Punta Cana, República Dominicana',
+        en: 'Wedding photographer in Punta Cana, Dominican Republic',
+      },
+      caption: { es: 'Boda · Punta Cana', en: 'Wedding · Punta Cana' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557413/fotografia-aerea-boda-playa-republica-dominicana_izspr3.webp',
+      alt: {
+        es: 'Fotografía aérea con drone para boda en la playa, República Dominicana',
+        en: 'Aerial drone photography for beach wedding, Dominican Republic',
+      },
+      caption: { es: 'Boda aérea con drone', en: 'Aerial drone wedding' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557413/fotografo-bodas-la-romana-casa-de-campo_bwd0s2.webp',
+      alt: {
+        es: 'Fotógrafo de bodas en La Romana — Casa de Campo, República Dominicana',
+        en: 'Wedding photographer in La Romana — Casa de Campo, Dominican Republic',
+      },
+      caption: { es: 'Boda · La Romana — Casa de Campo', en: 'Wedding · La Romana — Casa de Campo' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557413/fotografo-boda-cabarete-republica-dominicana_fnmbvz.webp',
+      alt: {
+        es: 'Fotógrafo de boda en Cabarete, República Dominicana',
+        en: 'Wedding photographer in Cabarete, Dominican Republic',
+      },
+      caption: { es: 'Boda · Cabarete', en: 'Wedding · Cabarete' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557416/wedding-photographer-cap-cana-luxury-resort_h5arx2.webp',
+      alt: {
+        es: 'Fotógrafo de bodas en Cap Cana — resort de lujo, República Dominicana',
+        en: 'Wedding photographer at Cap Cana luxury resort, Dominican Republic',
+      },
+      caption: { es: 'Boda · Cap Cana — luxury resort', en: 'Wedding · Cap Cana — luxury resort' },
+    },
   ],
 
   // ── GEO COVERAGE ────────────────────────────────────────────────────

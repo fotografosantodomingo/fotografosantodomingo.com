@@ -32,14 +32,70 @@ export const corporateEventPhotographyContent: ServiceContent = {
   // Santo Domingo to telegraph the "in-room speed + editorial criterion"
   // promise the intro copy makes.
   longFormGallery: [
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559771/servicio_de_fotografia_de_eventos_en_hotel_en_santo_domingo_yshzed.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559770/republica_dominicana_fotgrafo_commercial_ac8s9h.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559769/fotografo_profesioanl_para_eventos_zunpvf.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559770/hotel_sheraton_fotografo_de_eventos_commerciales_en_santo_domingo_republica_dominicana-8_ql8rb8.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559769/fotografo_para_empresas_en_santo_domingo_republica_dominicana_d7brmx.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559769/fotografo_de_eventos_commerciales_en_santo_domingo_republica_dominicana-catital_wwen96.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559768/fotografo_commercial_santo_domingo_etadfe.webp',
-    'https://res.cloudinary.com/dwewurxla/image/upload/v1777559768/fotografia_de_eventos_santo_domingo_lzdjba.webp',
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777559771/servicio_de_fotografia_de_eventos_en_hotel_en_santo_domingo_yshzed.webp',
+      alt: {
+        es: 'Servicio de fotografía de eventos en hotel en Santo Domingo, República Dominicana',
+        en: 'Event photography service at hotel in Santo Domingo, Dominican Republic',
+      },
+      caption: { es: 'Eventos · Hotel SD', en: 'Events · SD Hotel' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777559770/republica_dominicana_fotgrafo_commercial_ac8s9h.webp',
+      alt: {
+        es: 'Fotógrafo comercial en República Dominicana — eventos y empresas',
+        en: 'Commercial photographer in the Dominican Republic — events and corporate',
+      },
+      caption: { es: 'Comercial · República Dominicana', en: 'Commercial · Dominican Republic' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777559769/fotografo_profesioanl_para_eventos_zunpvf.webp',
+      alt: {
+        es: 'Fotógrafo profesional para eventos en Santo Domingo',
+        en: 'Professional event photographer in Santo Domingo',
+      },
+      caption: { es: 'Eventos · Profesional', en: 'Events · Professional' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777559770/hotel_sheraton_fotografo_de_eventos_commerciales_en_santo_domingo_republica_dominicana-8_ql8rb8.webp',
+      alt: {
+        es: 'Fotógrafo de eventos comerciales en Hotel Sheraton, Santo Domingo, República Dominicana',
+        en: 'Commercial event photographer at Hotel Sheraton, Santo Domingo, Dominican Republic',
+      },
+      caption: { es: 'Eventos · Sheraton SD', en: 'Events · Sheraton SD' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777559769/fotografo_para_empresas_en_santo_domingo_republica_dominicana_d7brmx.webp',
+      alt: {
+        es: 'Fotógrafo para empresas en Santo Domingo, República Dominicana',
+        en: 'Corporate photographer for businesses in Santo Domingo, Dominican Republic',
+      },
+      caption: { es: 'Empresas · Santo Domingo', en: 'Corporate · Santo Domingo' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777559769/fotografo_de_eventos_commerciales_en_santo_domingo_republica_dominicana-catital_wwen96.webp',
+      alt: {
+        es: 'Fotógrafo de eventos comerciales en Santo Domingo, República Dominicana',
+        en: 'Commercial event photographer in Santo Domingo, Dominican Republic',
+      },
+      caption: { es: 'Eventos · SD', en: 'Events · SD' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777559768/fotografo_commercial_santo_domingo_etadfe.webp',
+      alt: {
+        es: 'Fotógrafo comercial en Santo Domingo, República Dominicana',
+        en: 'Commercial photographer in Santo Domingo, Dominican Republic',
+      },
+      caption: { es: 'Comercial · SD', en: 'Commercial · SD' },
+    },
+    {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777559768/fotografia_de_eventos_santo_domingo_lzdjba.webp',
+      alt: {
+        es: 'Fotografía de eventos en Santo Domingo, República Dominicana',
+        en: 'Event photography in Santo Domingo, Dominican Republic',
+      },
+      caption: { es: 'Eventos · Santo Domingo', en: 'Events · Santo Domingo' },
+    },
   ],
 
   // ── GEO COVERAGE ────────────────────────────────────────────────────

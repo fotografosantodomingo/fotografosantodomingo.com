@@ -19,6 +19,16 @@ export type BilingualList = {
   en: string[]
 }
 
+/** Image with bilingual SEO metadata. Used by heroGallery / longFormGallery /
+ *  mobileHeroImage when SEO matters more than convenience. */
+export type RichImage = {
+  src: string
+  alt: Bilingual
+  caption?: Bilingual
+  width?: number
+  height?: number
+}
+
 export type FaqItem = {
   question: Bilingual
   answer: Bilingual
@@ -151,12 +161,20 @@ export type ServiceContent = {
   /** Optional single image rendered immediately below the hero on MOBILE
    *  ONLY (`md:hidden`). Use when the hero photo is too horizontal for
    *  small screens and you want a vertical/square crop above the fold for
-   *  phone visitors. */
-  mobileHeroImage?: string
+   *  phone visitors.
+   *
+   *  Pass a string for a quick generic alt; pass an object for proper SEO
+   *  alt text per photo (preferred — the renderer will use it verbatim
+   *  instead of the family-title fallback). */
+  mobileHeroImage?: string | RichImage
   /** Optional gallery rendered between the package grids and the longForm
    *  intro paragraph. 2 columns on desktop full-bleed, 1 column full-width
-   *  on mobile, matching the homepage "Nuestro trabajo" pattern. */
-  longFormGallery?: string[]
+   *  on mobile, matching the homepage "Nuestro trabajo" pattern.
+   *
+   *  Pass `string[]` for quick seeding (alt falls back to family title +
+   *  index). Pass `RichImage[]` to give every photo bilingual alt and
+   *  caption text — required for SEO image-search ranking. */
+  longFormGallery?: string[] | RichImage[]
   /** Eyebrow + value-prop content above the long-form. */
   differentiators?: Differentiator[]
   /** Numbered process / how-it-works. */

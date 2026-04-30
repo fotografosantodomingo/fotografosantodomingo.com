@@ -310,13 +310,24 @@ export default async function FamilyPage({ params }: Props) {
              phones (md:hidden). Desktop visitors see the typographic hero
              alone since their viewport already supports it; phone screens
              benefit from a vertical/landscape image to fill the gap below
-             the hero copy. Source: ServiceContent.mobileHeroImage. */}
+             the hero copy. Source: ServiceContent.mobileHeroImage —
+             accepts plain string or rich {src, alt, width, height}. */}
         {content?.mobileHeroImage && (
           <section className="md:hidden border-b border-hairline-soft bg-canvas">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={content.mobileHeroImage}
-              alt={isEs ? `${title} — fotografía profesional en República Dominicana` : `${title} — professional photography in the Dominican Republic`}
+              src={typeof content.mobileHeroImage === 'string' ? content.mobileHeroImage : content.mobileHeroImage.src}
+              alt={
+                typeof content.mobileHeroImage === 'string'
+                  ? (isEs
+                      ? `${title} — fotografía profesional en República Dominicana`
+                      : `${title} — professional photography in the Dominican Republic`)
+                  : (isEs ? content.mobileHeroImage.alt.es : content.mobileHeroImage.alt.en)
+              }
+              {...(typeof content.mobileHeroImage !== 'string' && content.mobileHeroImage.width
+                ? { width: content.mobileHeroImage.width } : {})}
+              {...(typeof content.mobileHeroImage !== 'string' && content.mobileHeroImage.height
+                ? { height: content.mobileHeroImage.height } : {})}
               className="block h-auto w-full"
               loading="eager"
               fetchPriority="high"
@@ -455,26 +466,37 @@ export default async function FamilyPage({ params }: Props) {
              the package grids and the long-form intro paragraph. 2 cols on
              desktop, 1 col on mobile, single set of <img> tags so crawlers
              see N photos not 2N (same lesson as /beach-photo-sessions).
-             Source: ServiceContent.longFormGallery. */}
+             Source: ServiceContent.longFormGallery — accepts string[] or
+             RichImage[]; rich form gives per-photo bilingual alt for SEO. */}
         {content?.longFormGallery && content.longFormGallery.length > 0 && (
           <section className="border-b border-hairline-soft bg-canvas">
             <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-1 md:grid-cols-2 gap-0">
-              {content.longFormGallery.map((src, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={src}
-                  src={src}
-                  alt={isEs
-                    ? `${title} — galería ${i + 1}`
-                    : `${title} — gallery ${i + 1}`}
-                  width={1600}
-                  height={900}
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-auto object-contain block"
-                />
-              ))}
+              {(content.longFormGallery as Array<string | { src: string; alt: { es: string; en: string }; caption?: { es: string; en: string }; width?: number; height?: number }>).map((item, i) => {
+                const src = typeof item === 'string' ? item : item.src
+                const altText = typeof item === 'string'
+                  ? (isEs ? `${title} — galería ${i + 1}` : `${title} — gallery ${i + 1}`)
+                  : (isEs ? item.alt.es : item.alt.en)
+                const titleAttr = typeof item === 'string' || !item.caption
+                  ? undefined
+                  : (isEs ? item.caption.es : item.caption.en)
+                const w = typeof item === 'string' ? 1600 : (item.width ?? 1600)
+                const h = typeof item === 'string' ? 900 : (item.height ?? 900)
+                return (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={src}
+                    src={src}
+                    alt={altText}
+                    title={titleAttr}
+                    width={w}
+                    height={h}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-auto object-contain block"
+                  />
+                )
+              })}
             </div>
           </section>
         )}

@@ -1,12 +1,17 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import type { PortfolioImage } from '@/lib/types/portfolio'
 import { resolveLocale } from '@/lib/types/portfolio'
+
+// Photos per page. Large enough to feel like a gallery, small enough that
+// 4G phones don't choke on first load. Tuned 2026-04-30 when the catalog
+// crossed ~85 images and the single-page grid started hurting LCP.
+const PAGE_SIZE = 24
 
 const CLOUD = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? 'dwewurxla'
 const FALLBACK_IMAGE = `https://res.cloudinary.com/${CLOUD}/image/upload/f_auto,q_auto/samples/landscapes/nature-mountains`
@@ -93,9 +98,32 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
     setActiveFilter('all')
   }, [searchParams])
 
-  const filteredItems = activeFilter === 'all'
-    ? images
-    : images.filter((img) => img.category === activeFilter)
+  const filteredItems = useMemo(
+    () => (activeFilter === 'all' ? images : images.filter((img) => img.category === activeFilter)),
+    [activeFilter, images]
+  )
+
+  // ── Pagination ──────────────────────────────────────────────────────
+  // Reads ?page=N from the URL (1-indexed) and slices filteredItems into
+  // PAGE_SIZE chunks. Page links are real <Link> nodes so each page has
+  // its own URL — better for SEO and back-button behaviour than a state-
+  // only paginator.
+  const requestedPage = (() => {
+    const p = parseInt(searchParams.get('page') ?? '1', 10)
+    return Number.isFinite(p) && p > 0 ? p : 1
+  })()
+  const totalPages = Math.max(1, Math.ceil(filteredItems.length / PAGE_SIZE))
+  const currentPage = Math.min(requestedPage, totalPages)
+  const startIdx = (currentPage - 1) * PAGE_SIZE
+  const pagedItems = filteredItems.slice(startIdx, startIdx + PAGE_SIZE)
+
+  function pageHref(page: number, category = activeFilter) {
+    const params = new URLSearchParams()
+    if (category !== 'all') params.set('category', category)
+    if (page > 1) params.set('page', String(page))
+    const q = params.toString()
+    return q ? `?${q}` : '?'
+  }
 
   const featuredItems = images.filter((img) => img.featured)
 
@@ -176,8 +204,9 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                 const active = activeFilter === category.id
                 return (
                   <li key={category.id}>
-                    <button
-                      onClick={() => setActiveFilter(category.id)}
+                    <Link
+                      href={pageHref(1, category.id)}
+                      scroll={false}
                       aria-pressed={active}
                       className={`inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] px-5 py-2.5 rounded-full border transition-colors duration-200 ${
                         active
@@ -186,7 +215,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                       }`}
                     >
                       {category.label}
-                    </button>
+                    </Link>
                   </li>
                 )
               })}
@@ -194,9 +223,12 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 md:gap-2">
-            {filteredItems.map((item, index) => {
+            {pagedItems.map((item, index) => {
               const loc = resolveLocale(item, locale)
-              // First 2 items are above the fold — no lazy loading (better LCP)
+              // First 2 items on page 1 are above the fold — eager LCP.
+              // Subsequent pages are reached via navigation, so eager load
+              // the first 2 there too (the paginator scroll behaviour
+              // brings them into view immediately).
               const isPriority = index < 2
               return (
                 <figure key={item.id} className="group cursor-pointer m-0" onClick={() => openLightbox(item)}>
@@ -239,6 +271,63 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
                 {locale === 'es' ? 'No hay trabajos en esta categoría aún.' : 'No work in this category yet.'}
               </p>
             </div>
+          )}
+
+          {/* ── Paginator ── Hidden when everything fits on one page. Each
+               page is a real URL (?page=N) so back-button + sharing work. */}
+          {totalPages > 1 && (
+            <nav
+              className="mt-12 md:mt-16 px-4 md:px-0 flex flex-wrap items-center justify-between gap-4"
+              aria-label={locale === 'es' ? 'Paginación' : 'Pagination'}
+            >
+              <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
+                {locale === 'es'
+                  ? `Página ${currentPage} de ${totalPages} · ${filteredItems.length} fotos`
+                  : `Page ${currentPage} of ${totalPages} · ${filteredItems.length} photos`}
+              </p>
+              <ul className="flex flex-wrap items-center gap-2">
+                {currentPage > 1 && (
+                  <li>
+                    <Link
+                      href={pageHref(currentPage - 1)}
+                      rel="prev"
+                      className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] px-4 py-2 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+                    >
+                      ← {locale === 'es' ? 'Anterior' : 'Prev'}
+                    </Link>
+                  </li>
+                )}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  const active = page === currentPage
+                  return (
+                    <li key={page}>
+                      <Link
+                        href={pageHref(page)}
+                        aria-current={active ? 'page' : undefined}
+                        className={`inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] min-w-[40px] px-3 py-2 rounded-full border transition-colors duration-200 ${
+                          active
+                            ? 'bg-ink text-canvas border-ink'
+                            : 'border-hairline text-ink hover:bg-ink hover:text-canvas'
+                        }`}
+                      >
+                        {page}
+                      </Link>
+                    </li>
+                  )
+                })}
+                {currentPage < totalPages && (
+                  <li>
+                    <Link
+                      href={pageHref(currentPage + 1)}
+                      rel="next"
+                      className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[11px] px-4 py-2 rounded-full border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200"
+                    >
+                      {locale === 'es' ? 'Siguiente' : 'Next'} →
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </nav>
           )}
         </div>
       </section>
