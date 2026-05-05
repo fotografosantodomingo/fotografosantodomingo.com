@@ -438,7 +438,7 @@ export const SPOKE_PAGES: SpokePage[] = [
     enSlug: 'weddings/proposal-photographer-dominican-republic',
     esSlug: 'bodas/fotografo-propuesta-matrimonio-republica-dominicana',
     hubSlug: 'wedding-photography',
-    status: 'approved', // noindex — needs review before publishing
+    status: 'published', // 2026-05-05: promoted from 'approved' to fix Search Console noindex flag
     tier: 1,
     geo: { latitude: 18.7357, longitude: -70.1627 },
     geoCity: 'Dominican Republic',
@@ -540,7 +540,7 @@ export const SPOKE_PAGES: SpokePage[] = [
     enSlug: 'weddings/proposal-photographer-punta-cana',
     esSlug: 'bodas/fotografo-propuesta-matrimonio-punta-cana',
     hubSlug: 'wedding-photography',
-    status: 'approved', // noindex — needs review before publishing
+    status: 'published', // 2026-05-05: promoted from 'approved' to remove noindex (matches RD spoke)
     tier: 1,
     geo: { latitude: 18.5601, longitude: -68.3725 },
     geoCity: 'Punta Cana',
