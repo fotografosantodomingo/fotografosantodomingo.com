@@ -1,19 +1,8 @@
 'use server'
 
-import { createAdminSupabaseClient } from '@/lib/supabase/admin-auth'
 import { createServiceClient } from '@/lib/supabase/service'
 import { getChecklistTemplate } from '@/lib/quotes/checklist'
 import OpenAI from 'openai'
-
-// ─── Auth guard ───────────────────────────────────────────────────────────────
-
-async function requireAdmin(): Promise<{ userId: string } | null> {
-  const supabase = createAdminSupabaseClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
-  const { data } = await supabase.from('admin_users').select('user_id').eq('user_id', user.id).single()
-  return data ? { userId: user.id } : null
-}
 
 // ─── Parse WhatsApp ───────────────────────────────────────────────────────────
 
@@ -52,8 +41,6 @@ service_type must be one of: WEDDINGS, ENGAGEMENT_SESSION, QUINCEANERAS, MATERNI
 event_date must be ISO 8601 yyyy-mm-dd format. Current year is 2026.`
 
 export async function parseWhatsAppAction(text: string): Promise<ParseResult> {
-  if (!await requireAdmin()) return { ok: false, error: 'Unauthorized' }
-
   if (!text || text.trim().length < 10) return { ok: false, error: 'Text too short' }
   if (text.length > 8000) return { ok: false, error: 'Text too long (max 8000 chars)' }
 
@@ -103,8 +90,6 @@ export type CreateDraftResult =
   | { ok: false; error: string }
 
 export async function createDraftAction(input: CreateDraftInput): Promise<CreateDraftResult> {
-  if (!await requireAdmin()) return { ok: false, error: 'Unauthorized' }
-
   const scoping_checklist = getChecklistTemplate(input.service_type)
 
   const supabase = createServiceClient()
