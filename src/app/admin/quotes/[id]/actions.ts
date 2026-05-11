@@ -165,7 +165,7 @@ export async function generateProposalLink(
   const supabase = createServiceClient()
   const { data: quote, error: fetchError } = await supabase
     .from('quotes')
-    .select('id, locale, full_name, email, service_type, final_price_usd, admin_note_customer, status, proposal_slug')
+    .select('id, locale, full_name, email, service_type, final_price_usd, admin_note_customer, status, proposal_slug, event_date, event_time, description')
     .eq('id', quoteId)
     .single()
 
@@ -206,6 +206,9 @@ export async function generateProposalLink(
         adminNoteCustomer: quote.admin_note_customer ?? null,
         proposalUrl,
         proposalExpiresAt: expiresAt,
+        eventDate: quote.event_date ?? null,
+        eventTime: quote.event_time ?? null,
+        description: quote.description ?? null,
       })
     } catch (emailError) {
       console.error('Proposal email failed (link still generated):', emailError)
@@ -230,6 +233,7 @@ export async function updateClientFields(
   const email = typeof formData.get('email') === 'string' ? (formData.get('email') as string).trim().toLowerCase() || null : null
   const service_type = typeof formData.get('service_type') === 'string' ? (formData.get('service_type') as string) || null : null
   const event_date = typeof formData.get('event_date') === 'string' ? (formData.get('event_date') as string) || null : null
+  const event_time = typeof formData.get('event_time') === 'string' ? (formData.get('event_time') as string).trim() || null : null
   const city = typeof formData.get('city') === 'string' ? (formData.get('city') as string).trim() || null : null
   const country = typeof formData.get('country') === 'string' ? (formData.get('country') as string).trim() || null : null
   const locale = (formData.get('locale') as string) === 'en' ? 'en' : 'es'
@@ -238,7 +242,7 @@ export async function updateClientFields(
   const supabase = createServiceClient()
   const { error } = await supabase
     .from('quotes')
-    .update({ full_name, client_company, whatsapp_phone, email, service_type, event_date, city, country, locale, description })
+    .update({ full_name, client_company, whatsapp_phone, email, service_type, event_date, event_time, city, country, locale, description })
     .eq('id', quoteId)
 
   if (error) {

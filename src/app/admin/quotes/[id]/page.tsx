@@ -108,6 +108,7 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
                 />
                 <DetailRow label="Service" value={quote.service_type?.replace(/_/g, ' ')} />
                 <DetailRow label="Event date" value={quote.event_date} />
+                {quote.event_time && <DetailRow label="Event time" value={quote.event_time} />}
                 <DetailRow
                   label="Location"
                   value={[quote.city, quote.state, quote.country].filter(Boolean).join(', ')}
@@ -145,6 +146,7 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
               email: quote.email,
               service_type: quote.service_type,
               event_date: quote.event_date,
+              event_time: quote.event_time ?? null,
               city: quote.city,
               country: quote.country,
               locale: quote.locale,

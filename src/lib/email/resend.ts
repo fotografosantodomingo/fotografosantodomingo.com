@@ -410,6 +410,9 @@ export type ProposalEmailData = {
   adminNoteCustomer: string | null
   proposalUrl: string
   proposalExpiresAt: string
+  eventDate?: string | null
+  eventTime?: string | null
+  description?: string | null
 }
 
 export async function sendProposalEmail(data: ProposalEmailData): Promise<void> {
@@ -419,6 +422,20 @@ export async function sendProposalEmail(data: ProposalEmailData): Promise<void> 
     isEs ? 'es-DO' : 'en-US',
     { month: 'long', day: 'numeric', year: 'numeric' }
   )
+  const eventDateFmt = data.eventDate
+    ? new Date(data.eventDate + 'T00:00:00').toLocaleDateString(
+        isEs ? 'es-DO' : 'en-US',
+        { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+      )
+    : null
+
+  const cardRows: Array<{ label: string; value: string; gold?: boolean }> = [
+    { label: isEs ? 'SERVICIO' : 'SERVICE', value: serviceLabel },
+    ...(eventDateFmt ? [{ label: isEs ? 'FECHA DEL EVENTO' : 'EVENT DATE', value: eventDateFmt }] : []),
+    ...(data.eventTime ? [{ label: isEs ? 'HORA' : 'TIME', value: data.eventTime }] : []),
+    { label: isEs ? 'INVERSIÓN' : 'INVESTMENT', value: `$${data.finalPriceUsd.toLocaleString('en-US', { minimumFractionDigits: 2 })} USD`, gold: true },
+    { label: isEs ? 'VÁLIDO HASTA' : 'VALID UNTIL', value: expiryDate },
+  ]
 
   await sendMail({
     from: FROM,
@@ -432,17 +449,22 @@ export async function sendProposalEmail(data: ProposalEmailData): Promise<void> 
         isEs ? `Hola, ${data.fullName}` : `Hi, ${data.fullName}`
       )}
 
-      <p style="margin:0 0 22px;color:#8a8680;line-height:1.7;font-size:14px">
+      <p style="margin:0 0 8px;color:#5a5753;font-size:9px;letter-spacing:.35em;text-transform:uppercase;font-weight:700">
+        ${isEs ? 'COTIZACIÓN PROFESIONAL' : 'PROFESSIONAL QUOTATION'}
+      </p>
+      <p style="margin:0 0 24px;color:#8a8680;line-height:1.7;font-size:14px">
         ${isEs
           ? 'Revisamos tu proyecto y preparamos una propuesta personalizada. El enlace es privado — solo está disponible para ti.'
           : 'We reviewed your project and prepared a personalized proposal. The link is private — available only to you.'}
       </p>
 
-      ${qdCard([
-        { label: isEs ? 'SERVICIO' : 'SERVICE', value: serviceLabel },
-        { label: isEs ? 'INVERSIÓN' : 'INVESTMENT', value: `$${data.finalPriceUsd.toLocaleString('en-US')} USD`, gold: true },
-        { label: isEs ? 'VÁLIDO HASTA' : 'VALID UNTIL', value: expiryDate },
-      ])}
+      ${data.description ? `
+      <div style="border-left:2px solid #2e2c29;padding:10px 18px;margin:0 0 24px">
+        <p style="margin:0;color:#8a8680;line-height:1.65;font-size:13px">${data.description}</p>
+      </div>
+      ` : ''}
+
+      ${qdCard(cardRows)}
 
       ${data.adminNoteCustomer ? `
       <div style="border-left:2px solid #c8a96e;padding:12px 18px;margin:4px 0 22px">
@@ -453,16 +475,16 @@ export async function sendProposalEmail(data: ProposalEmailData): Promise<void> 
       </div>
       ` : ''}
 
-      ${qdBtn(data.proposalUrl, isEs ? 'Ver mi cotización →' : 'View my quotation →')}
+      ${qdBtn(data.proposalUrl, isEs ? 'VER MI COTIZACIÓN →' : 'VIEW MY QUOTATION →')}
 
-      <p style="margin:0;color:#5a5753;font-size:12px;text-align:center;line-height:1.7">
+      <p style="margin:0;color:#5a5753;font-size:11px;text-align:center;line-height:1.9;letter-spacing:.03em">
         ${isEs
-          ? `Este enlace expira el ${expiryDate} y es único para ti.`
-          : `This link expires on ${expiryDate} and is unique to you.`}
+          ? `Este enlace es exclusivo para ti y expira el ${expiryDate}.`
+          : `This link is exclusive to you and expires on ${expiryDate}.`}
         <br>
         ${isEs
-          ? 'Preguntas: responde este email o escríbenos por WhatsApp.'
-          : 'Questions: reply to this email or message us on WhatsApp.'}
+          ? 'Para cualquier consulta, responde a este correo o escríbenos por WhatsApp.'
+          : 'For any questions, reply to this email or reach us on WhatsApp.'}
       </p>
 
       ${qdClose()}

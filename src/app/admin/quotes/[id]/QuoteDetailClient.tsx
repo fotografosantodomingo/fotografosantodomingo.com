@@ -32,6 +32,7 @@ type ClientQuote = {
   email: string | null
   service_type: string | null
   event_date: string | null
+  event_time: string | null
   city: string | null
   country: string | null
   locale: string | null
@@ -96,6 +97,9 @@ export function ClientEditCard({ quote }: { quote: ClientQuote }) {
             </Field>
             <Field label="Event date">
               <input name="event_date" type="date" defaultValue={quote.event_date ?? ''} className={inputCls} />
+            </Field>
+            <Field label="Event time">
+              <input name="event_time" type="time" defaultValue={quote.event_time ?? ''} className={inputCls} />
             </Field>
             <Field label="City">
               <input name="city" type="text" defaultValue={quote.city ?? ''} className={inputCls} />

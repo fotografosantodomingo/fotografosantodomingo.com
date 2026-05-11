@@ -21,6 +21,8 @@ type Props = {
   status: string
   locale: 'es' | 'en'
   terms: TermContent[]
+  eventDate: string | null
+  eventTime: string | null
 }
 
 type Lang = 'es' | 'en'
@@ -28,6 +30,8 @@ type Lang = 'es' | 'en'
 const T = {
   es: {
     preparedFor: 'Preparada exclusivamente para',
+    eventDate: 'FECHA DEL EVENTO',
+    eventTime: 'HORA DEL EVENTO',
     scope: 'ALCANCE DEL SERVICIO',
     investment: 'INVERSIÓN',
     total: 'TOTAL',
@@ -52,6 +56,8 @@ const T = {
   },
   en: {
     preparedFor: 'Prepared exclusively for',
+    eventDate: 'EVENT DATE',
+    eventTime: 'EVENT TIME',
     scope: 'SCOPE OF SERVICE',
     investment: 'INVESTMENT',
     total: 'TOTAL',
@@ -170,7 +176,7 @@ function CheckoutButton({
 export default function ProposalView({
   slug, quoteId, clientName, clientCompany, serviceType,
   description, lineItems, totalUsd, paymentMode, depositUsd,
-  adminNote, expiresAt, status, locale, terms,
+  adminNote, expiresAt, status, locale, terms, eventDate, eventTime,
 }: Props) {
   const [lang, setLang] = useState<Lang>(locale)
   const t = T[lang]
@@ -255,7 +261,7 @@ export default function ProposalView({
         </div>
 
         {/* Service scope */}
-        {(displayService || description) && (
+        {(displayService || description || eventDate) && (
           <section className="mb-16 print:mb-8">
             <p className="mb-6 text-xs tracking-[0.3em] text-[#8a8680]">{t.scope}</p>
             <div className="h-px bg-[#1e1c1a] mb-6" />
@@ -263,6 +269,24 @@ export default function ProposalView({
               <h2 className="mb-4 text-lg tracking-widest font-[family-name:var(--font-bugatti-display)] text-[#f0ede6]">
                 {displayService}
               </h2>
+            )}
+            {(eventDate || eventTime) && (
+              <div className="mb-4 flex flex-wrap gap-6">
+                {eventDate && (
+                  <div>
+                    <p className="text-[10px] tracking-[0.25em] text-[#5a5753] uppercase mb-1">{t.eventDate}</p>
+                    <p className="text-sm text-[#c8a96e] font-[family-name:var(--font-bugatti-mono)]">
+                      {new Date(eventDate + 'T00:00:00').toLocaleDateString(lang === 'es' ? 'es-DO' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </p>
+                  </div>
+                )}
+                {eventTime && (
+                  <div>
+                    <p className="text-[10px] tracking-[0.25em] text-[#5a5753] uppercase mb-1">{t.eventTime}</p>
+                    <p className="text-sm text-[#c8a96e] font-[family-name:var(--font-bugatti-mono)]">{eventTime}</p>
+                  </div>
+                )}
+              </div>
             )}
             {description && (
               <p className="text-sm leading-relaxed text-[#8a8680]">{description}</p>

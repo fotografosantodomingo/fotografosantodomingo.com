@@ -17,6 +17,7 @@ export default function NewDraftClient() {
   const [company, setCompany] = useState('')
   const [serviceType, setServiceType] = useState('')
   const [eventDate, setEventDate] = useState('')
+  const [eventTime, setEventTime] = useState('')
   const [city, setCity] = useState('')
   const [country, setCountry] = useState('')
   const [description, setDescription] = useState('')
@@ -60,6 +61,7 @@ export default function NewDraftClient() {
         client_company: company || null,
         service_type: serviceType || null,
         event_date: eventDate || null,
+        event_time: eventTime || null,
         city: city || null,
         country: country || null,
         description: description || null,
@@ -153,6 +155,11 @@ export default function NewDraftClient() {
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Event date</label>
             <input type="date" value={eventDate} onChange={e => setEventDate(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white" />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Event time <span className="font-normal text-slate-400">(optional)</span></label>
+            <input type="time" value={eventTime} onChange={e => setEventTime(e.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white" />
           </div>
           <div>

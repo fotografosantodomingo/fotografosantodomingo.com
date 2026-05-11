@@ -26,7 +26,7 @@ export default async function QuotationPage({ params }: Props) {
   const { data: quote, error } = await supabase
     .from('quotes')
     .select(
-      'id, full_name, client_company, service_type, description, line_items, final_price_usd, deposit_amount_usd, payment_mode, admin_note_customer, proposal_expires_at, locale, status'
+      'id, full_name, client_company, service_type, description, line_items, final_price_usd, deposit_amount_usd, payment_mode, admin_note_customer, proposal_expires_at, locale, status, event_date, event_time'
     )
     .eq('proposal_slug', slug)
     .single()
@@ -67,6 +67,8 @@ export default async function QuotationPage({ params }: Props) {
       status={quote.status}
       locale={locale}
       terms={terms}
+      eventDate={quote.event_date ?? null}
+      eventTime={quote.event_time ?? null}
     />
   )
 }

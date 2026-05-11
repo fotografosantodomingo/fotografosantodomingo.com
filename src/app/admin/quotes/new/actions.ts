@@ -78,6 +78,7 @@ export type CreateDraftInput = {
   client_company: string | null
   service_type: string | null
   event_date: string | null
+  event_time: string | null
   city: string | null
   country: string | null
   description: string | null
@@ -103,6 +104,7 @@ export async function createDraftAction(input: CreateDraftInput): Promise<Create
       email: input.email,
       service_type: input.service_type,
       event_date: input.event_date,
+      event_time: input.event_time,
       city: input.city,
       country: input.country,
       description: input.description,
