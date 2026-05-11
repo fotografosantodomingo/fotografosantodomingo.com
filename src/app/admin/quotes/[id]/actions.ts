@@ -1,6 +1,5 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/service'
 import { sendProposalEmail } from '@/lib/email/resend'
 import { generateProposalSlug } from '@/lib/quotes/slug'
@@ -62,7 +61,6 @@ export async function savePrice(
     return { error: 'Failed to save price.', success: false }
   }
 
-  revalidatePath(`/admin/quotes/${quoteId}`)
   return { error: null, success: true }
 }
 
@@ -116,7 +114,6 @@ export async function saveLineItems(
     return { error: 'Failed to save line items', success: false }
   }
 
-  revalidatePath(`/admin/quotes/${quoteId}`)
   return { error: null, success: true }
 }
 
@@ -151,7 +148,6 @@ export async function updateChecklistItem(
 
   if (error) return { error: 'Failed to update checklist', success: false }
 
-  revalidatePath(`/admin/quotes/${quoteId}`)
   return { error: null, success: true }
 }
 
@@ -216,8 +212,6 @@ export async function generateProposalLink(
     }
   }
 
-  revalidatePath(`/admin/quotes/${quoteId}`)
-  revalidatePath('/admin/quotes')
   return { error: null, success: true, url: proposalUrl }
 }
 
@@ -252,7 +246,6 @@ export async function updateClientFields(
     return { error: 'Failed to update client fields', success: false }
   }
 
-  revalidatePath(`/admin/quotes/${quoteId}`)
   return { error: null, success: true }
 }
 
@@ -277,8 +270,6 @@ export async function rejectQuote(
     return { error: 'Failed to reject quote', success: false }
   }
 
-  revalidatePath(`/admin/quotes/${quoteId}`)
-  revalidatePath('/admin/quotes')
   return { error: null, success: true }
 }
 
@@ -311,8 +302,6 @@ export async function reopenQuote(
     return { error: 'Failed to reopen quote', success: false }
   }
 
-  revalidatePath(`/admin/quotes/${quoteId}`)
-  revalidatePath('/admin/quotes')
   return { error: null, success: true }
 }
 
@@ -374,7 +363,5 @@ export async function sendProposal(
     return { error: 'Proposal saved but email delivery failed. Contact customer manually.', success: false }
   }
 
-  revalidatePath(`/admin/quotes/${quoteId}`)
-  revalidatePath('/admin/quotes')
   return { error: null, success: true }
 }
