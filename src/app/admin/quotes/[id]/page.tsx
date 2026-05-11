@@ -218,6 +218,7 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
                   quoteId={quote.id}
                   canGenerate={canGenerate}
                   existingUrl={existingProposalUrl}
+                  clientName={quote.full_name ?? null}
                 />
               </>
             ) : (

@@ -384,21 +384,64 @@ export function ChecklistCard({
   )
 }
 
+// ─── Cover letter template ────────────────────────────────────────────────────
+
+const FOOTER = `Thomas Smith — Sales Dept
+Email: info@fotografosantodomingo.com
+Tel./WP: +1 (809) 720-9547
+www.fotografosantodomingo.com`
+
+function coverLetter(locale: 'es' | 'en', url: string, clientName: string | null): string {
+  const name = clientName ?? (locale === 'es' ? 'estimado/a cliente' : 'valued client')
+  if (locale === 'es') {
+    return `Estimado/a ${name},
+
+Espero que se encuentre muy bien. Me comunico con usted para informarle que hemos preparado su cotización personalizada y ya se encuentra disponible.
+
+Puede acceder a ella en el siguiente enlace:
+${url}
+
+La propuesta detalla el servicio, los precios y las condiciones de contratación. Le invito a revisarla con calma y, si tiene alguna pregunta o desea ajustar algún detalle, no dude en contactarnos.
+
+Quedo a su disposición.
+
+Saludos cordiales,
+${FOOTER}`
+  }
+  return `Dear ${name},
+
+I hope this message finds you well. I am reaching out to let you know that your personalized quotation has been prepared and is now available for your review.
+
+You can access it at the following link:
+${url}
+
+The proposal outlines the service scope, pricing, and terms. Please take your time reviewing it, and feel free to reach out if you have any questions or would like to discuss any details.
+
+Looking forward to hearing from you.
+
+Best regards,
+${FOOTER}`
+}
+
 // ─── Generate Proposal Link button (Phase 2) ─────────────────────────────────
 
 export function GenerateLinkButton({
   quoteId,
   canGenerate,
   existingUrl,
+  clientName,
 }: {
   quoteId: string
   canGenerate: boolean
   existingUrl: string | null
+  clientName?: string | null
 }) {
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [url, setUrl] = useState<string | null>(existingUrl)
   const [copied, setCopied] = useState(false)
+  const [letterLocale, setLetterLocale] = useState<'es' | 'en'>('es')
+  const [letterCopied, setLetterCopied] = useState(false)
   const [expiryDays, setExpiryDays] = useState(7)
 
   async function handleGenerate() {
@@ -418,22 +461,30 @@ export function GenerateLinkButton({
     }
   }
 
-  async function handleCopy() {
+  async function handleCopyLink() {
     if (!url) return
     await navigator.clipboard.writeText(url)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
+  async function handleCopyLetter() {
+    if (!url) return
+    await navigator.clipboard.writeText(coverLetter(letterLocale, url, clientName ?? null))
+    setLetterCopied(true)
+    setTimeout(() => setLetterCopied(false), 2000)
+  }
+
   if (url) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
+        {/* Link row */}
         <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 dark:border-emerald-400/20 dark:bg-emerald-500/10">
           <p className="mb-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400">Proposal link — sent to client</p>
           <p className="break-all font-mono text-xs text-emerald-900 dark:text-emerald-200">{url}</p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={handleCopy} className="rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-700 hover:border-slate-400 dark:border-white/20 dark:text-gray-300">
+        <div className="flex flex-wrap gap-2">
+          <button onClick={handleCopyLink} className="rounded-full border border-slate-300 px-4 py-1.5 text-sm font-semibold text-slate-700 hover:border-slate-400 dark:border-white/20 dark:text-gray-300">
             {copied ? '✓ Copied' : 'Copy link'}
           </button>
           <a
@@ -449,6 +500,40 @@ export function GenerateLinkButton({
             className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
           >
             Regenerate
+          </button>
+        </div>
+
+        {/* Cover letter */}
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-white/5">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-gray-400">Cover letter</p>
+            <div className="flex gap-1">
+              {(['es', 'en'] as const).map(l => (
+                <button
+                  key={l}
+                  onClick={() => setLetterLocale(l)}
+                  className={`rounded px-2.5 py-1 text-xs font-bold transition-colors ${
+                    letterLocale === l
+                      ? 'bg-slate-800 text-white dark:bg-white dark:text-gray-900'
+                      : 'border border-slate-300 text-slate-500 hover:border-slate-400 dark:border-white/20 dark:text-gray-400'
+                  }`}
+                >
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
+          <textarea
+            readOnly
+            value={coverLetter(letterLocale, url, clientName ?? null)}
+            rows={14}
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 font-mono text-xs leading-relaxed text-slate-700 dark:border-white/10 dark:bg-gray-900 dark:text-gray-300"
+          />
+          <button
+            onClick={handleCopyLetter}
+            className="mt-2 rounded-full bg-slate-800 px-5 py-2 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+          >
+            {letterCopied ? '✓ Copied!' : 'Copy cover letter'}
           </button>
         </div>
       </div>
