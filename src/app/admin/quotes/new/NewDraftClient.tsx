@@ -3,18 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { QUOTE_SERVICE_TYPES } from '@/lib/quotes/constants'
-
-type ParsedData = {
-  full_name: string | null
-  whatsapp_phone: string | null
-  email: string | null
-  service_type: string | null
-  event_date: string | null
-  city: string | null
-  country: string | null
-  description: string | null
-  budget_mentioned: number | null
-}
+import { parseWhatsAppAction, createDraftAction } from './actions'
 
 export default function NewDraftClient() {
   const router = useRouter()
@@ -41,17 +30,9 @@ export default function NewDraftClient() {
     setParsing(true)
     setParseError(null)
     try {
-      const res = await fetch('/api/admin/quotes/parse-whatsapp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: rawText }),
-      })
-      const json = await res.json()
-      if (!res.ok || !json.data) {
-        setParseError(json.error || 'Parse failed')
-        return
-      }
-      const d: ParsedData = json.data
+      const result = await parseWhatsAppAction(rawText)
+      if (!result.ok) { setParseError(result.error); return }
+      const d = result.data
       if (d.full_name) setFullName(d.full_name)
       if (d.whatsapp_phone) setPhone(d.whatsapp_phone)
       if (d.email) setEmail(d.email)
@@ -72,29 +53,21 @@ export default function NewDraftClient() {
     setSubmitting(true)
     setSubmitError(null)
     try {
-      const res = await fetch('/api/admin/quotes/create-draft', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          full_name: fullName || null,
-          whatsapp_phone: phone || null,
-          email: email || null,
-          client_company: company || null,
-          service_type: serviceType || null,
-          event_date: eventDate || null,
-          city: city || null,
-          country: country || null,
-          description: description || null,
-          whatsapp_raw_text: rawText || null,
-          locale,
-        }),
+      const result = await createDraftAction({
+        full_name: fullName || null,
+        whatsapp_phone: phone || null,
+        email: email || null,
+        client_company: company || null,
+        service_type: serviceType || null,
+        event_date: eventDate || null,
+        city: city || null,
+        country: country || null,
+        description: description || null,
+        whatsapp_raw_text: rawText || null,
+        locale,
       })
-      const json = await res.json()
-      if (!res.ok || !json.id) {
-        setSubmitError(json.error || 'Failed to create draft')
-        return
-      }
-      router.push(`/admin/quotes/${json.id}`)
+      if (!result.ok) { setSubmitError(result.error); return }
+      router.push(`/admin/quotes/${result.id}`)
     } catch {
       setSubmitError('Connection error — try again')
     } finally {
@@ -136,43 +109,29 @@ export default function NewDraftClient() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Full name</label>
-            <input
-              type="text"
-              value={fullName}
-              onChange={e => setFullName(e.target.value)}
+            <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
-              placeholder="María García"
-            />
+              placeholder="María García" />
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">WhatsApp phone</label>
-            <input
-              type="text"
-              value={phone}
-              onChange={e => setPhone(e.target.value)}
+            <input type="text" value={phone} onChange={e => setPhone(e.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
-              placeholder="+1 809 000 0000"
-            />
+              placeholder="+1 809 000 0000" />
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
-              placeholder="cliente@ejemplo.com"
-            />
+              placeholder="cliente@ejemplo.com" />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Company / event name <span className="font-normal text-slate-400">(optional)</span></label>
-            <input
-              type="text"
-              value={company}
-              onChange={e => setCompany(e.target.value)}
+            <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">
+              Company / event name <span className="font-normal text-slate-400">(optional)</span>
+            </label>
+            <input type="text" value={company} onChange={e => setCompany(e.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
-              placeholder="Pyhex Corp."
-            />
+              placeholder="Pyhex Corp." />
           </div>
         </div>
       </div>
@@ -183,11 +142,8 @@ export default function NewDraftClient() {
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Service type</label>
-            <select
-              value={serviceType}
-              onChange={e => setServiceType(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
-            >
+            <select value={serviceType} onChange={e => setServiceType(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white">
               <option value="">— Unknown yet —</option>
               {QUOTE_SERVICE_TYPES.map(s => (
                 <option key={s.value} value={s.value}>{s.icon} {s.labelEn}</option>
@@ -196,49 +152,33 @@ export default function NewDraftClient() {
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Event date</label>
-            <input
-              type="date"
-              value={eventDate}
-              onChange={e => setEventDate(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
-            />
+            <input type="date" value={eventDate} onChange={e => setEventDate(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white" />
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">City</label>
-            <input
-              type="text"
-              value={city}
-              onChange={e => setCity(e.target.value)}
+            <input type="text" value={city} onChange={e => setCity(e.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
-              placeholder="Punta Cana"
-            />
+              placeholder="Punta Cana" />
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Country</label>
-            <input
-              type="text"
-              value={country}
-              onChange={e => setCountry(e.target.value)}
+            <input type="text" value={country} onChange={e => setCountry(e.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
-              placeholder="República Dominicana"
-            />
+              placeholder="República Dominicana" />
           </div>
         </div>
         <div className="mt-4">
           <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Notes / description</label>
-          <textarea
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            rows={3}
+          <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3}
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
-            placeholder="What the client wants…"
-          />
+            placeholder="What the client wants…" />
         </div>
         <div className="mt-4">
           <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Proposal language</label>
           <div className="flex gap-4 text-sm">
             {(['es', 'en'] as const).map(l => (
-              <label key={l} className="flex items-center gap-2 cursor-pointer">
+              <label key={l} className="flex cursor-pointer items-center gap-2">
                 <input type="radio" checked={locale === l} onChange={() => setLocale(l)} className="accent-sky-600" />
                 <span className="text-slate-700 dark:text-gray-200">{l === 'es' ? 'Español' : 'English'}</span>
               </label>
@@ -254,14 +194,12 @@ export default function NewDraftClient() {
       )}
 
       <div className="flex gap-3">
-        <button
-          type="submit"
-          disabled={submitting}
-          className="rounded-full bg-sky-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-sky-500 disabled:opacity-60"
-        >
+        <button type="submit" disabled={submitting}
+          className="rounded-full bg-sky-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-sky-500 disabled:opacity-60">
           {submitting ? 'Creating…' : 'Create Draft →'}
         </button>
-        <a href="/admin/quotes" className="rounded-full border border-slate-300 px-6 py-2.5 text-sm font-semibold text-slate-600 hover:border-slate-400 dark:border-white/20 dark:text-gray-300">
+        <a href="/admin/quotes"
+          className="rounded-full border border-slate-300 px-6 py-2.5 text-sm font-semibold text-slate-600 hover:border-slate-400 dark:border-white/20 dark:text-gray-300">
           Cancel
         </a>
       </div>
