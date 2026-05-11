@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   savePrice,
   saveLineItems,
@@ -195,6 +196,7 @@ type LineItemsQuote = {
 }
 
 export function LineItemsEditor({ quote }: { quote: LineItemsQuote }) {
+  const router = useRouter()
   const [items, setItems] = useState<LineItem[]>(
     Array.isArray(quote.line_items) && quote.line_items.length > 0
       ? quote.line_items
@@ -236,7 +238,7 @@ export function LineItemsEditor({ quote }: { quote: LineItemsQuote }) {
     startTransition(async () => {
       const result = await saveLineItems({ error: null, success: false }, fd)
       if (result.error) setError(result.error)
-      else setSuccess(true)
+      else { setSuccess(true); router.refresh() }
     })
   }
 
@@ -326,16 +328,22 @@ export function ChecklistCard({
   quoteId: string
   items: ChecklistItem[]
 }) {
+  const router = useRouter()
   const [list, setList] = useState<ChecklistItem[]>(items)
   const [pending, startTransition] = useTransition()
 
   function toggle(id: string, checked: boolean) {
-    setList(prev => prev.map(i => i.id === id ? { ...i, checked } : i))
+    const next = list.map(i => i.id === id ? { ...i, checked } : i)
+    setList(next)
     const fd = new FormData()
     fd.set('quoteId', quoteId)
     fd.set('itemId', id)
     fd.set('checked', String(checked))
-    startTransition(async () => { await updateChecklistItem({ error: null, success: false }, fd) })
+    const allDone = next.every(i => i.checked)
+    startTransition(async () => {
+      await updateChecklistItem({ error: null, success: false }, fd)
+      if (allDone) router.refresh()
+    })
   }
 
   const doneCount = list.filter(i => i.checked).length
@@ -535,6 +543,7 @@ export function RejectReopenButtons({
   status: string
   whatsappPhone: string | null
 }) {
+  const router = useRouter()
   const [pending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
@@ -545,6 +554,7 @@ export function RejectReopenButtons({
     startTransition(async () => {
       const result = await action({ error: null, success: false }, fd)
       if (result.error) setError(result.error)
+      else router.refresh()
     })
   }
 
