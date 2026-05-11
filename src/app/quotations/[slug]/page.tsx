@@ -64,6 +64,7 @@ export default async function QuotationPage({ params }: Props) {
       depositUsd={depositUsd}
       adminNote={quote.admin_note_customer ?? null}
       expiresAt={quote.proposal_expires_at ?? null}
+      status={quote.status}
       locale={locale}
       terms={terms}
     />

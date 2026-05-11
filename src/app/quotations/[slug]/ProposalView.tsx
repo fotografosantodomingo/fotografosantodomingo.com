@@ -18,6 +18,7 @@ type Props = {
   depositUsd: number
   adminNote: string | null
   expiresAt: string | null
+  status: string
   locale: 'es' | 'en'
   terms: TermContent[]
 }
@@ -44,6 +45,10 @@ const T = {
     print: 'Guardar PDF',
     paid: '✓ Pago recibido — ¡su reserva está confirmada!',
     cancelled: 'Pago cancelado. Puede intentarlo de nuevo cuando desee.',
+    depositPaid: '✓ Depósito recibido — su sesión está reservada.',
+    depositPaidSub: (bal: string) => `Saldo restante ${bal} — se liquida el día de la sesión.`,
+    payBalance: (amt: string) => `Pagar saldo completo — ${amt}`,
+    accepted: '✓ Pago completo recibido — su reserva está confirmada.',
   },
   en: {
     preparedFor: 'Prepared exclusively for',
@@ -64,6 +69,10 @@ const T = {
     print: 'Save PDF',
     paid: '✓ Payment received — your booking is confirmed!',
     cancelled: 'Payment cancelled. You may try again when ready.',
+    depositPaid: '✓ Deposit received — your session is booked.',
+    depositPaidSub: (bal: string) => `Remaining balance ${bal} — due on session day.`,
+    payBalance: (amt: string) => `Pay remaining balance — ${amt}`,
+    accepted: '✓ Full payment received — your booking is confirmed.',
   },
 }
 
@@ -161,7 +170,7 @@ function CheckoutButton({
 export default function ProposalView({
   slug, quoteId, clientName, clientCompany, serviceType,
   description, lineItems, totalUsd, paymentMode, depositUsd,
-  adminNote, expiresAt, locale, terms,
+  adminNote, expiresAt, status, locale, terms,
 }: Props) {
   const [lang, setLang] = useState<Lang>(locale)
   const t = T[lang]
@@ -177,6 +186,8 @@ export default function ProposalView({
 
   const isExpired = expiresAt ? new Date(expiresAt) < new Date() : false
   const balanceUsd = Math.round((totalUsd - depositUsd) * 100) / 100
+  const isDepositPaid = status === 'DEPOSIT_PAID'
+  const isAccepted = status === 'ACCEPTED'
 
   // Read URL params for Stripe redirect messages
   const [urlMsg, setUrlMsg] = useState<{ type: 'paid' | 'cancelled'; text: string } | null>(null)
@@ -285,9 +296,39 @@ export default function ProposalView({
           </div>
         </section>
 
-        {/* CTA block */}
-        {!isExpired && urlMsg?.type !== 'paid' && (
-          <section className="mb-16 print:hidden">
+        {/* CTA block — status-aware */}
+        <section className="mb-16 print:hidden">
+          {/* Fully paid */}
+          {(isAccepted || urlMsg?.type === 'paid') && (
+            <div className="border border-emerald-900 bg-emerald-950/30 p-8 text-center">
+              <p className="text-sm text-emerald-400">{t.accepted}</p>
+            </div>
+          )}
+
+          {/* Deposit paid — show balance option */}
+          {isDepositPaid && urlMsg?.type !== 'paid' && (
+            <div className="border border-[#1e1c1a] p-8 space-y-4">
+              <div className="text-center">
+                <p className="text-sm text-emerald-400">{t.depositPaid}</p>
+                <p className="mt-1 text-xs text-[#8a8680]">{t.depositPaidSub(fmt(balanceUsd))}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-[#1e1c1a]" />
+                <span className="text-xs text-[#2e2c29]">or</span>
+                <div className="flex-1 h-px bg-[#1e1c1a]" />
+              </div>
+              <CheckoutButton
+                slug={slug} quoteId={quoteId} mode="full" primary={false}
+                label={t.payBalance(fmt(balanceUsd))}
+              />
+              <p className="text-center text-xs text-[#4a4845]">
+                🔒 {t.secure} · Visa · Mastercard · Amex · Apple Pay
+              </p>
+            </div>
+          )}
+
+          {/* Not yet paid — normal flow */}
+          {!isAccepted && !isDepositPaid && !isExpired && urlMsg?.type !== 'paid' && (
             <div className="border border-[#1e1c1a] p-8">
               <p className="mb-1 text-xs tracking-[0.25em] text-[#8a8680]">{t.reserveTitle}</p>
               {expiresAt && (
@@ -295,7 +336,6 @@ export default function ProposalView({
                   <Countdown expiresAt={expiresAt} lang={lang} />
                 </div>
               )}
-
               <div className="space-y-3">
                 {paymentMode === 'DEPOSIT' ? (
                   <>
@@ -321,19 +361,19 @@ export default function ProposalView({
                   />
                 )}
               </div>
-
               <p className="mt-6 text-center text-xs text-[#4a4845]">
                 🔒 {t.secure} · Visa · Mastercard · Amex · Apple Pay
               </p>
             </div>
-          </section>
-        )}
+          )}
 
-        {isExpired && (
-          <section className="mb-16 border border-[#1e1c1a] p-8 text-center">
-            <p className="text-sm text-[#8a8680]">{t.expired}</p>
-          </section>
-        )}
+          {/* Expired */}
+          {!isAccepted && !isDepositPaid && isExpired && (
+            <div className="border border-[#1e1c1a] p-8 text-center">
+              <p className="text-sm text-[#8a8680]">{t.expired}</p>
+            </div>
+          )}
+        </section>
 
         {/* Terms */}
         {terms.length > 0 && (
