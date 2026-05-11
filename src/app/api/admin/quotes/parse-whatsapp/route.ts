@@ -18,7 +18,7 @@ async function isAdminSession(req: NextRequest): Promise<boolean> {
 
 let _client: OpenAI | null = null
 function getOpenAI(): OpenAI {
-  if (!_client) _client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  if (!_client) _client = new OpenAI({ apiKey: process.env.OPEN_AI_QUOTE })
   return _client
 }
 
