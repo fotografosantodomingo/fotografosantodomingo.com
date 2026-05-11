@@ -4,15 +4,19 @@ import Link from 'next/link'
 export const dynamic = 'force-dynamic'
 
 const STATUS_LABELS: Record<string, string> = {
+  DRAFT: 'Draft',
   PENDING_REVIEW: 'Pending',
   SENT_TO_CUSTOMER: 'Sent',
+  DEPOSIT_PAID: 'Deposit Paid',
   ACCEPTED: 'Accepted',
   REJECTED: 'Rejected',
 }
 
 const STATUS_COLORS: Record<string, string> = {
+  DRAFT: 'bg-violet-100 text-violet-800 dark:bg-violet-400/10 dark:text-violet-300',
   PENDING_REVIEW: 'bg-amber-100 text-amber-800 dark:bg-amber-400/10 dark:text-amber-300',
   SENT_TO_CUSTOMER: 'bg-sky-100 text-sky-800 dark:bg-sky-400/10 dark:text-sky-300',
+  DEPOSIT_PAID: 'bg-teal-100 text-teal-800 dark:bg-teal-400/10 dark:text-teal-300',
   ACCEPTED: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-300',
   REJECTED: 'bg-slate-100 text-slate-600 dark:bg-white/5 dark:text-gray-400',
 }
@@ -22,6 +26,7 @@ type Quote = {
   created_at: string
   full_name: string | null
   email: string | null
+  whatsapp_phone: string | null
   service_type: string | null
   event_date: string | null
   city: string | null
@@ -31,7 +36,7 @@ type Quote = {
   locale: string
 }
 
-const VALID_STATUSES = ['PENDING_REVIEW', 'SENT_TO_CUSTOMER', 'ACCEPTED', 'REJECTED', ''] as const
+const VALID_STATUSES = ['DRAFT', 'PENDING_REVIEW', 'SENT_TO_CUSTOMER', 'DEPOSIT_PAID', 'ACCEPTED', 'REJECTED', ''] as const
 type FilterStatus = (typeof VALID_STATUSES)[number]
 
 function isValidStatus(value: string): value is FilterStatus {
@@ -50,7 +55,7 @@ export default async function AdminQuotesPage({
   let query = supabase
     .from('quotes')
     .select(
-      'id, created_at, full_name, email, service_type, event_date, city, country, status, final_price_usd, locale'
+      'id, created_at, full_name, email, whatsapp_phone, service_type, event_date, city, country, status, final_price_usd, locale'
     )
     .order('created_at', { ascending: false })
     .limit(200)
@@ -64,13 +69,29 @@ export default async function AdminQuotesPage({
   return (
     <div>
       <div className="mb-6 flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Quote Requests</h1>
-        <span className="text-sm text-slate-500 dark:text-gray-400">{quotes?.length ?? 0} results</span>
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Quote Requests</h1>
+          <p className="mt-0.5 text-sm text-slate-500 dark:text-gray-400">{quotes?.length ?? 0} results</p>
+        </div>
+        <Link
+          href="/admin/quotes/new"
+          className="rounded-full bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-violet-500"
+        >
+          + New Draft
+        </Link>
       </div>
 
       {/* Status filters */}
       <div className="mb-6 flex flex-wrap gap-2">
-        {([['', 'All'], ['PENDING_REVIEW', 'Pending'], ['SENT_TO_CUSTOMER', 'Sent'], ['ACCEPTED', 'Accepted'], ['REJECTED', 'Rejected']] as const).map(([value, label]) => (
+        {([
+          ['', 'All'],
+          ['DRAFT', 'Draft'],
+          ['PENDING_REVIEW', 'Pending'],
+          ['SENT_TO_CUSTOMER', 'Sent'],
+          ['DEPOSIT_PAID', 'Deposit Paid'],
+          ['ACCEPTED', 'Accepted'],
+          ['REJECTED', 'Rejected'],
+        ] as const).map(([value, label]) => (
           <Link
             key={value}
             href={value ? `/admin/quotes?status=${value}` : '/admin/quotes'}
@@ -118,10 +139,12 @@ export default async function AdminQuotesPage({
                   </td>
                   <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">
                     {q.full_name ?? '—'}
-                    <div className="text-xs font-normal text-slate-400">{q.email ?? ''}</div>
+                    <div className="text-xs font-normal text-slate-400">
+                      {q.email ?? q.whatsapp_phone ?? ''}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-slate-700 dark:text-gray-300">
-                    {q.service_type ? q.service_type.replace(/-/g, ' ') : '—'}
+                    {q.service_type ? q.service_type.replace(/_/g, ' ') : '—'}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-slate-600 dark:text-gray-400">
                     {q.event_date ?? '—'}

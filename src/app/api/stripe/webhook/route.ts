@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe/server'
 import { createServiceClient } from '@/lib/supabase/service'
+import { sendQuotePaymentConfirmation, sendQuotePaymentAdminAlert } from '@/lib/email/resend'
 
 export const runtime = 'edge'
 
@@ -31,6 +32,7 @@ export async function POST(request: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object
     const quoteId = session.metadata?.quoteId
+    const paymentMode = (session.metadata?.paymentMode ?? 'FULL') as 'DEPOSIT' | 'FULL'
 
     if (!quoteId) {
       console.error('Webhook: checkout.session.completed missing quoteId in metadata')
@@ -38,30 +40,70 @@ export async function POST(request: NextRequest) {
     }
 
     if (session.payment_status !== 'paid') {
-      // Not fully paid yet (e.g. payment_intent requires action) — wait for next event
       return NextResponse.json({ received: true })
     }
 
+    const newStatus = paymentMode === 'DEPOSIT' ? 'DEPOSIT_PAID' : 'ACCEPTED'
+
     const supabase = createServiceClient()
+
+    // Fetch quote data before updating (needed for emails + idempotency check)
+    const { data: quote } = await supabase
+      .from('quotes')
+      .select('id, status, full_name, client_company, email, locale, service_type, final_price_usd, deposit_amount_usd, whatsapp_phone')
+      .eq('id', quoteId)
+      .single()
+
+    // Idempotency: skip if already fully paid or already in target status
+    if (!quote || quote.status === 'ACCEPTED' || quote.status === newStatus) {
+      return NextResponse.json({ received: true })
+    }
+
     const { error } = await supabase
       .from('quotes')
       .update({
-        status: 'ACCEPTED',
+        status: newStatus,
         stripe_session_id: session.id,
         stripe_payment_intent: typeof session.payment_intent === 'string'
           ? session.payment_intent
           : null,
       })
       .eq('id', quoteId)
-      .neq('status', 'ACCEPTED') // idempotency guard
 
     if (error) {
       console.error('Webhook: failed to update quote status:', error)
-      // Return 500 so Stripe retries
       return NextResponse.json({ error: 'DB update failed' }, { status: 500 })
     }
 
-    console.log(`Quote ${quoteId} marked ACCEPTED via Stripe webhook`)
+    console.log(`Quote ${quoteId} → ${newStatus} via Stripe webhook (mode: ${paymentMode})`)
+
+    // Send confirmation emails (fire-and-forget — email failure must not fail the webhook)
+    const amountPaidUsd = typeof session.amount_total === 'number' ? session.amount_total / 100 : 0
+    const totalUsd = Number(quote.final_price_usd ?? 0)
+    const balanceUsd = paymentMode === 'DEPOSIT' ? Math.max(0, totalUsd - amountPaidUsd) : 0
+
+    if (quote.email) {
+      sendQuotePaymentConfirmation({
+        locale: quote.locale ?? 'es',
+        fullName: quote.full_name ?? 'Cliente',
+        email: quote.email,
+        serviceType: quote.service_type ?? 'OTHER',
+        amountPaidUsd,
+        paymentMode,
+        balanceUsd,
+      }).catch(err => console.error('[webhook] client payment email failed:', err))
+    }
+
+    sendQuotePaymentAdminAlert({
+      quoteId: quote.id,
+      fullName: quote.full_name ?? 'Cliente',
+      clientCompany: quote.client_company ?? null,
+      serviceType: quote.service_type ?? 'OTHER',
+      amountPaidUsd,
+      paymentMode,
+      whatsappPhone: quote.whatsapp_phone ?? null,
+      email: quote.email ?? null,
+    }).catch(err => console.error('[webhook] admin payment alert email failed:', err))
   }
 
   return NextResponse.json({ received: true })

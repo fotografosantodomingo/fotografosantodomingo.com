@@ -337,7 +337,68 @@ export async function sendQuoteSubmissionConfirmation(data: QuoteEmailPayload) {
   })
 }
 
-// ─── Proposal email ─────────────────────────────────────────────────────────
+// ─── Dark luxury email shell (matches /quotations/[slug] proposal page) ──────
+// Used for all quote-related emails. Booking emails keep their own blue shell.
+
+function qdOpen(title: string, subtitle: string): string {
+  return `
+    <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#0e0e0d;padding:24px 12px">
+      <div style="max-width:640px;margin:0 auto;background:#161513;border:1px solid #2e2c29;overflow:hidden">
+        <div style="background:#c8a96e;height:3px;font-size:1px;line-height:1px;">&nbsp;</div>
+        <div style="background:#111110;padding:32px 28px;text-align:center;border-bottom:1px solid #2e2c29">
+          <p style="margin:0 0 14px;color:#c8a96e;font-size:10px;letter-spacing:.4em;text-transform:uppercase;font-weight:700">BABULA SHOTS</p>
+          <h2 style="margin:0;color:#f0ede6;font-size:26px;line-height:1.3;font-weight:400;letter-spacing:.03em">${title}</h2>
+          <p style="margin:12px 0 0;color:#8a8680;font-size:14px;line-height:1.5">${subtitle}</p>
+        </div>
+        <div style="background:#111110;padding:30px 28px 36px">
+  `
+}
+
+function qdClose(): string {
+  return `
+        </div>
+        <div style="background:#0a0a09;border-top:1px solid #2e2c29;padding:18px 28px;text-align:center">
+          <p style="margin:0;color:#3d3b38;font-size:11px;letter-spacing:.06em;text-transform:uppercase;line-height:2.2">
+            BABULA SHOTS &nbsp;·&nbsp; SANTO DOMINGO, REPÚBLICA DOMINICANA<br>
+            <a href="https://www.fotografosantodomingo.com" style="color:#5a5753;text-decoration:none">fotografosantodomingo.com</a>
+            &nbsp;·&nbsp;
+            <a href="https://wa.me/18097209547" style="color:#5a5753;text-decoration:none">+1 (809) 720-9547</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  `
+}
+
+function qdCard(rows: Array<{ label: string; value: string; gold?: boolean }>): string {
+  const last = rows.length - 1
+  return `
+    <table style="width:100%;border-collapse:collapse;background:#1a1815;border:1px solid #2e2c29;margin:20px 0">
+      ${rows.map((r, i) => `
+        <tr>
+          <td bgcolor="#1a1815" style="padding:11px 20px;${i < last ? 'border-bottom:1px solid #2e2c29;' : ''}color:#8a8680;font-size:12px;letter-spacing:.03em;width:46%">${r.label}</td>
+          <td bgcolor="#1a1815" style="padding:11px 20px;${i < last ? 'border-bottom:1px solid #2e2c29;' : ''}color:${r.gold ? '#c8a96e' : '#f0ede6'};font-size:${r.gold ? '17px' : '14px'};font-weight:${r.gold ? '700' : '400'}">${r.value}</td>
+        </tr>
+      `).join('')}
+    </table>
+  `
+}
+
+function qdBtn(href: string, label: string): string {
+  return `
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0">
+      <tr>
+        <td align="center">
+          <a href="${href}" style="display:inline-block;background:#c8a96e;color:#0e0e0d;padding:14px 38px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase">
+            ${label}
+          </a>
+        </td>
+      </tr>
+    </table>
+  `
+}
+
+// ─── Proposal email (client) — dark luxury redesign ──────────────────────────
 
 export type ProposalEmailData = {
   id: string
@@ -348,7 +409,7 @@ export type ProposalEmailData = {
   finalPriceUsd: number
   adminNoteCustomer: string | null
   proposalUrl: string
-  proposalExpiresAt: string // ISO string
+  proposalExpiresAt: string
 }
 
 export async function sendProposalEmail(data: ProposalEmailData): Promise<void> {
@@ -363,83 +424,197 @@ export async function sendProposalEmail(data: ProposalEmailData): Promise<void> 
     from: FROM,
     to: data.email,
     subject: isEs
-      ? `Tu presupuesto personalizado está listo — Babula Shots`
-      : `Your personalized quote is ready — Babula Shots`,
+      ? `Tu cotización está lista — Babula Shots`
+      : `Your quotation is ready — Babula Shots`,
     html: `
-      <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#f8fafc;padding:24px 12px">
-        <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
+      ${qdOpen(
+        isEs ? 'Tu cotización está lista' : 'Your quotation is ready',
+        isEs ? `Hola, ${data.fullName}` : `Hi, ${data.fullName}`
+      )}
 
-          <div style="background:linear-gradient(135deg,#0ea5e9,#0369a1);padding:28px 24px;text-align:center">
-            <p style="margin:0;color:#e0f2fe;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700">Babula Shots</p>
-            <h2 style="margin:10px 0 0;color:#ffffff;font-size:26px;line-height:1.2">
-              ${isEs ? 'Tu presupuesto está listo' : 'Your quote is ready'}
-            </h2>
-            <p style="margin:10px 0 0;color:#e0f2fe;font-size:15px">
-              ${isEs ? `Hola ${data.fullName}` : `Hi ${data.fullName}`}
-            </p>
-          </div>
+      <p style="margin:0 0 22px;color:#8a8680;line-height:1.7;font-size:14px">
+        ${isEs
+          ? 'Revisamos tu proyecto y preparamos una propuesta personalizada. El enlace es privado — solo está disponible para ti.'
+          : 'We reviewed your project and prepared a personalized proposal. The link is private — available only to you.'}
+      </p>
 
-          <div style="padding:28px 24px">
-            <p style="margin:0 0 20px;color:#334155;line-height:1.65;font-size:15px">
-              ${isEs
-                ? 'Revisamos tu solicitud y preparamos un presupuesto personalizado. Haz clic abajo para verlo completo antes de que expire.'
-                : 'We reviewed your request and prepared a personalized quote. Click below to view it in full before it expires.'}
-            </p>
+      ${qdCard([
+        { label: isEs ? 'SERVICIO' : 'SERVICE', value: serviceLabel },
+        { label: isEs ? 'INVERSIÓN' : 'INVESTMENT', value: `$${data.finalPriceUsd.toLocaleString('en-US')} USD`, gold: true },
+        { label: isEs ? 'VÁLIDO HASTA' : 'VALID UNTIL', value: expiryDate },
+      ])}
 
-            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;margin-bottom:24px">
-              <table style="width:100%;border-collapse:collapse;font-size:14px">
-                <tr>
-                  <td style="padding:6px 0;color:#64748b;width:150px">${isEs ? 'Servicio' : 'Service'}</td>
-                  <td style="padding:6px 0;font-weight:600;color:#0f172a">${serviceLabel}</td>
-                </tr>
-                <tr>
-                  <td style="padding:6px 0;color:#64748b">${isEs ? 'Inversión total' : 'Total investment'}</td>
-                  <td style="padding:6px 0;font-size:18px;font-weight:700;color:#0ea5e9">
-                    $${data.finalPriceUsd.toLocaleString('en-US')} USD
-                    <span style="font-size:12px;color:#64748b;font-weight:400"> + 18% ITBIS</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:6px 0;color:#64748b">${isEs ? 'Válido hasta' : 'Valid until'}</td>
-                  <td style="padding:6px 0;color:#334155">${expiryDate}</td>
-                </tr>
-              </table>
-              ${data.adminNoteCustomer ? `
-              <div style="margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0">
-                <p style="margin:0 0 6px;color:#0f172a;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">
-                  ${isEs ? 'Nota del fotógrafo' : "Photographer's note"}
-                </p>
-                <p style="margin:0;color:#334155;line-height:1.6;white-space:pre-wrap">${data.adminNoteCustomer}</p>
-              </div>` : ''}
-            </div>
-
-            <div style="text-align:center;margin-bottom:24px">
-              <a href="${data.proposalUrl}"
-                 style="display:inline-block;background:#0ea5e9;color:#ffffff;padding:14px 32px;border-radius:50px;text-decoration:none;font-size:16px;font-weight:700;letter-spacing:.01em">
-                ${isEs ? 'Ver mi presupuesto completo →' : 'View my full quote →'}
-              </a>
-            </div>
-
-            <p style="margin:0;color:#64748b;font-size:13px;text-align:center">
-              ${isEs
-                ? `Este enlace es único para ti y expira el ${expiryDate}.`
-                : `This link is unique to you and expires on ${expiryDate}.`}
-              ${isEs
-                ? ' Si tienes preguntas, responde este email o escríbenos por WhatsApp.'
-                : ' If you have questions, reply to this email or message us on WhatsApp.'}
-            </p>
-          </div>
-
-          <div style="padding:14px 24px;border-top:1px solid #e2e8f0;background:#f8fafc;text-align:center">
-            <p style="margin:0;color:#94a3b8;font-size:12px">
-              Fotógrafo Santo Domingo — Babula Shots · Santo Domingo, República Dominicana<br/>
-              <a href="https://www.fotografosantodomingo.com" style="color:#0284c7">fotografosantodomingo.com</a>
-              &nbsp;·&nbsp;
-              <a href="https://wa.me/18097209547" style="color:#0284c7">WhatsApp +1 (809) 720-9547</a>
-            </p>
-          </div>
-        </div>
+      ${data.adminNoteCustomer ? `
+      <div style="border-left:2px solid #c8a96e;padding:12px 18px;margin:4px 0 22px">
+        <p style="margin:0 0 6px;color:#c8a96e;font-size:9px;letter-spacing:.35em;text-transform:uppercase;font-weight:700">
+          ${isEs ? 'NOTA DEL FOTÓGRAFO' : "PHOTOGRAPHER'S NOTE"}
+        </p>
+        <p style="margin:0;color:#8a8680;line-height:1.65;font-size:13px;white-space:pre-wrap">${data.adminNoteCustomer}</p>
       </div>
+      ` : ''}
+
+      ${qdBtn(data.proposalUrl, isEs ? 'Ver mi cotización →' : 'View my quotation →')}
+
+      <p style="margin:0;color:#5a5753;font-size:12px;text-align:center;line-height:1.7">
+        ${isEs
+          ? `Este enlace expira el ${expiryDate} y es único para ti.`
+          : `This link expires on ${expiryDate} and is unique to you.`}
+        <br>
+        ${isEs
+          ? 'Preguntas: responde este email o escríbenos por WhatsApp.'
+          : 'Questions: reply to this email or message us on WhatsApp.'}
+      </p>
+
+      ${qdClose()}
+    `,
+  })
+}
+
+// ─── Quote payment confirmation (client) ─────────────────────────────────────
+
+export type QuotePaymentConfirmationData = {
+  locale: string
+  fullName: string
+  email: string
+  serviceType: string
+  amountPaidUsd: number
+  paymentMode: 'DEPOSIT' | 'FULL'
+  balanceUsd: number
+}
+
+export async function sendQuotePaymentConfirmation(data: QuotePaymentConfirmationData): Promise<void> {
+  const isEs = data.locale === 'es'
+  const isDeposit = data.paymentMode === 'DEPOSIT'
+  const serviceLabel = formatServiceLabel(data.serviceType, data.locale)
+
+  const title = isDeposit
+    ? (isEs ? 'Depósito confirmado' : 'Deposit confirmed')
+    : (isEs ? 'Pago recibido' : 'Payment received')
+
+  const subtitle = isDeposit
+    ? (isEs ? `Tu sesión está reservada, ${data.fullName}` : `Your session is booked, ${data.fullName}`)
+    : (isEs ? `Todo confirmado, ${data.fullName}` : `All confirmed, ${data.fullName}`)
+
+  const cardRows: Array<{ label: string; value: string; gold?: boolean }> = [
+    { label: isEs ? 'SERVICIO' : 'SERVICE', value: serviceLabel },
+    {
+      label: isDeposit
+        ? (isEs ? 'DEPÓSITO PAGADO (50%)' : 'DEPOSIT PAID (50%)')
+        : (isEs ? 'TOTAL PAGADO' : 'TOTAL PAID'),
+      value: `$${data.amountPaidUsd.toFixed(2)} USD`,
+      gold: true,
+    },
+    ...(isDeposit && data.balanceUsd > 0
+      ? [{ label: isEs ? 'SALDO EL DÍA DE LA SESIÓN' : 'BALANCE DUE SESSION DAY', value: `$${data.balanceUsd.toFixed(2)} USD` }]
+      : []),
+  ]
+
+  await sendMail({
+    from: FROM,
+    to: data.email,
+    subject: isDeposit
+      ? (isEs ? `Depósito recibido — ${serviceLabel} · Babula Shots` : `Deposit received — ${serviceLabel} · Babula Shots`)
+      : (isEs ? `Pago confirmado — ${serviceLabel} · Babula Shots` : `Payment confirmed — ${serviceLabel} · Babula Shots`),
+    html: `
+      ${qdOpen(title, subtitle)}
+
+      <p style="margin:0 0 22px;color:#8a8680;line-height:1.7;font-size:14px">
+        ${isDeposit
+          ? (isEs
+              ? 'Recibimos tu depósito. Tu sesión está reservada — te contactaremos por WhatsApp para coordinar los detalles finales.'
+              : 'We received your deposit. Your session is booked — we will contact you on WhatsApp to coordinate final details.')
+          : (isEs
+              ? 'Recibimos tu pago completo. Tu sesión está confirmada — te contactaremos por WhatsApp con los detalles finales.'
+              : 'We received your full payment. Your session is confirmed — we will contact you on WhatsApp with final details.')}
+      </p>
+
+      ${qdCard(cardRows)}
+
+      ${isDeposit && data.balanceUsd > 0 ? `
+      <div style="border-left:2px solid #2e2c29;padding:10px 16px;margin:4px 0 22px">
+        <p style="margin:0;color:#5a5753;font-size:12px;line-height:1.65">
+          ${isEs
+            ? 'Recuerda traer el saldo restante el día de la sesión. Cualquier pregunta, estamos en WhatsApp.'
+            : 'Remember to bring the remaining balance on session day. Any questions, we are on WhatsApp.'}
+        </p>
+      </div>
+      ` : ''}
+
+      ${qdBtn('https://wa.me/18097209547', isEs ? 'Escribir por WhatsApp →' : 'Message us on WhatsApp →')}
+
+      ${qdClose()}
+    `,
+  })
+}
+
+// ─── Quote payment admin alert ────────────────────────────────────────────────
+
+export type QuotePaymentAdminData = {
+  quoteId: string
+  fullName: string
+  clientCompany: string | null
+  serviceType: string
+  amountPaidUsd: number
+  paymentMode: 'DEPOSIT' | 'FULL'
+  whatsappPhone: string | null
+  email: string | null
+}
+
+export async function sendQuotePaymentAdminAlert(data: QuotePaymentAdminData): Promise<void> {
+  const isDeposit = data.paymentMode === 'DEPOSIT'
+  const serviceLabel = formatServiceLabel(data.serviceType, 'es')
+  const BASE = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.fotografosantodomingo.com'
+  const adminUrl = `${BASE}/admin/quotes/${data.quoteId}`
+  const waPhone = data.whatsappPhone?.replace(/\D/g, '') ?? null
+
+  const cardRows: Array<{ label: string; value: string; gold?: boolean }> = [
+    { label: 'CLIENTE', value: data.fullName },
+    ...(data.clientCompany ? [{ label: 'EMPRESA', value: data.clientCompany }] : []),
+    { label: 'SERVICIO', value: serviceLabel },
+    {
+      label: isDeposit ? 'DEPÓSITO PAGADO' : 'TOTAL PAGADO',
+      value: `$${data.amountPaidUsd.toFixed(2)} USD`,
+      gold: true,
+    },
+    ...(data.email ? [{ label: 'EMAIL', value: data.email }] : []),
+    ...(data.whatsappPhone ? [{ label: 'WHATSAPP', value: data.whatsappPhone }] : []),
+  ]
+
+  await sendMail({
+    from: FROM,
+    to: getAdminRecipients(),
+    subject: isDeposit
+      ? `💰 Depósito recibido — ${data.fullName} · ${serviceLabel}`
+      : `✅ Pago completo — ${data.fullName} · ${serviceLabel}`,
+    html: `
+      ${qdOpen(
+        isDeposit ? 'Depósito recibido' : 'Pago completo recibido',
+        `${data.fullName}${data.clientCompany ? ` · ${data.clientCompany}` : ''}`
+      )}
+
+      <p style="margin:0 0 22px;color:#8a8680;line-height:1.7;font-size:14px">
+        ${isDeposit
+          ? `Se recibió el depósito del 50%. Estado actualizado a <span style="color:#f0ede6;font-weight:700">DEPOSIT PAID</span>.`
+          : `Se recibió el pago completo. Estado actualizado a <span style="color:#c8a96e;font-weight:700">ACCEPTED</span>.`}
+      </p>
+
+      ${qdCard(cardRows)}
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 8px">
+        <tr>
+          <td align="center">
+            <a href="${adminUrl}" style="display:inline-block;background:#c8a96e;color:#0e0e0d;padding:13px 30px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase">
+              Ver cotización →
+            </a>
+            ${waPhone ? `&nbsp;&nbsp;
+            <a href="https://wa.me/${waPhone}" style="display:inline-block;background:transparent;border:1px solid #c8a96e;color:#c8a96e;padding:12px 24px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">
+              WhatsApp ↗
+            </a>` : ''}
+          </td>
+        </tr>
+      </table>
+
+      ${qdClose()}
     `,
   })
 }
