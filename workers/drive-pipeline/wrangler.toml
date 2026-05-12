@@ -1,0 +1,34 @@
+name = "fotografosantodomingo-drive-pipeline"
+main = "src/index.ts"
+compatibility_date = "2025-05-01"
+compatibility_flags = ["nodejs_compat"]
+
+[triggers]
+crons = ["0 19 * * *"]  # 3 PM AST / 7 PM UTC — daily
+
+[vars]
+SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co"
+SITE_URL = "https://www.fotografosantodomingo.com"
+WORKER_BASE_URL = "https://fotografosantodomingo-drive-pipeline.YOUR_SUBDOMAIN.workers.dev"
+REVIEW_EMAIL_FROM = "Babula Shots <info@fotografosantodomingo.com>"
+REVIEW_EMAIL_TO = "info@fotografosantodomingo.com"
+ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
+META_ENABLED = "false"
+META_IG_ENABLED = "false"
+LINKEDIN_ENABLED = "false"
+
+# Secrets — set each with: wrangler secret put SECRET_NAME
+#
+#   wrangler secret put ANTHROPIC_API_KEY
+#   wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+#   wrangler secret put GOOGLE_SERVICE_ACCOUNT_JSON   (full JSON, not a path)
+#   wrangler secret put GOOGLE_DRIVE_FOLDER_ID
+#   wrangler secret put BREVO_API_KEY
+#   wrangler secret put EMAIL_LINK_SECRET             (openssl rand -base64 32)
+#   wrangler secret put META_PAGE_ACCESS_TOKEN
+#   wrangler secret put META_PAGE_ID
+#   wrangler secret put META_IG_BUSINESS_ID
+#   wrangler secret put LINKEDIN_CLIENT_ID
+#   wrangler secret put LINKEDIN_CLIENT_SECRET
+#   wrangler secret put LINKEDIN_ACCESS_TOKEN
+#   wrangler secret put LINKEDIN_AUTHOR_URN
