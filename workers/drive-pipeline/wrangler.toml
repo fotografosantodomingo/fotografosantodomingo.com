@@ -7,9 +7,9 @@ compatibility_flags = ["nodejs_compat"]
 crons = ["0 19 * * *"]  # 3 PM AST / 7 PM UTC — daily
 
 [vars]
-SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co"
+SUPABASE_URL = "https://ummlavdykprwozwzhvge.supabase.co"
 SITE_URL = "https://www.fotografosantodomingo.com"
-WORKER_BASE_URL = "https://fotografosantodomingo-drive-pipeline.YOUR_SUBDOMAIN.workers.dev"
+WORKER_BASE_URL = "https://fotografosantodomingo-drive-pipeline.homekrypto.workers.dev"
 REVIEW_EMAIL_FROM = "Babula Shots <info@fotografosantodomingo.com>"
 REVIEW_EMAIL_TO = "info@fotografosantodomingo.com"
 ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
