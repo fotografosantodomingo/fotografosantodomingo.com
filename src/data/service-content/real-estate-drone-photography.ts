@@ -310,6 +310,7 @@ export const realEstateDronePhotographyContent: ServiceContent = {
       },
     },
   longForm: {
+      introImage: 'https://res.cloudinary.com/dwewurxla/image/upload/v1776369513/republica_dominicana_piloto_con_drone_y_licencia_urk2n7.webp',
       intro: {
         es: 'La produccion con dron en Republica Dominicana necesita una mezcla de creatividad y disciplina operativa. Nuestro enfoque combina planificacion de vuelo, seguridad, cumplimiento local y direccion visual para que hoteles, real estate y marcas reciban activos aereos listos para vender mejor.',
         en: 'Drone production in the Dominican Republic requires both creativity and operational discipline. Our approach combines flight planning, safety, local compliance, and visual direction so hotels, real estate teams, and brands receive aerial assets that are ready to drive results.',

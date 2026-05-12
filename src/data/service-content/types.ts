@@ -79,6 +79,7 @@ export type TimelineRow = {
 
 export type LongFormContent = {
   intro: Bilingual
+  introImage?: string
   sections: LongFormSection[]
   timeline?: {
     title: Bilingual

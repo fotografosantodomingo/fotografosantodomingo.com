@@ -592,6 +592,16 @@ export default async function FamilyPage({ params }: Props) {
         {content?.longForm && (
           <section className="border-b border-hairline-soft py-20 md:py-28">
             <div className="container mx-auto px-4">
+              {content.longForm.introImage && (
+                <div className="mb-10 w-full overflow-hidden">
+                  <img
+                    src={content.longForm.introImage}
+                    alt={title}
+                    className="w-full h-auto object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              )}
               <div className="max-w-3xl">
                 <p className="text-ink text-lg md:text-xl leading-relaxed">
                   {isEs ? content.longForm.intro.es : content.longForm.intro.en}
