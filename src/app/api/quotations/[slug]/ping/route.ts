@@ -35,36 +35,61 @@ export async function GET(
       .update({ first_viewed_at: new Date().toISOString() })
       .eq('id', quote.id)
 
-    const proposalUrl = `${BASE_URL}/quotations/${slug}`
+    const adminUrl = `${BASE_URL}/admin/quotes/${quote.id}`
     const clientName = quote.full_name ?? 'Cliente'
     const service = quote.service_type?.replace(/_/g, ' ') ?? 'Photography service'
+    const waPhone = quote.whatsapp_phone?.replace(/\D/g, '') ?? null
 
-    const waLink = quote.whatsapp_phone
-      ? `<a href="https://wa.me/${quote.whatsapp_phone.replace(/\D/g, '')}" style="display:inline-block;background:#22c55e;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:700;margin-top:12px">Abrir WhatsApp ↗</a>`
-      : ''
+    const cardRows = [
+      { label: 'CLIENTE', value: clientName },
+      { label: 'SERVICIO', value: service },
+      ...(quote.email ? [{ label: 'EMAIL', value: `<a href="mailto:${quote.email}" style="color:#c8a96e;text-decoration:none">${quote.email}</a>` }] : []),
+      ...(quote.whatsapp_phone ? [{ label: 'WHATSAPP', value: quote.whatsapp_phone }] : []),
+    ]
+
+    const card = `
+      <table style="width:100%;border-collapse:collapse;background:#1a1815;border:1px solid #2e2c29;margin:20px 0">
+        ${cardRows.map((r, i) => `
+          <tr>
+            <td bgcolor="#1a1815" style="padding:11px 20px;${i < cardRows.length - 1 ? 'border-bottom:1px solid #2e2c29;' : ''}color:#8a8680;font-size:12px;letter-spacing:.03em;width:46%">${r.label}</td>
+            <td bgcolor="#1a1815" style="padding:11px 20px;${i < cardRows.length - 1 ? 'border-bottom:1px solid #2e2c29;' : ''}color:#f0ede6;font-size:14px">${r.value}</td>
+          </tr>
+        `).join('')}
+      </table>`
 
     await sendMail({
       to: getAdminRecipients(),
       subject: `👁 ${clientName} acaba de abrir tu cotización`,
       html: `
-        <div style="font-family:Arial,sans-serif;background:#f8fafc;padding:24px 12px">
-          <div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
-            <div style="background:linear-gradient(135deg,#0ea5e9,#0369a1);padding:20px 24px">
-              <p style="margin:0;color:#e0f2fe;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700">Propuesta abierta</p>
-              <h2 style="margin:6px 0 0;color:#fff;font-size:20px">${clientName} acaba de ver tu cotización</h2>
+        <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#0e0e0d;padding:24px 12px">
+          <div style="max-width:640px;margin:0 auto;background:#161513;border:1px solid #2e2c29;overflow:hidden">
+            <div style="background:#c8a96e;height:3px;font-size:1px;line-height:1px;">&nbsp;</div>
+            <div style="background:#111110;padding:32px 28px;text-align:center;border-bottom:1px solid #2e2c29">
+              <p style="margin:0 0 14px;color:#c8a96e;font-size:10px;letter-spacing:.4em;text-transform:uppercase;font-weight:700">BABULA SHOTS</p>
+              <h2 style="margin:0;color:#f0ede6;font-size:24px;line-height:1.3;font-weight:400;letter-spacing:.03em">Propuesta abierta</h2>
+              <p style="margin:12px 0 0;color:#8a8680;font-size:14px">${clientName} está leyendo tu cotización ahora mismo</p>
             </div>
-            <div style="padding:20px 24px">
-              <table style="width:100%;font-size:14px;border-collapse:collapse">
-                <tr><td style="padding:6px 0;color:#64748b;width:120px">Cliente</td><td style="padding:6px 0;font-weight:700">${clientName}</td></tr>
-                <tr><td style="padding:6px 0;color:#64748b">Servicio</td><td style="padding:6px 0">${service}</td></tr>
-                ${quote.email ? `<tr><td style="padding:6px 0;color:#64748b">Email</td><td style="padding:6px 0"><a href="mailto:${quote.email}" style="color:#0284c7">${quote.email}</a></td></tr>` : ''}
-                ${quote.whatsapp_phone ? `<tr><td style="padding:6px 0;color:#64748b">WhatsApp</td><td style="padding:6px 0">${quote.whatsapp_phone}</td></tr>` : ''}
+            <div style="background:#111110;padding:30px 28px 36px">
+              <p style="margin:0 0 4px;color:#8a8680;line-height:1.7;font-size:14px">
+                Este es el momento ideal para hacer seguimiento — la propuesta acaba de ser abierta por primera vez.
+              </p>
+              ${card}
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 8px">
+                <tr>
+                  <td align="center">
+                    <a href="${adminUrl}" style="display:inline-block;background:#c8a96e;color:#0e0e0d;padding:13px 30px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase">
+                      Ver cotización →
+                    </a>
+                    ${waPhone ? `&nbsp;&nbsp;<a href="https://wa.me/${waPhone}" style="display:inline-block;background:transparent;border:1px solid #c8a96e;color:#c8a96e;padding:12px 24px;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">WhatsApp ↗</a>` : ''}
+                  </td>
+                </tr>
               </table>
-              <div style="margin-top:16px">
-                <a href="${proposalUrl}" style="display:inline-block;background:#0ea5e9;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:700">Ver cotización ↗</a>
-                ${waLink}
-              </div>
-              <p style="margin-top:16px;font-size:12px;color:#94a3b8">Este es el momento ideal para hacer seguimiento — están leyendo tu propuesta ahora mismo.</p>
+            </div>
+            <div style="background:#0a0a09;border-top:1px solid #2e2c29;padding:18px 28px;text-align:center">
+              <p style="margin:0;color:#3d3b38;font-size:11px;letter-spacing:.06em;text-transform:uppercase;line-height:2.2">
+                BABULA SHOTS &nbsp;·&nbsp; SANTO DOMINGO, REPÚBLICA DOMINICANA<br>
+                <a href="https://www.fotografosantodomingo.com" style="color:#5a5753;text-decoration:none">fotografosantodomingo.com</a>
+              </p>
             </div>
           </div>
         </div>

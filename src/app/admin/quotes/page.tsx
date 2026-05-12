@@ -34,6 +34,7 @@ type Quote = {
   status: string
   final_price_usd: number | null
   locale: string
+  first_viewed_at: string | null
 }
 
 const VALID_STATUSES = ['DRAFT', 'PENDING_REVIEW', 'SENT_TO_CUSTOMER', 'DEPOSIT_PAID', 'ACCEPTED', 'REJECTED', ''] as const
@@ -55,7 +56,7 @@ export default async function AdminQuotesPage({
   let query = supabase
     .from('quotes')
     .select(
-      'id, created_at, full_name, email, whatsapp_phone, service_type, event_date, city, country, status, final_price_usd, locale'
+      'id, created_at, full_name, email, whatsapp_phone, service_type, event_date, city, country, status, final_price_usd, locale, first_viewed_at'
     )
     .order('created_at', { ascending: false })
     .limit(200)
@@ -156,6 +157,11 @@ export default async function AdminQuotesPage({
                     <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_COLORS[q.status] ?? ''}`}>
                       {STATUS_LABELS[q.status] ?? q.status}
                     </span>
+                    {q.first_viewed_at && (
+                      <span className="ml-1.5 text-xs text-emerald-600 dark:text-emerald-400" title={`Opened ${new Date(q.first_viewed_at).toLocaleString()}`}>
+                        👁
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-slate-700 dark:text-gray-300">
                     {q.final_price_usd ? `$${Number(q.final_price_usd).toLocaleString()}` : '—'}
