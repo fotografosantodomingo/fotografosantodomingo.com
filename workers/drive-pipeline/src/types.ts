@@ -2,7 +2,9 @@ export interface Env {
   // Required secrets
   ANTHROPIC_API_KEY: string
   SUPABASE_SERVICE_ROLE_KEY: string
-  GOOGLE_SERVICE_ACCOUNT_JSON: string
+  GOOGLE_CLIENT_ID: string
+  GOOGLE_CLIENT_SECRET: string
+  GOOGLE_REFRESH_TOKEN: string
   GOOGLE_DRIVE_FOLDER_ID: string
   BREVO_API_KEY: string
   EMAIL_LINK_SECRET: string

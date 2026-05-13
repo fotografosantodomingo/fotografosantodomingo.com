@@ -48,7 +48,7 @@ async function runPipeline(env: Env): Promise<void> {
   const processedKeys = new Set<string>((processedRows ?? []).map((r: { group_key: string }) => r.group_key))
 
   // Discover new groups in Drive
-  const groups = await listNewGroups(env.GOOGLE_SERVICE_ACCOUNT_JSON, env.GOOGLE_DRIVE_FOLDER_ID, processedKeys)
+  const groups = await listNewGroups(env, env.GOOGLE_DRIVE_FOLDER_ID, processedKeys)
   console.log(`[pipeline] ${groups.length} new group(s) found`)
 
   for (const group of groups) {
@@ -57,7 +57,7 @@ async function runPipeline(env: Env): Promise<void> {
       // Download + upload each image
       const stored: StoredImage[] = []
       for (const file of group.files) {
-        const buf = await downloadFile(file.id, env.GOOGLE_SERVICE_ACCOUNT_JSON)
+        const buf = await downloadFile(file.id, env)
         const img = await uploadImage(env, buf, group.groupKey, file.id, file.mimeType)
         stored.push(img)
       }
@@ -312,6 +312,46 @@ export default {
     if (pathname === '/health') return new Response('ok')
 
     if (pathname === '/meta/status') return handleMetaStatus(env, token)
+
+    // Google OAuth — get refresh token (one-time setup)
+    if (pathname === '/auth/google/start') {
+      const params = new URLSearchParams({
+        client_id: env.GOOGLE_CLIENT_ID ?? '',
+        redirect_uri: `${env.WORKER_BASE_URL}/auth/google/callback`,
+        response_type: 'code',
+        scope: 'https://www.googleapis.com/auth/drive.readonly',
+        access_type: 'offline',
+        prompt: 'consent',
+      })
+      return Response.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`, 302)
+    }
+    if (pathname === '/auth/google/callback') {
+      const code = url.searchParams.get('code') ?? ''
+      if (!code) return htmlPage('Error', 'No code returned from Google.', 400)
+      const res = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          client_id: env.GOOGLE_CLIENT_ID ?? '',
+          client_secret: env.GOOGLE_CLIENT_SECRET ?? '',
+          code,
+          redirect_uri: `${env.WORKER_BASE_URL}/auth/google/callback`,
+          grant_type: 'authorization_code',
+        }),
+      })
+      const json = await res.json() as { refresh_token?: string; error?: string; error_description?: string }
+      if (!res.ok || !json.refresh_token) {
+        return htmlPage('Error', json.error_description ?? json.error ?? 'No refresh_token returned. Make sure you added prompt=consent.', 400)
+      }
+      return htmlPage(
+        'Google OAuth — done',
+        `<strong>Refresh Token:</strong><br>
+         <code style="color:#c8a96e;word-break:break-all;font-size:12px">${json.refresh_token}</code>
+         <br><br>Run in your terminal:<br>
+         <code style="color:#c8a96e">wrangler secret put GOOGLE_REFRESH_TOKEN</code><br>
+         then paste the token above when prompted.`,
+      )
+    }
 
     // LinkedIn OAuth
     if (pathname === '/auth/linkedin/start') {

@@ -21,10 +21,12 @@ LINKEDIN_ENABLED = "false"
 #
 #   wrangler secret put ANTHROPIC_API_KEY
 #   wrangler secret put SUPABASE_SERVICE_ROLE_KEY
-#   wrangler secret put GOOGLE_SERVICE_ACCOUNT_JSON   (full JSON, not a path)
+#   wrangler secret put GOOGLE_CLIENT_ID              (from GCP OAuth 2.0 credentials)
+#   wrangler secret put GOOGLE_CLIENT_SECRET          (from GCP OAuth 2.0 credentials)
+#   wrangler secret put GOOGLE_REFRESH_TOKEN          (visit /auth/google/start after deploy)
 #   wrangler secret put GOOGLE_DRIVE_FOLDER_ID
 #   wrangler secret put BREVO_API_KEY
-#   wrangler secret put EMAIL_LINK_SECRET             (openssl rand -base64 32)
+#   wrangler secret put EMAIL_LINK_SECRET
 #   wrangler secret put META_PAGE_ACCESS_TOKEN
 #   wrangler secret put META_PAGE_ID
 #   wrangler secret put META_IG_BUSINESS_ID

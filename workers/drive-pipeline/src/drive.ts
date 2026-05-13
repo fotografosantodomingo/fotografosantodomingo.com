@@ -1,68 +1,25 @@
-import type { DriveFile, DriveGroup } from './types'
+import type { DriveFile, DriveGroup, Env } from './types'
 
-interface ServiceAccount {
-  client_email: string
-  private_key: string
-}
-
-// Cache the token for the lifetime of this Worker invocation
+// Cached per-invocation so we don't refresh on every Drive call
 let cachedToken: { token: string; expiry: number } | null = null
 
-function b64url(input: string | ArrayBuffer): string {
-  const bytes = typeof input === 'string'
-    ? new TextEncoder().encode(input)
-    : new Uint8Array(input)
-  let binary = ''
-  for (const b of bytes) binary += String.fromCharCode(b)
-  return btoa(binary).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
-}
-
-async function getAccessToken(serviceAccountJson: string): Promise<string> {
+async function getAccessToken(env: Env): Promise<string> {
   const now = Math.floor(Date.now() / 1000)
   if (cachedToken && cachedToken.expiry > now + 60) return cachedToken.token
-
-  const sa: ServiceAccount = JSON.parse(serviceAccountJson)
-
-  const header = b64url(JSON.stringify({ alg: 'RS256', typ: 'JWT' }))
-  const payload = b64url(JSON.stringify({
-    iss: sa.client_email,
-    scope: 'https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/devstorage.read_write',
-    aud: 'https://oauth2.googleapis.com/token',
-    iat: now,
-    exp: now + 3600,
-  }))
-
-  const signingInput = `${header}.${payload}`
-
-  // Import the RSA private key (PEM → DER)
-  const pem = sa.private_key.replace(/-----.*?-----/g, '').replace(/\s/g, '')
-  const der = Uint8Array.from(atob(pem), (c) => c.charCodeAt(0))
-  const cryptoKey = await crypto.subtle.importKey(
-    'pkcs8',
-    der,
-    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
-    false,
-    ['sign'],
-  )
-
-  const sigBuf = await crypto.subtle.sign(
-    'RSASSA-PKCS1-v1_5',
-    cryptoKey,
-    new TextEncoder().encode(signingInput),
-  )
-  const jwt = `${signingInput}.${b64url(sigBuf)}`
 
   const res = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
-      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-      assertion: jwt,
+      client_id: env.GOOGLE_CLIENT_ID,
+      client_secret: env.GOOGLE_CLIENT_SECRET,
+      refresh_token: env.GOOGLE_REFRESH_TOKEN,
+      grant_type: 'refresh_token',
     }),
   })
-  if (!res.ok) throw new Error(`Drive auth failed: ${await res.text()}`)
-  const json = await res.json() as { access_token: string; expires_in: number }
 
+  if (!res.ok) throw new Error(`Google token refresh failed: ${await res.text()}`)
+  const json = await res.json() as { access_token: string; expires_in: number }
   cachedToken = { token: json.access_token, expiry: now + json.expires_in }
   return json.access_token
 }
@@ -74,14 +31,14 @@ async function driveGet(path: string, token: string): Promise<Response> {
 }
 
 export async function listNewGroups(
-  serviceAccountJson: string,
+  env: Env,
   rootFolderId: string,
   processedKeys: Set<string>,
 ): Promise<DriveGroup[]> {
-  const token = await getAccessToken(serviceAccountJson)
+  const token = await getAccessToken(env)
   const groups: DriveGroup[] = []
 
-  // Sub-folders → multi-image groups
+  // Sub-folders → multi-image groups (max 5 images each)
   const foldersRes = await driveGet(
     `files?q=${encodeURIComponent(`'${rootFolderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`)}&fields=files(id,name)&orderBy=name`,
     token,
@@ -117,8 +74,8 @@ export async function listNewGroups(
   return groups
 }
 
-export async function downloadFile(fileId: string, serviceAccountJson: string): Promise<ArrayBuffer> {
-  const token = await getAccessToken(serviceAccountJson)
+export async function downloadFile(fileId: string, env: Env): Promise<ArrayBuffer> {
+  const token = await getAccessToken(env)
   const res = await driveGet(`files/${fileId}?alt=media`, token)
   if (!res.ok) throw new Error(`Drive download failed for ${fileId}: ${res.status}`)
   return res.arrayBuffer()
