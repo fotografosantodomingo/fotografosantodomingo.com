@@ -115,6 +115,7 @@ async function runPipeline(env: Env): Promise<void> {
           source: 'drive-pipeline',
           auto_draft_meta: autoMeta,
           // Legacy compat fields
+          slug: generated.slug_es,
           title: generated.title_es,
           excerpt: generated.excerpt_es,
           content: generated.content_es,
@@ -310,6 +311,42 @@ export default {
     if (pathname === '/reject') return handleReject(env, req)
 
     if (pathname === '/health') return new Response('ok')
+
+    // Drive debug — lists raw contents of the watched folder
+    if (pathname === '/debug-drive') {
+      if (token !== (env.SUPABASE_SERVICE_ROLE_KEY ?? '').slice(0, 24)) {
+        return new Response('Unauthorized', { status: 401 })
+      }
+      try {
+        const { getAccessToken } = await import('./drive') as unknown as { getAccessToken: never }
+        void getAccessToken
+        // Use fetch directly with fresh token
+        const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            client_id: env.GOOGLE_CLIENT_ID,
+            client_secret: env.GOOGLE_CLIENT_SECRET,
+            refresh_token: env.GOOGLE_REFRESH_TOKEN,
+            grant_type: 'refresh_token',
+          }),
+        })
+        const tokenJson = await tokenRes.json() as { access_token?: string; error?: string }
+        if (!tokenRes.ok || !tokenJson.access_token) {
+          return new Response(JSON.stringify({ error: 'token_refresh_failed', detail: tokenJson }, null, 2), { status: 500, headers: { 'Content-Type': 'application/json' } })
+        }
+        const driveRes = await fetch(
+          `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(`'${env.GOOGLE_DRIVE_FOLDER_ID}' in parents and trashed=false`)}&fields=files(id,name,mimeType)&pageSize=10`,
+          { headers: { Authorization: `Bearer ${tokenJson.access_token}` } },
+        )
+        const driveJson = await driveRes.json()
+        return new Response(JSON.stringify({ status: driveRes.status, folder: env.GOOGLE_DRIVE_FOLDER_ID, drive: driveJson }, null, 2), {
+          headers: { 'Content-Type': 'application/json' },
+        })
+      } catch (e: unknown) {
+        return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+      }
+    }
 
     if (pathname === '/meta/status') return handleMetaStatus(env, token)
 
