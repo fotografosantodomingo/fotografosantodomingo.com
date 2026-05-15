@@ -43,6 +43,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Link href="/admin/images" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
                   Images
                 </Link>
+                <Link href="/admin/account" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
+                  Account
+                </Link>
                 <form action="/api/admin/signout" method="POST">
                   <button
                     type="submit"
