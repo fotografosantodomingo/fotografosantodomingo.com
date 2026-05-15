@@ -255,7 +255,7 @@ export const SPOKE_PAGES: SpokePage[] = [
       { icon: '🗺️', titleEn: 'Venue Access', titleEs: 'Acceso a Venues', bodyEn: 'Years of working with Punta Cana resorts means we understand their coordinator requirements, photography permits, and the unwritten rules that let us move freely on your wedding day.', bodyEs: 'Años trabajando con los resorts de Punta Cana significan que entendemos los requisitos de sus coordinadores, los permisos de fotografía y las reglas no escritas que nos permiten movernos libremente el día de tu boda.' },
       { icon: '🌤️', titleEn: 'Weather & Light Expertise', titleEs: 'Expertos en Clima y Luz', bodyEn: 'We know when Punta Cana rainy season is (May–October), which months give the softest light, and exactly how to adapt if clouds appear. Plan B is always ready.', bodyEs: 'Sabemos cuándo es la temporada de lluvias en Punta Cana (mayo–octubre), qué meses ofrecen la luz más suave y exactamente cómo adaptarnos si aparecen nubes. El plan B siempre está listo.' },
       { icon: '✈️', titleEn: 'Destination Specialists', titleEs: 'Especialistas en Destino', bodyEn: 'Over 80% of our couples fly in from the US, Canada, or Europe specifically for a DR destination wedding. We\'ve mastered the logistics: airport transfers, accommodation recommendations, vendor relationships.', bodyEs: 'Más del 80% de nuestros clientes viajan desde EE.UU., Canadá o Europa específicamente para una boda destino en RD. Hemos dominado la logística: traslados, recomendaciones de alojamiento, relaciones con proveedores.' },
-      { icon: '⭐', titleEn: '4.9 Stars on Google', titleEs: '4.9 Estrellas en Google', bodyEn: '91+ Google reviews from real couples who celebrated in the Dominican Republic. Read their words — consistent, honest feedback from your exact situation.', bodyEs: '91+ reseñas de Google de parejas reales que celebraron en República Dominicana. Lee sus palabras — comentarios consistentes y honestos de personas en tu misma situación.' },
+      { icon: '⭐', titleEn: '4.9 Stars on Google', titleEs: '4.9 Estrellas en Google', bodyEn: '98+ Google reviews from real couples who celebrated in the Dominican Republic. Read their words — consistent, honest feedback from your exact situation.', bodyEs: '98+ reseñas de Google de parejas reales que celebraron en República Dominicana. Lee sus palabras — comentarios consistentes y honestos de personas en tu misma situación.' },
     ],
 
     faq: [
@@ -295,8 +295,8 @@ export const SPOKE_PAGES: SpokePage[] = [
 
     ctaHeadlineEn: 'Ready to book your Punta Cana wedding photographer?',
     ctaHeadlineEs: '¿Listo para reservar tu fotógrafo de bodas en Punta Cana?',
-    ctaValuePropEn: 'Punta Cana dates fill up 6–12 months in advance. Check availability and hold your date today. · ⭐ 4.9 on Google (91+ reviews)',
-    ctaValuePropEs: 'Las fechas en Punta Cana se agotan con 6–12 meses de anticipación. Verifica disponibilidad y reserva tu fecha hoy. · ⭐ 4.9 en Google (+91 reseñas)',
+    ctaValuePropEn: 'Punta Cana dates fill up 6–12 months in advance. Check availability and hold your date today. · ⭐ 4.9 on Google (98+ reviews)',
+    ctaValuePropEs: 'Las fechas en Punta Cana se agotan con 6–12 meses de anticipación. Verifica disponibilidad y reserva tu fecha hoy. · ⭐ 4.9 en Google (+98 reseñas)',
 
     waMessageEn: 'Hello! I\'m interested in wedding photography in Punta Cana. Can you check availability for my date?',
     waMessageEs: 'Hola! Me interesa fotografía de bodas en Punta Cana. ¿Pueden verificar disponibilidad para mi fecha?',
@@ -372,7 +372,7 @@ export const SPOKE_PAGES: SpokePage[] = [
       { icon: '🗺️', titleEn: 'Deep Local Knowledge', titleEs: 'Conocimiento Local Profundo', bodyEn: 'We have been photographing in the Zona Colonial since 2015. We know every courtyard, every light angle, and every hidden passage that turns into the perfect backdrop.', bodyEs: 'Llevamos fotografiando en la Zona Colonial desde 2015. Conocemos cada patio, cada ángulo de luz y cada pasaje escondido que se convierte en el fondo perfecto.' },
       { icon: '🏛️', titleEn: 'UNESCO Venue Experience', titleEs: 'Experiencia en Venues UNESCO', bodyEn: 'From the Ozama Fortress to the Cathedral of Santa María la Menor, we have photographed in all the major landmarks and know how to work within each venue\'s rules and restrictions.', bodyEs: 'Desde la Fortaleza Ozama hasta la Catedral de Santa María la Menor, hemos fotografiado en todos los monumentos principales y sabemos cómo trabajar dentro de las reglas y restricciones de cada venue.' },
       { icon: '🌤️', titleEn: 'City Weather Strategy', titleEs: 'Estrategia Climática Urbana', bodyEn: 'Santo Domingo weather is predictable once you know the patterns. We plan your timeline with the dry season (November–April) in mind and always have an indoor backup plan for Caribbean showers.', bodyEs: 'El clima de Santo Domingo es predecible una vez que conoces los patrones. Planificamos tu cronograma con la temporada seca (noviembre–abril) en mente y siempre tenemos un plan de respaldo interior para los aguaceros caribeños.' },
-      { icon: '⭐', titleEn: '4.9 Stars on Google', titleEs: '4.9 Estrellas en Google', bodyEn: '91+ Google reviews from real couples who celebrated in the Dominican Republic. Consistent, honest feedback from clients in your exact situation.', bodyEs: '+91 reseñas de Google de parejas reales que celebraron en República Dominicana. Comentarios consistentes y honestos de clientes en tu misma situación.' },
+      { icon: '⭐', titleEn: '4.9 Stars on Google', titleEs: '4.9 Estrellas en Google', bodyEn: '98+ Google reviews from real couples who celebrated in the Dominican Republic. Consistent, honest feedback from clients in your exact situation.', bodyEs: '+98 reseñas de Google de parejas reales que celebraron en República Dominicana. Comentarios consistentes y honestos de clientes en tu misma situación.' },
     ],
 
     faq: [
@@ -412,8 +412,8 @@ export const SPOKE_PAGES: SpokePage[] = [
 
     ctaHeadlineEn: 'Ready to book your Zona Colonial wedding photographer?',
     ctaHeadlineEs: '¿Listo para reservar tu fotógrafo de bodas en la Zona Colonial?',
-    ctaValuePropEn: 'Santo Domingo dates fill up fast — especially for December–March peak season. Check availability and hold your date today. · ⭐ 4.9 on Google (91+ reviews)',
-    ctaValuePropEs: 'Las fechas en Santo Domingo se agotan rápido — especialmente en la temporada alta de diciembre a marzo. Verifica disponibilidad y reserva tu fecha hoy. · ⭐ 4.9 en Google (+91 reseñas)',
+    ctaValuePropEn: 'Santo Domingo dates fill up fast — especially for December–March peak season. Check availability and hold your date today. · ⭐ 4.9 on Google (98+ reviews)',
+    ctaValuePropEs: 'Las fechas en Santo Domingo se agotan rápido — especialmente en la temporada alta de diciembre a marzo. Verifica disponibilidad y reserva tu fecha hoy. · ⭐ 4.9 en Google (+98 reseñas)',
 
     waMessageEn: 'Hello! I\'m interested in wedding photography in the Zona Colonial, Santo Domingo. Can you check availability for my date?',
     waMessageEs: 'Hola! Me interesa fotografía de bodas en la Zona Colonial, Santo Domingo. ¿Pueden verificar disponibilidad para mi fecha?',

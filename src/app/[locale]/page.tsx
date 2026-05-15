@@ -237,7 +237,7 @@ export default async function HomePage({ params: { locale } }: Props) {
               { value: t('stats_weddings'), label: isEs ? 'Clientes satisfech@s' : 'Satisfied clients' },
               { value: t('stats_years'),    label: isEs ? 'Años de experiencia' : 'Years experience' },
               { value: t('stats_locations'),label: isEs ? 'Ubicaciones' : 'Locations served' },
-              { value: t('stats_reviews'),  label: isEs ? '91 reseñas en Google' : '91 Google reviews' },
+              { value: t('stats_reviews'),  label: isEs ? '98 reseñas en Google' : '98 Google reviews' },
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
                 <div className="hero-white-text font-display text-3xl md:text-4xl text-white">{value}</div>
@@ -394,7 +394,7 @@ export default async function HomePage({ params: { locale } }: Props) {
         <div className="container mx-auto px-4">
           <div className="mb-12 md:mb-16">
             <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
-              {isEs ? 'Reseñas · 91 en Google · 4.9 ★' : 'Reviews · 91 on Google · 4.9 ★'}
+              {isEs ? 'Reseñas · 98 en Google · 4.9 ★' : 'Reviews · 98 on Google · 4.9 ★'}
             </p>
             <h2
               className="font-display uppercase text-ink"

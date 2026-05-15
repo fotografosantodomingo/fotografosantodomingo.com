@@ -512,8 +512,8 @@ function FinalCTASection({ spoke, locale }: Props) {
         {/* Trust signal */}
         <p className="mt-8 text-sm text-amber-900/70">
           {isEs
-            ? '⭐ 4.9 en Google · +91 reseñas · bodas y sesiones en República Dominicana'
-            : '⭐ 4.9 on Google · 91+ reviews · weddings and sessions across the Dominican Republic'}
+            ? '⭐ 4.9 en Google · +98 reseñas · bodas y sesiones en República Dominicana'
+            : '⭐ 4.9 on Google · 98+ reviews · weddings and sessions across the Dominican Republic'}
         </p>
       </div>
     </section>

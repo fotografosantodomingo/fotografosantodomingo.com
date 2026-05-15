@@ -6,7 +6,7 @@ export interface Env {
   GOOGLE_CLIENT_SECRET: string
   GOOGLE_REFRESH_TOKEN: string
   GOOGLE_DRIVE_FOLDER_ID: string
-  BREVO_API_KEY: string
+  RESEND_API_KEY: string
   EMAIL_LINK_SECRET: string
   // Required vars
   ANTHROPIC_MODEL: string
@@ -42,6 +42,17 @@ export interface DriveGroup {
   folderName?: string
 }
 
+export interface FaqItem {
+  question: string
+  answer: string
+}
+
+export interface InternalLink {
+  text: string
+  url: string
+  description: string
+}
+
 export interface GeneratedPost {
   slug_es: string
   slug_en: string
@@ -55,10 +66,22 @@ export interface GeneratedPost {
   og_title_en: string
   primary_keyword_es: string
   primary_keyword_en: string
+  intro_es: string
+  intro_en: string
   content_es: string
   content_en: string
+  location_section_es: string
+  location_section_en: string
+  faq_es: FaqItem[]
+  faq_en: FaqItem[]
   cover_image_alt_es: string
   cover_image_alt_en: string
+  cover_image_title_es: string
+  cover_image_title_en: string
+  cover_image_caption_es: string
+  cover_image_caption_en: string
+  cover_image_description_es: string
+  cover_image_description_en: string
   reading_time: number
   service_type: string
   geo_city: string

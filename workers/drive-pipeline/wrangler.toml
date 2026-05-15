@@ -4,7 +4,7 @@ compatibility_date = "2025-05-01"
 compatibility_flags = ["nodejs_compat"]
 
 [triggers]
-crons = ["0 19 * * *"]  # 3 PM AST / 7 PM UTC — daily
+crons = ["0 21 */4 * *"]  # 5 PM AST / 9 PM UTC — every 4 days
 
 [vars]
 SUPABASE_URL = "https://ummlavdykprwozwzhvge.supabase.co"
@@ -13,8 +13,8 @@ WORKER_BASE_URL = "https://fotografosantodomingo-drive-pipeline.homekrypto.worke
 REVIEW_EMAIL_FROM = "Babula Shots <info@fotografosantodomingo.com>"
 REVIEW_EMAIL_TO = "info@fotografosantodomingo.com"
 ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
-META_ENABLED = "false"
-META_IG_ENABLED = "false"
+META_ENABLED = "true"
+META_IG_ENABLED = "true"
 LINKEDIN_ENABLED = "false"
 
 # Secrets — set each with: wrangler secret put SECRET_NAME

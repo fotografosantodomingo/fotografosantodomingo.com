@@ -1,14 +1,14 @@
 import type { CrossPostResult, Env } from './types'
 
-async function brevoSend(apiKey: string, payload: object): Promise<void> {
-  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+async function resendSend(apiKey: string, payload: { from: string; to: string[]; subject: string; html: string }): Promise<void> {
+  const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { 'api-key': apiKey, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
   if (!res.ok) {
     const body = await res.text()
-    throw new Error(`Brevo error ${res.status}: ${body}`)
+    throw new Error(`Resend error ${res.status}: ${body}`)
   }
 }
 
@@ -116,11 +116,11 @@ export async function sendReviewEmail(
       Este enlace expira en 7 días. Una vez aprobado, el post se publica y se comparte en redes sociales.
     </p>`
 
-  await brevoSend(env.BREVO_API_KEY, {
-    sender: { name: 'Babula Shots Pipeline', email: 'info@fotografosantodomingo.com' },
-    to: [{ email: env.REVIEW_EMAIL_TO }],
+  await resendSend(env.RESEND_API_KEY, {
+    from: 'Babula Shots <info@fotografosantodomingo.com>',
+    to: [env.REVIEW_EMAIL_TO],
     subject: `📸 Nuevo post listo: ${titleEs}`,
-    htmlContent: shell(content),
+    html: shell(content),
   })
 }
 
@@ -153,10 +153,10 @@ export async function sendResultsEmail(
       <tr><td align="center">${btn(postUrl, 'Ver post en el blog →')}</td></tr>
     </table>`
 
-  await brevoSend(env.BREVO_API_KEY, {
-    sender: { name: 'Babula Shots Pipeline', email: 'info@fotografosantodomingo.com' },
-    to: [{ email: env.REVIEW_EMAIL_TO }],
+  await resendSend(env.RESEND_API_KEY, {
+    from: 'Babula Shots <info@fotografosantodomingo.com>',
+    to: [env.REVIEW_EMAIL_TO],
     subject: `✅ Publicado: ${titleEs}`,
-    htmlContent: shell(content),
+    html: shell(content),
   })
 }

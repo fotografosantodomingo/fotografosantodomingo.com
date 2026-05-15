@@ -70,7 +70,7 @@ export const schemaGenerators = {
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '4.9',
-      reviewCount: '91',
+      reviewCount: '98',
       bestRating: '5',
       worstRating: '1'
     },
