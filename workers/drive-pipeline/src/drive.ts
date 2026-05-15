@@ -48,7 +48,7 @@ export async function listNewGroups(
     for (const folder of folders) {
       if (processedKeys.has(folder.id)) continue
       const imgsRes = await driveGet(
-        `files?q=${encodeURIComponent(`'${folder.id}' in parents and mimeType contains 'image/' and trashed=false`)}&fields=files(id,name,mimeType,modifiedTime)&orderBy=name&pageSize=5`,
+        `files?q=${encodeURIComponent(`'${folder.id}' in parents and mimeType contains 'image/' and trashed=false`)}&fields=files(id,name,mimeType,modifiedTime)&orderBy=name&pageSize=2`,
         token,
       )
       if (!imgsRes.ok) continue
