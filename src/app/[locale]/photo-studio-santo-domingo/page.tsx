@@ -49,8 +49,11 @@ async function loadPortraitPackages(): Promise<PackageRow[]> {
   return (packages ?? []) as PackageRow[]
 }
 
-const HERO_DESKTOP = 'https://res.cloudinary.com/dwewurxla/image/upload/v1777431039/editorial_sesioon_de_fotos_santoo_domingo_fotografo_profesional_republica_dominicana_neupwn.webp'
-const HERO_MOBILE = 'https://res.cloudinary.com/dwewurxla/image/upload/v1777431069/sesion_de_fotos_en_estudio_fotografico_santo_domingo_h0b3ap.webp'
+const CL_BASE = 'https://res.cloudinary.com/dwewurxla/image/upload'
+const HERO_DESKTOP = `${CL_BASE}/w_1600,f_auto,q_auto/v1777431039/editorial_sesioon_de_fotos_santoo_domingo_fotografo_profesional_republica_dominicana_neupwn.webp`
+const HERO_DESKTOP_2X = `${CL_BASE}/w_3200,f_auto,q_auto/v1777431039/editorial_sesioon_de_fotos_santoo_domingo_fotografo_profesional_republica_dominicana_neupwn.webp`
+const HERO_MOBILE = `${CL_BASE}/w_828,f_auto,q_auto/v1777431069/sesion_de_fotos_en_estudio_fotografico_santo_domingo_h0b3ap.webp`
+const HERO_MOBILE_2X = `${CL_BASE}/w_1242,f_auto,q_auto/v1777431069/sesion_de_fotos_en_estudio_fotografico_santo_domingo_h0b3ap.webp`
 
 const GALLERY_DESKTOP = [
   'https://res.cloudinary.com/dwewurxla/image/upload/v1777431479/retratos_sesion_de_fotos_en_santo_domingo_izdpba.webp',
@@ -200,16 +203,24 @@ export default async function PhotoStudioPage({ params: { locale } }: Props) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={HERO_DESKTOP}
+            srcSet={`${HERO_DESKTOP} 1600w, ${HERO_DESKTOP_2X} 3200w`}
+            sizes="100vw"
             alt={isEs ? 'Sesión editorial en estudio fotográfico — Santo Domingo, República Dominicana' : 'Editorial studio photo session — Santo Domingo, Dominican Republic'}
             className="hidden md:block w-full h-auto"
+            width={1600}
+            height={900}
             loading="eager"
             fetchPriority="high"
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={HERO_MOBILE}
+            srcSet={`${HERO_MOBILE} 828w, ${HERO_MOBILE_2X} 1242w`}
+            sizes="100vw"
             alt={isEs ? 'Sesión de fotos en estudio fotográfico — Santo Domingo' : 'Photo studio session — Santo Domingo'}
             className="block md:hidden w-full h-auto"
+            width={828}
+            height={1035}
             loading="eager"
             fetchPriority="high"
           />

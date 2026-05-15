@@ -44,6 +44,13 @@ export default function TawkChat() {
         src={`https://embed.tawk.to/${propertyId}/${widgetId}`}
         crossOrigin="anonymous"
       />
+      <Script
+        id="tawkto-iframe-title"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: `(function(){var o=new MutationObserver(function(){document.querySelectorAll('iframe[src*="tawk.to"]:not([title])').forEach(function(f){f.setAttribute('title','Live chat support');});});o.observe(document.body,{childList:true,subtree:true});})();`,
+        }}
+      />
     </>
   )
 }

@@ -69,7 +69,7 @@ export default function NewsletterForm({ locale }: { locale: string }) {
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="bg-primary-600 hover:bg-primary-700 disabled:opacity-60 px-6 py-2 rounded-r-lg transition-colors text-sm font-medium"
+          className="bg-primary-700 hover:bg-primary-800 disabled:opacity-60 px-6 py-2 rounded-r-lg transition-colors text-sm font-medium text-white"
         >
           {status === 'loading'
             ? '...'
