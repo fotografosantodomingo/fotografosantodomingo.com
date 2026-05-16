@@ -439,7 +439,8 @@ export default async function BeachPhotoSessionsPage({ params: { locale } }: Pro
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={p.src}
-                src={p.src}
+                src={p.src.replace('/image/upload/', '/image/upload/w_828,f_auto,q_auto/')}
+                srcSet={`${p.src.replace('/image/upload/', '/image/upload/w_828,f_auto,q_auto/')} 828w, ${p.src.replace('/image/upload/', '/image/upload/w_1600,f_auto,q_auto/')} 1600w`}
                 alt={p.alt[isEs ? 'es' : 'en']}
                 title={p.caption[isEs ? 'es' : 'en']}
                 width={1600}

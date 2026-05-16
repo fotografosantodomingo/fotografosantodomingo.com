@@ -62,13 +62,13 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="space-y-3">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+                className="w-full bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-800 transition-colors"
               >
                 Refresh Page
               </button>
               <a
                 href="/contact"
-                className="block w-full border border-primary-600 text-primary-600 px-4 py-2 rounded-lg hover:bg-primary-50 transition-colors"
+                className="block w-full border border-primary-700 text-primary-700 px-4 py-2 rounded-lg hover:bg-primary-50 transition-colors"
               >
                 Contact Support
               </a>

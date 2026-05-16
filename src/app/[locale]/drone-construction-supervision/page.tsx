@@ -15,15 +15,18 @@ const FAMILY_SLUG = 'real-estate-drone-photography'
 // new uploads. Hero is the wide aerial; secondary slot is the closer
 // drone-on-site shot. Both already have alt metadata in portfolio_images
 // from prior migrations.
+const CL = 'https://res.cloudinary.com/dwewurxla/image/upload'
 const HERO_PHOTO = {
-  src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777428637/Foto%CC%81grafo_Inmobiliario_en_Punta_Cana_Drone_xdv4io.webp',
+  src:    `${CL}/w_828,f_auto,q_auto/v1777428637/Foto%CC%81grafo_Inmobiliario_en_Punta_Cana_Drone_xdv4io.webp`,
+  srcLg:  `${CL}/w_1600,f_auto,q_auto/v1777428637/Foto%CC%81grafo_Inmobiliario_en_Punta_Cana_Drone_xdv4io.webp`,
   alt: {
     es: 'Inspección aérea de obra con drone profesional en República Dominicana',
     en: 'Professional drone aerial construction inspection in the Dominican Republic',
   },
 }
 const MID_PHOTO = {
-  src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777428995/Babula_Shots_Rd_s9lkak.webp',
+  src:    `${CL}/w_828,f_auto,q_auto/v1777428995/Babula_Shots_Rd_s9lkak.webp`,
+  srcLg:  `${CL}/w_1600,f_auto,q_auto/v1777428995/Babula_Shots_Rd_s9lkak.webp`,
   alt: {
     es: 'Documentación aérea del avance de obra — supervisión técnica con drone',
     en: 'Aerial construction progress documentation — drone technical supervision',
@@ -101,14 +104,14 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
       title: titleAbsolute,
       description,
       siteName: 'Babula Shots',
-      images: [{ url: HERO_PHOTO.src, width: 1600, height: 900, alt: HERO_PHOTO.alt[isEs ? 'es' : 'en'] }],
+      images: [{ url: HERO_PHOTO.srcLg, width: 1600, height: 900, alt: HERO_PHOTO.alt[isEs ? 'es' : 'en'] }],
       locale: isEs ? 'es_DO' : 'en_US',
     },
     twitter: {
       card: 'summary_large_image',
       title: titleAbsolute,
       description,
-      images: [HERO_PHOTO.src],
+      images: [HERO_PHOTO.srcLg],
     },
   }
 }
@@ -303,10 +306,15 @@ export default async function DroneConstructionSupervisionPage({ params: { local
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={HERO_PHOTO.src}
+            srcSet={`${HERO_PHOTO.src} 828w, ${HERO_PHOTO.srcLg} 1600w`}
+            sizes="100vw"
+            width={1600}
+            height={900}
             alt={HERO_PHOTO.alt[isEs ? 'es' : 'en']}
             className="block h-auto w-full"
             loading="eager"
             fetchPriority="high"
+            decoding="async"
           />
         </section>
 
@@ -368,6 +376,10 @@ export default async function DroneConstructionSupervisionPage({ params: { local
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={MID_PHOTO.src}
+            srcSet={`${MID_PHOTO.src} 828w, ${MID_PHOTO.srcLg} 1600w`}
+            sizes="100vw"
+            width={1600}
+            height={900}
             alt={MID_PHOTO.alt[isEs ? 'es' : 'en']}
             className="block h-auto w-full"
             loading="lazy"

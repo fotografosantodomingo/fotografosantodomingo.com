@@ -14,8 +14,17 @@ const FAMILY_SLUG = 'commercial-branding-photography'
 // Cloudinary URL helper — public_ids stay self-documenting (descriptive
 // slugs from migration 025) so search engines pick up the keywords from
 // the path even before reading the alt attribute.
+const CL = 'https://res.cloudinary.com/dwewurxla/image/upload'
 function cl(publicId: string): string {
-  return `https://res.cloudinary.com/dwewurxla/image/upload/${publicId}.webp`
+  return `${CL}/f_auto,q_auto/${publicId}.webp`
+}
+// Takes a URL produced by cl() and returns a width-resized variant
+function clResize(url: string, w: number): string {
+  return url.replace('/f_auto,q_auto/', `/w_${w},f_auto,q_auto/`)
+}
+// Generates a 2-stop srcSet from a cl() URL
+function clSrcSet(url: string, small: number, large: number): string {
+  return `${clResize(url, small)} ${small}w, ${clResize(url, large)} ${large}w`
 }
 
 // 13 studio / indoor business headshots. Order: featured / strongest
@@ -358,7 +367,11 @@ export default async function BusinessPortraitsPage({ params: { locale } }: Prop
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={`m-${p.src}`}
-                src={p.src}
+                src={clResize(p.src, 828)}
+                srcSet={clSrcSet(p.src, 828, 1200)}
+                sizes="100vw"
+                width={1200}
+                height={1500}
                 alt={p.alt[isEs ? 'es' : 'en']}
                 className="block h-auto w-full"
                 loading={i === 0 ? 'eager' : 'lazy'}
@@ -373,10 +386,12 @@ export default async function BusinessPortraitsPage({ params: { locale } }: Prop
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   key={`d1-${p.src}`}
-                  src={p.src}
-                  alt={p.alt[isEs ? 'es' : 'en']}
+                  src={clResize(p.src, 600)}
+                  srcSet={clSrcSet(p.src, 600, 1200)}
+                  sizes="calc(100vw / 6)"
                   width={1200}
                   height={1500}
+                  alt={p.alt[isEs ? 'es' : 'en']}
                   className="block h-auto w-full object-cover"
                   loading={i < 3 ? 'eager' : 'lazy'}
                   fetchPriority={i === 0 ? 'high' : 'auto'}
@@ -389,10 +404,12 @@ export default async function BusinessPortraitsPage({ params: { locale } }: Prop
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   key={`d2-${p.src}`}
-                  src={p.src}
-                  alt={p.alt[isEs ? 'es' : 'en']}
+                  src={clResize(p.src, 600)}
+                  srcSet={clSrcSet(p.src, 600, 1200)}
+                  sizes="calc(100vw / 7)"
                   width={1200}
                   height={1500}
+                  alt={p.alt[isEs ? 'es' : 'en']}
                   className="block h-auto w-full object-cover"
                   loading="lazy"
                   decoding="async"
@@ -436,7 +453,11 @@ export default async function BusinessPortraitsPage({ params: { locale } }: Prop
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={`mo-${p.src}`}
-                src={p.src}
+                src={clResize(p.src, 828)}
+                srcSet={clSrcSet(p.src, 828, 1200)}
+                sizes="100vw"
+                width={1500}
+                height={1200}
                 alt={p.alt[isEs ? 'es' : 'en']}
                 className="block h-auto w-full"
                 loading="lazy"
@@ -449,10 +470,12 @@ export default async function BusinessPortraitsPage({ params: { locale } }: Prop
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={`do-${p.src}`}
-                src={p.src}
-                alt={p.alt[isEs ? 'es' : 'en']}
+                src={clResize(p.src, 828)}
+                srcSet={clSrcSet(p.src, 828, 1200)}
+                sizes="25vw"
                 width={1500}
                 height={1200}
+                alt={p.alt[isEs ? 'es' : 'en']}
                 className="block h-auto w-full object-cover"
                 loading="lazy"
                 decoding="async"
