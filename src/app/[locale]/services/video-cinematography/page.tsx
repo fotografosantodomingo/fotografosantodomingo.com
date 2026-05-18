@@ -28,6 +28,29 @@ type VideoGroup = {
 
 const videoGroups: VideoGroup[] = [
   {
+    groupId: 'dynamic-editing',
+    title: {
+      es: 'Edición Dinámica · Combinación de Planos Cinematográficos',
+      en: 'Dynamic Editing · Combined Cinematic Shots',
+    },
+    intro: {
+      es: 'La habilidad de editar es tan importante como la habilidad de filmar. Esta pieza combina planos dinámicos y cinematográficos editados con ritmo, cortes precisos y coherencia visual — todo producido por un solo operador.',
+      en: 'Editing skill is as important as filming skill. This piece combines dynamic and cinematic shots edited with rhythm, precise cuts, and visual coherence — all produced by a single operator.',
+    },
+    videos: [
+      {
+        id: 'TBk5fGcYNjM',
+        uploadDate: '2024-06-10',
+        title: { es: 'Combinación de planos dinámicos y cinematográficos — habilidades de edición rápida', en: 'Dynamic + cinematic shot combination — fast editing skills' },
+        description: {
+          es: 'Combinación de planos dinámicos y cinematográficos con habilidades de edición rápida. Ritmo, corte y coherencia visual completa entregada por un solo operador de cámara y editor.',
+          en: 'Combination of dynamic and cinematic shots with fast editing skills. Rhythm, cuts, and complete visual coherence delivered by a single camera operator and editor.',
+        },
+        badge: { es: 'Dinámico · Cinematográfico · Edición rápida', en: 'Dynamic · Cinematic · Fast editing' },
+      },
+    ],
+  },
+  {
     groupId: 'drone-cinematography',
     title: {
       es: 'Cinematografía Aérea con Drone',
@@ -158,29 +181,6 @@ const videoGroups: VideoGroup[] = [
           en: 'Image quality and natural light management in demanding public locations, including international airport filming with official authority permit. Environmental mastery, fast setup, and ability to operate under real logistical restrictions.',
         },
         badge: { es: 'Aeropuerto · Permiso oficial · Lugares públicos', en: 'Airport · Official permit · Public locations' },
-      },
-    ],
-  },
-  {
-    groupId: 'dynamic-editing',
-    title: {
-      es: 'Edición Dinámica · Combinación de Planos Cinematográficos',
-      en: 'Dynamic Editing · Combined Cinematic Shots',
-    },
-    intro: {
-      es: 'La habilidad de editar es tan importante como la habilidad de filmar. Esta pieza combina planos dinámicos y cinematográficos editados con ritmo, cortes precisos y coherencia visual — todo producido por un solo operador.',
-      en: 'Editing skill is as important as filming skill. This piece combines dynamic and cinematic shots edited with rhythm, precise cuts, and visual coherence — all produced by a single operator.',
-    },
-    videos: [
-      {
-        id: 'TBk5fGcYNjM',
-        uploadDate: '2024-06-10',
-        title: { es: 'Combinación de planos dinámicos y cinematográficos — habilidades de edición rápida', en: 'Dynamic + cinematic shot combination — fast editing skills' },
-        description: {
-          es: 'Combinación de planos dinámicos y cinematográficos con habilidades de edición rápida. Ritmo, corte y coherencia visual completa entregada por un solo operador de cámara y editor.',
-          en: 'Combination of dynamic and cinematic shots with fast editing skills. Rhythm, cuts, and complete visual coherence delivered by a single camera operator and editor.',
-        },
-        badge: { es: 'Dinámico · Cinematográfico · Edición rápida', en: 'Dynamic · Cinematic · Fast editing' },
       },
     ],
   },
