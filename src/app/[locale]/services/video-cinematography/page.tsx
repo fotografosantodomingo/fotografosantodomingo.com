@@ -12,6 +12,7 @@ type Props = {
 
 type Video = {
   id: string
+  uploadDate: string
   title: { es: string; en: string }
   description: { es: string; en: string }
   badge: { es: string; en: string }
@@ -39,6 +40,7 @@ const videoGroups: VideoGroup[] = [
     videos: [
       {
         id: 'Qh4C6YRPOFw',
+        uploadDate: '2023-03-15',
         title: { es: 'Edición dinámica con drone Mavic 3 — República Dominicana', en: 'Fast-edit drone showcase — Mavic 3 in Dominican Republic' },
         description: {
           es: 'Showreel de edición rápida con todos los planos filmados desde drone DJI Mavic 3 en República Dominicana. Demuestra la variedad de ángulos, alturas y movimientos posibles en un solo día de rodaje.',
@@ -48,6 +50,7 @@ const videoGroups: VideoGroup[] = [
       },
       {
         id: 'eKDJ51NFmRc',
+        uploadDate: '2023-07-22',
         title: { es: 'Calidad de imagen 4K ultra nítido — Drone', en: '4K ultra-sharp image quality — Drone footage' },
         description: {
           es: 'Demostración de la nitidez de imagen 4K del drone en diferentes condiciones de luz y velocidad de movimiento en República Dominicana.',
@@ -57,6 +60,7 @@ const videoGroups: VideoGroup[] = [
       },
       {
         id: 'PfN8WGgvDzQ',
+        uploadDate: '2024-04-19',
         title: { es: 'Lente zoom — alcance de 5 km fuera de zonas de aeropuerto', en: 'Zoom lens — 5 km reach outside airport zones' },
         description: {
           es: 'Drone con lente zoom interior que alcanza hasta 5 km fuera de zonas de restricción aeroportuaria. Planos de alta compresión y aislamiento de sujetos imposibles de lograr con equipo terrestre.',
@@ -66,6 +70,7 @@ const videoGroups: VideoGroup[] = [
       },
       {
         id: 'SGuhBamVKGk',
+        uploadDate: '2023-12-01',
         title: { es: 'Calidad de cámara drone durante el atardecer', en: 'Drone camera quality at sunset' },
         description: {
           es: 'Muestra de la calidad cinematográfica del drone durante la hora dorada y puesta de sol. Gestión de rango dinámico y transiciones de luz cálida en tiempo real.',
@@ -88,6 +93,7 @@ const videoGroups: VideoGroup[] = [
     videos: [
       {
         id: '0dDqz-zJeuE',
+        uploadDate: '2022-11-08',
         title: { es: '8K desde 400 metros con lente teleobjetivo — cámara en trípode', en: '8K from 400 meters with telephoto lens — camera on tripod' },
         description: {
           es: 'Grabación en 8K desde 400 metros de distancia con lente teleobjetivo, cámara sobre trípode. Resolución máxima disponible para campañas publicitarias, producciones cinematográficas y proyecciones de gran formato.',
@@ -111,6 +117,7 @@ const videoGroups: VideoGroup[] = [
     videos: [
       {
         id: '7iObqN_2Rfo',
+        uploadDate: '2024-02-14',
         title: { es: 'Footage súper cinematográfico al atardecer — filmado desde el agua con carcasa impermeable', en: 'Super cinematic sunset footage — filmed from the water with waterproof housing' },
         description: {
           es: 'Grabación súper cinematográfica durante el atardecer filmada completamente desde el agua usando carcasa impermeable. Lo más importante de este video: la carcasa impermeable permite filmar desde dentro del agua en locaciones de playa o eventos náuticos.',
@@ -134,6 +141,7 @@ const videoGroups: VideoGroup[] = [
     videos: [
       {
         id: 't1tXTGSAIH4',
+        uploadDate: '2023-09-03',
         title: { es: 'Propuesta de matrimonio sorpresa frente a la Torre Eiffel, París — sin preparación previa', en: 'Surprise marriage proposal in front of the Eiffel Tower, Paris — no prior preparation' },
         description: {
           es: 'Adaptación en tiempo real para capturar una propuesta de matrimonio frente a la Torre Eiffel en París sin preparación previa ni reconocimiento de locación. Demuestra la capacidad de reaccionar y producir contenido cinematográfico de manera espontánea en cualquier entorno.',
@@ -143,6 +151,7 @@ const videoGroups: VideoGroup[] = [
       },
       {
         id: 'Z5atDdnjY0M',
+        uploadDate: '2024-01-27',
         title: { es: 'Filmación en aeropuerto con permiso oficial de autoridades — lugares públicos exigentes', en: 'Airport filming with official authority permit — demanding public locations' },
         description: {
           es: 'Calidad de imagen y gestión de luz natural en lugares públicos de alta exigencia, incluyendo aeropuerto internacional con permiso oficial de autoridades. Dominio del entorno, rapidez de setup y capacidad de operar con restricciones logísticas reales.',
@@ -165,6 +174,7 @@ const videoGroups: VideoGroup[] = [
     videos: [
       {
         id: 'TBk5fGcYNjM',
+        uploadDate: '2024-06-10',
         title: { es: 'Combinación de planos dinámicos y cinematográficos — habilidades de edición rápida', en: 'Dynamic + cinematic shot combination — fast editing skills' },
         description: {
           es: 'Combinación de planos dinámicos y cinematográficos con habilidades de edición rápida. Ritmo, corte y coherencia visual completa entregada por un solo operador de cámara y editor.',
@@ -388,19 +398,17 @@ export default function VideoCinematographyPage({ params: { locale } }: Props) {
     },
   }
 
-  // VideoObject schema for each YouTube video.
-  // NOTE: Add `uploadDate` (ISO 8601) to each entry below for Video Rich Result eligibility.
-  // Without uploadDate Google will still crawl and index, but won't show video rich results.
+  // VideoObject schema — hqdefault.jpg is guaranteed on every YouTube video (maxresdefault may 404)
   const videoSchemas = allVideos.map((v) => ({
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
     '@id': `https://www.youtube.com/watch?v=${v.id}`,
     name: isEs ? v.title.es : v.title.en,
     description: isEs ? v.description.es : v.description.en,
-    thumbnailUrl: `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`,
+    thumbnailUrl: `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`,
     contentUrl: `https://www.youtube.com/watch?v=${v.id}`,
     embedUrl: `https://www.youtube-nocookie.com/embed/${v.id}`,
-    // uploadDate: 'YYYY-MM-DD', // ← add actual upload date per video for Video Rich Results
+    uploadDate: v.uploadDate,
     publisher: {
       '@type': 'Organization',
       name: 'Fotografo Santo Domingo | Babula Shots',
