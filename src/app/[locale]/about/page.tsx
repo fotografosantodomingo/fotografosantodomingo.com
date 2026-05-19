@@ -193,32 +193,16 @@ export default async function AboutPage({ params: { locale } }: Props) {
 
             {/* Photographer Profile Card */}
             <div className="relative">
-              {/* Main card — ready for headshot image */}
-              <div className="aspect-square bg-gradient-to-br from-gray-900 via-primary-900 to-primary-700 rounded-2xl flex flex-col items-center justify-center shadow-xl text-white overflow-hidden">
-                {/* Camera shutter decoration */}
-                <div className="absolute inset-0 opacity-5">
-                  <svg viewBox="0 0 100 100" className="w-full h-full" fill="currentColor">
-                    <circle cx="50" cy="50" r="48" stroke="white" strokeWidth="2" fill="none"/>
-                    <circle cx="50" cy="50" r="30" stroke="white" strokeWidth="1.5" fill="none"/>
-                    <circle cx="50" cy="50" r="15" fill="white" opacity="0.3"/>
-                  </svg>
-                </div>
-                <div className="text-7xl mb-4">📷</div>
-                <p className="text-2xl font-bold tracking-wide">Babula Shots</p>
-                <p className="text-ink text-sm mt-1 tracking-widest uppercase">
-                  {locale === 'es' ? 'Fotógrafo Profesional' : 'Professional Photographer'}
-                </p>
-                <a
-                  href="https://instagram.com/babulashotsrd"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm px-4 py-2 rounded-full transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-                  </svg>
-                  @babulashotsrd
-                </a>
+              {/* Main card */}
+              <div className="aspect-square rounded-2xl shadow-xl overflow-hidden">
+                <img
+                  src="/images/babula-shots-michal-babula-fotografo-profesional.webp"
+                  alt={locale === 'es' ? 'Michal Babula — Fotógrafo Profesional Santo Domingo' : 'Michal Babula — Professional Photographer Santo Domingo'}
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                  width={600}
+                  height={600}
+                />
               </div>
               {/* Rating badge */}
               <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-gray-900 border border-hairline-soft rounded-full px-4 py-2 flex items-center gap-2 whitespace-nowrap">
@@ -390,7 +374,7 @@ export default async function AboutPage({ params: { locale } }: Props) {
                   </div>
                   <div>
                     <h3 className="font-semibold text-white">Cámaras Profesionales</h3>
-                    <p className="text-ink-muted">Sony A7R series con lentes de alta calidad</p>
+                    <p className="text-ink-muted">Canon R5</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
@@ -408,7 +392,7 @@ export default async function AboutPage({ params: { locale } }: Props) {
                   </div>
                   <div>
                     <h3 className="font-semibold text-white">Dron Licenciado</h3>
-                    <p className="text-ink-muted">DJI con licencia FAA para fotografía aérea</p>
+                    <p className="text-ink-muted">DJI Mavic 3 Pro</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
