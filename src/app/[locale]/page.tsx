@@ -444,6 +444,59 @@ export default async function HomePage({ params: { locale } }: Props) {
         </div>
       </section>
 
+      {/* ── Photographer portrait ── */}
+      <section className="py-0 bg-canvas" aria-label={isEs ? 'Fotógrafo profesional en República Dominicana' : 'Professional photographer in the Dominican Republic'}>
+        <figure className="w-full max-h-[70vh] overflow-hidden">
+          <img
+            src="/images/fotografo-profesional-republica-dominicana.webp"
+            alt={isEs
+              ? 'Michal Babula, fotógrafo profesional en República Dominicana — Babula Shots'
+              : 'Michal Babula, professional photographer in the Dominican Republic — Babula Shots'}
+            title={isEs
+              ? 'Fotógrafo profesional en República Dominicana | Babula Shots'
+              : 'Professional photographer in the Dominican Republic | Babula Shots'}
+            className="w-full h-full object-cover object-center"
+            loading="lazy"
+            width={1600}
+            height={900}
+          />
+          <figcaption className="sr-only">
+            {isEs
+              ? 'Michal Babula, fotógrafo profesional con sede en Santo Domingo, República Dominicana. Especializado en bodas, retratos, eventos y fotografía aérea con drone.'
+              : 'Michal Babula, professional photographer based in Santo Domingo, Dominican Republic. Specialized in weddings, portraits, events, and aerial drone photography.'}
+          </figcaption>
+        </figure>
+      </section>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ImageObject',
+            '@id': `${BASE_URL}/${locale}#photographer-portrait`,
+            contentUrl: `${BASE_URL}/images/fotografo-profesional-republica-dominicana.webp`,
+            url: `${BASE_URL}/images/fotografo-profesional-republica-dominicana.webp`,
+            name: isEs
+              ? 'Fotógrafo profesional en República Dominicana — Babula Shots'
+              : 'Professional photographer in the Dominican Republic — Babula Shots',
+            description: isEs
+              ? 'Michal Babula, fotógrafo profesional con sede en la Zona Colonial de Santo Domingo. Más de 10 años capturando bodas, retratos, eventos y tomas aéreas con drone en República Dominicana.'
+              : 'Michal Babula, professional photographer based in the Zona Colonial of Santo Domingo. Over 10 years capturing weddings, portraits, events, and aerial drone shots across the Dominican Republic.',
+            caption: isEs
+              ? 'Michal Babula — Fotógrafo Profesional · Santo Domingo, República Dominicana'
+              : 'Michal Babula — Professional Photographer · Santo Domingo, Dominican Republic',
+            creator: {
+              '@type': 'Person',
+              name: 'Michal Babula',
+              url: `${BASE_URL}/${locale}/about`,
+            },
+            representativeOfPage: false,
+            width: { '@type': 'QuantitativeValue', value: 1600 },
+            height: { '@type': 'QuantitativeValue', value: 900 },
+          }),
+        }}
+      />
+
       {/* ── FAQ ── */}
       <HomeFaq locale={locale} />
 
