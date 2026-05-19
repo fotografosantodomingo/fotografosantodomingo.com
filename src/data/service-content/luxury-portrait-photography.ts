@@ -447,4 +447,46 @@ export const luxuryPortraitPhotographyContent: ServiceContent = {
         description: { es: 'Definimos estilo, locacion y objetivos de imagen.', en: 'We define style, location, and image goals.' },
       },
     ],
+  preProcessGallery: [
+    {
+      src: '/images/retratos-profesional-santo-domingo.webp',
+      alt: {
+        es: 'Retrato profesional en Santo Domingo, República Dominicana — Babula Shots fotógrafo de retratos',
+        en: 'Professional portrait in Santo Domingo, Dominican Republic — Babula Shots portrait photographer',
+      },
+      caption: {
+        es: 'Retratos profesionales en Santo Domingo — Babula Shots',
+        en: 'Professional portraits in Santo Domingo — Babula Shots',
+      },
+      width: 1600,
+      height: 1067,
+    },
+    {
+      src: '/images/sesion-fotos-santo-domingo.webp',
+      alt: {
+        es: 'Sesión de fotos en Santo Domingo — retrato de lujo con luz natural, República Dominicana',
+        en: 'Photo session in Santo Domingo — luxury portrait with natural light, Dominican Republic',
+      },
+      caption: {
+        es: 'Sesión de fotos en Santo Domingo · Babula Shots',
+        en: 'Photo session in Santo Domingo · Babula Shots',
+      },
+      width: 1600,
+      height: 1067,
+    },
+    {
+      src: '/images/sesion-fotos-santo-domingo-rd-babula.webp',
+      alt: {
+        es: 'Sesión de fotos en Santo Domingo, RD — Babula Shots fotógrafo profesional de retratos y bodas',
+        en: 'Photo session in Santo Domingo, DR — Babula Shots professional portrait and wedding photographer',
+      },
+      caption: {
+        es: 'Sesión de fotos Santo Domingo RD · Babula Shots',
+        en: 'Photo session Santo Domingo DR · Babula Shots',
+      },
+      width: 800,
+      height: 1067,
+      mobileOnly: true,
+    },
+  ],
 }

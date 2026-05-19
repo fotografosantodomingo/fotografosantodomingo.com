@@ -788,6 +788,75 @@ export default async function FamilyPage({ params }: Props) {
           </section>
         )}
 
+        {/* ── PRE-PROCESS GALLERY ── full-bleed strip before Proceso section */}
+        {content?.preProcessGallery && content.preProcessGallery.length > 0 && (
+          <>
+            <section className="border-b border-hairline-soft bg-canvas" aria-hidden="true">
+              <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] grid grid-cols-1 md:grid-cols-2 gap-0">
+                {content.preProcessGallery.filter((img) => !img.mobileOnly).map((img, i) => (
+                  <figure key={img.src} className="m-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img.src}
+                      alt={isEs ? img.alt.es : img.alt.en}
+                      title={img.caption ? (isEs ? img.caption.es : img.caption.en) : undefined}
+                      width={img.width ?? 1600}
+                      height={img.height ?? 900}
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-auto object-cover block"
+                    />
+                    {img.caption && (
+                      <figcaption className="sr-only">{isEs ? img.caption.es : img.caption.en}</figcaption>
+                    )}
+                  </figure>
+                ))}
+              </div>
+            </section>
+            {content.preProcessGallery.some((img) => img.mobileOnly) && (
+              <section className="border-b border-hairline-soft bg-canvas md:hidden">
+                {content.preProcessGallery.filter((img) => img.mobileOnly).map((img) => (
+                  <figure key={img.src} className="m-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img.src}
+                      alt={isEs ? img.alt.es : img.alt.en}
+                      title={img.caption ? (isEs ? img.caption.es : img.caption.en) : undefined}
+                      width={img.width ?? 800}
+                      height={img.height ?? 1000}
+                      sizes="100vw"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-auto object-cover block"
+                    />
+                    {img.caption && (
+                      <figcaption className="sr-only">{isEs ? img.caption.es : img.caption.en}</figcaption>
+                    )}
+                  </figure>
+                ))}
+              </section>
+            )}
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  '@context': 'https://schema.org',
+                  '@type': 'ImageGallery',
+                  image: content.preProcessGallery.map((img) => ({
+                    '@type': 'ImageObject',
+                    contentUrl: img.src,
+                    url: img.src,
+                    name: isEs ? img.alt.es : img.alt.en,
+                    caption: img.caption ? (isEs ? img.caption.es : img.caption.en) : undefined,
+                    creator: { '@type': 'Person', name: 'Michal Babula' },
+                  })),
+                }),
+              }}
+            />
+          </>
+        )}
+
         {/* ── PROCESS STEPS ── how it works */}
         {content?.processSteps && content.processSteps.length > 0 && (
           <section className="border-b border-hairline-soft py-16 md:py-20">

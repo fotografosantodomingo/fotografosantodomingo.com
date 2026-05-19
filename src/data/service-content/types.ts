@@ -27,6 +27,8 @@ export type RichImage = {
   caption?: Bilingual
   width?: number
   height?: number
+  /** When true, renders only on mobile (hidden on md+). */
+  mobileOnly?: boolean
 }
 
 export type FaqItem = {
@@ -197,4 +199,8 @@ export type ServiceContent = {
   faqs?: FaqItem[]
   /** Internal navigation links to spoke / portfolio / quote pages. */
   internalLinks?: InternalLink[]
+  /** Full-bleed photo strip rendered immediately before the Proceso /
+   *  "Cómo trabajamos" section. Accepts RichImage[] for bilingual SEO
+   *  metadata. Images with mobileOnly:true render only on small screens. */
+  preProcessGallery?: RichImage[]
 }
