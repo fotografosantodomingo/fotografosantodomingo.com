@@ -282,5 +282,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...geoEntries,
     ...blogEntries,
     ...spokeEntries,
+    // Standalone landing pages not covered by the service catalog
+    { url: `${BASE_URL}/es/beach-photo-sessions`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: `${BASE_URL}/en/beach-photo-sessions`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: `${BASE_URL}/es/business-portraits-santo-domingo`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: `${BASE_URL}/en/business-portraits-santo-domingo`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: `${BASE_URL}/es/photo-studio-santo-domingo`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: `${BASE_URL}/en/photo-studio-santo-domingo`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: `${BASE_URL}/es/drone-construction-supervision`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE_URL}/en/drone-construction-supervision`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE_URL}/es/services/real-estate-drone-photography/360-simulacion-vistas`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.75 },
+    { url: `${BASE_URL}/en/services/real-estate-drone-photography/360-simulacion-vistas`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.75 },
   ]
 }

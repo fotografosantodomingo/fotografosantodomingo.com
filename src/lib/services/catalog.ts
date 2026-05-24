@@ -25,6 +25,7 @@ export const serviceSlugById: Record<ServiceCatalogItem['id'], string> = {
   family: 'family-photography',
   commercial: 'commercial-photography',
   proposal: 'proposal-photography',
+  video: 'video-cinematography',
 }
 
 export const serviceIdBySlug: Record<string, ServiceCatalogItem['id']> = Object.fromEntries(
