@@ -225,7 +225,7 @@ export default function AiChat() {
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? (locale === 'es' ? 'Cerrar chat' : 'Close chat') : (locale === 'es' ? 'Abrir chat' : 'Open chat')}
-        className="fixed bottom-5 right-[4.5rem] z-50 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg ring-1 ring-black/10 transition-transform hover:scale-105 active:scale-95 dark:bg-gray-900 dark:ring-white/10 md:bottom-6 md:right-20"
+        className="fixed bottom-5 left-5 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg ring-1 ring-black/10 transition-transform hover:scale-105 active:scale-95 dark:bg-gray-900 dark:ring-white/10 md:bottom-6 md:left-6"
       >
         {open ? (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-5 w-5 text-slate-700 dark:text-gray-200">
@@ -240,7 +240,7 @@ export default function AiChat() {
 
       {open && (
         <div
-          className="fixed bottom-20 right-4 z-50 flex w-80 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-white/10 dark:bg-gray-900 md:right-6 md:w-96"
+          className="fixed bottom-20 left-4 z-50 flex w-80 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-white/10 dark:bg-gray-900 md:left-6 md:w-96"
           style={{ maxHeight: 'min(560px, calc(100dvh - 96px))' }}
         >
           {/* Header */}
