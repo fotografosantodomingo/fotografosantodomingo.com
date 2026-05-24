@@ -178,12 +178,22 @@ const nextConfig = {
       config.cache = false
     }
 
-    // @anthropic-ai/sdk imports node:fs and node:path which webpack
-    // can't resolve for edge runtime. Strip the node: prefix so webpack
-    // uses its own resolver, then fall back to empty stubs — at runtime
-    // CF Workers provides the real implementations via nodejs_compat.
+    // @anthropic-ai/sdk v0.98+ ships an agent-toolset that statically imports
+    // node:fs, node:child_process, node:readline, etc. — none of which webpack
+    // can resolve for edge runtime. Replace the two culprit files with empty
+    // stubs so they don't pull Node.js built-ins into the bundle. At runtime
+    // CF Workers provides real Node.js compat via nodejs_compat flag.
     const webpack = require('webpack')
     config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(
+        /\/@anthropic-ai\/sdk\/tools\/agent-toolset\/node\.mjs$/,
+        require.resolve('./src/lib/shims/empty.js'),
+      ),
+      new webpack.NormalModuleReplacementPlugin(
+        /\/@anthropic-ai\/sdk\/tools\/agent-toolset\/fs-util\.mjs$/,
+        require.resolve('./src/lib/shims/empty.js'),
+      ),
+      // Strip node: prefix for any remaining built-ins so webpack resolves them
       new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
         resource.request = resource.request.replace(/^node:/, '')
       }),
@@ -193,6 +203,9 @@ const nextConfig = {
       fs: false,
       path: false,
       'fs/promises': false,
+      child_process: false,
+      readline: false,
+      crypto: false,
     }
 
     return config
