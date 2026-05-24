@@ -177,10 +177,24 @@ const nextConfig = {
     if (!dev) {
       config.cache = false
     }
-    // (cloudflare:sockets externalization removed — was needed for the
-    // worker-mailer SMTP transport that we replaced with Brevo HTTP API
-    // in commit migrating off Hostinger SMTP. No more virtual modules
-    // to externalize.)
+
+    // @anthropic-ai/sdk imports node:fs and node:path which webpack
+    // can't resolve for edge runtime. Strip the node: prefix so webpack
+    // uses its own resolver, then fall back to empty stubs — at runtime
+    // CF Workers provides the real implementations via nodejs_compat.
+    const webpack = require('webpack')
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
+        resource.request = resource.request.replace(/^node:/, '')
+      }),
+    )
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      'fs/promises': false,
+    }
+
     return config
   },
 
