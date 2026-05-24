@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Unbounded, JetBrains_Mono } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import './globals.css'
-import TawkChat from '@/components/TawkChat'
+import AiChat from '@/components/AiChat'
 
 // Bugatti Display substitute. Geometric extended display face for the
 // monumental hero scale (DESIGN.md §3 Note on Substitutes — Unbounded works
@@ -100,9 +100,7 @@ export default async function RootLayout({
           />
         </noscript>
         {children}
-        {/* Tawk.to live chat — lazyOnload so it never blocks LCP. See
-            src/components/TawkChat.tsx for the perf-rationale. */}
-        <TawkChat />
+        <AiChat />
       </body>
     </html>
   )

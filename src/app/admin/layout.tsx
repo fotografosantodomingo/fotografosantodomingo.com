@@ -40,6 +40,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Link href="/admin/quotes" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
                   Quotes
                 </Link>
+                <Link href="/admin/ai-inbox" className="font-medium text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-300">
+                  AI Inbox
+                </Link>
                 <Link href="/admin/images" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
                   Images
                 </Link>
