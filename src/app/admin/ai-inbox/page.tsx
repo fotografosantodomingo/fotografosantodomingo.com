@@ -11,6 +11,7 @@ type PendingDraft = {
   risk_flags: string[]
   confidence: number | null
   created_at: string
+  channel: string
   conversation: {
     id: string
     buyer_locale: string
@@ -19,12 +20,12 @@ type PendingDraft = {
     last_message_at: string
   }
   user_message: string | null
+  email_subject: string | null
 }
 
 export default async function AiInboxPage() {
   const admin = createServiceClient()
 
-  // Fetch pending drafts with their conversation and the preceding user message
   const { data: drafts } = await admin
     .from('ai_conversation_messages')
     .select(
@@ -35,6 +36,7 @@ export default async function AiInboxPage() {
       risk_flags,
       confidence,
       created_at,
+      channel,
       conversation:ai_conversations!inner(
         id,
         buyer_locale,
@@ -49,10 +51,10 @@ export default async function AiInboxPage() {
     .order('created_at', { ascending: false })
     .limit(50)
 
-  // For each draft, grab the user message that triggered it
   const enriched: PendingDraft[] = await Promise.all(
     (drafts ?? []).map(async (d) => {
       const conv = Array.isArray(d.conversation) ? d.conversation[0] : d.conversation
+
       const { data: userMsg } = await admin
         .from('ai_conversation_messages')
         .select('body')
@@ -63,6 +65,19 @@ export default async function AiInboxPage() {
         .limit(1)
         .single()
 
+      // For email conversations, pull the subject from email_threads
+      let emailSubject: string | null = null
+      if (d.channel === 'email') {
+        const { data: thread } = await admin
+          .from('email_threads')
+          .select('subject')
+          .eq('conversation_id', conv.id)
+          .order('created_at', { ascending: true })
+          .limit(1)
+          .single()
+        emailSubject = thread?.subject ?? null
+      }
+
       return {
         id: d.id,
         body: d.body,
@@ -70,8 +85,10 @@ export default async function AiInboxPage() {
         risk_flags: d.risk_flags ?? [],
         confidence: d.confidence,
         created_at: d.created_at,
+        channel: d.channel ?? 'web_chat',
         conversation: conv as PendingDraft['conversation'],
         user_message: userMsg?.body ?? null,
+        email_subject: emailSubject,
       }
     }),
   )

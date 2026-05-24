@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { createServerClient } from '@supabase/ssr'
+import { sendEmailReply } from '@/lib/email/chat-reply'
 
 export const runtime = 'edge'
 
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const { data: msg, error: fetchErr } = await admin
     .from('ai_conversation_messages')
-    .select('id, conversation_id, approval_status')
+    .select('id, conversation_id, approval_status, body, channel')
     .eq('id', messageId)
     .maybeSingle()
 
@@ -58,7 +59,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'already_actioned' }, { status: 409 })
   }
 
+  const finalBody = editedBody ?? msg.body
   const status = editedBody ? 'edited' : 'approved'
+
   const { error: updateErr } = await admin
     .from('ai_conversation_messages')
     .update({
@@ -82,5 +85,83 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   })
   if (evErr) console.error('[ai-inbox/approve] event failed', evErr)
 
+  // For email conversations: send the reply via Brevo
+  if (msg.channel === 'email') {
+    await sendEmailReply_forConversation(admin, msg.conversation_id, messageId, finalBody)
+  }
+
   return NextResponse.json({ ok: true, status })
+}
+
+async function sendEmailReply_forConversation(
+  admin: ReturnType<typeof createServiceClient>,
+  conversationId: string,
+  assistantMessageId: string,
+  replyBody: string,
+): Promise<void> {
+  // Get conversation for buyer email
+  const { data: conv } = await admin
+    .from('ai_conversations')
+    .select('buyer_email, buyer_locale')
+    .eq('id', conversationId)
+    .maybeSingle()
+  if (!conv?.buyer_email) {
+    console.error('[ai-inbox/approve] email conversation has no buyer_email', conversationId)
+    return
+  }
+
+  // Get thread for subject + threading headers
+  const { data: thread } = await admin
+    .from('email_threads')
+    .select('id, subject, root_message_id')
+    .eq('conversation_id', conversationId)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle()
+  if (!thread) {
+    console.error('[ai-inbox/approve] no email_threads row for conversation', conversationId)
+    return
+  }
+
+  // Get the most recent inbound email_message for In-Reply-To
+  const { data: lastInbound } = await admin
+    .from('email_messages')
+    .select('message_id, refs')
+    .eq('thread_id', thread.id)
+    .eq('direction', 'inbound')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  const inReplyTo = lastInbound?.message_id ?? thread.root_message_id
+  const references = lastInbound?.refs?.length
+    ? lastInbound.refs
+    : [thread.root_message_id]
+
+  const result = await sendEmailReply({
+    toAddress: conv.buyer_email,
+    subject: thread.subject,
+    bodyText: replyBody,
+    inReplyTo,
+    references,
+  })
+
+  if (!result.ok) {
+    console.error('[ai-inbox/approve] email send failed', result.error)
+    return
+  }
+
+  // Record the outbound email_messages row
+  const { error: outErr } = await admin.from('email_messages').insert({
+    conversation_message_id: assistantMessageId,
+    thread_id: thread.id,
+    direction: 'outbound',
+    message_id: result.messageId,
+    in_reply_to: inReplyTo,
+    refs: references,
+    from_address: process.env.EMAIL_REPLY_ADDRESS ?? 'chat@fotografosantodomingo.com',
+    to_address: conv.buyer_email,
+    subject: thread.subject,
+  })
+  if (outErr) console.error('[ai-inbox/approve] outbound email_messages insert failed', outErr)
 }

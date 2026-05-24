@@ -1,0 +1,12 @@
+name = "fotografosantodomingo-inbound-email"
+main = "src/index.ts"
+compatibility_date = "2026-04-21"
+compatibility_flags = ["nodejs_compat"]
+
+# Secrets (set via: wrangler secret put SECRET_NAME)
+#   EMAIL_INBOUND_SECRET   — shared HMAC secret with the Pages app
+#   APP_BASE               — https://www.fotografosantodomingo.com
+
+[vars]
+# Catch-all reply address — must match what Cloudflare Email Routing forwards to
+REPLY_ADDRESS = "chat@fotografosantodomingo.com"

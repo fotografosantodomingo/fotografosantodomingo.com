@@ -10,6 +10,7 @@ type PendingDraft = {
   risk_flags: string[]
   confidence: number | null
   created_at: string
+  channel: string
   conversation: {
     id: string
     buyer_locale: string
@@ -18,6 +19,7 @@ type PendingDraft = {
     last_message_at: string
   }
   user_message: string | null
+  email_subject: string | null
 }
 
 const RISK_COLORS: Record<string, string> = {
@@ -98,6 +100,14 @@ function DraftCard({
     >
       {/* Meta row */}
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-gray-400">
+        <span className={`rounded-full px-2 py-0.5 font-medium ${
+          draft.channel === 'email'
+            ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300'
+            : 'bg-slate-100 text-slate-600 dark:bg-gray-800 dark:text-gray-300'
+        }`}>
+          {draft.channel === 'email' ? '✉ email' : '💬 chat'}
+        </span>
+        <span>·</span>
         <span className="font-mono">{draft.conversation.id.slice(0, 8)}</span>
         <span>·</span>
         <span>{draft.conversation.buyer_locale.toUpperCase()}</span>
@@ -105,6 +115,12 @@ function DraftCard({
           <>
             <span>·</span>
             <span>{draft.conversation.buyer_email}</span>
+          </>
+        )}
+        {draft.email_subject && (
+          <>
+            <span>·</span>
+            <span className="italic">{draft.email_subject}</span>
           </>
         )}
         <span>·</span>
