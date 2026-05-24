@@ -135,11 +135,6 @@ export async function POST(req: NextRequest): Promise<Response> {
           } else if (event.type === 'done') {
             inputTokens = event.usage.input_tokens
             outputTokens = event.usage.output_tokens
-            controller.enqueue(
-              encoder.encode(
-                `data: ${JSON.stringify({ type: 'done', conversationId })}\n\n`,
-              ),
-            )
           } else if (event.type === 'error') {
             controller.enqueue(
               encoder.encode(
@@ -163,20 +158,33 @@ export async function POST(req: NextRequest): Promise<Response> {
         locale: data.locale,
       })
 
-      const { error: assistantInsertErr } = await admin.from('ai_conversation_messages').insert({
-        conversation_id: conversationId,
-        role: 'assistant',
-        channel: 'web_chat',
-        body: fullDraft,
-        approval_status: 'auto_sent',
-        sent_at: new Date().toISOString(),
-        confidence: classification.confidence,
-        intent: classification.intent,
-        risk_flags: classification.riskFlags,
-      })
+      // Insert BEFORE sending done so we can include the real DB id.
+      // The client uses it to replace the pendingId placeholder, which
+      // lets the poll dedup correctly skip the message.
+      const { data: assistantRow, error: assistantInsertErr } = await admin
+        .from('ai_conversation_messages')
+        .insert({
+          conversation_id: conversationId,
+          role: 'assistant',
+          channel: 'web_chat',
+          body: fullDraft,
+          approval_status: 'auto_sent',
+          sent_at: new Date().toISOString(),
+          confidence: classification.confidence,
+          intent: classification.intent,
+          risk_flags: classification.riskFlags,
+        })
+        .select('id')
+        .single()
       if (assistantInsertErr) {
         console.error('[ai-chat] assistant turn insert failed', assistantInsertErr)
       }
+
+      controller.enqueue(
+        encoder.encode(
+          `data: ${JSON.stringify({ type: 'done', conversationId, messageId: assistantRow?.id ?? null })}\n\n`,
+        ),
+      )
 
       const costCents =
         (inputTokens * 0.003 + outputTokens * 0.015) / 1000

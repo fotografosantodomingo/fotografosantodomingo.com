@@ -168,8 +168,15 @@ export default function AiChat() {
               setMessages((prev) =>
                 prev.map((m) => m.id === pendingId ? { ...m, body: streamedText } : m),
               )
-            } else if (ev.type === 'done' && ev.conversationId && !conversationId) {
-              setConversationId(ev.conversationId)
+            } else if (ev.type === 'done') {
+              if (ev.conversationId && !conversationId) setConversationId(ev.conversationId)
+              // Replace the client-side pendingId with the real DB id so the
+              // poll dedup correctly skips this message instead of adding it twice
+              if (ev.messageId) {
+                setMessages((prev) =>
+                  prev.map((m) => m.id === pendingId ? { ...m, id: ev.messageId } : m),
+                )
+              }
             }
           } catch {}
         }
