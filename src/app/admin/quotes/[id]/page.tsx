@@ -119,12 +119,6 @@ export default async function QuoteDetailPage({ params }: { params: { id: string
                     value={new Date(quote.proposal_expires_at).toLocaleDateString()}
                   />
                 )}
-                {quote.deposit_amount_usd && (
-                  <DetailRow
-                    label="Deposit paid"
-                    value={`$${Number(quote.deposit_amount_usd).toLocaleString('en-US', { minimumFractionDigits: 2 })}`}
-                  />
-                )}
               </tbody>
             </table>
 
