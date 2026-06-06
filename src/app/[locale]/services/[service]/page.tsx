@@ -474,6 +474,64 @@ export default async function FamilyPage({ params }: Props) {
           </section>
         )}
 
+        {/* ── JW MARRIOTT CTA ── only on corporate-event-photography. Drives
+             traffic to the dedicated venue sub-page covering product
+             presentations and networking events at JW Marriott Piantini SD. */}
+        {family.slug === 'corporate-event-photography' && (
+          <section className="border-b border-hairline-soft bg-canvas">
+            <div className="container mx-auto px-4 py-12 md:py-16">
+              <div className="flex flex-col md:flex-row md:items-center gap-8 md:gap-12">
+                <Link
+                  href={`/${locale}/services/corporate-event-photography/jw-marriott-santo-domingo`}
+                  className="block shrink-0 overflow-hidden group"
+                  aria-label={isEs ? 'Ver eventos corporativos en JW Marriott Santo Domingo' : 'See corporate events at JW Marriott Santo Domingo'}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://res.cloudinary.com/dwewurxla/image/upload/v1780585505/Foto%CC%81grafo_de_eventos_sociales_y_negocios_RD_jcxmxe.webp"
+                    alt={isEs
+                      ? 'Fotógrafo de eventos sociales y de negocios en JW Marriott Santo Domingo, República Dominicana'
+                      : 'Social and business event photographer at JW Marriott Santo Domingo, Dominican Republic'}
+                    title={isEs
+                      ? 'Eventos corporativos en JW Marriott Santo Domingo — Babula Shots'
+                      : 'Corporate events at JW Marriott Santo Domingo — Babula Shots'}
+                    width={1600}
+                    height={1067}
+                    className="block w-full md:w-80 lg:w-96 h-auto object-cover rounded-md group-hover:opacity-90 transition-opacity duration-200"
+                    loading="lazy"
+                  />
+                </Link>
+                <div className="flex-1">
+                  <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-3">
+                    {isEs ? 'Venue destacado' : 'Featured venue'}
+                  </p>
+                  <h2
+                    className="font-display uppercase text-ink"
+                    style={{ fontSize: 'clamp(24px, 3.2vw, 40px)', lineHeight: '1.05' }}
+                  >
+                    {isEs
+                      ? 'Presentaciones de Producto y Networking · JW Marriott Santo Domingo'
+                      : 'Product Presentations & Networking · JW Marriott Santo Domingo'}
+                  </h2>
+                  <p className="text-ink-muted text-sm md:text-base leading-relaxed mt-4 max-w-2xl">
+                    {isEs
+                      ? 'Cobertura fotográfica de eventos empresariales en el JW Marriott Piantini — presentaciones de producto, networking B2B, galas y convenciones. Conocemos el venue, sus salones y protocolos para integrar la cobertura sin fricción desde el primer minuto.'
+                      : 'Photographic coverage of corporate events at JW Marriott Piantini — product presentations, B2B networking, galas, and conventions. We know the venue, its ballrooms, and protocols to integrate coverage seamlessly from the first minute.'}
+                  </p>
+                  <div className="mt-6">
+                    <Link
+                      href={`/${locale}/services/corporate-event-photography/jw-marriott-santo-domingo`}
+                      className="inline-flex items-center justify-center rounded-full bg-ink px-6 py-3 font-mono uppercase tracking-widest text-[12px] text-canvas hover:opacity-90 transition-opacity"
+                    >
+                      {isEs ? 'Ver galería JW Marriott →' : 'See JW Marriott gallery →'}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* ── HERO GALLERY ── Optional full-bleed photos rendered just before
              the "Why us" section. Edge-to-edge, no crop, same on desktop and
              mobile. Source: ServiceContent.heroGallery in src/data/service-content/. */}
