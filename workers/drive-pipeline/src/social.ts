@@ -268,7 +268,7 @@ export function linkedInAuthStart(env: Env, workerUrl: string): string {
     client_id: env.LINKEDIN_CLIENT_ID ?? '',
     redirect_uri: `${workerUrl}/auth/linkedin/callback`,
     state,
-    scope: 'openid profile w_member_social',
+    scope: 'w_member_social r_basicprofile',
   })
   return `https://www.linkedin.com/oauth/v2/authorization?${params}`
 }
@@ -288,11 +288,12 @@ export async function linkedInAuthCallback(env: Env, workerUrl: string, code: st
   if (!res.ok) throw new Error(`LI token exchange: ${await res.text()}`)
   const { access_token } = await res.json() as { access_token: string }
 
-  const meRes = await fetch('https://api.linkedin.com/v2/userinfo', {
+  // Get member ID via /v2/me (requires r_basicprofile)
+  const meRes = await fetch('https://api.linkedin.com/v2/me', {
     headers: { Authorization: `Bearer ${access_token}` },
   })
-  const me = await meRes.json() as { sub?: string }
-  const authorUrn = `urn:li:person:${me.sub}`
+  const me = await meRes.json() as { id?: string }
+  const authorUrn = `urn:li:person:${me.id}`
 
   return { token: access_token, authorUrn }
 }
