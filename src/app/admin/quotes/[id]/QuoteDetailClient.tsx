@@ -390,7 +390,7 @@ export function ChecklistCard({
 
 // ─── Cover letter template ────────────────────────────────────────────────────
 
-const FOOTER = `Thomas Smith — Sales Dept
+const FOOTER = `Michal Babula — Sales Dept
 Email: info@fotografosantodomingo.com
 Tel./WP: +1 (809) 720-9547
 www.fotografosantodomingo.com`
