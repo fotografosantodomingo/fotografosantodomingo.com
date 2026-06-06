@@ -155,6 +155,8 @@ async function postToInstagram(
 
 // ── LinkedIn ──────────────────────────────────────────────────────────────────
 
+const LI_VERSION = '202501'
+
 async function postToLinkedIn(
   env: Env,
   imageUrl: string,
@@ -166,31 +168,24 @@ async function postToLinkedIn(
 
   const token = env.LINKEDIN_ACCESS_TOKEN
   const author = env.LINKEDIN_AUTHOR_URN
-  const headers = {
+  const restHeaders = {
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
+    'LinkedIn-Version': LI_VERSION,
     'X-Restli-Protocol-Version': '2.0.0',
   }
 
   try {
-    // Step 1: register upload
-    const regRes = await fetch('https://api.linkedin.com/v2/assets?action=registerUpload', {
+    // Step 1: initialize image upload (new REST API, replaces registerUpload)
+    const initRes = await fetch('https://api.linkedin.com/rest/images?action=initializeUpload', {
       method: 'POST',
-      headers,
-      body: JSON.stringify({
-        registerUploadRequest: {
-          recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
-          owner: author,
-          serviceRelationships: [{ relationshipType: 'OWNER', identifier: 'urn:li:userGeneratedContent' }],
-        },
-      }),
+      headers: restHeaders,
+      body: JSON.stringify({ initializeUploadRequest: { owner: author } }),
     })
-    if (!regRes.ok) throw new Error(`LI register: ${await regRes.text()}`)
-    const regJson = await regRes.json() as {
-      value: { asset: string; uploadMechanism: { 'com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest': { uploadUrl: string } } }
-    }
-    const assetUrn = regJson.value.asset
-    const uploadUrl = regJson.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'].uploadUrl
+    if (!initRes.ok) throw new Error(`LI initializeUpload: ${await initRes.text()}`)
+    const initJson = await initRes.json() as { value: { uploadUrl: string; image: string } }
+    const uploadUrl = initJson.value.uploadUrl
+    const imageUrn = initJson.value.image
 
     // Step 2: upload image bytes
     const imgRes = await fetch(imageUrl)
@@ -198,31 +193,37 @@ async function postToLinkedIn(
     const imgBuf = await imgRes.arrayBuffer()
     const putRes = await fetch(uploadUrl, {
       method: 'PUT',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'image/jpeg' },
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/octet-stream' },
       body: imgBuf,
     })
     if (!putRes.ok) throw new Error(`LI upload PUT: ${putRes.status}`)
 
-    // Step 3: post UGC
-    const postRes = await fetch('https://api.linkedin.com/v2/ugcPosts', {
+    // Step 3: create post (new REST API, replaces ugcPosts)
+    const postRes = await fetch('https://api.linkedin.com/rest/posts', {
       method: 'POST',
-      headers,
+      headers: restHeaders,
       body: JSON.stringify({
         author,
-        lifecycleState: 'PUBLISHED',
-        specificContent: {
-          'com.linkedin.ugc.ShareContent': {
-            shareCommentary: { text: caption },
-            shareMediaCategory: 'IMAGE',
-            media: [{ status: 'READY', description: { text: caption }, media: assetUrn }],
+        commentary: caption,
+        visibility: 'PUBLIC',
+        distribution: {
+          feedDistribution: 'MAIN_FEED',
+          targetEntities: [],
+          thirdPartyDistributionChannels: [],
+        },
+        content: {
+          media: {
+            title: caption.slice(0, 200),
+            id: imageUrn,
           },
         },
-        visibility: { 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC' },
+        lifecycleState: 'PUBLISHED',
+        isReshareDisabledByAuthor: false,
       }),
     })
-    if (!postRes.ok) throw new Error(`LI ugcPosts: ${await postRes.text()}`)
-    const postJson = await postRes.json() as { id?: string }
-    return { platform: 'li', status: 'posted', postId: postJson.id }
+    if (!postRes.ok) throw new Error(`LI posts: ${await postRes.text()}`)
+    const postId = postRes.headers.get('x-restli-id') ?? undefined
+    return { platform: 'li', status: 'posted', postId }
   } catch (err: unknown) {
     return { platform: 'li', status: 'failed', error: (err as Error).message }
   }
