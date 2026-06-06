@@ -616,6 +616,11 @@ export default {
       return Response.redirect(redirectTo, 302)
     }
     if (pathname === '/auth/linkedin/callback') {
+      const liError = url.searchParams.get('error')
+      if (liError) {
+        const desc = url.searchParams.get('error_description') ?? liError
+        return htmlPage('LinkedIn OAuth Error', `<p style="color:red"><strong>${liError}</strong>: ${desc}</p><p>Go back and try <a href="/auth/linkedin/start">/auth/linkedin/start</a> again.</p>`, 400)
+      }
       const code = url.searchParams.get('code') ?? ''
       try {
         const { token: liToken, authorUrn } = await linkedInAuthCallback(env, env.WORKER_BASE_URL, code)
