@@ -78,9 +78,13 @@ SUPABASE_URL = "https://<ref>.supabase.co"
 2. Enable **Google Drive API**
 3. OAuth consent screen → External → add scopes:
    - `https://www.googleapis.com/auth/drive.readonly`
-4. Credentials → Create OAuth 2.0 Client ID (Web Application)
-5. Add redirect URI: `<WORKER_BASE_URL>/auth/google/callback`
-6. Copy Client ID and Client Secret
+4. **CRITICAL — Publish the OAuth app before getting a token:**
+   - On the OAuth consent screen page click **"Publish App"** / "Push to production"
+   - While the app is in **Testing** mode, refresh tokens expire after **7 days**
+   - A published app gets non-expiring refresh tokens — skip this and the cron breaks silently every week
+5. Credentials → Create OAuth 2.0 Client ID (Web Application)
+6. Add redirect URI: `<WORKER_BASE_URL>/auth/google/callback`
+7. Copy Client ID and Client Secret
 
 ```bash
 echo "<client_id>" | npx wrangler secret put GOOGLE_CLIENT_ID

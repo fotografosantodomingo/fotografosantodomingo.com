@@ -618,13 +618,17 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           </div>
 
           <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden border-y border-white/10 bg-black/20">
-            {/* Above-the-fold cover image — eager + high priority for LCP. */}
+            {/* Above-the-fold cover image — eager + high priority for LCP.
+                Explicit width/height prevent CLS; aspect-ratio 3:2 is the
+                most common photography crop. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={heroImageUrl}
               alt={coverImageAlt}
               title={coverImageTitle}
               className="h-auto w-full object-contain"
+              width={1400}
+              height={933}
               loading="eager"
               fetchPriority="high"
             />
@@ -664,11 +668,14 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Galería de la sesión' : 'Session gallery'}</h2>
           {galleryImageUrl && (
             <figure className="overflow-hidden rounded-2xl border border-white/10 bg-gray-900 p-3 md:p-5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={galleryImageUrl}
                 alt={coverImageAlt}
                 title={coverImageTitle}
                 className="h-auto max-h-[80vh] w-full rounded-xl object-contain"
+                width={1400}
+                height={933}
                 loading="eager"
               />
               <figcaption className="px-2 pt-4 text-sm text-gray-300 md:text-base">
@@ -766,8 +773,8 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         </section>
 
         <section className="container mx-auto px-4 pb-14">
-          <div className="embedsocial-hashtag min-h-[520px]" data-ref="96976acc2bbc0a6debbfd7318ab8b3ed5aa68ed6" data-lazyload="no" />
-          <Script id="EmbedSocialHashtagScript" src="https://embedsocial.com/cdn/ht.js" strategy="afterInteractive" />
+          <div className="embedsocial-hashtag min-h-[520px]" data-ref="96976acc2bbc0a6debbfd7318ab8b3ed5aa68ed6" data-lazyload="yes" />
+          <Script id="EmbedSocialHashtagScript" src="https://embedsocial.com/cdn/ht.js" strategy="lazyOnload" />
         </section>
 
         <section className="container mx-auto px-4 pb-14">

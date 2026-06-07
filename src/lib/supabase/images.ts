@@ -24,7 +24,9 @@ const STATIC_IMAGES: PortfolioImage[] = [
   { id: '12', public_id: 'real-estate-drone-1',     alt_es: 'Fotografía aérea drone villa de lujo inmobiliaria Punta Cana República Dominicana',     alt_en: 'Aerial drone photography of luxury villa real estate Punta Cana', caption_es: 'Fotografía aérea de villa de lujo para inmobiliaria en Punta Cana', caption_en: 'Aerial photography of luxury villa for real estate, Punta Cana DR', title_es: 'Propiedad Inmobiliaria', title_en: 'Real Estate Property', description_es: 'Fotografía aérea de villa de lujo', description_en: 'Aerial photography of luxury villa', category: 'drone',    location: 'Punta Cana',              featured: true,  sort_order: 12, width: 1920, height: 1080 },
 ]
 
-const STATIC_REVIEW_STATS: ReviewStats = { review_count: 87, rating_value: 4.9 }
+const STATIC_REVIEW_STATS: ReviewStats = { review_count: 101, rating_value: 4.9 }
+
+const GOOGLE_PLACE_ID = process.env.GOOGLE_PLACE_ID ?? 'ChIJwTKDbC2Jr44R_OH44Jzl5-0'
 
 function createClient() {
   const cookieStore = cookies()
@@ -73,6 +75,27 @@ export async function updateImageSeo(
 }
 
 export async function getReviewStats(): Promise<ReviewStats> {
+  // 1. Live pull from Google Places API — cached 1 hour at the fetch level
+  const mapsKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+  if (mapsKey) {
+    try {
+      const res = await fetch(
+        `https://places.googleapis.com/v1/places/${GOOGLE_PLACE_ID}?fields=rating,userRatingCount`,
+        {
+          headers: { 'X-Goog-Api-Key': mapsKey },
+          next: { revalidate: 3600 },
+        },
+      )
+      if (res.ok) {
+        const data = await res.json() as { rating?: number; userRatingCount?: number }
+        if (typeof data.rating === 'number' && typeof data.userRatingCount === 'number') {
+          return { rating_value: data.rating, review_count: data.userRatingCount }
+        }
+      }
+    } catch { /* fall through to Supabase */ }
+  }
+
+  // 2. Supabase view fallback
   try {
     const supabase = createClient()
     const { data, error } = await supabase
@@ -80,12 +103,13 @@ export async function getReviewStats(): Promise<ReviewStats> {
       .select('review_count, rating_value')
       .single()
 
-    if (error || !data) return STATIC_REVIEW_STATS
-    return {
-      review_count: data.review_count ?? STATIC_REVIEW_STATS.review_count,
-      rating_value: data.rating_value ?? STATIC_REVIEW_STATS.rating_value,
+    if (!error && data) {
+      return {
+        review_count: data.review_count ?? STATIC_REVIEW_STATS.review_count,
+        rating_value: data.rating_value ?? STATIC_REVIEW_STATS.rating_value,
+      }
     }
-  } catch {
-    return STATIC_REVIEW_STATS
-  }
+  } catch { /* fall through */ }
+
+  return STATIC_REVIEW_STATS
 }
