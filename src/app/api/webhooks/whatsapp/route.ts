@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { getAdminRecipients } from '@/lib/email/admin-recipients'
 import { sendMail } from '@/lib/email/smtp'
+import { getChecklistTemplate } from '@/lib/quotes/checklist'
 import Anthropic from '@anthropic-ai/sdk'
 
 export const runtime = 'edge'
@@ -108,20 +109,24 @@ export async function POST(req: NextRequest) {
         if (!extracted) continue
 
         // Create draft quote
+        const serviceType = extracted.service_type ?? null
         const { data: quote, error: quoteErr } = await sb
           .from('quotes')
           .insert({
-            status:           'PENDING_REVIEW',
-            locale:           extracted.locale ?? 'es',
-            full_name:        extracted.full_name ?? displayName ?? null,
-            whatsapp_phone:   phoneNumber,
-            service_type:     extracted.service_type ?? null,
-            event_date:       extracted.event_date ?? null,
-            city:             extracted.city ?? null,
-            country:          extracted.country ?? null,
-            description:      extracted.description ?? null,
-            source_page:      'whatsapp',
-            form_step_reached: 1,
+            status:             'PENDING_REVIEW',
+            locale:             extracted.locale ?? 'es',
+            full_name:          extracted.full_name ?? displayName ?? null,
+            whatsapp_phone:     phoneNumber,
+            service_type:       serviceType,
+            event_date:         extracted.event_date ?? null,
+            city:               extracted.city ?? null,
+            country:            extracted.country ?? null,
+            description:        extracted.description ?? null,
+            whatsapp_raw_text:  transcript,
+            scoping_checklist:  getChecklistTemplate(serviceType),
+            payment_mode:       'FULL',
+            source_page:        'whatsapp',
+            form_step_reached:  1,
           })
           .select('id')
           .single()
