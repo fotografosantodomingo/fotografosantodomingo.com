@@ -90,7 +90,7 @@ export default function NewDraftClient() {
           onChange={e => setRawText(e.target.value)}
           rows={5}
           placeholder={`Ejemplo:\n"hola, quiero fotos de boda el 15 de junio en Punta Cana, somos 120 personas"`}
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+          className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white"
         />
         {parseError && (
           <p className="mt-2 text-sm text-red-600 dark:text-red-400">{parseError}</p>
@@ -112,19 +112,19 @@ export default function NewDraftClient() {
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Full name</label>
             <input type="text" value={fullName} onChange={e => setFullName(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white"
               placeholder="María García" />
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">WhatsApp phone</label>
             <input type="text" value={phone} onChange={e => setPhone(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white"
               placeholder="+1 809 000 0000" />
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Email</label>
             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white"
               placeholder="cliente@ejemplo.com" />
           </div>
           <div>
@@ -132,7 +132,7 @@ export default function NewDraftClient() {
               Company / event name <span className="font-normal text-slate-400">(optional)</span>
             </label>
             <input type="text" value={company} onChange={e => setCompany(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white"
               placeholder="Pyhex Corp." />
           </div>
         </div>
@@ -145,7 +145,7 @@ export default function NewDraftClient() {
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Service type</label>
             <select value={serviceType} onChange={e => setServiceType(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white">
+              className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white">
               <option value="">— Unknown yet —</option>
               {QUOTE_SERVICE_TYPES.map(s => (
                 <option key={s.value} value={s.value}>{s.icon} {s.labelEn}</option>
@@ -155,30 +155,30 @@ export default function NewDraftClient() {
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Event date</label>
             <input type="date" value={eventDate} onChange={e => setEventDate(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white" />
+              className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white" />
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Event time <span className="font-normal text-slate-400">(optional)</span></label>
             <input type="time" value={eventTime} onChange={e => setEventTime(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white" />
+              className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white" />
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">City</label>
             <input type="text" value={city} onChange={e => setCity(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white"
               placeholder="Punta Cana" />
           </div>
           <div>
             <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Country</label>
             <input type="text" value={country} onChange={e => setCountry(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+              className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white"
               placeholder="República Dominicana" />
           </div>
         </div>
         <div className="mt-4">
           <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">Notes / description</label>
           <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+            className="w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white"
             placeholder="What the client wants…" />
         </div>
         <div className="mt-4">

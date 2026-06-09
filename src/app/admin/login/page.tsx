@@ -53,7 +53,7 @@ export default function AdminLoginPage({
               type="email"
               autoComplete="email"
               required
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none dark:border-white/15 dark:bg-gray-800 dark:text-white dark:focus:border-sky-400"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none dark:border-slate-500 dark:bg-gray-800 dark:text-white dark:focus:border-sky-400"
             />
           </div>
 
@@ -67,7 +67,7 @@ export default function AdminLoginPage({
               type="password"
               autoComplete="current-password"
               required
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none dark:border-white/15 dark:bg-gray-800 dark:text-white dark:focus:border-sky-400"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none dark:border-slate-500 dark:bg-gray-800 dark:text-white dark:focus:border-sky-400"
             />
           </div>
 

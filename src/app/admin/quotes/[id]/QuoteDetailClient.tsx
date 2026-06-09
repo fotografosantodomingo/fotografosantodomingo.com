@@ -552,7 +552,7 @@ export function GenerateLinkButton({
         <select
           value={expiryDays}
           onChange={e => setExpiryDays(Number(e.target.value))}
-          className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white"
+          className="rounded-lg border border-slate-400 px-3 py-1.5 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white"
         >
           {[3, 7, 14, 30].map(d => (
             <option key={d} value={d}>{d} days</option>
@@ -694,14 +694,14 @@ export function RejectReopenButtons({
 
 // ─── Shared helpers ────────────────────────────────────────────────────────────
 
-const inputCls = 'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-white/15 dark:bg-gray-800 dark:text-white'
+const inputCls = 'w-full rounded-lg border border-slate-400 px-3 py-2 text-sm text-slate-900 dark:border-slate-500 dark:bg-gray-800 dark:text-white'
 const btnPrimary = 'rounded-full bg-sky-600 px-5 py-2 text-sm font-semibold text-white hover:bg-sky-500 disabled:opacity-60'
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-200">
-        {label}{hint && <span className="ml-1 font-normal text-slate-400">{hint}</span>}
+      <label className="mb-1 block text-sm font-semibold text-slate-700 dark:text-gray-100">
+        {label}{hint && <span className="ml-1 font-normal text-slate-500 dark:text-slate-400">{hint}</span>}
       </label>
       {children}
     </div>
