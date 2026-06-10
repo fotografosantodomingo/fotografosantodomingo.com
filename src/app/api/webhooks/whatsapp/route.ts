@@ -3,6 +3,7 @@ import { createServiceClient } from '@/lib/supabase/service'
 import { getAdminRecipients } from '@/lib/email/admin-recipients'
 import { sendMail } from '@/lib/email/smtp'
 import { getChecklistTemplate } from '@/lib/quotes/checklist'
+import { buildActionLinks } from '@/lib/quotes/action-links'
 import Anthropic from '@anthropic-ai/sdk'
 
 export const runtime = 'edge'
@@ -112,24 +113,37 @@ export async function POST(req: NextRequest) {
         const extracted = await extractQuoteFields(transcript, displayName)
         if (!extracted) continue
 
+        // Bot constructs the full proposal (package + price + client message)
+        const proposal = await buildClientProposal(transcript, extracted)
+        const total = proposal
+          ? Math.round(proposal.line_items.reduce((s, i) => s + Number(i.amount_usd || 0), 0) * 100) / 100
+          : null
+        const deposit = total ? Math.round(total * 100 * 0.5) / 100 : null
+
         const serviceType = extracted.service_type ?? null
         const { data: quote, error: quoteErr } = await sb
           .from('quotes')
           .insert({
-            status:            'PENDING_REVIEW',
-            locale:            extracted.locale ?? 'es',
-            full_name:         extracted.full_name ?? displayName ?? null,
-            whatsapp_phone:    phoneNumber,
-            service_type:      serviceType,
-            event_date:        extracted.event_date ?? null,
-            city:              extracted.city ?? null,
-            country:           extracted.country ?? null,
-            description:       extracted.description ?? null,
-            whatsapp_raw_text: transcript,
-            scoping_checklist: getChecklistTemplate(serviceType),
-            payment_mode:      'FULL',
-            source_page:       'whatsapp',
-            form_step_reached: 1,
+            status:              'PENDING_REVIEW',
+            locale:              extracted.locale ?? 'es',
+            full_name:           extracted.full_name ?? displayName ?? null,
+            whatsapp_phone:      phoneNumber,
+            service_type:        serviceType,
+            event_date:          extracted.event_date ?? null,
+            city:                extracted.city ?? null,
+            country:             extracted.country ?? null,
+            description:         extracted.description ?? null,
+            whatsapp_raw_text:   transcript,
+            scoping_checklist:   getChecklistTemplate(serviceType),
+            payment_mode:        'FULL',
+            source_page:         'whatsapp',
+            form_step_reached:   1,
+            ...(proposal && total ? {
+              line_items:          proposal.line_items,
+              final_price_usd:     total,
+              deposit_amount_usd:  deposit,
+              admin_note_customer: proposal.client_message,
+            } : {}),
           })
           .select('id')
           .single()
@@ -141,15 +155,22 @@ export async function POST(req: NextRequest) {
           .update({ quote_generated: true, quote_id: quote.id })
           .eq('phone_number', phoneNumber)
 
-        await notifyAdmin({
-          quoteId:     quote.id,
+        const links = await buildActionLinks(quote.id)
+        await sendProposalReviewEmail({
+          quoteId:       quote.id,
           phoneNumber,
-          displayName: extracted.full_name ?? displayName ?? phoneNumber,
-          serviceType: extracted.service_type ?? 'Unknown',
-          eventDate:   extracted.event_date ?? null,
-          city:        extracted.city ?? null,
-          description: extracted.description ?? null,
-        })
+          displayName:   extracted.full_name ?? displayName ?? phoneNumber,
+          serviceType:   extracted.service_type ?? 'Unknown',
+          eventDate:     extracted.event_date ?? null,
+          city:          extracted.city ?? null,
+          description:   extracted.description ?? null,
+          packageName:   proposal?.package_name ?? null,
+          lineItems:     proposal?.line_items ?? [],
+          total,
+          clientMessage: proposal?.client_message ?? null,
+          transcript,
+          links,
+        }).catch(() => { /* email failure shouldn't drop the webhook */ })
       }
     }
   }
@@ -362,45 +383,156 @@ Return ONLY valid JSON with these fields (null if unknown):
   }
 }
 
-// ─── Admin notification ───────────────────────────────────────────────────────
+// ─── Proposal builder (bot picks package + price + client message) ────────────
 
-async function notifyAdmin(data: {
-  quoteId:     string
-  phoneNumber: string
-  displayName: string
-  serviceType: string
-  eventDate:   string | null
-  city:        string | null
-  description: string | null
+type LineItem = { description: string; amount_usd: number }
+type Proposal = {
+  package_name:  string
+  line_items:    LineItem[]
+  client_message: string
+}
+
+async function buildClientProposal(
+  transcript: string,
+  extracted: ExtractedQuote,
+): Promise<Proposal | null> {
+  try {
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+    const locale = extracted.locale ?? 'es'
+    const resp = await client.messages.create({
+      model:      'claude-haiku-4-5-20251001',
+      max_tokens: 700,
+      system: `Construyes una PROPUESTA de fotografía para Babula Shots a partir de una conversación de WhatsApp.
+
+Devuelve SOLO JSON válido con esta forma:
+{
+  "package_name": "nombre del paquete recomendado",
+  "line_items": [{ "description": "...", "amount_usd": 900 }],
+  "client_message": "mensaje corto y cálido para el cliente (máx 4 líneas, estilo WhatsApp, en ${locale === 'en' ? 'inglés' : 'español'})"
+}
+
+REGLAS:
+- Usa SIEMPRE estos precios exactos. Nunca inventes números.
+- Si el cliente pide algo claro (p.ej. boda de 2-3h), elige el paquete que mejor encaje.
+- Si NO hay suficiente información para elegir un paquete con confianza, devuelve exactamente: {"package_name":"","line_items":[],"client_message":""}
+- line_items normalmente es un solo ítem (el paquete). Añade extras solo si el cliente los pidió (video, drone, hora adicional).
+- client_message NO debe incluir el link — solo el resumen de la oferta y el precio total. El link se añade automáticamente.
+
+PRECIOS REALES:
+BODAS: Esencial hasta 4h/80 fotos/$900 · Premium hasta 6h/150 fotos/$1500 · Lujo 8h/250 fotos/$2500
+FAMILIA: Esencial 1h/20 fotos/$350 · Premium 90min/30 fotos/$480 · Lujo 3h/40 fotos/$650
+RETRATO: Esencial 1h/15 fotos/$250 · Editorial 90min/25 fotos/$390 · Firma 2h/40 fotos/$550
+PROPUESTA: Playa Secreta 2h/$250 · Firma 3h/$390 · Lujo+Drone 4h/$480
+CORPORATIVO/EVENTO: Por Hora Estándar $100/h(min 2h) · Por Hora Premium $200/h(min 2h) · Día Completo 8h/$550
+QUINCE/CUMPLE: Esencial 1h/$200 · Firma 2h/$350 · Quinceañera Premium 4h/$500
+COMERCIAL: Esencial 1h/$400 · Branding 3h/$700 · Campaña 6h/$1200
+DRONE/INMOBILIARIA: Listado 90min/$200 · Premium 3h/$400 · Finca Lujo 4h/$600`,
+      messages: [{
+        role:    'user',
+        content: `Conversación:\n\n${transcript}\n\nDatos extraídos: ${JSON.stringify(extracted)}\n\nConstruye la propuesta.`,
+      }],
+    })
+
+    const text = resp.content[0].type === 'text' ? resp.content[0].text : ''
+    const json = text.match(/\{[\s\S]*\}/)?.[0]
+    if (!json) return null
+    const parsed = JSON.parse(json) as Proposal
+    if (!parsed.package_name || !Array.isArray(parsed.line_items) || parsed.line_items.length === 0) {
+      return null  // not confident enough — admin sets price manually
+    }
+    return parsed
+  } catch {
+    return null
+  }
+}
+
+// ─── Proposal review email (Accept / Edit / Decline) ──────────────────────────
+
+async function sendProposalReviewEmail(data: {
+  quoteId:       string
+  phoneNumber:   string
+  displayName:   string
+  serviceType:   string
+  eventDate:     string | null
+  city:          string | null
+  description:   string | null
+  packageName:   string | null
+  lineItems:     LineItem[]
+  total:         number | null
+  clientMessage: string | null
+  transcript:    string
+  links:         { acceptUrl: string; declineUrl: string; editUrl: string }
 }) {
-  const BASE     = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.fotografosantodomingo.com'
-  const adminUrl = `${BASE}/admin/quotes/${data.quoteId}`
-  const waUrl    = `https://wa.me/${data.phoneNumber.replace(/\D/g, '')}`
+  const waUrl = `https://wa.me/${data.phoneNumber.replace(/\D/g, '')}`
+  const hasPrice = data.total != null && data.total > 0
+
+  const itemsRows = data.lineItems
+    .map(i => `<tr><td style="padding:6px 0;color:#374151">${i.description}</td><td style="padding:6px 0;text-align:right;font-weight:600;color:#111827">$${Number(i.amount_usd).toLocaleString()}</td></tr>`)
+    .join('')
+
+  const priceBlock = hasPrice
+    ? `<div style="margin:18px 0;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden">
+         <div style="background:#f0fdf4;padding:10px 16px;font-weight:700;color:#166534;font-size:13px">
+           Propuesta del bot${data.packageName ? ` · ${data.packageName}` : ''}
+         </div>
+         <table style="width:100%;border-collapse:collapse;padding:0 16px;font-size:14px">
+           <tbody style="display:table;width:calc(100% - 32px);margin:8px 16px">${itemsRows}
+             <tr style="border-top:2px solid #e2e8f0"><td style="padding:8px 0;font-weight:700;color:#111827">Total</td><td style="padding:8px 0;text-align:right;font-weight:800;color:#16a34a;font-size:16px">$${data.total!.toLocaleString()}</td></tr>
+           </tbody>
+         </table>
+       </div>`
+    : `<div style="margin:18px 0;padding:12px 16px;border:1px solid #fde68a;background:#fffbeb;border-radius:10px;color:#92400e;font-size:13px">
+         ⚠️ El bot no pudo determinar un paquete con confianza. Abre la cotización para fijar el precio manualmente antes de enviar.
+       </div>`
+
+  const clientPreview = data.clientMessage
+    ? `<div style="margin:16px 0;padding:14px 16px;background:#ecfdf5;border-radius:10px;border:1px solid #a7f3d0">
+         <p style="margin:0 0 6px;font-size:11px;font-weight:700;color:#047857;text-transform:uppercase;letter-spacing:.06em">Lo que recibirá el cliente en WhatsApp</p>
+         <p style="margin:0;font-size:14px;color:#065f46;white-space:pre-wrap">${data.clientMessage}</p>
+       </div>`
+    : ''
+
+  // Accept button only makes sense if we have a price; otherwise force Edit first.
+  const acceptBtn = hasPrice
+    ? `<a href="${data.links.acceptUrl}" style="display:inline-block;background:#16a34a;color:#fff;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">✓ Aceptar y enviar al cliente</a>`
+    : ''
 
   await sendMail({
     from:    'Babula Shots <noreply@fotografosantodomingo.com>',
     to:      getAdminRecipients(),
-    subject: `💬 Nueva cotización desde WhatsApp — ${data.displayName}`,
+    subject: `💬 Propuesta lista — ${data.displayName}${hasPrice ? ` · $${data.total!.toLocaleString()}` : ' · fijar precio'}`,
     html: `
 <div style="font-family:Arial,sans-serif;background:#f8fafc;padding:24px 12px">
-  <div style="max-width:600px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
+  <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
     <div style="background:linear-gradient(135deg,#25d366,#128c7e);padding:22px 24px">
-      <p style="margin:0;color:#d1fae5;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700">WhatsApp Auto-Quote</p>
-      <h2 style="margin:8px 0 0;color:#fff;font-size:22px">Nueva cotización generada</h2>
-      <p style="margin:8px 0 0;color:#d1fae5;font-size:14px">${data.displayName} · ${data.phoneNumber}</p>
+      <p style="margin:0;color:#d1fae5;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700">WhatsApp · Propuesta automática</p>
+      <h2 style="margin:8px 0 0;color:#fff;font-size:22px">${data.displayName}</h2>
+      <p style="margin:8px 0 0;color:#d1fae5;font-size:14px">+${data.phoneNumber.replace(/\D/g, '')}</p>
     </div>
     <div style="padding:20px 24px;font-size:14px;color:#374151">
       <table style="width:100%;border-collapse:collapse">
         ${row('Servicio', data.serviceType.replace(/_/g, ' '))}
-        ${data.eventDate  ? row('Fecha del evento', data.eventDate) : ''}
+        ${data.eventDate  ? row('Fecha', data.eventDate) : ''}
         ${data.city       ? row('Ciudad', data.city) : ''}
-        ${data.description ? row('Descripción', data.description) : ''}
+        ${data.description ? row('Resumen', data.description) : ''}
       </table>
-      ${data.description ? `<p style="margin:16px 0 0;color:#6b7280;font-style:italic">${data.description}</p>` : ''}
-      <div style="margin-top:24px;display:flex;gap:12px">
-        <a href="${adminUrl}" style="display:inline-block;background:#0ea5e9;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">Ver cotización →</a>
-        <a href="${waUrl}"    style="display:inline-block;background:#25d366;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">Abrir WhatsApp</a>
+
+      ${priceBlock}
+      ${clientPreview}
+
+      <div style="margin-top:24px;text-align:center">
+        ${acceptBtn}
+        <div style="margin-top:12px">
+          <a href="${data.links.editUrl}"    style="display:inline-block;background:#0ea5e9;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;margin:0 4px">✎ Editar</a>
+          <a href="${data.links.declineUrl}" style="display:inline-block;background:#ef4444;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;margin:0 4px">✕ Descartar</a>
+          <a href="${waUrl}"                  style="display:inline-block;background:#25d366;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;margin:0 4px">Abrir chat</a>
+        </div>
       </div>
+
+      <details style="margin-top:22px">
+        <summary style="cursor:pointer;color:#6b7280;font-size:13px">Ver conversación completa</summary>
+        <pre style="white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:12px;color:#475569;margin-top:8px">${data.transcript}</pre>
+      </details>
     </div>
   </div>
 </div>`,
