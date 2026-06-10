@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { getAdminRecipients } from '@/lib/email/admin-recipients'
 import { sendMail } from '@/lib/email/smtp'
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
       for (const msg of messages) {
         const m = msg as Record<string, unknown>
-        if (m.type !== 'text') continue  // skip non-text for now
+        if (m.type !== 'text') continue
 
         const phoneNumber  = String(m.from ?? '')
         const waMessageId  = String(m.id ?? '')
@@ -57,20 +57,34 @@ export async function POST(req: NextRequest) {
 
         if (!phoneNumber || !waMessageId) continue
 
-        // Store message (upsert on wa_message_id to deduplicate retries)
-        const { error: insertErr } = await sb.from('whatsapp_messages').upsert({
-          phone_number:   phoneNumber,
-          display_name:   displayName ?? null,
-          wa_message_id:  waMessageId,
-          direction:      'inbound',
-          body:           textBody ?? null,
-          media_type:     'text',
-          wa_timestamp:   waTimestamp,
-        }, { onConflict: 'wa_message_id', ignoreDuplicates: true })
+        // Store message — if duplicate (webhook retry), skip entirely
+        const { data: insertedMsg, error: insertErr } = await sb
+          .from('whatsapp_messages')
+          .upsert({
+            phone_number:  phoneNumber,
+            display_name:  displayName ?? null,
+            wa_message_id: waMessageId,
+            direction:     'inbound',
+            body:          textBody ?? null,
+            media_type:    'text',
+            wa_timestamp:  waTimestamp,
+          }, { onConflict: 'wa_message_id', ignoreDuplicates: true })
+          .select('id')
 
-        if (insertErr) continue
+        if (insertErr || !insertedMsg || insertedMsg.length === 0) continue
 
-        // Count messages from this phone where no quote has been generated yet
+        // Fetch full conversation thread for both auto-reply and quote
+        const { data: thread } = await sb
+          .from('whatsapp_messages')
+          .select('direction, body, wa_timestamp')
+          .eq('phone_number', phoneNumber)
+          .not('body', 'is', null)
+          .order('wa_timestamp', { ascending: true })
+
+        // ── Auto-reply via Claude ─────────────────────────────────────────────
+        await handleAutoReply(sb, phoneNumber, waMessageId, thread ?? [], displayName)
+
+        // ── Quote creation after 5+ messages ─────────────────────────────────
         const { count } = await sb
           .from('whatsapp_messages')
           .select('id', { count: 'exact', head: true })
@@ -80,7 +94,6 @@ export async function POST(req: NextRequest) {
 
         if ((count ?? 0) < 5) continue
 
-        // Check no quote already generated for this phone
         const { data: existing } = await sb
           .from('whatsapp_messages')
           .select('id')
@@ -90,56 +103,44 @@ export async function POST(req: NextRequest) {
 
         if (existing && existing.length > 0) continue
 
-        // Fetch all messages for this phone to feed Claude
-        const { data: thread } = await sb
-          .from('whatsapp_messages')
-          .select('direction, body, wa_timestamp')
-          .eq('phone_number', phoneNumber)
-          .not('body', 'is', null)
-          .order('wa_timestamp', { ascending: true })
-
         if (!thread || thread.length === 0) continue
 
         const transcript = thread
           .map(r => `[${r.direction === 'inbound' ? 'Client' : 'Us'}]: ${r.body}`)
           .join('\n')
 
-        // Extract quote fields with Claude
         const extracted = await extractQuoteFields(transcript, displayName)
         if (!extracted) continue
 
-        // Create draft quote
         const serviceType = extracted.service_type ?? null
         const { data: quote, error: quoteErr } = await sb
           .from('quotes')
           .insert({
-            status:             'PENDING_REVIEW',
-            locale:             extracted.locale ?? 'es',
-            full_name:          extracted.full_name ?? displayName ?? null,
-            whatsapp_phone:     phoneNumber,
-            service_type:       serviceType,
-            event_date:         extracted.event_date ?? null,
-            city:               extracted.city ?? null,
-            country:            extracted.country ?? null,
-            description:        extracted.description ?? null,
-            whatsapp_raw_text:  transcript,
-            scoping_checklist:  getChecklistTemplate(serviceType),
-            payment_mode:       'FULL',
-            source_page:        'whatsapp',
-            form_step_reached:  1,
+            status:            'PENDING_REVIEW',
+            locale:            extracted.locale ?? 'es',
+            full_name:         extracted.full_name ?? displayName ?? null,
+            whatsapp_phone:    phoneNumber,
+            service_type:      serviceType,
+            event_date:        extracted.event_date ?? null,
+            city:              extracted.city ?? null,
+            country:           extracted.country ?? null,
+            description:       extracted.description ?? null,
+            whatsapp_raw_text: transcript,
+            scoping_checklist: getChecklistTemplate(serviceType),
+            payment_mode:      'FULL',
+            source_page:       'whatsapp',
+            form_step_reached: 1,
           })
           .select('id')
           .single()
 
         if (quoteErr || !quote) continue
 
-        // Mark all messages for this phone as quote generated
         await sb
           .from('whatsapp_messages')
           .update({ quote_generated: true, quote_id: quote.id })
           .eq('phone_number', phoneNumber)
 
-        // Notify admin
         await notifyAdmin({
           quoteId:     quote.id,
           phoneNumber,
@@ -156,7 +157,167 @@ export async function POST(req: NextRequest) {
   return new Response('ok', { status: 200 })
 }
 
-// ─── Claude extraction ────────────────────────────────────────────────────────
+// ─── Auto-reply ───────────────────────────────────────────────────────────────
+
+type ThreadRow = { direction: string; body: string | null; wa_timestamp: string }
+
+async function handleAutoReply(
+  sb: ReturnType<typeof createServiceClient>,
+  phoneNumber: string,
+  waMessageId: string,
+  thread: ThreadRow[],
+  displayName?: string,
+): Promise<void> {
+  const accessToken   = process.env.WHATSAPP_ACCESS_TOKEN
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID
+  if (!accessToken || !phoneNumberId) return
+
+  // Skip if we already replied to this specific inbound message
+  const replyMsgId = `bot-${waMessageId}`
+  const { data: alreadySent } = await sb
+    .from('whatsapp_messages')
+    .select('id')
+    .eq('wa_message_id', replyMsgId)
+    .maybeSingle()
+  if (alreadySent) return
+
+  const reply = await generateSalesReply(thread, displayName)
+  if (!reply) return
+
+  // Send via WhatsApp Cloud API
+  const sent = await sendWhatsAppMessage(phoneNumber, reply, accessToken, phoneNumberId)
+  if (!sent) return
+
+  // Store outbound reply
+  await sb.from('whatsapp_messages').insert({
+    phone_number:  phoneNumber,
+    wa_message_id: replyMsgId,
+    direction:     'outbound',
+    body:          reply,
+    media_type:    'text',
+    wa_timestamp:  new Date().toISOString(),
+  })
+}
+
+async function sendWhatsAppMessage(
+  to: string,
+  message: string,
+  accessToken: string,
+  phoneNumberId: string,
+): Promise<boolean> {
+  try {
+    const res = await fetch(`https://graph.facebook.com/v19.0/${phoneNumberId}/messages`, {
+      method: 'POST',
+      headers: {
+        Authorization:  `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messaging_product: 'whatsapp',
+        to,
+        type: 'text',
+        text: { body: message },
+      }),
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
+async function generateSalesReply(
+  thread: ThreadRow[],
+  displayName?: string,
+): Promise<string | null> {
+  try {
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+    const conversation = thread
+      .map(r => `[${r.direction === 'inbound' ? 'Cliente' : 'Nosotros'}]: ${r.body}`)
+      .join('\n')
+
+    const resp = await client.messages.create({
+      model:      'claude-haiku-4-5-20251001',
+      max_tokens: 400,
+      system: `Eres el asistente de ventas de Babula Shots (fotografosantodomingo.com), estudio de fotografía profesional en Santo Domingo, República Dominicana.
+
+TONO: Cálido, profesional, conciso. Estilo WhatsApp — respuestas cortas (máx. 5 líneas). Responde en español salvo que el cliente escriba en inglés.
+
+TU OBJETIVO: Entender qué necesitan → recomendar el paquete correcto → dirigir a cotizar o confirmar.
+
+PREGUNTAS CLAVE (hazlas de forma natural, no todas a la vez):
+- ¿Qué tipo de evento? (boda, familia, propuesta, corporativo, cumpleaños, retrato, drone)
+- ¿Qué fecha?
+- ¿Dónde (ciudad/lugar)?
+- ¿Cuántas horas / invitados?
+- ¿Necesitan video también?
+
+PAQUETES REALES (usa siempre estos números exactos, nunca inventes):
+
+BODAS — /es/services/wedding-photography
+• Boda Esencial: hasta 4h · 80 fotos · $900 · entrega 14 días
+• Boda Premium: hasta 6h · 150 fotos · $1,500 · entrega 14 días
+• Día Completo Lujo: hasta 8h · 250 fotos · $2,500 · teaser mismo día
+
+FAMILIA — /es/services/family-beach-photography
+• Esencial: 1h · hasta 5 personas · 20 fotos · $350 · entrega 7 días
+• Premium Playa: 90min · hasta 10 personas · 30 fotos · $480
+• Lujo Saona/Catalina: 3h · 40 fotos · $650 (lancha incluida)
+
+RETRATO — /es/services/luxury-portrait-photography
+• Esencial: 1h · 15 fotos · $250 · entrega 48h
+• Editorial Premium: 90min · 25 fotos · $390 · entrega 48h
+• Sesión Firma: 2h · 40 fotos · $550
+
+PROPUESTA — /es/services/proposal-photography
+• Playa Secreta: 2h oculta · 20 fotos · $250 · entrega 24h
+• Propuesta Firma: 3h · 35 fotos · $390 · misma noche
+• Lujo + Drone: 4h · 50 fotos · $480 · misma noche
+
+EVENTOS CORPORATIVOS — /es/services/corporate-event-photography
+• Por Hora Estándar: $100/h · mínimo 2h · entrega 48h
+• Por Hora Premium: $200/h · mínimo 2h · teaser mismo día + full 24h
+• Día Completo: 8h · $550 · entrega 48h
+
+QUINCEAÑERAS / CUMPLEAÑOS — /es/services/birthday-event-photography
+• Cobertura Esencial: 1h · 20 fotos · $200 · entrega 7 días
+• Celebración Firma: 2h · 30 fotos · $350 · entrega 7 días
+• Quinceañera Premium: 4h · 60 fotos · $500 · entrega 14 días
+
+COMERCIAL — /es/services/commercial-branding-photography
+• Esencial: 1h · 15 imágenes · $400 · entrega 48h
+• Branding Premium: 3h · 30 imágenes · $700
+• Campaña Lujo: 6h · 60 imágenes · $1,200
+
+DRONE / INMOBILIARIA — /es/services/real-estate-drone-photography
+• Listado Esencial: 90min · 20 fotos · $200 · entrega 48h
+• Propiedad Premium: 3h · 35 fotos + drone · $400
+• Finca Lujo: 4h · 50+ fotos + video 4K drone · $600
+
+COTIZAR: fotografosantodomingo.com/es/cotizar
+
+REGLAS:
+- Máximo 5 líneas por respuesta — es WhatsApp, no email
+- No listes todos los paquetes a la vez — solo los 2 más relevantes
+- Si no tienes suficiente info para recomendar, haz UNA pregunta concreta
+- Nunca prometas disponibilidad — di "verificaremos disponibilidad para esa fecha"
+- Para solicitudes muy complejas: "Nuestro fotógrafo te contactará en breve para una propuesta personalizada"
+- Agosto, diciembre y enero son temporada alta — úsalo para crear urgencia`,
+
+      messages: [{
+        role:    'user',
+        content: `Conversación WhatsApp${displayName ? ` con ${displayName}` : ''}:\n\n${conversation}\n\nGenera la respuesta al último mensaje del cliente.`,
+      }],
+    })
+
+    const text = resp.content[0].type === 'text' ? resp.content[0].text.trim() : null
+    return text || null
+  } catch {
+    return null
+  }
+}
+
+// ─── Claude quote extraction ──────────────────────────────────────────────────
 
 type ExtractedQuote = {
   full_name:    string | null
@@ -212,7 +373,7 @@ async function notifyAdmin(data: {
   city:        string | null
   description: string | null
 }) {
-  const BASE = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.fotografosantodomingo.com'
+  const BASE     = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://www.fotografosantodomingo.com'
   const adminUrl = `${BASE}/admin/quotes/${data.quoteId}`
   const waUrl    = `https://wa.me/${data.phoneNumber.replace(/\D/g, '')}`
 
@@ -231,14 +392,14 @@ async function notifyAdmin(data: {
     <div style="padding:20px 24px;font-size:14px;color:#374151">
       <table style="width:100%;border-collapse:collapse">
         ${row('Servicio', data.serviceType.replace(/_/g, ' '))}
-        ${data.eventDate ? row('Fecha del evento', data.eventDate) : ''}
-        ${data.city      ? row('Ciudad', data.city) : ''}
+        ${data.eventDate  ? row('Fecha del evento', data.eventDate) : ''}
+        ${data.city       ? row('Ciudad', data.city) : ''}
         ${data.description ? row('Descripción', data.description) : ''}
       </table>
       ${data.description ? `<p style="margin:16px 0 0;color:#6b7280;font-style:italic">${data.description}</p>` : ''}
       <div style="margin-top:24px;display:flex;gap:12px">
         <a href="${adminUrl}" style="display:inline-block;background:#0ea5e9;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">Ver cotización →</a>
-        <a href="${waUrl}" style="display:inline-block;background:#25d366;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">Abrir WhatsApp</a>
+        <a href="${waUrl}"    style="display:inline-block;background:#25d366;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">Abrir WhatsApp</a>
       </div>
     </div>
   </div>
