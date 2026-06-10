@@ -9,6 +9,16 @@
  * the page returns 404.
  */
 export const LEGACY_SERVICE_SLUG_TO_FAMILY: Record<string, string> = {
+  // Short marketing slugs (used in blog posts, worker captions, social links)
+  'wedding': 'wedding-photography',
+  'portrait': 'luxury-portrait-photography',
+  'family': 'family-beach-photography',
+  'birthday': 'birthday-event-photography',
+  'proposal': 'proposal-photography',
+  'drone': 'real-estate-drone-photography',
+  'drone-real-estate': 'real-estate-drone-photography',
+  'corporate': 'corporate-event-photography',
+  // Legacy URL aliases (old site slugs)
   'commercial': 'commercial-branding-photography',
   'commercial-photography': 'commercial-branding-photography',
   'corporate-portrait': 'luxury-portrait-photography',
