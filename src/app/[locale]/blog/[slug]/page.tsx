@@ -131,59 +131,6 @@ function splitParagraphs(text: string | null | undefined) {
     .filter(Boolean)
 }
 
-function splitSentences(text: string | null | undefined) {
-  if (!text) return []
-  return text
-    .replace(/\s+/g, ' ')
-    .split(/(?<=[.!?])\s+/)
-    .map((sentence) => sentence.trim())
-    .filter((sentence) => sentence.length > 40)
-}
-
-function buildContentBlocks(paragraphs: string[]) {
-  if (paragraphs.length >= 3) return paragraphs
-  const combined = paragraphs.join(' ')
-  const sentences = splitSentences(combined)
-  const blocks: string[] = []
-  for (let i = 0; i < sentences.length; i += 2) {
-    blocks.push(sentences.slice(i, i + 2).join(' '))
-  }
-  return blocks.filter(Boolean)
-}
-
-function buildContentBlockTitle(
-  index: number,
-  locale: string,
-  keyword: string,
-  serviceType: string,
-  location: string,
-) {
-  const isEs = locale === 'es'
-  const safeKeyword = keyword.trim()
-  const safeService = serviceType.trim() || (isEs ? 'sesion fotografica' : 'photo session')
-  const safeLocation = location.trim() || (isEs ? 'Republica Dominicana' : 'Dominican Republic')
-
-  const titlesEs = [
-    `${safeKeyword}: que lo hace especial`,
-    `${safeKeyword}: mejor momento para reservar`,
-    `${safeKeyword}: claves para obtener mejores fotos`,
-    `${safeService} en ${safeLocation}: como prepararte`,
-    `${safeKeyword}: direccion y estilo durante la sesion`,
-    `${safeKeyword}: resultados y entrega final`,
-  ]
-
-  const titlesEn = [
-    `${safeKeyword}: what makes it stand out`,
-    `${safeKeyword}: best time to book`,
-    `${safeKeyword}: keys to getting better photos`,
-    `${safeService} in ${safeLocation}: how to prepare`,
-    `${safeKeyword}: direction and style during the session`,
-    `${safeKeyword}: final results and delivery`,
-  ]
-
-  const source = isEs ? titlesEs : titlesEn
-  return source[index % source.length]
-}
 
 function contextualFallbackFaq(locale: string, serviceType: string, location: string): FaqItem[] {
   const isEs = locale === 'es'
@@ -383,9 +330,10 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
 
   const locationLabel = post.location || post.geo_city || (isEs ? 'República Dominicana' : 'Dominican Republic')
   const articleParagraphs = splitParagraphs(content)
-  const contentBlocks = buildContentBlocks(articleParagraphs)
-  const primaryKeyword = (isEs ? post.primary_keyword_es : post.primary_keyword_en) || title || (isEs ? 'fotografia profesional' : 'professional photography')
-  const serviceLabel = post.service_type || (isEs ? 'sesion fotografica' : 'photo session')
+  // content_en/content_es is rich HTML from the pipeline (<h2>/<p>/...). Render it
+  // verbatim when it carries markup; only fall back to paragraph-splitting for
+  // legacy plain-text posts.
+  const contentIsHtml = /<\/?(p|h[1-6]|ul|ol|li|blockquote|div|br|a)\b/i.test(content)
 
   const pageUrl = `${BASE_URL}/${locale}/blog/${postSlug}`
   const imageUrl = post.cover_image_url || `${BASE_URL}/api/og?title=${encodeURIComponent(title)}`
@@ -700,18 +648,16 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           </div>
         </section>
 
-        {contentBlocks.length > 0 && (
+        {content && (
           <section className="container mx-auto px-4 pb-14">
-            <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Guía completa de la sesión' : 'Complete session guide'}</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {contentBlocks.slice(0, 6).map((block, index) => (
-                <article key={`content-block-${index}`} className="rounded-2xl border border-white/10 bg-gray-900 p-6">
-                  <h3 className="mb-3 text-xl font-bold text-sky-300">
-                    {buildContentBlockTitle(index, locale, primaryKeyword, serviceLabel, locationLabel)}
-                  </h3>
-                  <p className="text-base leading-8 text-gray-200 md:text-lg">{block}</p>
-                </article>
-              ))}
+            <div className="prose prose-invert prose-lg max-w-3xl prose-headings:font-extrabold prose-headings:text-white prose-p:text-gray-200 prose-p:leading-8 prose-a:text-sky-300 prose-strong:text-white">
+              {contentIsHtml ? (
+                <div dangerouslySetInnerHTML={{ __html: content }} />
+              ) : (
+                articleParagraphs.map((paragraph, index) => (
+                  <p key={`article-${index}`}>{paragraph}</p>
+                ))
+              )}
             </div>
           </section>
         )}
