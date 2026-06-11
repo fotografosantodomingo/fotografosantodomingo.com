@@ -315,7 +315,7 @@ DRONE / INMOBILIARIA — /es/services/real-estate-drone-photography
 • Propiedad Premium: 3h · 35 fotos + drone · $400
 • Finca Lujo: 4h · 50+ fotos + video 4K drone · $600
 
-COTIZAR: fotografosantodomingo.com/es/cotizar
+COTIZAR: fotografosantodomingo.com/es/get-quote
 
 REGLAS:
 - Máximo 5 líneas por respuesta — es WhatsApp, no email
