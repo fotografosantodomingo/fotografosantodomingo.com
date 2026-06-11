@@ -16,8 +16,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
   const isEs = locale === 'es'
   return {
     title: isEs
-      ? 'Fotógrafo en Santo Domingo, República Dominicana | Sesión de Fotos — Babula Shots'
-      : 'Photographer in Santo Domingo, Dominican Republic | Photo Session — Babula Shots',
+      ? 'Fotógrafo Profesional en Santo Domingo, República Dominicana — Babula Shots'
+      : 'Professional Photographer in Santo Domingo, Dominican Republic — Babula Shots',
     description: isEs
       ? 'Fotógrafo profesional en Santo Domingo, República Dominicana para sesión de fotos, bodas, retratos, eventos y drone. Reserva tu sesión personalizada en RD.'
       : 'Professional photographer in Santo Domingo, Dominican Republic for photo sessions, weddings, portraits, events, and drone. Book your custom session in DR.',
