@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { getAllSlugs } from '@/lib/supabase/blog'
 import { serviceLandingSlugs } from '@/lib/services/catalog'
+import { LEGACY_SERVICE_SLUG_TO_FAMILY } from '@/lib/services/legacy-aliases'
 import { getPublishedSpokes, spokeTierToPriority } from '@/data/spoke-pages'
 import { createServiceClient } from '@/lib/supabase/service'
 import { GEO_PAGES } from '@/data/geo-pages'
@@ -38,7 +39,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     loadPackagePairs(),
   ])
 
-  const serviceEntries: MetadataRoute.Sitemap = serviceLandingSlugs.flatMap((serviceSlug) => [
+  // Exclude legacy marketing slugs that 307-redirect to canonical family URLs
+  // (e.g. portrait-photography → luxury-portrait-photography). Sitemaps must
+  // list only final 200 URLs, otherwise GSC reports them as "Page with redirect".
+  const canonicalServiceSlugs = serviceLandingSlugs.filter(
+    (slug) => !(slug in LEGACY_SERVICE_SLUG_TO_FAMILY),
+  )
+
+  const serviceEntries: MetadataRoute.Sitemap = canonicalServiceSlugs.flatMap((serviceSlug) => [
     {
       url: `${BASE_URL}/es/services/${serviceSlug}`,
       lastModified: new Date(),

@@ -70,3 +70,5 @@ loyal-network-*.json
 !src/messages/*.json
 !.eslintrc.json
 .env*.local
+*gsc*.json
+fotografo-gsc-*.json
