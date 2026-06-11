@@ -16,6 +16,9 @@ ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
 META_ENABLED = "true"
 META_IG_ENABLED = "true"
 LINKEDIN_ENABLED = "true"
+PINTEREST_ENABLED = "false"
+GBP_ENABLED = "false"
+DA_ENABLED = "false"
 
 # Secrets — set each with: wrangler secret put SECRET_NAME
 #
@@ -25,7 +28,7 @@ LINKEDIN_ENABLED = "true"
 #   wrangler secret put GOOGLE_CLIENT_SECRET          (from GCP OAuth 2.0 credentials)
 #   wrangler secret put GOOGLE_REFRESH_TOKEN          (visit /auth/google/start after deploy)
 #   wrangler secret put GOOGLE_DRIVE_FOLDER_ID
-#   wrangler secret put BREVO_API_KEY
+#   wrangler secret put RESEND_API_KEY
 #   wrangler secret put EMAIL_LINK_SECRET
 #   wrangler secret put META_PAGE_ACCESS_TOKEN
 #   wrangler secret put META_PAGE_ID
@@ -34,3 +37,14 @@ LINKEDIN_ENABLED = "true"
 #   wrangler secret put LINKEDIN_CLIENT_SECRET
 #   wrangler secret put LINKEDIN_ACCESS_TOKEN
 #   wrangler secret put LINKEDIN_AUTHOR_URN
+#   wrangler secret put PINTEREST_CLIENT_ID
+#   wrangler secret put PINTEREST_CLIENT_SECRET
+#   wrangler secret put PINTEREST_REFRESH_TOKEN
+#   wrangler secret put PINTEREST_BOARD_ID
+#   wrangler secret put GBP_CLIENT_ID
+#   wrangler secret put GBP_CLIENT_SECRET
+#   wrangler secret put GBP_REFRESH_TOKEN
+#   wrangler secret put GBP_LOCATION_NAME
+#   wrangler secret put DA_CLIENT_ID           (DeviantArt app client ID)
+#   wrangler secret put DA_CLIENT_SECRET       (DeviantArt app client secret)
+#   wrangler secret put DA_REFRESH_TOKEN       (visit /auth/deviantart/start after setup)

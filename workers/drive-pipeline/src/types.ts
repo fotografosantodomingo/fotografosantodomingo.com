@@ -26,6 +26,23 @@ export interface Env {
   LINKEDIN_CLIENT_SECRET?: string
   LINKEDIN_ACCESS_TOKEN?: string
   LINKEDIN_AUTHOR_URN?: string
+  // Pinterest
+  PINTEREST_ENABLED?: string
+  PINTEREST_CLIENT_ID?: string
+  PINTEREST_CLIENT_SECRET?: string
+  PINTEREST_REFRESH_TOKEN?: string
+  PINTEREST_BOARD_ID?: string
+  // Google Business Profile
+  GBP_ENABLED?: string
+  GBP_CLIENT_ID?: string
+  GBP_CLIENT_SECRET?: string
+  GBP_REFRESH_TOKEN?: string
+  GBP_LOCATION_NAME?: string
+  // DeviantArt
+  DA_ENABLED?: string
+  DA_CLIENT_ID?: string
+  DA_CLIENT_SECRET?: string
+  DA_REFRESH_TOKEN?: string
 }
 
 export interface DriveFile {
@@ -89,6 +106,8 @@ export interface GeneratedPost {
   fb_caption_es: string
   ig_caption_es: string
   li_caption_es: string
+  pi_caption_es: string
+  gbp_caption_es: string
 }
 
 export interface StoredImage {
@@ -99,7 +118,7 @@ export interface StoredImage {
 }
 
 export interface CrossPostResult {
-  platform: 'fb' | 'ig' | 'li'
+  platform: 'fb' | 'ig' | 'li' | 'pi' | 'gbp' | 'da'
   status: 'posted' | 'failed' | 'skipped'
   postId?: string
   error?: string

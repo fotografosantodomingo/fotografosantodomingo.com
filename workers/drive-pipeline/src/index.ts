@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { listNewGroups, downloadFile } from './drive'
 import { generateBlogPost, substitutePlaceholders } from './anthropic'
-import { runCrossPost, linkedInAuthStart, linkedInAuthCallback } from './social'
-import { buildMagicLinks, verifyHmac, sendReviewEmail, sendResultsEmail } from './email'
-import type { Env, StoredImage, CrossPostResult } from './types'
+import { runCrossPost, linkedInAuthStart, linkedInAuthCallback, pinterestAuthStart, pinterestAuthCallback, refreshGbpToken, deviantArtAuthStart, deviantArtAuthCallback } from './social'
+import { verifyHmac, sendResultsEmail } from './email'
+import type { Env, StoredImage } from './types'
 
 // ── Supabase helper ───────────────────────────────────────────────────────────
 
@@ -48,13 +48,13 @@ const SERVICE_LINK_SETS: Record<string, LinkSet> = {
       { text: 'Fotografía de bodas en DR', url: `${BASE}/es/services/wedding`, description: 'Paquetes completos para fotografía de bodas en República Dominicana' },
       { text: 'Propuestas de matrimonio', url: `${BASE}/es/services/proposal`, description: 'Captamos el momento exacto de la propuesta con discreción' },
       { text: 'Retratos de pareja', url: `${BASE}/es/services/portrait`, description: 'Sesiones de retrato para novios antes o después de la boda' },
-      { text: 'Cotizar tu boda', url: `${BASE}/es/cotizar`, description: 'Presupuesto personalizado en menos de 2 minutos' },
+      { text: 'Cotizar tu boda', url: `${BASE}/es/get-quote`, description: 'Presupuesto personalizado en menos de 2 minutos' },
     ],
     en: [
       { text: 'Wedding photography in DR', url: `${BASE}/en/services/wedding`, description: 'Full wedding photography packages in the Dominican Republic' },
       { text: 'Marriage proposal photography', url: `${BASE}/en/services/proposal`, description: 'We capture the proposal moment with discretion and emotion' },
       { text: 'Couple portrait sessions', url: `${BASE}/en/services/portrait`, description: 'Portrait sessions for couples before or after the wedding' },
-      { text: 'Get a wedding quote', url: `${BASE}/en/cotizar`, description: 'Personalized quote in under 2 minutes' },
+      { text: 'Get a wedding quote', url: `${BASE}/en/get-quote`, description: 'Personalized quote in under 2 minutes' },
     ],
   },
   proposal: {
@@ -62,13 +62,13 @@ const SERVICE_LINK_SETS: Record<string, LinkSet> = {
       { text: 'Propuestas de matrimonio', url: `${BASE}/es/services/proposal`, description: 'Capturamos la propuesta en Santo Domingo y destinos DR' },
       { text: 'Fotografía de bodas', url: `${BASE}/es/services/wedding`, description: 'Cobertura completa desde la propuesta hasta el gran día' },
       { text: 'Retratos de lujo', url: `${BASE}/es/services/portrait`, description: 'Sesiones de retrato para parejas en locaciones exclusivas' },
-      { text: 'Cotizar propuesta', url: `${BASE}/es/cotizar`, description: 'Presupuesto personalizado en 2 minutos' },
+      { text: 'Cotizar propuesta', url: `${BASE}/es/get-quote`, description: 'Presupuesto personalizado en 2 minutos' },
     ],
     en: [
       { text: 'Proposal photography', url: `${BASE}/en/services/proposal`, description: 'We capture the proposal moment across Dominican Republic' },
       { text: 'Wedding photography', url: `${BASE}/en/services/wedding`, description: 'Full coverage from proposal to the big day' },
       { text: 'Luxury couple portraits', url: `${BASE}/en/services/portrait`, description: 'Portrait sessions for couples at exclusive DR locations' },
-      { text: 'Get a proposal quote', url: `${BASE}/en/cotizar`, description: 'Personalized quote in 2 minutes' },
+      { text: 'Get a proposal quote', url: `${BASE}/en/get-quote`, description: 'Personalized quote in 2 minutes' },
     ],
   },
   family: {
@@ -76,13 +76,13 @@ const SERVICE_LINK_SETS: Record<string, LinkSet> = {
       { text: 'Fotos de familia en playa', url: `${BASE}/es/services/family`, description: 'Sesiones familiares en las mejores playas de República Dominicana' },
       { text: 'Retratos de lujo', url: `${BASE}/es/services/portrait`, description: 'Retratos individuales y de pareja con luz natural en DR' },
       { text: 'Fotografía de quinceañera', url: `${BASE}/es/services/birthday`, description: 'Sesiones especiales para quinceañeras y celebraciones familiares' },
-      { text: 'Cotizar sesión familiar', url: `${BASE}/es/cotizar`, description: 'Precio personalizado para tu sesión en 2 minutos' },
+      { text: 'Cotizar sesión familiar', url: `${BASE}/es/get-quote`, description: 'Precio personalizado para tu sesión en 2 minutos' },
     ],
     en: [
       { text: 'Family beach photography', url: `${BASE}/en/services/family`, description: 'Family sessions at the best beaches in the Dominican Republic' },
       { text: 'Luxury portrait sessions', url: `${BASE}/en/services/portrait`, description: 'Individual and couple portraits with natural light in DR' },
       { text: 'Quinceañera photography', url: `${BASE}/en/services/birthday`, description: 'Special sessions for quinceañeras and family celebrations' },
-      { text: 'Book a family session', url: `${BASE}/en/cotizar`, description: 'Get a personalized quote in 2 minutes' },
+      { text: 'Book a family session', url: `${BASE}/en/get-quote`, description: 'Get a personalized quote in 2 minutes' },
     ],
   },
   portrait: {
@@ -90,13 +90,13 @@ const SERVICE_LINK_SETS: Record<string, LinkSet> = {
       { text: 'Retrato de lujo y moda', url: `${BASE}/es/services/portrait`, description: 'Retratos editoriales con luz natural y dirección artística profesional' },
       { text: 'Fotografía comercial', url: `${BASE}/es/services/commercial`, description: 'Contenido visual para marcas y emprendimientos en Santo Domingo' },
       { text: 'Fotos de familia en playa', url: `${BASE}/es/services/family`, description: 'Sesiones familiares en exteriores y playa en DR' },
-      { text: 'Cotizar retrato', url: `${BASE}/es/cotizar`, description: 'Presupuesto para tu sesión de retrato en 2 minutos' },
+      { text: 'Cotizar retrato', url: `${BASE}/es/get-quote`, description: 'Presupuesto para tu sesión de retrato en 2 minutos' },
     ],
     en: [
       { text: 'Luxury portrait photography', url: `${BASE}/en/services/portrait`, description: 'Editorial portraits with natural light and professional art direction' },
       { text: 'Commercial photography', url: `${BASE}/en/services/commercial`, description: 'Visual content for brands and businesses in Santo Domingo' },
       { text: 'Family photography', url: `${BASE}/en/services/family`, description: 'Family sessions at the beach and outdoors in DR' },
-      { text: 'Book a portrait session', url: `${BASE}/en/cotizar`, description: 'Get a quote for your portrait session in 2 minutes' },
+      { text: 'Book a portrait session', url: `${BASE}/en/get-quote`, description: 'Get a quote for your portrait session in 2 minutes' },
     ],
   },
   commercial: {
@@ -104,13 +104,13 @@ const SERVICE_LINK_SETS: Record<string, LinkSet> = {
       { text: 'Fotografía comercial', url: `${BASE}/es/services/commercial`, description: 'Imágenes para marcas, productos y emprendimientos en Santo Domingo' },
       { text: 'Fotografía con drone', url: `${BASE}/es/services/drone-real-estate`, description: 'Tomas aéreas para proyectos inmobiliarios y comerciales' },
       { text: 'Eventos corporativos', url: `${BASE}/es/services/corporate`, description: 'Cobertura profesional de eventos empresariales en DR' },
-      { text: 'Cotizar proyecto', url: `${BASE}/es/cotizar`, description: 'Presupuesto para tu proyecto comercial en 2 minutos' },
+      { text: 'Cotizar proyecto', url: `${BASE}/es/get-quote`, description: 'Presupuesto para tu proyecto comercial en 2 minutos' },
     ],
     en: [
       { text: 'Commercial photography', url: `${BASE}/en/services/commercial`, description: 'Images for brands, products and businesses in Santo Domingo' },
       { text: 'Drone aerial photography', url: `${BASE}/en/services/drone-real-estate`, description: 'Aerial shots for real estate and commercial projects' },
       { text: 'Corporate event coverage', url: `${BASE}/en/services/corporate`, description: 'Professional photography for corporate events in DR' },
-      { text: 'Get a commercial quote', url: `${BASE}/en/cotizar`, description: 'Quote for your commercial project in 2 minutes' },
+      { text: 'Get a commercial quote', url: `${BASE}/en/get-quote`, description: 'Quote for your commercial project in 2 minutes' },
     ],
   },
   drone: {
@@ -118,13 +118,13 @@ const SERVICE_LINK_SETS: Record<string, LinkSet> = {
       { text: 'Drone inmobiliario', url: `${BASE}/es/services/drone-real-estate`, description: 'Fotografía aérea para propiedades y proyectos inmobiliarios en DR' },
       { text: 'Fotografía comercial', url: `${BASE}/es/services/commercial`, description: 'Contenido visual profesional para marcas y proyectos' },
       { text: 'Eventos corporativos', url: `${BASE}/es/services/corporate`, description: 'Cobertura de eventos empresariales con drone incluido' },
-      { text: 'Cotizar vuelo drone', url: `${BASE}/es/cotizar`, description: 'Presupuesto para tu proyecto aéreo en 2 minutos' },
+      { text: 'Cotizar vuelo drone', url: `${BASE}/es/get-quote`, description: 'Presupuesto para tu proyecto aéreo en 2 minutos' },
     ],
     en: [
       { text: 'Real estate drone photography', url: `${BASE}/en/services/drone-real-estate`, description: 'Aerial photography for properties and real estate in DR' },
       { text: 'Commercial photography', url: `${BASE}/en/services/commercial`, description: 'Professional visual content for brands and projects' },
       { text: 'Corporate event photography', url: `${BASE}/en/services/corporate`, description: 'Corporate event coverage with drone included' },
-      { text: 'Get a drone quote', url: `${BASE}/en/cotizar`, description: 'Quote for your aerial project in 2 minutes' },
+      { text: 'Get a drone quote', url: `${BASE}/en/get-quote`, description: 'Quote for your aerial project in 2 minutes' },
     ],
   },
   corporate: {
@@ -132,13 +132,13 @@ const SERVICE_LINK_SETS: Record<string, LinkSet> = {
       { text: 'Eventos corporativos', url: `${BASE}/es/services/corporate`, description: 'Fotografía profesional de eventos empresariales en Santo Domingo' },
       { text: 'Fotografía comercial', url: `${BASE}/es/services/commercial`, description: 'Imágenes para marcas y comunicación corporativa' },
       { text: 'Retrato ejecutivo', url: `${BASE}/es/services/portrait`, description: 'Retratos profesionales para equipos directivos y LinkedIn' },
-      { text: 'Cotizar evento', url: `${BASE}/es/cotizar`, description: 'Presupuesto para tu evento corporativo en 2 minutos' },
+      { text: 'Cotizar evento', url: `${BASE}/es/get-quote`, description: 'Presupuesto para tu evento corporativo en 2 minutos' },
     ],
     en: [
       { text: 'Corporate event photography', url: `${BASE}/en/services/corporate`, description: 'Professional corporate event photography in Santo Domingo' },
       { text: 'Commercial photography', url: `${BASE}/en/services/commercial`, description: 'Images for brands and corporate communications' },
       { text: 'Executive headshots', url: `${BASE}/en/services/portrait`, description: 'Professional portraits for leadership teams and LinkedIn' },
-      { text: 'Get a corporate quote', url: `${BASE}/en/cotizar`, description: 'Quote for your corporate event in 2 minutes' },
+      { text: 'Get a corporate quote', url: `${BASE}/en/get-quote`, description: 'Quote for your corporate event in 2 minutes' },
     ],
   },
   birthday: {
@@ -146,13 +146,13 @@ const SERVICE_LINK_SETS: Record<string, LinkSet> = {
       { text: 'Quinceañeras y cumpleaños', url: `${BASE}/es/services/birthday`, description: 'Fotografía de quinceañeras y cumpleaños en Santo Domingo' },
       { text: 'Fotos de familia en playa', url: `${BASE}/es/services/family`, description: 'Sesiones familiares en playa y exteriores en República Dominicana' },
       { text: 'Retratos de lujo', url: `${BASE}/es/services/portrait`, description: 'Retratos editoriales para jóvenes y adultos en DR' },
-      { text: 'Cotizar quinceañera', url: `${BASE}/es/cotizar`, description: 'Presupuesto para tu celebración en 2 minutos' },
+      { text: 'Cotizar quinceañera', url: `${BASE}/es/get-quote`, description: 'Presupuesto para tu celebración en 2 minutos' },
     ],
     en: [
       { text: 'Quinceañera photography', url: `${BASE}/en/services/birthday`, description: 'Quinceañera and birthday photography in Santo Domingo' },
       { text: 'Family beach photography', url: `${BASE}/en/services/family`, description: 'Family sessions at the beach and outdoors in DR' },
       { text: 'Luxury portrait sessions', url: `${BASE}/en/services/portrait`, description: 'Editorial portraits for young adults in DR' },
-      { text: 'Book a birthday session', url: `${BASE}/en/cotizar`, description: 'Get a quote for your celebration in 2 minutes' },
+      { text: 'Book a birthday session', url: `${BASE}/en/get-quote`, description: 'Get a quote for your celebration in 2 minutes' },
     ],
   },
 }
@@ -162,13 +162,13 @@ const DEFAULT_LINKS: LinkSet = {
     { text: 'Nuestros servicios', url: `${BASE}/es/services`, description: 'Todos los servicios de fotografía profesional en DR' },
     { text: 'Fotografía de bodas', url: `${BASE}/es/services/wedding`, description: 'Cobertura completa para el día más importante' },
     { text: 'Galería de trabajos', url: `${BASE}/es/portfolio`, description: 'Explora nuestra galería de fotografía profesional' },
-    { text: 'Cotizar sesión', url: `${BASE}/es/cotizar`, description: 'Presupuesto personalizado en 2 minutos' },
+    { text: 'Cotizar sesión', url: `${BASE}/es/get-quote`, description: 'Presupuesto personalizado en 2 minutos' },
   ],
   en: [
     { text: 'Our services', url: `${BASE}/en/services`, description: 'All professional photography services in DR' },
     { text: 'Wedding photography', url: `${BASE}/en/services/wedding`, description: 'Full coverage for your most important day' },
     { text: 'Photo gallery', url: `${BASE}/en/portfolio`, description: 'Explore our professional photography gallery' },
-    { text: 'Get a quote', url: `${BASE}/en/cotizar`, description: 'Personalized quote in 2 minutes' },
+    { text: 'Get a quote', url: `${BASE}/en/get-quote`, description: 'Personalized quote in 2 minutes' },
   ],
 }
 
@@ -234,8 +234,9 @@ async function runPipeline(env: Env): Promise<void> {
   const processedKeys = new Set<string>((processedRows ?? []).map((r: { group_key: string }) => r.group_key))
 
   // Discover new groups in Drive
-  const groups = await listNewGroups(env, env.GOOGLE_DRIVE_FOLDER_ID, processedKeys)
-  console.log(`[pipeline] ${groups.length} new group(s) found`)
+  const allGroups = await listNewGroups(env, env.GOOGLE_DRIVE_FOLDER_ID, processedKeys)
+  console.log(`[pipeline] ${allGroups.length} new group(s) found, processing 1`)
+  const groups = allGroups.slice(0, 1)
 
   for (const group of groups) {
     let blogPostId: string | null = null
@@ -285,6 +286,8 @@ async function runPipeline(env: Env): Promise<void> {
         fb_caption_es: generated.fb_caption_es,
         ig_caption_es: generated.ig_caption_es,
         li_caption_es: generated.li_caption_es,
+        pi_caption_es: generated.pi_caption_es,
+        gbp_caption_es: generated.gbp_caption_es,
         image_urls: imageUrls,
         group_key: group.groupKey,
       }
@@ -331,7 +334,8 @@ async function runPipeline(env: Env): Promise<void> {
           service_type: generated.service_type,
           geo_city: generated.geo_city,
           tags: generated.tags,
-          status: 'draft',
+          status: 'published',
+          published_at: new Date().toISOString(),
           source: 'drive-pipeline',
           auto_draft_meta: autoMeta,
           // Legacy compat fields
@@ -351,18 +355,49 @@ async function runPipeline(env: Env): Promise<void> {
         group_key: group.groupKey,
         file_ids: group.files.map((f) => f.id),
         blog_post_id: blogPostId,
-        status: 'draft_pending',
+        status: 'approved',
       })
 
-      // Build and send review email
-      const { approveUrl, rejectUrl } = await buildMagicLinks(
-        env.EMAIL_LINK_SECRET,
-        env.WORKER_BASE_URL,
-        blogPostId,
+      // Cross-post immediately — no manual approval needed
+      const postUrl = `${env.SITE_URL}/es/blog/${generated.slug_es}`
+      const results = await runCrossPost(
+        env,
+        imageUrls,
+        generated.ig_caption_es,
+        generated.fb_caption_es,
+        generated.li_caption_es,
+        generated.pi_caption_es,
+        generated.gbp_caption_es,
+        postUrl,
+        generated.title_es,
       )
-      await sendReviewEmail(env, blogPostId, generated.title_es, imageUrls[0], approveUrl, rejectUrl)
 
-      console.log(`[pipeline] ✓ Draft created: ${blogPostId} — "${generated.title_es}"`)
+      // Update blog_posts with social URLs
+      const socialUpdates: Record<string, string> = {}
+      for (const r of results) {
+        if (r.status !== 'posted' || !r.postId) continue
+        if (r.platform === 'fb') socialUpdates.facebook_post_url = `https://www.facebook.com/${r.postId}`
+        if (r.platform === 'ig') socialUpdates.instagram_post_url = `https://www.instagram.com/p/${r.postId}/`
+        if (r.platform === 'li') socialUpdates.linkedin_post_url = `https://www.linkedin.com/feed/update/${r.postId}/`
+      }
+      if (Object.keys(socialUpdates).length > 0) {
+        await supabase.from('blog_posts').update(socialUpdates).eq('id', blogPostId)
+      }
+
+      // Update cross_post_jobs
+      for (const r of results) {
+        await supabase.from('cross_post_jobs').upsert({
+          blog_post_id: blogPostId,
+          platform: r.platform,
+          status: r.status,
+          platform_post_id: r.postId ?? null,
+          error_msg: r.error ?? null,
+          attempted_at: new Date().toISOString(),
+        }, { onConflict: 'blog_post_id,platform' })
+      }
+
+      await sendResultsEmail(env, generated.title_es, postUrl, results).catch(console.error)
+      console.log(`[pipeline] ✓ Published: ${blogPostId} — "${generated.title_es}"`)
     } catch (err: unknown) {
       console.error(`[pipeline] ✗ Group ${group.groupKey}:`, (err as Error).message)
       // Mark as failed so we don't retry this group forever
@@ -379,7 +414,7 @@ async function runPipeline(env: Env): Promise<void> {
 
 // ── Approve handler ───────────────────────────────────────────────────────────
 
-async function handleApprove(env: Env, req: Request): Promise<Response> {
+async function handleApprove(env: Env, req: Request, ctx: ExecutionContext): Promise<Response> {
   const url = new URL(req.url)
   const postId = url.searchParams.get('post_id') ?? ''
   const ts = parseInt(url.searchParams.get('ts') ?? '0', 10)
@@ -414,10 +449,12 @@ async function handleApprove(env: Env, req: Request): Promise<Response> {
   const fbCaption = (meta.fb_caption_es as string) ?? post.title_es
   const igCaption = (meta.ig_caption_es as string) ?? post.title_es
   const liCaption = (meta.li_caption_es as string) ?? post.title_es
+  const piCaption = (meta.pi_caption_es as string) ?? post.title_es
+  const gbpCaption = (meta.gbp_caption_es as string) ?? post.title_es
 
   // Cross-post in background (don't await — return confirmation page immediately)
   const crossPostPromise = (async () => {
-    const results = await runCrossPost(env, imageUrls, igCaption, fbCaption, liCaption, postUrl)
+    const results = await runCrossPost(env, imageUrls, igCaption, fbCaption, liCaption, piCaption, gbpCaption, postUrl, post.title_es)
 
     // Update blog_posts with social URLs
     const updates: Record<string, string> = {}
@@ -446,8 +483,7 @@ async function handleApprove(env: Env, req: Request): Promise<Response> {
     await sendResultsEmail(env, post.title_es, postUrl, results).catch(console.error)
   })()
 
-  // Use waitUntil if we have ctx — handled at the caller level
-  crossPostPromise.catch(console.error)
+  ctx.waitUntil(crossPostPromise)
 
   return htmlPage(
     'Post publicado',
@@ -509,7 +545,7 @@ async function handleMetaStatus(env: Env, token: string): Promise<Response> {
 // ── Worker entry ──────────────────────────────────────────────────────────────
 
 export default {
-  async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext): Promise<void> {
+  async scheduled(_event: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
     await runPipeline(env)
   },
 
@@ -527,7 +563,7 @@ export default {
       return new Response('Pipeline triggered', { status: 200 })
     }
 
-    if (pathname === '/approve') return handleApprove(env, req)
+    if (pathname === '/approve') return handleApprove(env, req, ctx)
     if (pathname === '/reject') return handleReject(env, req)
 
     if (pathname === '/health') return new Response('ok')
@@ -634,6 +670,139 @@ export default {
         )
       } catch (e: unknown) {
         return htmlPage('Error', (e as Error).message, 500)
+      }
+    }
+
+    // Pinterest OAuth
+    if (pathname === '/auth/pinterest/start') {
+      const redirectTo = pinterestAuthStart(env, env.WORKER_BASE_URL)
+      return Response.redirect(redirectTo, 302)
+    }
+    if (pathname === '/auth/pinterest/callback') {
+      const piError = url.searchParams.get('error')
+      if (piError) {
+        const desc = url.searchParams.get('error_description') ?? piError
+        return htmlPage('Pinterest OAuth Error', `<p style="color:red"><strong>${piError}</strong>: ${desc}</p><p>Try <a href="/auth/pinterest/start">/auth/pinterest/start</a> again.</p>`, 400)
+      }
+      const code = url.searchParams.get('code') ?? ''
+      if (!code) return htmlPage('Pinterest OAuth Error', 'No code returned.', 400)
+      try {
+        const { accessToken, refreshToken } = await pinterestAuthCallback(env, env.WORKER_BASE_URL, code)
+        return htmlPage(
+          'Pinterest OAuth — done',
+          `<strong>Refresh Token (save this):</strong><br>
+           <code style="color:#c8a96e;word-break:break-all;font-size:12px">${refreshToken}</code>
+           <br><br><strong>Access Token (short-lived, ignore):</strong><br>
+           <code style="color:#8a8680;word-break:break-all;font-size:11px">${accessToken}</code>
+           <br><br>Run in your terminal:<br>
+           <code style="color:#c8a96e">wrangler secret put PINTEREST_REFRESH_TOKEN</code><br>
+           then paste the refresh token above when prompted.`,
+        )
+      } catch (e: unknown) {
+        return htmlPage('Error', (e as Error).message, 500)
+      }
+    }
+
+    // GBP OAuth
+    if (pathname === '/auth/gbp/start') {
+      const params = new URLSearchParams({
+        client_id: env.GBP_CLIENT_ID ?? env.GOOGLE_CLIENT_ID,
+        redirect_uri: `${env.WORKER_BASE_URL}/auth/gbp/callback`,
+        response_type: 'code',
+        scope: 'https://www.googleapis.com/auth/business.manage',
+        access_type: 'offline',
+        prompt: 'consent',
+      })
+      return Response.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`, 302)
+    }
+    if (pathname === '/auth/gbp/callback') {
+      const code = url.searchParams.get('code') ?? ''
+      if (!code) return htmlPage('Error', 'No code returned from Google.', 400)
+      const res = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          client_id: env.GBP_CLIENT_ID ?? env.GOOGLE_CLIENT_ID,
+          client_secret: env.GBP_CLIENT_SECRET ?? env.GOOGLE_CLIENT_SECRET,
+          code,
+          redirect_uri: `${env.WORKER_BASE_URL}/auth/gbp/callback`,
+          grant_type: 'authorization_code',
+        }),
+      })
+      const json = await res.json() as { refresh_token?: string; error?: string; error_description?: string }
+      if (!res.ok || !json.refresh_token) {
+        return htmlPage('Error', json.error_description ?? json.error ?? 'No refresh_token returned.', 400)
+      }
+      return htmlPage(
+        'GBP OAuth — done',
+        `<strong>Refresh Token:</strong><br>
+         <code style="color:#c8a96e;word-break:break-all;font-size:12px">${json.refresh_token}</code>
+         <br><br>Run in your terminal:<br>
+         <code style="color:#c8a96e">wrangler secret put GBP_REFRESH_TOKEN</code><br>
+         then paste the token above when prompted.<br><br>
+         Next: visit <a href="/gbp/locations" style="color:#c8a96e">/gbp/locations?token=...</a> to find your location name.`,
+      )
+    }
+
+    // DeviantArt OAuth
+    if (pathname === '/auth/deviantart/start') {
+      const redirectTo = deviantArtAuthStart(env, env.WORKER_BASE_URL)
+      return Response.redirect(redirectTo, 302)
+    }
+    if (pathname === '/auth/deviantart/callback') {
+      const daError = url.searchParams.get('error')
+      if (daError) {
+        const desc = url.searchParams.get('error_description') ?? daError
+        return htmlPage('DeviantArt OAuth Error', `<p style="color:red"><strong>${daError}</strong>: ${desc}</p><p>Try <a href="/auth/deviantart/start">/auth/deviantart/start</a> again.</p>`, 400)
+      }
+      const code = url.searchParams.get('code') ?? ''
+      if (!code) return htmlPage('DeviantArt OAuth Error', 'No code returned.', 400)
+      try {
+        const { refreshToken } = await deviantArtAuthCallback(env, env.WORKER_BASE_URL, code)
+        return htmlPage(
+          'DeviantArt OAuth — done',
+          `<strong>Refresh Token (save this):</strong><br>
+           <code style="color:#c8a96e;word-break:break-all;font-size:12px">${refreshToken}</code>
+           <br><br>Run in your terminal:<br>
+           <code style="color:#c8a96e">wrangler secret put DA_REFRESH_TOKEN</code><br>
+           then paste the token above when prompted.<br><br>
+           Then set <code>DA_ENABLED = "true"</code> in wrangler.toml and redeploy.`,
+        )
+      } catch (e: unknown) {
+        return htmlPage('Error', (e as Error).message, 500)
+      }
+    }
+
+    // GBP — list accounts + locations (to find GBP_LOCATION_NAME)
+    if (pathname === '/gbp/locations') {
+      if (token !== (env.SUPABASE_SERVICE_ROLE_KEY ?? '').slice(0, 24)) {
+        return new Response('Unauthorized', { status: 401 })
+      }
+      try {
+        const accessToken = await refreshGbpToken(env)
+        const accountsRes = await fetch('https://mybusinessaccountmanagement.googleapis.com/v1/accounts', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        const accountsJson = await accountsRes.json() as { accounts?: Array<{ name: string; accountName: string; type: string }> }
+        const accounts = accountsJson.accounts ?? []
+
+        const locationRows: Array<{ account: string; name: string; title: string }> = []
+        for (const account of accounts) {
+          const locRes = await fetch(
+            `https://mybusinessbusinessinformation.googleapis.com/v1/${account.name}/locations?readMask=name,title`,
+            { headers: { Authorization: `Bearer ${accessToken}` } },
+          )
+          const locJson = await locRes.json() as { locations?: Array<{ name: string; title: string }> }
+          for (const loc of locJson.locations ?? []) {
+            locationRows.push({ account: account.accountName, name: loc.name, title: loc.title })
+          }
+        }
+
+        return new Response(JSON.stringify({ accounts, locations: locationRows }, null, 2), {
+          headers: { 'Content-Type': 'application/json' },
+        })
+      } catch (e: unknown) {
+        return new Response(JSON.stringify({ error: (e as Error).message }), { status: 500, headers: { 'Content-Type': 'application/json' } })
       }
     }
 

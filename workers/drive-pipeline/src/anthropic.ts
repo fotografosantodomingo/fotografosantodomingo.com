@@ -92,12 +92,14 @@ const OUTPUT_SCHEMA = `{
   "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
   "fb_caption_es": "Caption FB 160–220 chars. Emoji inicial. Sin hashtags. Termina con el URL del post.",
   "ig_caption_es": "Caption IG 180–220 chars. Emoji inicial. Termina con salto de línea y 6 hashtags: #fotografosantodomingo #fotografiadeboda #republica...",
-  "li_caption_es": "Caption LinkedIn profesional 210–270 chars. Sin hashtags. Valor profesional claro."
+  "li_caption_es": "Caption LinkedIn profesional 210–270 chars. Sin hashtags. Valor profesional claro.",
+  "pi_caption_es": "Descripción Pinterest 150–300 chars. Orientada a búsquedas: incluye keywords de servicio + ciudad. Sin emojis. Texto evergreen para SEO de imagen.",
+  "gbp_caption_es": "Texto Google Business 150–250 chars. Menciona el servicio, la ciudad y una llamada a acción clara. Tono local y cercano."
 }`
 
 // Hardcoded CTA block — consistent across all posts, not Claude-generated
-const CTA_BLOCK_ES = `<div class="cta-block"><p><strong>¿Listo para agendar tu sesión?</strong><br>Cotiza en línea en menos de 2 minutos o escríbenos directamente por WhatsApp — respondemos el mismo día.</p><p><a href="https://www.fotografosantodomingo.com/es/cotizar">Ver paquetes y precios</a> &nbsp;·&nbsp; <a href="https://wa.me/18097209547">WhatsApp</a></p></div>`
-const CTA_BLOCK_EN = `<div class="cta-block"><p><strong>Ready to book your session?</strong><br>Get an instant quote in under 2 minutes, or message us directly on WhatsApp — we reply the same day.</p><p><a href="https://www.fotografosantodomingo.com/en/cotizar">See packages &amp; pricing</a> &nbsp;·&nbsp; <a href="https://wa.me/18097209547">WhatsApp</a></p></div>`
+const CTA_BLOCK_ES = `<div class="cta-block"><p><strong>¿Listo para agendar tu sesión?</strong><br>Cotiza en línea en menos de 2 minutos o escríbenos directamente por WhatsApp — respondemos el mismo día.</p><p><a href="https://www.fotografosantodomingo.com/es/get-quote">Ver paquetes y precios</a> &nbsp;·&nbsp; <a href="https://wa.me/18097209547">WhatsApp</a></p></div>`
+const CTA_BLOCK_EN = `<div class="cta-block"><p><strong>Ready to book your session?</strong><br>Get an instant quote in under 2 minutes, or message us directly on WhatsApp — we reply the same day.</p><p><a href="https://www.fotografosantodomingo.com/en/get-quote">See packages &amp; pricing</a> &nbsp;·&nbsp; <a href="https://wa.me/18097209547">WhatsApp</a></p></div>`
 
 interface ClaudeMessage {
   type: 'text'

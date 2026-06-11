@@ -78,6 +78,7 @@ async function postToInstagram(
   env: Env,
   imageUrls: string[],
   caption: string,
+  postUrl: string,
 ): Promise<CrossPostResult> {
   if (!env.META_PAGE_ACCESS_TOKEN || !env.META_IG_BUSINESS_ID) {
     return { platform: 'ig', status: 'skipped', error: 'META_PAGE_ACCESS_TOKEN or META_IG_BUSINESS_ID not set' }
@@ -85,13 +86,14 @@ async function postToInstagram(
 
   const token = env.META_PAGE_ACCESS_TOKEN
   const igId = env.META_IG_BUSINESS_ID
+  const fullCaption = `${caption}\n\n${postUrl}`
 
   try {
     if (imageUrls.length === 1) {
       // 2-step: container → publish
       const cRes = await fetch(`https://graph.facebook.com/${igId}/media`, {
         method: 'POST',
-        body: new URLSearchParams({ image_url: imageUrls[0], caption, access_token: token }),
+        body: new URLSearchParams({ image_url: imageUrls[0], caption: fullCaption, access_token: token }),
       })
       const cJson = await cRes.json() as { id?: string; error?: { message: string } }
       if (!cRes.ok || cJson.error) throw new Error(cJson.error?.message ?? `container ${cRes.status}`)
@@ -131,7 +133,7 @@ async function postToInstagram(
       method: 'POST',
       body: new URLSearchParams({
         media_type: 'CAROUSEL',
-        caption,
+        caption: fullCaption,
         children: itemIds.join(','),
         access_token: token,
       }),
@@ -155,12 +157,13 @@ async function postToInstagram(
 
 // ── LinkedIn ──────────────────────────────────────────────────────────────────
 
-const LI_VERSION = '202501'
+const LI_VERSION = '202506'
 
 async function postToLinkedIn(
   env: Env,
   imageUrl: string,
   caption: string,
+  postUrl: string,
 ): Promise<CrossPostResult> {
   if (!env.LINKEDIN_ACCESS_TOKEN || !env.LINKEDIN_AUTHOR_URN) {
     return { platform: 'li', status: 'skipped', error: 'LINKEDIN_ACCESS_TOKEN or LINKEDIN_AUTHOR_URN not set' }
@@ -204,7 +207,7 @@ async function postToLinkedIn(
       headers: restHeaders,
       body: JSON.stringify({
         author,
-        commentary: caption,
+        commentary: `${caption}\n\n${postUrl}`,
         visibility: 'PUBLIC',
         distribution: {
           feedDistribution: 'MAIN_FEED',
@@ -229,6 +232,196 @@ async function postToLinkedIn(
   }
 }
 
+// ── Pinterest ─────────────────────────────────────────────────────────────────
+
+async function refreshPinterestToken(env: Env): Promise<string> {
+  const creds = btoa(`${env.PINTEREST_CLIENT_ID}:${env.PINTEREST_CLIENT_SECRET}`)
+  const res = await fetch('https://api.pinterest.com/v5/oauth/token', {
+    method: 'POST',
+    headers: { Authorization: `Basic ${creds}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: env.PINTEREST_REFRESH_TOKEN ?? '' }),
+  })
+  if (!res.ok) throw new Error(`Pinterest token refresh failed: ${await res.text()}`)
+  const json = await res.json() as { access_token: string }
+  return json.access_token
+}
+
+async function postToPinterest(
+  env: Env,
+  imageUrl: string,
+  caption: string,
+  postUrl: string,
+  title: string,
+): Promise<CrossPostResult> {
+  if (!env.PINTEREST_CLIENT_ID || !env.PINTEREST_CLIENT_SECRET || !env.PINTEREST_REFRESH_TOKEN || !env.PINTEREST_BOARD_ID) {
+    return { platform: 'pi', status: 'skipped', error: 'Pinterest secrets not set' }
+  }
+  try {
+    const token = await refreshPinterestToken(env)
+    const res = await fetch('https://api.pinterest.com/v5/pins', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        board_id: env.PINTEREST_BOARD_ID,
+        title: title.slice(0, 100),
+        description: `${caption}\n\n${postUrl}`,
+        link: postUrl,
+        media_source: { source_type: 'image_url', url: imageUrl },
+      }),
+    })
+    const json = await res.json() as { id?: string; message?: string }
+    if (!res.ok) throw new Error(json.message ?? `Pinterest ${res.status}`)
+    return { platform: 'pi', status: 'posted', postId: json.id }
+  } catch (err: unknown) {
+    return { platform: 'pi', status: 'failed', error: (err as Error).message }
+  }
+}
+
+// ── Google Business Profile ───────────────────────────────────────────────────
+
+async function refreshGbpToken(env: Env): Promise<string> {
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: env.GBP_CLIENT_ID ?? env.GOOGLE_CLIENT_ID,
+      client_secret: env.GBP_CLIENT_SECRET ?? env.GOOGLE_CLIENT_SECRET,
+      refresh_token: env.GBP_REFRESH_TOKEN ?? '',
+      grant_type: 'refresh_token',
+    }),
+  })
+  if (!res.ok) throw new Error(`GBP token refresh failed: ${await res.text()}`)
+  const json = await res.json() as { access_token: string }
+  return json.access_token
+}
+
+async function postToGoogleBusiness(
+  env: Env,
+  imageUrl: string,
+  caption: string,
+  postUrl: string,
+): Promise<CrossPostResult> {
+  if (!env.GBP_REFRESH_TOKEN || !env.GBP_LOCATION_NAME) {
+    return { platform: 'gbp', status: 'skipped', error: 'GBP_REFRESH_TOKEN or GBP_LOCATION_NAME not set' }
+  }
+  try {
+    const token = await refreshGbpToken(env)
+    const res = await fetch(
+      `https://mybusiness.googleapis.com/v4/${env.GBP_LOCATION_NAME}/localPosts`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          languageCode: 'es',
+          summary: `${caption}\n\n${postUrl}`,
+          callToAction: { actionType: 'LEARN_MORE', url: postUrl },
+          media: [{ mediaFormat: 'PHOTO', sourceUrl: imageUrl }],
+          topicType: 'STANDARD',
+        }),
+      },
+    )
+    const json = await res.json() as { name?: string; error?: { message: string } }
+    if (!res.ok) throw new Error(json.error?.message ?? `GBP ${res.status}`)
+    return { platform: 'gbp', status: 'posted', postId: json.name }
+  } catch (err: unknown) {
+    return { platform: 'gbp', status: 'failed', error: (err as Error).message }
+  }
+}
+
+// ── DeviantArt ────────────────────────────────────────────────────────────────
+
+async function refreshDeviantArtToken(env: Env): Promise<string> {
+  const res = await fetch('https://www.deviantart.com/oauth2/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id:     env.DA_CLIENT_ID ?? '',
+      client_secret: env.DA_CLIENT_SECRET ?? '',
+      grant_type:    'refresh_token',
+      refresh_token: env.DA_REFRESH_TOKEN ?? '',
+    }),
+  })
+  if (!res.ok) throw new Error(`DA token refresh failed: ${await res.text()}`)
+  const json = await res.json() as { access_token?: string; error?: string }
+  if (!json.access_token) throw new Error(`DA token refresh: ${json.error ?? 'no access_token'}`)
+  return json.access_token
+}
+
+async function postToDeviantArt(
+  env: Env,
+  imageUrl: string,
+  caption: string,
+  postUrl: string,
+  title: string,
+): Promise<CrossPostResult> {
+  if (!env.DA_CLIENT_ID || !env.DA_CLIENT_SECRET || !env.DA_REFRESH_TOKEN) {
+    return { platform: 'da', status: 'skipped', error: 'DA secrets not set' }
+  }
+  try {
+    const token = await refreshDeviantArtToken(env)
+
+    // Download image bytes
+    const imgRes = await fetch(imageUrl)
+    if (!imgRes.ok) throw new Error(`Image fetch for DA: ${imgRes.status}`)
+    const imgBuf = await imgRes.arrayBuffer()
+    const mimeType = imgRes.headers.get('content-type') ?? 'image/jpeg'
+    const ext = mimeType.includes('png') ? 'png' : 'jpg'
+
+    const artistComments =
+      `<p>${caption}</p>` +
+      `<p>📷 <a href="${postUrl}">Más información en nuestro blog</a> · ` +
+      `<a href="https://www.fotografosantodomingo.com">fotografosantodomingo.com</a></p>`
+
+    // Step 1 — upload to Stash
+    const stashForm = new FormData()
+    stashForm.append('access_token', token)
+    stashForm.append('title', title.slice(0, 50))
+    stashForm.append('artist_comments', artistComments)
+    stashForm.append('file', new Blob([imgBuf], { type: mimeType }), `photo.${ext}`)
+
+    const stashRes = await fetch('https://www.deviantart.com/api/v1/oauth2/stash/submit', {
+      method: 'POST',
+      body: stashForm,
+    })
+    const stashText = await stashRes.text()
+    let stashJson: { status?: string; itemid?: number; error?: string; error_description?: string }
+    try { stashJson = JSON.parse(stashText) } catch { throw new Error(`DA stash parse: ${stashText.slice(0, 200)}`) }
+    if (stashJson.status !== 'success' || !stashJson.itemid) {
+      throw new Error(stashJson.error_description ?? stashJson.error ?? `DA stash failed: ${stashText.slice(0, 200)}`)
+    }
+
+    // Step 2 — publish from Stash
+    const pubBody = new URLSearchParams({
+      access_token:                token,
+      itemid:                      String(stashJson.itemid),
+      title:                       title.slice(0, 50),
+      catpath:                     'photography',
+      is_mature:                   '0',
+      feature:                     '1',
+      allow_comments:              '1',
+      'license_options[commercial]': '0',
+      'license_options[modify]':   'no',
+      'license_options[share]':    'yes',
+    })
+
+    const pubRes = await fetch('https://www.deviantart.com/api/v1/oauth2/stash/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: pubBody,
+    })
+    const pubText = await pubRes.text()
+    let pubJson: { status?: string; url?: string; deviationid?: string; error?: string; error_description?: string }
+    try { pubJson = JSON.parse(pubText) } catch { throw new Error(`DA publish parse: ${pubText.slice(0, 200)}`) }
+    if (pubJson.status !== 'success') {
+      throw new Error(pubJson.error_description ?? pubJson.error ?? `DA publish failed: ${pubText.slice(0, 200)}`)
+    }
+
+    return { platform: 'da', status: 'posted', postId: pubJson.url ?? pubJson.deviationid }
+  } catch (err: unknown) {
+    return { platform: 'da', status: 'failed', error: (err as Error).message }
+  }
+}
+
 // ── Orchestrator ──────────────────────────────────────────────────────────────
 
 export async function runCrossPost(
@@ -237,27 +430,75 @@ export async function runCrossPost(
   igCaption: string,
   fbCaption: string,
   liCaption: string,
+  piCaption: string,
+  gbpCaption: string,
   postUrl: string,
+  postTitle: string,
 ): Promise<CrossPostResult[]> {
-  const results: CrossPostResult[] = []
-
-  const [fbResult, igResult, liResult] = await Promise.all([
+  const [fbResult, igResult, liResult, piResult, gbpResult, daResult] = await Promise.all([
     env.META_ENABLED === 'true'
       ? postToFacebook(env, imageUrls, fbCaption, postUrl)
       : Promise.resolve<CrossPostResult>({ platform: 'fb', status: 'skipped', error: 'META_ENABLED=false' }),
 
     env.META_ENABLED === 'true' && env.META_IG_ENABLED === 'true'
-      ? postToInstagram(env, imageUrls, igCaption)
+      ? postToInstagram(env, imageUrls, igCaption, postUrl)
       : Promise.resolve<CrossPostResult>({ platform: 'ig', status: 'skipped', error: 'META_IG_ENABLED=false' }),
 
     env.LINKEDIN_ENABLED === 'true'
-      ? postToLinkedIn(env, imageUrls[0], liCaption)
+      ? postToLinkedIn(env, imageUrls[0], liCaption, postUrl)
       : Promise.resolve<CrossPostResult>({ platform: 'li', status: 'skipped', error: 'LINKEDIN_ENABLED=false' }),
+
+    env.PINTEREST_ENABLED === 'true'
+      ? postToPinterest(env, imageUrls[0], piCaption, postUrl, postTitle)
+      : Promise.resolve<CrossPostResult>({ platform: 'pi', status: 'skipped', error: 'PINTEREST_ENABLED=false' }),
+
+    env.GBP_ENABLED === 'true'
+      ? postToGoogleBusiness(env, imageUrls[0], gbpCaption, postUrl)
+      : Promise.resolve<CrossPostResult>({ platform: 'gbp', status: 'skipped', error: 'GBP_ENABLED=false' }),
+
+    env.DA_ENABLED === 'true'
+      ? postToDeviantArt(env, imageUrls[0], piCaption, postUrl, postTitle)
+      : Promise.resolve<CrossPostResult>({ platform: 'da', status: 'skipped', error: 'DA_ENABLED=false' }),
   ])
 
-  results.push(fbResult, igResult, liResult)
-  return results
+  return [fbResult, igResult, liResult, piResult, gbpResult, daResult]
 }
+
+// ── Pinterest OAuth helpers ────────────────────────────────────────────────────
+
+export function pinterestAuthStart(env: Env, workerUrl: string): string {
+  const params = new URLSearchParams({
+    client_id: env.PINTEREST_CLIENT_ID ?? '',
+    redirect_uri: `${workerUrl}/auth/pinterest/callback`,
+    response_type: 'code',
+    scope: 'boards:read,boards:write,pins:read,pins:write',
+  })
+  return `https://www.pinterest.com/oauth/?${params}`
+}
+
+export async function pinterestAuthCallback(
+  env: Env,
+  workerUrl: string,
+  code: string,
+): Promise<{ accessToken: string; refreshToken: string }> {
+  const creds = btoa(`${env.PINTEREST_CLIENT_ID}:${env.PINTEREST_CLIENT_SECRET}`)
+  const res = await fetch('https://api.pinterest.com/v5/oauth/token', {
+    method: 'POST',
+    headers: { Authorization: `Basic ${creds}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: `${workerUrl}/auth/pinterest/callback`,
+    }),
+  })
+  if (!res.ok) throw new Error(`Pinterest token exchange: ${await res.text()}`)
+  const json = await res.json() as { access_token: string; refresh_token: string }
+  return { accessToken: json.access_token, refreshToken: json.refresh_token }
+}
+
+// ── GBP token (exported for locations probe) ──────────────────────────────────
+
+export { refreshGbpToken }
 
 // ── LinkedIn OAuth helpers (operational tool) ─────────────────────────────────
 
@@ -295,4 +536,40 @@ export async function linkedInAuthCallback(env: Env, workerUrl: string, code: st
   const authorUrn = `urn:li:person:${me.sub}`
 
   return { token: access_token, authorUrn }
+}
+
+// ── DeviantArt OAuth helpers ──────────────────────────────────────────────────
+
+export function deviantArtAuthStart(env: Env, workerUrl: string): string {
+  const params = new URLSearchParams({
+    client_id:     env.DA_CLIENT_ID ?? '',
+    redirect_uri:  `${workerUrl}/auth/deviantart/callback`,
+    response_type: 'code',
+    scope:         'browse publish stash user',
+  })
+  return `https://www.deviantart.com/oauth2/authorize?${params}`
+}
+
+export async function deviantArtAuthCallback(
+  env: Env,
+  workerUrl: string,
+  code: string,
+): Promise<{ accessToken: string; refreshToken: string }> {
+  const res = await fetch('https://www.deviantart.com/oauth2/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id:     env.DA_CLIENT_ID ?? '',
+      client_secret: env.DA_CLIENT_SECRET ?? '',
+      grant_type:    'authorization_code',
+      code,
+      redirect_uri:  `${workerUrl}/auth/deviantart/callback`,
+    }),
+  })
+  if (!res.ok) throw new Error(`DA token exchange: ${await res.text()}`)
+  const json = await res.json() as { access_token?: string; refresh_token?: string; error?: string; error_description?: string }
+  if (!json.access_token || !json.refresh_token) {
+    throw new Error(json.error_description ?? json.error ?? 'DA: no tokens returned')
+  }
+  return { accessToken: json.access_token, refreshToken: json.refresh_token }
 }
