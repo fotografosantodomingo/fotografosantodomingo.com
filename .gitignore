@@ -69,6 +69,8 @@ loyal-network-*.json
 !vercel.json
 !src/messages/*.json
 !.eslintrc.json
+# GSC indexation snapshots are coverage states only (no secrets) — keep for diffing
+!scripts/gsc-snapshots/*.json
 .env*.local
 *gsc*.json
 fotografo-gsc-*.json

@@ -132,6 +132,17 @@ function splitParagraphs(text: string | null | undefined) {
 }
 
 
+// Turn internal PascalCase schema tokens (e.g. "RealEstateAerialPhotography")
+// into human-readable JSON-LD serviceType text ("Real Estate Aerial Photography").
+function humanizeServiceType(value?: string | null): string {
+  if (!value) return ''
+  const spaced = value
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/_/g, ' ')
+    .trim()
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1)
+}
+
 function contextualFallbackFaq(locale: string, serviceType: string, location: string): FaqItem[] {
   const isEs = locale === 'es'
   const service = serviceType || (isEs ? 'sesión fotográfica' : 'photo session')
@@ -478,7 +489,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         '@type': 'Service',
         '@id': `${pageUrl}#service`,
         name: isEs ? `${post.service_type || 'Fotografía Profesional'} en ${locationLabel}` : `${post.service_type || 'Professional Photography'} in ${locationLabel}`,
-        serviceType: post.schema_service_type || post.service_type || 'Photography',
+        serviceType: humanizeServiceType(post.schema_service_type || post.service_type) || 'Photography',
         provider: { '@id': `${BASE_URL}/#business` },
         areaServed: [
           { '@type': 'City', name: post.geo_city || locationLabel },
