@@ -9,8 +9,8 @@ Zero CMS. Zero manual writing. One human decision.
 ## What this builds
 
 A Cloudflare Worker that runs daily, watches a Google Drive folder, generates a bilingual
-SEO blog post with Claude Vision, sends you a review email with Approve/Reject links,
-and on approval publishes the post to your site + cross-posts to every social platform.
+SEO blog post with Claude Vision, and immediately publishes to the site + cross-posts to
+every social platform — fully automatic, no human approval step.
 
 ```
 Google Drive folder
@@ -23,21 +23,15 @@ Cloudflare Worker
       ├─ Calls Claude Vision → bilingual blog post JSON
       │   (ES + EN: title, slug, content, meta, FAQs, social captions)
       │
-      ├─ Inserts draft → Supabase blog_posts
+      ├─ Inserts post → Supabase blog_posts  (status=published immediately)
       │
-      └─ Sends review email (Resend) with HMAC-signed links
-              │
-    ┌─────────┴──────────┐
-    ▼                    ▼
-  APPROVE              REJECT
-    │                    │
-    ├─ status=published   └─ status=archived
-    │
-    ├─► Facebook Page (Graph API)
-    ├─► Instagram Business (Graph API)
-    ├─► LinkedIn Page/Person (REST API v202506)
-    ├─► Pinterest (API v5)  [requires Standard access]
-    └─► Google Business Profile  [requires partner API approval]
+      ├─► Facebook Page (Graph API)
+      ├─► Instagram Business (Graph API)
+      ├─► LinkedIn Page/Person (REST API v202506)
+      ├─► Pinterest (API v5)  [requires Standard access]
+      ├─► Google Business Profile  [requires partner API approval]
+      │
+      └─ Sends results email (Resend) — what was posted + links
 ```
 
 ---
@@ -71,8 +65,8 @@ Cloudflare Worker
 
 ## What this does NOT include
 
-- Content moderation — the Approve gate is the only filter
-- Scheduled/queued publishing — Approve = publish immediately
+- Content moderation — posts go live automatically; manual `/approve` and `/reject` endpoints exist for one-off overrides
+- Scheduled/queued publishing — cron fires daily, publishes immediately
 - Engagement analytics pull-back — results stored but metrics not fetched
 - Multi-language captions (other than ES default) — trivially extensible
 - Video/Reels — images only; video requires container upload flows on IG/FB
@@ -87,7 +81,7 @@ Cloudflare Worker
 | 2 images, bilingual | ~24s |
 | 3+ images or long body | Use Workers Paid ($5/mo, 15-min budget) |
 
-Cross-posting runs in `ctx.waitUntil()` — response returns immediately, social posts happen in background.
+Cross-posting runs inline during the cron job — all platforms are attempted before the worker exits.
 
 ---
 
