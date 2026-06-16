@@ -6,6 +6,11 @@ import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const BUSINESS_NAME = 'Fotografo Santo Domingo | Babula Shots'
 
+// This route is force-dynamic; on Cloudflare Pages (@cloudflare/next-on-pages)
+// a dynamic route MUST declare the edge runtime, otherwise next-on-pages emits a
+// broken function that fails at request time with
+// "ReferenceError: async__chunk_XXXX is not defined" → HTTP 500.
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({
