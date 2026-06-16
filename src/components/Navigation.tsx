@@ -64,7 +64,7 @@ export default function Navigation() {
       { href: '/about', labelKey: 'items.aboutMe', descriptionKey: 'descriptions.aboutMe' },
       { href: '/services', labelKey: 'items.pricing', descriptionKey: 'descriptions.pricing' },
       { href: '/contact#faq', labelKey: 'items.faq', descriptionKey: 'descriptions.faq' },
-      { href: '/portfolio', labelKey: 'items.testimonials', descriptionKey: 'descriptions.testimonials' },
+      { href: '/testimonials', labelKey: 'items.testimonials', descriptionKey: 'descriptions.testimonials' },
     ]
 
     return [
