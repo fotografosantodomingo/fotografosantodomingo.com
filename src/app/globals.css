@@ -217,3 +217,15 @@ html.light-mode .hero-white-lock .hero-white-highlight {
   color: #bfdbfe !important;
   -webkit-text-fill-color: #bfdbfe !important;
 }
+
+/* The hero is locked dark in both themes, but some descendants (availability
+   badge text, secondary CTA) use bare `text-white`, which the global
+   light-mode rule flips to dark — invisible on the black hero. Keep them
+   light. Higher-specificity hover rule restores the secondary CTA's black
+   text when its background turns white on hover. */
+html.light-mode .hero-white-lock .text-white {
+  color: #e2e8f0;
+}
+html.light-mode .hero-white-lock .hover\:text-black:hover {
+  color: #000;
+}
