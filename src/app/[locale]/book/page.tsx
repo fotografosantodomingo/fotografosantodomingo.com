@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import BookingWizard from '@/components/booking/BookingWizard'
-import { createServiceClient } from '@/lib/supabase/service'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
@@ -60,7 +60,11 @@ type ServiceRow = {
 
 async function buildJsonLd(locale: 'es' | 'en') {
   const isEs = locale === 'es'
-  const supabase = createServiceClient()
+  // Public booking page: read package data with the anon client (covered by the
+  // service_packages/service_families public-read RLS policies). The service-role
+  // client throws when SUPABASE_SERVICE_ROLE_KEY is absent in the edge/prod env,
+  // which 500'd this page in production; this data is public, so anon is correct.
+  const supabase = createSupabaseServerClient()
   // Pull family_slug too so JSON-LD offer URLs use the disambiguated
   // `<family>__<package>` form. Package slugs alone collide across
   // families (5 'essential', 5 'premium', 4 'luxury', 6 'custom').
