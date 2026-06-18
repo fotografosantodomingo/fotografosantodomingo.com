@@ -1,5 +1,16 @@
 import type { CrossPostResult, Env } from './types'
 
+// Instagram's container step ("/media") fails ("Media ID is not available") on
+// very large source images. Serve IG a dimension-capped JPEG via Supabase's
+// image render endpoint (bounds BOTH sides to 1440px, IG's feed max). Facebook
+// and LinkedIn tolerate full-res, so only the IG path uses this.
+function igImageUrl(publicUrl: string): string {
+  const marker = '/storage/v1/object/public/'
+  if (!publicUrl.includes(marker)) return publicUrl
+  const rendered = publicUrl.replace(marker, '/storage/v1/render/image/public/')
+  return `${rendered}?width=1440&height=1440&resize=contain`
+}
+
 // ── Facebook ──────────────────────────────────────────────────────────────────
 
 async function postToFacebook(
@@ -93,7 +104,7 @@ async function postToInstagram(
       // 2-step: container → publish
       const cRes = await fetch(`https://graph.facebook.com/${igId}/media`, {
         method: 'POST',
-        body: new URLSearchParams({ image_url: imageUrls[0], caption: fullCaption, access_token: token }),
+        body: new URLSearchParams({ image_url: igImageUrl(imageUrls[0]), caption: fullCaption, access_token: token }),
       })
       const cJson = await cRes.json() as { id?: string; error?: { message: string } }
       if (!cRes.ok || cJson.error) throw new Error(cJson.error?.message ?? `container ${cRes.status}`)
@@ -115,7 +126,7 @@ async function postToInstagram(
     for (const url of imageUrls) {
       const r = await fetch(`https://graph.facebook.com/${igId}/media`, {
         method: 'POST',
-        body: new URLSearchParams({ image_url: url, is_carousel_item: 'true', access_token: token }),
+        body: new URLSearchParams({ image_url: igImageUrl(url), is_carousel_item: 'true', access_token: token }),
       })
       const j = await r.json() as { id?: string; error?: { message: string } }
       if (!r.ok || j.error) throw new Error(`Carousel item: ${j.error?.message ?? r.status}`)
@@ -434,31 +445,32 @@ export async function runCrossPost(
   gbpCaption: string,
   postUrl: string,
   postTitle: string,
+  skip: Set<string> = new Set(),
 ): Promise<CrossPostResult[]> {
   const [fbResult, igResult, liResult, piResult, gbpResult, daResult] = await Promise.all([
-    env.META_ENABLED === 'true'
+    env.META_ENABLED === 'true' && !skip.has('fb')
       ? postToFacebook(env, imageUrls, fbCaption, postUrl)
-      : Promise.resolve<CrossPostResult>({ platform: 'fb', status: 'skipped', error: 'META_ENABLED=false' }),
+      : Promise.resolve<CrossPostResult>({ platform: 'fb', status: 'skipped', error: skip.has('fb') ? 'already posted' : 'META_ENABLED=false' }),
 
-    env.META_ENABLED === 'true' && env.META_IG_ENABLED === 'true'
+    env.META_ENABLED === 'true' && env.META_IG_ENABLED === 'true' && !skip.has('ig')
       ? postToInstagram(env, imageUrls, igCaption, postUrl)
-      : Promise.resolve<CrossPostResult>({ platform: 'ig', status: 'skipped', error: 'META_IG_ENABLED=false' }),
+      : Promise.resolve<CrossPostResult>({ platform: 'ig', status: 'skipped', error: skip.has('ig') ? 'already posted' : 'META_IG_ENABLED=false' }),
 
-    env.LINKEDIN_ENABLED === 'true'
+    env.LINKEDIN_ENABLED === 'true' && !skip.has('li')
       ? postToLinkedIn(env, imageUrls[0], liCaption, postUrl)
-      : Promise.resolve<CrossPostResult>({ platform: 'li', status: 'skipped', error: 'LINKEDIN_ENABLED=false' }),
+      : Promise.resolve<CrossPostResult>({ platform: 'li', status: 'skipped', error: skip.has('li') ? 'already posted' : 'LINKEDIN_ENABLED=false' }),
 
-    env.PINTEREST_ENABLED === 'true'
+    env.PINTEREST_ENABLED === 'true' && !skip.has('pi')
       ? postToPinterest(env, imageUrls[0], piCaption, postUrl, postTitle)
-      : Promise.resolve<CrossPostResult>({ platform: 'pi', status: 'skipped', error: 'PINTEREST_ENABLED=false' }),
+      : Promise.resolve<CrossPostResult>({ platform: 'pi', status: 'skipped', error: skip.has('pi') ? 'already posted' : 'PINTEREST_ENABLED=false' }),
 
-    env.GBP_ENABLED === 'true'
+    env.GBP_ENABLED === 'true' && !skip.has('gbp')
       ? postToGoogleBusiness(env, imageUrls[0], gbpCaption, postUrl)
-      : Promise.resolve<CrossPostResult>({ platform: 'gbp', status: 'skipped', error: 'GBP_ENABLED=false' }),
+      : Promise.resolve<CrossPostResult>({ platform: 'gbp', status: 'skipped', error: skip.has('gbp') ? 'already posted' : 'GBP_ENABLED=false' }),
 
-    env.DA_ENABLED === 'true'
+    env.DA_ENABLED === 'true' && !skip.has('da')
       ? postToDeviantArt(env, imageUrls[0], piCaption, postUrl, postTitle)
-      : Promise.resolve<CrossPostResult>({ platform: 'da', status: 'skipped', error: 'DA_ENABLED=false' }),
+      : Promise.resolve<CrossPostResult>({ platform: 'da', status: 'skipped', error: skip.has('da') ? 'already posted' : 'DA_ENABLED=false' }),
   ])
 
   return [fbResult, igResult, liResult, piResult, gbpResult, daResult]

@@ -222,6 +222,19 @@ function mapSchemaServiceType(serviceType: string): string {
   return map[serviceType.toLowerCase()] ?? 'PhotographyService'
 }
 
+// Anthropic's vision API hard-rejects images whose longest side exceeds 8000px
+// ("dimensions exceed max allowed size: 8000 pixels") and downscales anything
+// above ~1568px anyway. Full-res Drive photos can be larger, which silently
+// killed a day's post. Route the vision call through Supabase's image render
+// endpoint capped at 1568px; the original full-res publicUrl is still used for
+// the blog body, cover image, and social cross-posts.
+function toVisionUrl(publicUrl: string): string {
+  const marker = '/storage/v1/object/public/'
+  if (!publicUrl.includes(marker)) return publicUrl
+  const rendered = publicUrl.replace(marker, '/storage/v1/render/image/public/')
+  return `${rendered}?width=1568&height=1568&resize=contain`
+}
+
 // ── Core pipeline ─────────────────────────────────────────────────────────────
 
 async function runPipeline(env: Env): Promise<void> {
@@ -251,11 +264,12 @@ async function runPipeline(env: Env): Promise<void> {
 
       const imageUrls = stored.map((s) => s.publicUrl)
 
-      // Generate bilingual post via Claude Vision
+      // Generate bilingual post via Claude Vision — use dimension-capped render
+      // URLs so oversized photos (>8000px) don't get rejected by the vision API.
       const generated = await generateBlogPost(
         env.ANTHROPIC_API_KEY,
         env.ANTHROPIC_MODEL,
-        imageUrls,
+        imageUrls.map(toVisionUrl),
         group.folderName,
       )
 
@@ -513,6 +527,60 @@ async function handleReject(env: Env, req: Request): Promise<Response> {
   return htmlPage('Post rechazado', 'El borrador ha sido archivado.')
 }
 
+// ── Retry cross-post (idempotent) ─────────────────────────────────────────────
+// Re-runs social cross-posting for an existing post, skipping platforms already
+// marked 'posted' in cross_post_jobs — so a single failed platform (e.g. IG)
+// can be retried without duplicating the others. Token-authed like /run.
+async function handleRetryCrossPost(env: Env, req: Request): Promise<Response> {
+  const postId = new URL(req.url).searchParams.get('post_id') ?? ''
+  if (!postId) return new Response('Missing post_id', { status: 400 })
+
+  const supabase = db(env)
+  const { data: post, error } = await supabase
+    .from('blog_posts')
+    .select('id, title_es, slug_es, auto_draft_meta')
+    .eq('id', postId)
+    .single()
+  if (error || !post) return new Response(`Post not found: ${error?.message ?? 'n/a'}`, { status: 404 })
+
+  const { data: jobs } = await supabase
+    .from('cross_post_jobs')
+    .select('platform, status')
+    .eq('blog_post_id', postId)
+  const skip = new Set((jobs ?? []).filter((j) => j.status === 'posted').map((j) => j.platform as string))
+
+  const postUrl = `${env.SITE_URL}/es/blog/${post.slug_es}`
+  const meta = (post.auto_draft_meta ?? {}) as Record<string, unknown>
+  const imageUrls = (meta.image_urls as string[]) ?? []
+  const cap = (k: string) => (meta[k] as string) ?? post.title_es
+
+  const results = await runCrossPost(
+    env, imageUrls, cap('ig_caption_es'), cap('fb_caption_es'), cap('li_caption_es'),
+    cap('pi_caption_es'), cap('gbp_caption_es'), postUrl, post.title_es, skip,
+  )
+
+  const updates: Record<string, string> = {}
+  for (const r of results) {
+    if (r.status !== 'posted' || !r.postId) continue
+    if (r.platform === 'fb') updates.facebook_post_url = `https://www.facebook.com/${r.postId}`
+    if (r.platform === 'ig') updates.instagram_post_url = `https://www.instagram.com/p/${r.postId}/`
+    if (r.platform === 'li') updates.linkedin_post_url = `https://www.linkedin.com/feed/update/${r.postId}/`
+  }
+  if (Object.keys(updates).length > 0) await supabase.from('blog_posts').update(updates).eq('id', postId)
+
+  for (const r of results) {
+    if (r.status === 'skipped') continue // never overwrite an existing 'posted' row
+    await supabase.from('cross_post_jobs').upsert({
+      blog_post_id: postId, platform: r.platform, status: r.status,
+      platform_post_id: r.postId ?? null, error_msg: r.error ?? null,
+      attempted_at: new Date().toISOString(),
+    }, { onConflict: 'blog_post_id,platform' })
+  }
+
+  return new Response(JSON.stringify({ post_id: postId, skipped_already_posted: [...skip], results }, null, 2),
+    { headers: { 'Content-Type': 'application/json' } })
+}
+
 // ── HTML response helper ──────────────────────────────────────────────────────
 
 function htmlPage(title: string, body: string, status = 200, backUrl?: string): Response {
@@ -565,6 +633,14 @@ export default {
 
     if (pathname === '/approve') return handleApprove(env, req, ctx)
     if (pathname === '/reject') return handleReject(env, req)
+
+    // Idempotent social retry — only platforms not already 'posted' are re-sent.
+    if (pathname === '/retry-crosspost') {
+      if (token !== (env.SUPABASE_SERVICE_ROLE_KEY ?? '').slice(0, 24)) {
+        return new Response('Unauthorized', { status: 401 })
+      }
+      return handleRetryCrossPost(env, req)
+    }
 
     if (pathname === '/health') return new Response('ok')
 
