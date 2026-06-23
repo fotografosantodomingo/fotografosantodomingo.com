@@ -642,6 +642,34 @@ export default {
       return handleRetryCrossPost(env, req)
     }
 
+    // One-time: verify GBP approval + discover account/location IDs for GBP_LOCATION_NAME.
+    if (pathname === '/debug-gbp') {
+      if (token !== (env.SUPABASE_SERVICE_ROLE_KEY ?? '').slice(0, 24)) {
+        return new Response('Unauthorized', { status: 401 })
+      }
+      try {
+        const at = await refreshGbpToken(env)
+        const acctRes = await fetch('https://mybusinessaccountmanagement.googleapis.com/v1/accounts', {
+          headers: { Authorization: `Bearer ${at}` },
+        })
+        const accounts = await acctRes.json() as { accounts?: Array<{ name: string; accountName?: string }> }
+        const out: Record<string, unknown> = { accountsStatus: acctRes.status, accounts }
+        const firstAcct = accounts.accounts?.[0]?.name
+        if (firstAcct) {
+          const locRes = await fetch(
+            `https://mybusinessbusinessinformation.googleapis.com/v1/${firstAcct}/locations?readMask=name,title,storefrontAddress&pageSize=100`,
+            { headers: { Authorization: `Bearer ${at}` } },
+          )
+          out.locationsStatus = locRes.status
+          out.locations = await locRes.json()
+          out.hint_GBP_LOCATION_NAME = `${firstAcct}/locations/<locationId from name above>`
+        }
+        return new Response(JSON.stringify(out, null, 2), { headers: { 'Content-Type': 'application/json' } })
+      } catch (e) {
+        return new Response(JSON.stringify({ error: (e as Error).message }, null, 2), { status: 500, headers: { 'Content-Type': 'application/json' } })
+      }
+    }
+
     if (pathname === '/health') return new Response('ok')
 
     // Drive debug — lists raw contents of the watched folder

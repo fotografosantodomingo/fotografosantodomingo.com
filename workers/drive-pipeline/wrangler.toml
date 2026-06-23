@@ -17,7 +17,7 @@ META_ENABLED = "true"
 META_IG_ENABLED = "true"
 LINKEDIN_ENABLED = "true"
 PINTEREST_ENABLED = "false"
-GBP_ENABLED = "false"
+GBP_ENABLED = "true"
 DA_ENABLED = "false"
 
 # Secrets — set each with: wrangler secret put SECRET_NAME
