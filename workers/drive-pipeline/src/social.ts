@@ -5,10 +5,16 @@ import type { CrossPostResult, Env } from './types'
 // image render endpoint (bounds BOTH sides to 1440px, IG's feed max). Facebook
 // and LinkedIn tolerate full-res, so only the IG path uses this.
 function igImageUrl(publicUrl: string): string {
+  return renderCapped(publicUrl, 1440)
+}
+
+// Generic Supabase render-endpoint cap (returns a JPEG bounded to size×size).
+// Used to keep oversized source photos within each platform's accepted limits.
+function renderCapped(publicUrl: string, size: number): string {
   const marker = '/storage/v1/object/public/'
   if (!publicUrl.includes(marker)) return publicUrl
   const rendered = publicUrl.replace(marker, '/storage/v1/render/image/public/')
-  return `${rendered}?width=1440&height=1440&resize=contain`
+  return `${rendered}?width=${size}&height=${size}&resize=contain`
 }
 
 // ── Facebook ──────────────────────────────────────────────────────────────────
@@ -326,7 +332,7 @@ async function postToGoogleBusiness(
           languageCode: 'es',
           summary: `${caption}\n\n${postUrl}`,
           callToAction: { actionType: 'LEARN_MORE', url: postUrl },
-          media: [{ mediaFormat: 'PHOTO', sourceUrl: imageUrl }],
+          media: [{ mediaFormat: 'PHOTO', sourceUrl: renderCapped(imageUrl, 2000) }],
           topicType: 'STANDARD',
         }),
       },
