@@ -77,6 +77,7 @@ export default function Navigation() {
 
   const baseNavItems = [
     { href: '/', label: t('home') },
+    { href: '/punta-cana', label: 'Punta Cana' },
     { href: '/blog', label: t('blog') },
     { href: '/contact', label: t('contact') },
   ]
