@@ -4,7 +4,9 @@ compatibility_date = "2025-05-01"
 compatibility_flags = ["nodejs_compat"]
 
 [triggers]
-crons = ["0 17 * * *"]  # 1 PM AST (Dominican time) / 5 PM UTC — daily
+# Twice daily, Santo Domingo time (AST = UTC-4, no DST):
+#   10:00 AST → 14:00 UTC   |   19:00 AST → 23:00 UTC
+crons = ["0 14 * * *", "0 23 * * *"]
 
 [vars]
 SUPABASE_URL = "https://ummlavdykprwozwzhvge.supabase.co"
