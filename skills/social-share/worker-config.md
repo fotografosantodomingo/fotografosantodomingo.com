@@ -56,7 +56,7 @@ Never commit secrets. Each is pushed once and stored encrypted in Cloudflare.
 | `GOOGLE_REFRESH_TOKEN` | Drive read access refresh token | Visit `/auth/google/start` |
 | `GOOGLE_DRIVE_FOLDER_ID` | Root folder ID to watch | From Drive folder URL |
 | `RESEND_API_KEY` | Resend transactional email | resend.com → API Keys |
-| `EMAIL_LINK_SECRET` | HMAC signing key for approve/reject links | `openssl rand -base64 32` |
+| `EMAIL_LINK_SECRET` | HMAC signing key for manual `/approve` and `/reject` endpoints | `openssl rand -base64 32` |
 
 ### Facebook + Instagram (optional)
 

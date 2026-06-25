@@ -126,7 +126,7 @@ echo "<folder_id>" | npx wrangler secret put GOOGLE_DRIVE_FOLDER_ID
 echo "<resend_api_key>" | npx wrangler secret put RESEND_API_KEY
 ```
 
-Set email link signing secret (any random 32+ char string):
+Set email link signing secret (used by the manual `/approve` and `/reject` endpoints):
 ```bash
 openssl rand -base64 32 | npx wrangler secret put EMAIL_LINK_SECRET
 ```
@@ -294,7 +294,7 @@ Test by manually triggering the pipeline:
 curl -X POST "<WORKER_BASE_URL>/run?token=<first_24_chars_of_SUPABASE_SERVICE_ROLE_KEY>"
 ```
 
-Check your email for a review draft. Click Approve. Verify the post appears on all platforms.
+Check your email for a results notification — it lists what was published and links to each platform post. The post goes live automatically without any approval step.
 
 ---
 
