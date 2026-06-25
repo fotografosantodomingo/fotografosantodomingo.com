@@ -106,66 +106,25 @@ async function postToInstagram(
   const fullCaption = `${caption}\n\n${postUrl}`
 
   try {
-    if (imageUrls.length === 1) {
-      // 2-step: container → publish
-      const cRes = await fetch(`https://graph.facebook.com/${igId}/media`, {
-        method: 'POST',
-        body: new URLSearchParams({ image_url: igImageUrl(imageUrls[0]), caption: fullCaption, access_token: token }),
-      })
-      const cJson = await cRes.json() as { id?: string; error?: { message: string } }
-      if (!cRes.ok || cJson.error) throw new Error(cJson.error?.message ?? `container ${cRes.status}`)
-
-      const pRes = await fetch(`https://graph.facebook.com/${igId}/media_publish`, {
-        method: 'POST',
-        body: new URLSearchParams({ creation_id: cJson.id!, access_token: token }),
-      })
-      const pJson = await pRes.json() as { id?: string; error?: { code?: number; message: string } }
-
-      if (!pRes.ok && pJson.error?.code !== 2) throw new Error(pJson.error?.message ?? `publish ${pRes.status}`)
-
-      const postId = pJson.id ?? await verifyRecentIgPublish(igId, token, caption)
-      return { platform: 'ig', status: 'posted', postId: postId ?? undefined }
-    }
-
-    // Carousel: 3-step
-    const itemIds: string[] = []
-    for (const url of imageUrls) {
-      const r = await fetch(`https://graph.facebook.com/${igId}/media`, {
-        method: 'POST',
-        body: new URLSearchParams({ image_url: igImageUrl(url), is_carousel_item: 'true', access_token: token }),
-      })
-      const j = await r.json() as { id?: string; error?: { message: string } }
-      if (!r.ok || j.error) throw new Error(`Carousel item: ${j.error?.message ?? r.status}`)
-      // Poll until FINISHED
-      for (let i = 0; i < 10; i++) {
-        await new Promise((res) => setTimeout(res, 2000))
-        const statusRes = await fetch(`https://graph.facebook.com/${j.id!}?fields=status_code&access_token=${token}`)
-        const s = await statusRes.json() as { status_code?: string }
-        if (s.status_code === 'FINISHED') break
-      }
-      itemIds.push(j.id!)
-    }
-
-    const carRes = await fetch(`https://graph.facebook.com/${igId}/media`, {
+    // Single-image post only — IG mirrors FB / LinkedIn / GBP (first image).
+    // Carousels were removed: a single slow or errored secondary child container
+    // failed the entire post with "Only photo or video can be accepted as media
+    // type", so one bad extra photo took down the whole IG post.
+    const cRes = await fetch(`https://graph.facebook.com/${igId}/media`, {
       method: 'POST',
-      body: new URLSearchParams({
-        media_type: 'CAROUSEL',
-        caption: fullCaption,
-        children: itemIds.join(','),
-        access_token: token,
-      }),
+      body: new URLSearchParams({ image_url: igImageUrl(imageUrls[0]), caption: fullCaption, access_token: token }),
     })
-    const carJson = await carRes.json() as { id?: string; error?: { message: string } }
-    if (!carRes.ok || carJson.error) throw new Error(carJson.error?.message ?? `carousel ${carRes.status}`)
+    const cJson = await cRes.json() as { id?: string; error?: { message: string } }
+    if (!cRes.ok || cJson.error) throw new Error(cJson.error?.message ?? `container ${cRes.status}`)
 
-    const pubRes = await fetch(`https://graph.facebook.com/${igId}/media_publish`, {
+    const pRes = await fetch(`https://graph.facebook.com/${igId}/media_publish`, {
       method: 'POST',
-      body: new URLSearchParams({ creation_id: carJson.id!, access_token: token }),
+      body: new URLSearchParams({ creation_id: cJson.id!, access_token: token }),
     })
-    const pubJson = await pubRes.json() as { id?: string; error?: { code?: number; message: string } }
-    if (!pubRes.ok && pubJson.error?.code !== 2) throw new Error(pubJson.error?.message ?? `publish ${pubRes.status}`)
+    const pJson = await pRes.json() as { id?: string; error?: { code?: number; message: string } }
+    if (!pRes.ok && pJson.error?.code !== 2) throw new Error(pJson.error?.message ?? `publish ${pRes.status}`)
 
-    const postId = pubJson.id ?? await verifyRecentIgPublish(igId, token, caption)
+    const postId = pJson.id ?? await verifyRecentIgPublish(igId, token, caption)
     return { platform: 'ig', status: 'posted', postId: postId ?? undefined }
   } catch (err: unknown) {
     return { platform: 'ig', status: 'failed', error: (err as Error).message }
