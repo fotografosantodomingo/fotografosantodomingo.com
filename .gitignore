@@ -9,6 +9,7 @@ yarn-error.log*
 /.next/**
 /.open-next/
 out/
+*.tsbuildinfo
 
 # Environment variables
 .env.local
@@ -78,3 +79,15 @@ fotografo-gsc-*.json
 # Local wrangler pages dev secrets (never commit)
 .dev.vars
 .wrangler/
+
+# Local image staging — not served by Next (uses public/ + Cloudinary)
+/photos/
+
+# Failed/local DB backup dir (typo of _backups) — never commit data dumps
+/supabase-backu/
+
+# Skill archives — rebuilt on demand, no need to track
+*.zip
+
+# Local working drafts (e.g. outbound credential-request notes)
+/question*.md
