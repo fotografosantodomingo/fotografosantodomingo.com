@@ -1,4 +1,4 @@
-// CI/CD: auto-deployed via Cloudflare Workers Builds on push to main.
+// CI/CD: auto-deployed via Cloudflare Workers Builds on push to main (root: workers/drive-pipeline).
 import { createClient } from '@supabase/supabase-js'
 import { listNewGroups, downloadFile } from './drive'
 import { generateBlogPost, substitutePlaceholders } from './anthropic'
