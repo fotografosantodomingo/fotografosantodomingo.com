@@ -1,3 +1,4 @@
+// CI/CD: auto-deployed via Cloudflare Workers Builds on push to main.
 import { createClient } from '@supabase/supabase-js'
 import { listNewGroups, downloadFile } from './drive'
 import { generateBlogPost, substitutePlaceholders } from './anthropic'
