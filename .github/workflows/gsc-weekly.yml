@@ -1,0 +1,60 @@
+name: GSC Weekly Indexation Check
+
+# Autonomous recurring Search Console indexation audit.
+# Runs whether or not Claude Code is open — replaces the in-session cron.
+# Snapshots every sitemap URL, diffs vs the prior committed snapshot, and
+# commits the new snapshot back so the next run has something to diff against.
+
+on:
+  schedule:
+    - cron: '0 13 * * 1' # Mondays 13:00 UTC (~09:00 AST)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Write service account key
+        run: printf '%s' "$GSC_SA_JSON" > /tmp/gsc-sa.json
+        env:
+          GSC_SA_JSON: ${{ secrets.GSC_SA_JSON }}
+
+      - name: Run GSC snapshot + diff
+        run: |
+          set -o pipefail
+          GSC_KEY=/tmp/gsc-sa.json node scripts/gsc-snapshot.mjs 2>/dev/null | tee /tmp/gsc-report.txt
+
+      - name: Publish report to job summary
+        if: always()
+        run: |
+          {
+            echo '```'
+            cat /tmp/gsc-report.txt 2>/dev/null || echo '(brak raportu — sprawdź log kroku snapshotu)'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove service account key
+        if: always()
+        run: rm -f /tmp/gsc-sa.json
+
+      - name: Commit new snapshot
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add scripts/gsc-snapshots/*.json
+          if git diff --staged --quiet; then
+            echo 'No new snapshot to commit'
+          else
+            git commit -m "chore(gsc): weekly indexation snapshot $(date -u +%Y-%m-%d)"
+            git push
+          fi
