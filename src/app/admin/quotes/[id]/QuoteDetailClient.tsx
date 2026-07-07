@@ -392,7 +392,8 @@ export function ChecklistCard({
 
 const FOOTER = `Michal Babula — Sales Dept
 Email: info@fotografosantodomingo.com
-Tel./WP: +1 (809) 720-9547
+Tel: +1 (809) 720-9547
+WhatsApp: +1 (809) 778-9547
 www.fotografosantodomingo.com`
 
 function coverLetter(locale: 'es' | 'en', url: string, clientName: string | null): string {

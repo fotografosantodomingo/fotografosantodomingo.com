@@ -8,7 +8,7 @@
 
 import Link from 'next/link'
 
-const WHATSAPP_NUMBER = '18097209547'
+const WHATSAPP_NUMBER = '18097789547'
 const SETMORE_URL = 'https://babulashotsrd.setmore.com/reserva'
 
 type BookingCTAProps = {

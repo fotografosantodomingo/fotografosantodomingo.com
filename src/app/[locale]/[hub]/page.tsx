@@ -447,7 +447,7 @@ export default async function GeoPageRoute({ params }: Props) {
                   {isEs ? 'Solicitar cotización' : 'Request quote'}
                 </Link>
                 <a
-                  href="https://wa.me/18097209547"
+                  href="https://wa.me/18097789547"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] px-7 py-3.5 rounded-full border border-hairline-soft text-ink-muted hover:text-ink hover:border-hairline transition-colors duration-200"

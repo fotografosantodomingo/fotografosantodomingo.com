@@ -337,7 +337,7 @@ export default function ContactPage() {
               </h2>
 
               <div className="space-y-8">
-                {/* Phone */}
+                {/* Phone — call only (local line) */}
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-ink/10 rounded-lg flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📞</span>
@@ -347,11 +347,34 @@ export default function ContactPage() {
                       {t('contact.info.phone') || 'Phone'}
                     </h3>
                     <p className="text-ink-muted">{CONTACT_INFO.phone}</p>
+                    <p className="text-ink-muted/70 text-sm mb-1">{t('contact.info.callNote') || 'Local line — calls only'}</p>
                     <a
                       href={`tel:${CONTACT_INFO.phone}`}
                       className="text-ink hover:text-ink font-medium"
                     >
-                      {t('contact.info.call') || 'Call me'}
+                      {t('contact.info.call') || 'Call'}
+                    </a>
+                  </div>
+                </div>
+
+                {/* WhatsApp — dedicated chatbot line */}
+                <div className="flex items-start space-x-4">
+                  <div className="w-12 h-12 bg-ink/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl">💬</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white mb-1">
+                      {t('contact.info.whatsapp') || 'WhatsApp'}
+                    </h3>
+                    <p className="text-ink-muted">{CONTACT_INFO.whatsappDisplay}</p>
+                    <p className="text-ink-muted/70 text-sm mb-1">{t('contact.info.whatsappNote') || 'Message us and we reply within minutes'}</p>
+                    <a
+                      href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(CONTACT_INFO.whatsappMessage)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-ink hover:text-ink font-medium"
+                    >
+                      {t('contact.info.whatsappAction') || 'Message on WhatsApp'}
                     </a>
                   </div>
                 </div>

@@ -130,9 +130,9 @@ export async function sendContactConfirmation(data: ContactData) {
             </div>
 
             <div style="margin-top:18px">
-              <a href="https://wa.me/18097209547"
+              <a href="https://wa.me/18097789547"
                  style="display:inline-block;background:#22c55e;color:#ffffff;padding:12px 18px;border-radius:8px;text-decoration:none;font-weight:700">
-                ${isEs ? 'WhatsApp directo: +1 (809) 720-9547' : 'Direct WhatsApp: +1 (809) 720-9547'}
+                ${isEs ? 'WhatsApp directo: +1 (809) 778-9547' : 'Direct WhatsApp: +1 (809) 778-9547'}
               </a>
             </div>
           </div>
@@ -362,7 +362,7 @@ function qdClose(): string {
             BABULA SHOTS &nbsp;·&nbsp; SANTO DOMINGO, REPÚBLICA DOMINICANA<br>
             <a href="https://www.fotografosantodomingo.com" style="color:#5a5753;text-decoration:none">fotografosantodomingo.com</a>
             &nbsp;·&nbsp;
-            <a href="https://wa.me/18097209547" style="color:#5a5753;text-decoration:none">+1 (809) 720-9547</a>
+            <a href="https://wa.me/18097789547" style="color:#5a5753;text-decoration:none">+1 (809) 778-9547</a>
           </p>
         </div>
       </div>
@@ -562,7 +562,7 @@ export async function sendQuotePaymentConfirmation(data: QuotePaymentConfirmatio
       </div>
       ` : ''}
 
-      ${qdBtn('https://wa.me/18097209547', isEs ? 'Escribir por WhatsApp →' : 'Message us on WhatsApp →')}
+      ${qdBtn('https://wa.me/18097789547', isEs ? 'Escribir por WhatsApp →' : 'Message us on WhatsApp →')}
 
       ${qdClose()}
     `,

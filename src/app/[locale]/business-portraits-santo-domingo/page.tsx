@@ -659,8 +659,8 @@ export default async function BusinessPortraitsPage({ params: { locale } }: Prop
               </Link>
             </div>
             <p className="mt-10 text-ink-muted text-sm">
-              <a href="https://wa.me/18097209547" target="_blank" rel="noopener noreferrer" className="underline hover:text-ink">
-                WhatsApp +1 (809) 720-9547
+              <a href="https://wa.me/18097789547" target="_blank" rel="noopener noreferrer" className="underline hover:text-ink">
+                WhatsApp +1 (809) 778-9547
               </a>
               {' · '}
               <Link href={`/${locale}/contact`} className="underline hover:text-ink">

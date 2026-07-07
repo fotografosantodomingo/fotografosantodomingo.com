@@ -111,7 +111,7 @@ function shellClose() {
             Fotógrafo Santo Domingo — Babula Shots · Santo Domingo, República Dominicana<br/>
             <a href="${BASE_URL}" style="color:#0284c7">fotografosantodomingo.com</a>
             &nbsp;·&nbsp;
-            <a href="https://wa.me/18097209547" style="color:#0284c7">WhatsApp +1 (809) 720-9547</a>
+            <a href="https://wa.me/18097789547" style="color:#0284c7">WhatsApp +1 (809) 778-9547</a>
           </p>
         </div>
       </div>
@@ -123,8 +123,8 @@ function calendarButtons(ctx: BookingEmailContext) {
   const isEs = ctx.locale === 'es'
   const title = `${serviceName(ctx)} — Babula Shots`
   const description = isEs
-    ? `Sesión confirmada con Babula Shots. Punto de encuentro y detalles finales por WhatsApp +1 (809) 720-9547.`
-    : `Confirmed session with Babula Shots. Meeting point and final details via WhatsApp +1 (809) 720-9547.`
+    ? `Sesión confirmada con Babula Shots. Punto de encuentro y detalles finales por WhatsApp +1 (809) 778-9547.`
+    : `Confirmed session with Babula Shots. Meeting point and final details via WhatsApp +1 (809) 778-9547.`
   const gCalUrl = googleCalendarUrl({
     bookingId: ctx.bookingId,
     title,
@@ -237,7 +237,7 @@ export async function sendBookingConfirmation(
         ${calendarButtons(ctx)}
 
         <div style="text-align:center;margin:6px 0 6px">
-          <a href="https://wa.me/18097209547"
+          <a href="https://wa.me/18097789547"
              style="display:inline-block;background:#22c55e;color:#ffffff;padding:12px 22px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px">
             ${isEs ? 'Escribir por WhatsApp' : 'Message us on WhatsApp'}
           </a>
@@ -391,7 +391,7 @@ export async function sendBookingReminder24h(
         </p>
 
         <div style="text-align:center;margin:22px 0 6px">
-          <a href="https://wa.me/18097209547"
+          <a href="https://wa.me/18097789547"
              style="display:inline-block;background:#22c55e;color:#ffffff;padding:12px 22px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px">
             ${isEs ? 'WhatsApp directo' : 'Message us on WhatsApp'}
           </a>
@@ -459,7 +459,7 @@ export async function sendBookingReminderSameDay(
         </p>
 
         <div style="text-align:center;margin:22px 0 6px">
-          <a href="https://wa.me/18097209547"
+          <a href="https://wa.me/18097789547"
              style="display:inline-block;background:#22c55e;color:#ffffff;padding:12px 22px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px">
             ${isEs ? 'WhatsApp directo' : 'Message us on WhatsApp'}
           </a>
@@ -605,7 +605,7 @@ export async function sendBookingCancellation(
         </p>
 
         <div style="text-align:center;margin:22px 0 6px">
-          <a href="https://wa.me/18097209547"
+          <a href="https://wa.me/18097789547"
              style="display:inline-block;background:#22c55e;color:#ffffff;padding:12px 22px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px">
             ${isEs ? 'Hablar por WhatsApp' : 'Message on WhatsApp'}
           </a>

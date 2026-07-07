@@ -7,9 +7,13 @@ export const SITE_CONFIG = {
 }
 
 // Contact information
+// NOTE: two distinct numbers.
+//  - `phone` (809) 720-9547 → LOCAL line, CALLS ONLY (tel: links). No WhatsApp here.
+//  - `whatsapp` 18097789547 → dedicated WhatsApp chatbot line (wa.me links + bot).
 export const CONTACT_INFO = {
   phone: '+1 (809) 720-9547',
-  whatsapp: '18097209547',
+  whatsapp: '18097789547',
+  whatsappDisplay: '+1 (809) 778-9547',
   whatsappMessage: 'Hola! Me interesa una sesión de fotos.',
   address: 'C. El Conde 142, Santo Domingo 11111',
   addressShort: 'Zona Colonial, Santo Domingo',

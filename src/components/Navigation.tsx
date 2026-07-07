@@ -421,7 +421,7 @@ export default function Navigation() {
               {switchLocale.toUpperCase()}
             </Link>
             <a
-              href="https://wa.me/18097209547"
+              href="https://wa.me/18097789547"
               target="_blank"
               rel="noopener noreferrer"
               className="font-mono uppercase tracking-widest text-[12px] text-ink/80 hover:text-ink transition-opacity hidden lg:inline-block"
@@ -531,7 +531,7 @@ export default function Navigation() {
 
               <div className="flex flex-col gap-3 pt-5 mt-2 border-t border-hairline-soft">
                 <a
-                  href="https://wa.me/18097209547"
+                  href="https://wa.me/18097789547"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={pillSecondary + ' w-full'}

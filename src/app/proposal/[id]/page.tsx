@@ -139,7 +139,7 @@ export default async function ProposalPage({ params, searchParams }: Props) {
                   {isEs ? 'Volver al inicio' : 'Back to home'}
                 </Link>
                 <a
-                  href="https://wa.me/18097209547"
+                  href="https://wa.me/18097789547"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-500"
@@ -163,7 +163,7 @@ export default async function ProposalPage({ params, searchParams }: Props) {
                   : 'This link is no longer valid — the proposal expired. Reach out to request a fresh quote.'}
               </p>
               <a
-                href="https://wa.me/18097209547"
+                href="https://wa.me/18097789547"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 inline-block rounded-full bg-sky-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-sky-500"
@@ -295,8 +295,8 @@ export default async function ProposalPage({ params, searchParams }: Props) {
           {/* Footer */}
           <p className="mt-8 text-center text-xs text-slate-400 dark:text-gray-500">
             Babula Shots · Santo Domingo, República Dominicana ·{' '}
-            <a href="https://wa.me/18097209547" className="underline hover:text-sky-500">
-              WhatsApp +1 (809) 720-9547
+            <a href="https://wa.me/18097789547" className="underline hover:text-sky-500">
+              WhatsApp +1 (809) 778-9547
             </a>
           </p>
         </div>

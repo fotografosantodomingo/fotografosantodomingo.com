@@ -5,7 +5,7 @@ import { generateJsonLd, schemaGenerators } from '@/components/seo/JsonLd'
 export const runtime = 'edge'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
-const WA_NUMBER = '18097209547'
+const WA_NUMBER = '18097789547'
 
 type Props = { params: { locale: string } }
 

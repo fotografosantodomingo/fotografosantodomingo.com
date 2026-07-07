@@ -89,8 +89,8 @@ export default function TermsPage({ params: { locale } }: Props) {
               : 'Fotografo Santo Domingo is a professional photography service based in Santo Domingo, Distrito Nacional, Dominican Republic. We provide professional photography services across the entire country including Santo Domingo, Punta Cana, Bávaro, Cap Cana, Isla Saona, Tortuga Bay, Casa de Campo, La Romana, Santiago, San Pedro de Macorís, Puerto Plata and any other location agreed upon with the client.'}
             </p>
             <p className="mt-3">{isEs
-              ? <>Puedes contactarnos en <ObfuscatedEmail locale="es" className="text-ink hover:text-ink" /> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-ink hover:text-ink">+1 809 720 9547</a>.</>
-              : <>You can reach us at <ObfuscatedEmail locale="en" className="text-ink hover:text-ink" /> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-ink hover:text-ink">+1 809 720 9547</a>.</>}
+              ? <>Puedes contactarnos en <ObfuscatedEmail locale="es" className="text-ink hover:text-ink" /> o por WhatsApp al <a href="https://wa.me/18097789547" className="text-ink hover:text-ink">+1 809 778 9547</a>.</>
+              : <>You can reach us at <ObfuscatedEmail locale="en" className="text-ink hover:text-ink" /> or via WhatsApp at <a href="https://wa.me/18097789547" className="text-ink hover:text-ink">+1 809 778 9547</a>.</>}
             </p>
           </Section>
 
@@ -309,7 +309,7 @@ export default function TermsPage({ params: { locale } }: Props) {
               <p className="font-semibold text-white">Fotografo Santo Domingo</p>
               <p>Santo Domingo, Distrito Nacional, República Dominicana</p>
               <p>Email: <ObfuscatedEmail locale={locale} className="text-ink hover:text-ink" /></p>
-              <p>WhatsApp: <a href="https://wa.me/18097209547" className="text-ink hover:text-ink">+1 809 720 9547</a></p>
+              <p>WhatsApp: <a href="https://wa.me/18097789547" className="text-ink hover:text-ink">+1 809 778 9547</a></p>
               <p>Web: <a href="https://www.fotografosantodomingo.com" className="text-ink hover:text-ink">www.fotografosantodomingo.com</a></p>
             </address>
           </Section>

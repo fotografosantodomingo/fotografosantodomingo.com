@@ -435,8 +435,8 @@ export default async function PhotoStudioPage({ params: { locale } }: Props) {
                 {isEs ? 'Contactar al fotógrafo' : 'Contact the photographer'}
               </Link>
               {' · '}
-              <a href="https://wa.me/18097209547" target="_blank" rel="noopener noreferrer" className="underline hover:text-ink">
-                WhatsApp +1 (809) 720-9547
+              <a href="https://wa.me/18097789547" target="_blank" rel="noopener noreferrer" className="underline hover:text-ink">
+                WhatsApp +1 (809) 778-9547
               </a>
             </p>
             <p className="mt-3 text-ink-muted text-xs">

@@ -72,13 +72,13 @@ export default function PrivacyPage({ params: { locale } }: Props) {
               <>
                 <p>Bienvenido a fotografosantodomingo.com. Esta Política de Privacidad explica cómo recopilamos, usamos, almacenamos y protegemos tu información personal cuando visitas nuestro sitio web o nos contactas para contratar una sesión fotográfica en Santo Domingo, República Dominicana.</p>
                 <p className="mt-3">Al utilizar este sitio web aceptas los términos descritos en esta Política de Privacidad. Si no estás de acuerdo, por favor no utilices nuestro sitio web.</p>
-                <p className="mt-3">Este sitio web es operado por Fotografo Santo Domingo, un servicio de fotografía profesional con sede en Santo Domingo, República Dominicana. Para cualquier consulta relacionada con privacidad puedes contactarnos en <ObfuscatedEmail locale="es" className="text-ink hover:text-ink" /> o por WhatsApp al <a href="https://wa.me/18097209547" className="text-ink hover:text-ink">+1 809 720 9547</a>.</p>
+                <p className="mt-3">Este sitio web es operado por Fotografo Santo Domingo, un servicio de fotografía profesional con sede en Santo Domingo, República Dominicana. Para cualquier consulta relacionada con privacidad puedes contactarnos en <ObfuscatedEmail locale="es" className="text-ink hover:text-ink" /> o por WhatsApp al <a href="https://wa.me/18097789547" className="text-ink hover:text-ink">+1 809 778 9547</a>.</p>
               </>
             ) : (
               <>
                 <p>Welcome to fotografosantodomingo.com. This Privacy Policy explains how we collect, use, store and protect your personal information when you visit our website or contact us to book a photography session in Santo Domingo, Dominican Republic.</p>
                 <p className="mt-3">By using this website you agree to the terms described in this Privacy Policy. If you do not agree, please do not use our website.</p>
-                <p className="mt-3">This website is operated by Fotografo Santo Domingo, a professional photography service based in Santo Domingo, Dominican Republic. For any privacy-related questions you can contact us at <ObfuscatedEmail locale="en" className="text-ink hover:text-ink" /> or via WhatsApp at <a href="https://wa.me/18097209547" className="text-ink hover:text-ink">+1 809 720 9547</a>.</p>
+                <p className="mt-3">This website is operated by Fotografo Santo Domingo, a professional photography service based in Santo Domingo, Dominican Republic. For any privacy-related questions you can contact us at <ObfuscatedEmail locale="en" className="text-ink hover:text-ink" /> or via WhatsApp at <a href="https://wa.me/18097789547" className="text-ink hover:text-ink">+1 809 778 9547</a>.</p>
               </>
             )}
           </Section>
@@ -247,7 +247,7 @@ export default function PrivacyPage({ params: { locale } }: Props) {
               <p className="font-semibold text-white">Fotografo Santo Domingo</p>
               <p>Santo Domingo, Distrito Nacional, República Dominicana</p>
               <p>Email: <ObfuscatedEmail locale={locale} className="text-ink hover:text-ink" /></p>
-              <p>WhatsApp: <a href="https://wa.me/18097209547" className="text-ink hover:text-ink">+1 809 720 9547</a></p>
+              <p>WhatsApp: <a href="https://wa.me/18097789547" className="text-ink hover:text-ink">+1 809 778 9547</a></p>
               <p>Web: <a href="https://www.fotografosantodomingo.com" className="text-ink hover:text-ink">www.fotografosantodomingo.com</a></p>
             </address>
           </Section>

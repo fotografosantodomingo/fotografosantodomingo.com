@@ -149,7 +149,7 @@ export default function StepConfirmation({
 
       <div className="flex flex-col gap-3">
         <a
-          href="https://wa.me/18097209547"
+          href="https://wa.me/18097789547"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center justify-center font-mono uppercase tracking-widest text-[12px] py-3.5 rounded-full bg-[#25D366] text-black hover:opacity-90 transition-opacity duration-200"

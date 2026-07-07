@@ -79,8 +79,8 @@ export async function GET(
     : snap.family_title_en ?? snap.name_en ?? 'Photo session'
   const title = `${serviceName || familyTitle} — Babula Shots`
   const description = isEs
-    ? `Sesión confirmada con Babula Shots. Punto de encuentro y detalles finales por WhatsApp +1 (809) 720-9547.`
-    : `Confirmed session with Babula Shots. Meeting point and final details via WhatsApp +1 (809) 720-9547.`
+    ? `Sesión confirmada con Babula Shots. Punto de encuentro y detalles finales por WhatsApp +1 (809) 778-9547.`
+    : `Confirmed session with Babula Shots. Meeting point and final details via WhatsApp +1 (809) 778-9547.`
 
   const ics = buildIcsDocument({
     bookingId: booking.id,
