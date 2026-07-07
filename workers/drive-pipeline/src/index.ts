@@ -611,11 +611,91 @@ async function handleMetaStatus(env: Env, token: string): Promise<Response> {
   return new Response(JSON.stringify(json, null, 2), { headers: { 'Content-Type': 'application/json' } })
 }
 
+// ── Google Business Profile review sync ───────────────────────────────────────
+// Reuses the pipeline's existing GBP OAuth (business.manage scope) to pull all
+// Google reviews and upsert them into the Supabase `reviews` table on
+// (source, external_id). The /testimonials page reads verified reviews from there.
+
+const GBP_STAR: Record<string, number> = { ONE: 1, TWO: 2, THREE: 3, FOUR: 4, FIVE: 5 }
+
+interface GbpReview {
+  reviewId: string
+  reviewer?: { displayName?: string; profilePhotoUrl?: string }
+  starRating?: string
+  comment?: string
+  createTime?: string
+}
+
+async function syncGbpReviews(env: Env): Promise<{ fetched: number; upserted: number; total?: number; error?: string }> {
+  if (!env.GBP_REFRESH_TOKEN || !env.GBP_LOCATION_NAME) {
+    return { fetched: 0, upserted: 0, error: 'GBP_REFRESH_TOKEN or GBP_LOCATION_NAME not set' }
+  }
+  const at = await refreshGbpToken(env)
+  const rows: Record<string, unknown>[] = []
+  let total: number | undefined
+  let pageToken: string | undefined
+  do {
+    const u = new URL(`https://mybusiness.googleapis.com/v4/${env.GBP_LOCATION_NAME}/reviews`)
+    u.searchParams.set('pageSize', '50')
+    if (pageToken) u.searchParams.set('pageToken', pageToken)
+    const res = await fetch(u.toString(), { headers: { Authorization: `Bearer ${at}` } })
+    const data = await res.json() as { reviews?: GbpReview[]; nextPageToken?: string; totalReviewCount?: number; error?: { message: string } }
+    if (!res.ok) return { fetched: rows.length, upserted: 0, error: data.error?.message ?? `reviews ${res.status}` }
+    total = data.totalReviewCount ?? total
+    for (const r of data.reviews ?? []) {
+      const text = (r.comment ?? '').trim()
+      if (!text) continue // skip star-only ratings — /testimonials shows written reviews
+      rows.push({
+        source: 'google',
+        external_id: r.reviewId,
+        reviewer_name: r.reviewer?.displayName || 'Google user',
+        reviewer_location: '',
+        avatar_url: r.reviewer?.profilePhotoUrl || null,
+        rating: GBP_STAR[r.starRating ?? 'FIVE'] || 5,
+        review_text: text,
+        review_url: env.GBP_REVIEWS_URL || null,
+        published_at: r.createTime || null,
+        locale: 'es',
+        service_type: 'general',
+        verified: true,
+      })
+    }
+    pageToken = data.nextPageToken
+  } while (pageToken)
+
+  if (rows.length === 0) return { fetched: 0, upserted: 0, total }
+
+  // Full refresh: replace all google-sourced rows. Avoids ON CONFLICT against the
+  // partial unique index (external_id IS NOT NULL) that PostgREST can't target, and
+  // naturally handles edited/removed reviews. Manual/curated rows (other sources)
+  // are untouched, so the review_stats view keeps aggregating them.
+  const sbHeaders = {
+    apikey: env.SUPABASE_SERVICE_ROLE_KEY,
+    Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+    'Content-Type': 'application/json',
+  }
+  const del = await fetch(`${env.SUPABASE_URL}/rest/v1/reviews?source=eq.google`, {
+    method: 'DELETE',
+    headers: { ...sbHeaders, Prefer: 'return=minimal' },
+  })
+  if (!del.ok) return { fetched: rows.length, upserted: 0, total, error: `supabase delete ${del.status}: ${(await del.text()).slice(0, 200)}` }
+
+  const ins = await fetch(`${env.SUPABASE_URL}/rest/v1/reviews`, {
+    method: 'POST',
+    headers: { ...sbHeaders, Prefer: 'return=minimal' },
+    body: JSON.stringify(rows),
+  })
+  if (!ins.ok) return { fetched: rows.length, upserted: 0, total, error: `supabase insert ${ins.status}: ${(await ins.text()).slice(0, 200)}` }
+  return { fetched: rows.length, upserted: rows.length, total }
+}
+
 // ── Worker entry ──────────────────────────────────────────────────────────────
 
 export default {
   async scheduled(_event: ScheduledController, env: Env, _ctx: ExecutionContext): Promise<void> {
     await runPipeline(env)
+    // Refresh Google reviews once per scheduled run (best-effort; never blocks pipeline).
+    try { await syncGbpReviews(env) } catch (e) { console.error('review sync failed:', (e as Error).message) }
   },
 
   async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -634,6 +714,18 @@ export default {
 
     if (pathname === '/approve') return handleApprove(env, req, ctx)
     if (pathname === '/reject') return handleReject(env, req)
+
+    // Manual Google review sync → Supabase reviews table (also runs on cron).
+    if (pathname === '/sync-reviews') {
+      if (token !== (env.SUPABASE_SERVICE_ROLE_KEY ?? '').slice(0, 24)) {
+        return new Response('Unauthorized', { status: 401 })
+      }
+      const result = await syncGbpReviews(env)
+      return new Response(JSON.stringify(result, null, 2), {
+        status: result.error ? 502 : 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
 
     // Idempotent social retry — only platforms not already 'posted' are re-sent.
     if (pathname === '/retry-crosspost') {
@@ -664,6 +756,19 @@ export default {
           out.locationsStatus = locRes.status
           out.locations = await locRes.json()
           out.hint_GBP_LOCATION_NAME = `${firstAcct}/locations/<locationId from name above>`
+        }
+        // Read-only probe: can we read reviews via the v4 API for the configured location?
+        if (env.GBP_LOCATION_NAME) {
+          const revRes = await fetch(
+            `https://mybusiness.googleapis.com/v4/${env.GBP_LOCATION_NAME}/reviews?pageSize=5`,
+            { headers: { Authorization: `Bearer ${at}` } },
+          )
+          const revBody = await revRes.json() as { reviews?: unknown[]; totalReviewCount?: number; averageRating?: number; error?: { message: string } }
+          out.reviewsStatus = revRes.status
+          out.reviewsTotalCount = revBody.totalReviewCount
+          out.reviewsAverageRating = revBody.averageRating
+          out.reviewsSample = Array.isArray(revBody.reviews) ? revBody.reviews.length : 0
+          out.reviewsError = revBody.error?.message
         }
         return new Response(JSON.stringify(out, null, 2), { headers: { 'Content-Type': 'application/json' } })
       } catch (e) {

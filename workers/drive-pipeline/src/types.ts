@@ -38,6 +38,7 @@ export interface Env {
   GBP_CLIENT_SECRET?: string
   GBP_REFRESH_TOKEN?: string
   GBP_LOCATION_NAME?: string
+  GBP_REVIEWS_URL?: string
   // DeviantArt
   DA_ENABLED?: string
   DA_CLIENT_ID?: string
