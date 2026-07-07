@@ -235,6 +235,35 @@ export default function Footer({ locale: localeProp }: { locale?: string } = {})
               </>
             )}
           </p>
+          <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted leading-relaxed mt-3">
+            {isEs ? (
+              <>
+                También en{' '}
+                <a
+                  href="https://tourist.com/p/50187"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-ink underline underline-offset-2 hover:opacity-70"
+                >
+                  tourist.com
+                </a>
+                {' '}— reserva mi servicio en el portal
+              </>
+            ) : (
+              <>
+                Also on{' '}
+                <a
+                  href="https://tourist.com/p/50187"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-ink underline underline-offset-2 hover:opacity-70"
+                >
+                  tourist.com
+                </a>
+                {' '}— book my service on the portal
+              </>
+            )}
+          </p>
         </div>
       </div>
     </footer>
