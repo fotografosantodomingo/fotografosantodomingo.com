@@ -18,8 +18,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Imágenes 360° con Dron para Simulación de Vistas — Santo Domingo | Babula Shots'
     : 'Drone 360° Images for View Simulation — Santo Domingo | Babula Shots'
   const description = isEs
-    ? 'Fotografía aérea 360° con dron para simular las vistas reales de proyectos inmobiliarios antes de construirlos. Preventa, tours virtuales interactivos y renders 3D en República Dominicana. Desde $350 USD.'
-    : 'Aerial 360° drone photography to simulate real views of real estate projects before construction. Pre-sale, interactive virtual tours, and 3D render backplates in the Dominican Republic. From $350 USD.'
+    ? 'Fotografía aérea 360° con dron para simular las vistas reales de proyectos inmobiliarios antes de construirlos. Preventa, tours virtuales interactivos y renders 3D en República Dominicana. Desde $370 USD.'
+    : 'Aerial 360° drone photography to simulate real views of real estate projects before construction. Pre-sale, interactive virtual tours, and 3D render backplates in the Dominican Republic. From $370 USD.'
   return {
     title,
     description,
@@ -552,7 +552,7 @@ export default function Drone360Page({ params: { locale } }: Props) {
                 {isEs ? 'Tarifas y Planes del Servicio' : 'Service Plans & Pricing'}
               </h2>
               <p className="text-ink-muted text-lg">
-                {isEs ? 'Desde $350 USD · Cotización personalizada disponible' : 'From $350 USD · Custom quotes available'}
+                {isEs ? 'Desde $370 USD · Cotización personalizada disponible' : 'From $370 USD · Custom quotes available'}
               </p>
             </div>
 

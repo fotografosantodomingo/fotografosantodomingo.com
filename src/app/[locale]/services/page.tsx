@@ -217,7 +217,7 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                   <div className="flex items-start justify-between mb-5">
                     <span className="text-2xl" aria-hidden="true">💼</span>
                     <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
-                      {isEs ? 'Desde $400 USD' : 'From $400 USD'}
+                      {isEs ? 'Desde $420 USD' : 'From $420 USD'}
                     </span>
                   </div>
                   <h2
@@ -245,7 +245,7 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                   <div className="flex items-start justify-between mb-5">
                     <span className="text-2xl" aria-hidden="true">🏖️</span>
                     <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
-                      {isEs ? 'Desde $250 USD' : 'From $250 USD'}
+                      {isEs ? 'Desde $270 USD' : 'From $270 USD'}
                     </span>
                   </div>
                   <h2
@@ -273,7 +273,7 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                   <div className="flex items-start justify-between mb-5">
                     <span className="text-2xl" aria-hidden="true">🚁</span>
                     <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
-                      {isEs ? 'Desde $200 USD' : 'From $200 USD'}
+                      {isEs ? 'Desde $220 USD' : 'From $220 USD'}
                     </span>
                   </div>
                   <h2
@@ -301,7 +301,7 @@ export default async function ServicesPage({ params: { locale } }: Props) {
                   <div className="flex items-start justify-between mb-5">
                     <span className="text-2xl" aria-hidden="true">📸</span>
                     <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
-                      {isEs ? 'Desde $250 USD' : 'From $250 USD'}
+                      {isEs ? 'Desde $270 USD' : 'From $270 USD'}
                     </span>
                   </div>
                   <h2

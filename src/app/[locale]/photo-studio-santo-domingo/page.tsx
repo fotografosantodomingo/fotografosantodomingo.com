@@ -76,8 +76,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Estudio Fotográfico en Santo Domingo · Fashion, Editorial y Arte | Babula Shots'
     : 'Photo Studio in Santo Domingo · Fashion, Editorial & Fine Art | Babula Shots'
   const description = isEs
-    ? 'Sesión de fotos en estudio profesional en Santo Domingo, RD. Especialistas en fashion editorial, retratos creativos y fotografía artística. Iluminación profesional, fondos editoriales y dirección creativa. Desde $100 USD.'
-    : 'Professional photo studio sessions in Santo Domingo, DR. Specialists in fashion editorial, creative portraits, and fine art photography. Pro lighting, editorial backdrops, and creative direction. From $100 USD.'
+    ? 'Sesión de fotos en estudio profesional en Santo Domingo, RD. Especialistas en fashion editorial, retratos creativos y fotografía artística. Iluminación profesional, fondos editoriales y dirección creativa. Desde $120 USD.'
+    : 'Professional photo studio sessions in Santo Domingo, DR. Specialists in fashion editorial, creative portraits, and fine art photography. Pro lighting, editorial backdrops, and creative direction. From $120 USD.'
   return {
     title,
     description,

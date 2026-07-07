@@ -17,8 +17,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Fotografía de Propuesta de Matrimonio en República Dominicana | Babula Shots'
     : 'Proposal Photography in Dominican Republic | Babula Shots'
   const description = isEs
-    ? 'Fotografía de propuesta de matrimonio en República Dominicana — modo ninja oculto con teleobjetivo 400–600 mm, Punta Cana, Santo Domingo, Samaná y toda la isla. Precio desde $250 USD + ITBIS.'
-    : 'Proposal photography in Dominican Republic — hidden ninja mode with 400–600 mm telephoto lens, Punta Cana, Santo Domingo, Samaná and the entire island. Starting from $250 USD + tax.'
+    ? 'Fotografía de propuesta de matrimonio en República Dominicana — modo ninja oculto con teleobjetivo 400–600 mm, Punta Cana, Santo Domingo, Samaná y toda la isla. Precio desde $270 USD + ITBIS.'
+    : 'Proposal photography in Dominican Republic — hidden ninja mode with 400–600 mm telephoto lens, Punta Cana, Santo Domingo, Samaná and the entire island. Starting from $270 USD + tax.'
   return {
     title,
     description,
@@ -73,7 +73,7 @@ const PACKAGES = [
     descEn: '400–600 mm telephoto from 50–80 m away. She never sees us. Island-wide.',
     descEs: 'Teleobjetivo 400–600 mm desde 50–80 m. Ella nunca nos ve. Toda la isla.',
     highlight: true as const,
-    price: '$250 USD + ITBIS',
+    price: '$270 USD + ITBIS',
   },
   {
     icon: '🏖️',
@@ -84,7 +84,7 @@ const PACKAGES = [
     descEn: 'Ninja mode at Bávaro, Juanillo, Macao, Cap Cana, and every resort beach.',
     descEs: 'Modo ninja en Bávaro, Juanillo, Macao, Cap Cana y todas las playas de resorts.',
     highlight: false as const,
-    price: '$250 USD + ITBIS',
+    price: '$270 USD + ITBIS',
   },
   {
     icon: '🌴',
@@ -95,7 +95,7 @@ const PACKAGES = [
     descEn: 'Samaná, Santo Domingo, Puerto Plata, Casa de Campo, Las Terrenas and more.',
     descEs: 'Samaná, Santo Domingo, Puerto Plata, Casa de Campo, Las Terrenas y más.',
     highlight: false as const,
-    price: '$250 USD + ITBIS',
+    price: '$270 USD + ITBIS',
   },
 ]
 

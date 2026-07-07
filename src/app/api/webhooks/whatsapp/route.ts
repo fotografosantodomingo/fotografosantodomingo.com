@@ -276,44 +276,44 @@ PREGUNTAS CLAVE (hazlas de forma natural, no todas a la vez):
 PAQUETES REALES (usa siempre estos números exactos, nunca inventes):
 
 BODAS — /es/services/wedding-photography
-• Boda Esencial: hasta 4h · 80 fotos · $900 · entrega 14 días
-• Boda Premium: hasta 6h · 150 fotos · $1,500 · entrega 14 días
-• Día Completo Lujo: hasta 8h · 250 fotos · $2,500 · teaser mismo día
+• Boda Esencial: hasta 4h · 80 fotos · $920 · entrega 14 días
+• Boda Premium: hasta 6h · 150 fotos · $1,520 · entrega 14 días
+• Día Completo Lujo: hasta 8h · 250 fotos · $2,520 · teaser mismo día
 
 FAMILIA — /es/services/family-beach-photography
-• Esencial: 1h · hasta 5 personas · 20 fotos · $350 · entrega 7 días
-• Premium Playa: 90min · hasta 10 personas · 30 fotos · $480
-• Lujo Saona/Catalina: 3h · 40 fotos · $650 (lancha incluida)
+• Esencial: 1h · hasta 5 personas · 20 fotos · $370 · entrega 7 días
+• Premium Playa: 90min · hasta 10 personas · 30 fotos · $500
+• Lujo Saona/Catalina: 3h · 40 fotos · $670 (lancha incluida)
 
 RETRATO — /es/services/luxury-portrait-photography
-• Esencial: 1h · 15 fotos · $250 · entrega 48h
-• Editorial Premium: 90min · 25 fotos · $390 · entrega 48h
-• Sesión Firma: 2h · 40 fotos · $550
+• Esencial: 1h · 15 fotos · $270 · entrega 48h
+• Editorial Premium: 90min · 25 fotos · $410 · entrega 48h
+• Sesión Firma: 2h · 40 fotos · $570
 
 PROPUESTA — /es/services/proposal-photography
-• Playa Secreta: 2h oculta · 20 fotos · $250 · entrega 24h
-• Propuesta Firma: 3h · 35 fotos · $390 · misma noche
-• Lujo + Drone: 4h · 50 fotos · $480 · misma noche
+• Playa Secreta: 2h oculta · 20 fotos · $270 · entrega 24h
+• Propuesta Firma: 3h · 35 fotos · $410 · misma noche
+• Lujo + Drone: 4h · 50 fotos · $500 · misma noche
 
 EVENTOS CORPORATIVOS — /es/services/corporate-event-photography
-• Por Hora Estándar: $100/h · mínimo 2h · entrega 48h
-• Por Hora Premium: $200/h · mínimo 2h · teaser mismo día + full 24h
-• Día Completo: 8h · $550 · entrega 48h
+• Por Hora Estándar: $120/h · mínimo 2h · entrega 48h
+• Por Hora Premium: $220/h · mínimo 2h · teaser mismo día + full 24h
+• Día Completo: 8h · $570 · entrega 48h
 
 QUINCEAÑERAS / CUMPLEAÑOS — /es/services/birthday-event-photography
-• Cobertura Esencial: 1h · 20 fotos · $200 · entrega 7 días
-• Celebración Firma: 2h · 30 fotos · $350 · entrega 7 días
-• Quinceañera Premium: 4h · 60 fotos · $500 · entrega 14 días
+• Cobertura Esencial: 1h · 20 fotos · $220 · entrega 7 días
+• Celebración Firma: 2h · 30 fotos · $370 · entrega 7 días
+• Quinceañera Premium: 4h · 60 fotos · $520 · entrega 14 días
 
 COMERCIAL — /es/services/commercial-branding-photography
-• Esencial: 1h · 15 imágenes · $400 · entrega 48h
-• Branding Premium: 3h · 30 imágenes · $700
-• Campaña Lujo: 6h · 60 imágenes · $1,200
+• Esencial: 1h · 15 imágenes · $420 · entrega 48h
+• Branding Premium: 3h · 30 imágenes · $720
+• Campaña Lujo: 6h · 60 imágenes · $1,220
 
 DRONE / INMOBILIARIA — /es/services/real-estate-drone-photography
-• Listado Esencial: 90min · 20 fotos · $200 · entrega 48h
-• Propiedad Premium: 3h · 35 fotos + drone · $400
-• Finca Lujo: 4h · 50+ fotos + video 4K drone · $600
+• Listado Esencial: 90min · 20 fotos · $220 · entrega 48h
+• Propiedad Premium: 3h · 35 fotos + drone · $420
+• Finca Lujo: 4h · 50+ fotos + video 4K drone · $620
 
 COTIZAR: fotografosantodomingo.com/es/get-quote
 
@@ -419,14 +419,14 @@ REGLAS:
 - client_message NO debe incluir el link — solo el resumen de la oferta y el precio total. El link se añade automáticamente.
 
 PRECIOS REALES:
-BODAS: Esencial hasta 4h/80 fotos/$900 · Premium hasta 6h/150 fotos/$1500 · Lujo 8h/250 fotos/$2500
-FAMILIA: Esencial 1h/20 fotos/$350 · Premium 90min/30 fotos/$480 · Lujo 3h/40 fotos/$650
-RETRATO: Esencial 1h/15 fotos/$250 · Editorial 90min/25 fotos/$390 · Firma 2h/40 fotos/$550
-PROPUESTA: Playa Secreta 2h/$250 · Firma 3h/$390 · Lujo+Drone 4h/$480
-CORPORATIVO/EVENTO: Por Hora Estándar $100/h(min 2h) · Por Hora Premium $200/h(min 2h) · Día Completo 8h/$550
-QUINCE/CUMPLE: Esencial 1h/$200 · Firma 2h/$350 · Quinceañera Premium 4h/$500
-COMERCIAL: Esencial 1h/$400 · Branding 3h/$700 · Campaña 6h/$1200
-DRONE/INMOBILIARIA: Listado 90min/$200 · Premium 3h/$400 · Finca Lujo 4h/$600`,
+BODAS: Esencial hasta 4h/80 fotos/$920 · Premium hasta 6h/150 fotos/$1520 · Lujo 8h/250 fotos/$2520
+FAMILIA: Esencial 1h/20 fotos/$370 · Premium 90min/30 fotos/$500 · Lujo 3h/40 fotos/$670
+RETRATO: Esencial 1h/15 fotos/$270 · Editorial 90min/25 fotos/$410 · Firma 2h/40 fotos/$570
+PROPUESTA: Playa Secreta 2h/$270 · Firma 3h/$410 · Lujo+Drone 4h/$500
+CORPORATIVO/EVENTO: Por Hora Estándar $120/h(min 2h) · Por Hora Premium $220/h(min 2h) · Día Completo 8h/$570
+QUINCE/CUMPLE: Esencial 1h/$220 · Firma 2h/$370 · Quinceañera Premium 4h/$520
+COMERCIAL: Esencial 1h/$420 · Branding 3h/$720 · Campaña 6h/$1220
+DRONE/INMOBILIARIA: Listado 90min/$220 · Premium 3h/$420 · Finca Lujo 4h/$620`,
       messages: [{
         role:    'user',
         content: `Conversación:\n\n${transcript}\n\nDatos extraídos: ${JSON.stringify(extracted)}\n\nConstruye la propuesta.`,

@@ -167,8 +167,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Sesiones de Fotos en la Playa · República Dominicana | Babula Shots'
     : 'Beach Photo Sessions · Dominican Republic | Babula Shots'
   const description = isEs
-    ? 'Sesiones de fotos profesionales en la playa cubriendo Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Isla Saona, Las Terrenas, Cabarete y todas las costas de RD. Desde $250 USD. Golden hour, luz natural y flash editorial.'
-    : 'Professional beach photo sessions covering Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Saona Island, Las Terrenas, Cabarete and the entire Dominican coast. From $250 USD. Golden hour, natural light, and editorial flash.'
+    ? 'Sesiones de fotos profesionales en la playa cubriendo Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Isla Saona, Las Terrenas, Cabarete y todas las costas de RD. Desde $270 USD. Golden hour, luz natural y flash editorial.'
+    : 'Professional beach photo sessions covering Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Saona Island, Las Terrenas, Cabarete and the entire Dominican coast. From $270 USD. Golden hour, natural light, and editorial flash.'
   const keywords = isEs
     ? 'sesion de fotos en la playa, fotografo de playa republica dominicana, fotos punta cana playa, sesion isla saona, fotografo bavaro, golden hour playa rd, fotos boda playa, fotografo profesional costa caribe'
     : 'beach photo session dominican republic, punta cana beach photographer, saona island photo session, bavaro beach photographer, golden hour beach photography, dominican coast photographer, caribbean beach session'
@@ -234,7 +234,7 @@ export default async function BeachPhotoSessionsPage({ params: { locale } }: Pro
     ? [
         {
           q: '¿Cuánto cuesta una sesión de fotos en la playa en República Dominicana?',
-          a: 'Tres paquetes a precio fijo: $250 USD por una sesión de mediodía con 10 fotos editadas, $330 por sesión estándar de 1 hora con 20 fotos y mezcla de luz natural + flash, y $400 por la sesión Golden Hour al amanecer o atardecer con 20 fotos super-editadas y corrección de color cinematográfica. Para proyectos a medida — multi-locación, drone, grupos extendidos o conceptos editoriales — manejamos cotización personalizada.',
+          a: 'Tres paquetes a precio fijo: $270 USD por una sesión de mediodía con 10 fotos editadas, $350 por sesión estándar de 1 hora con 20 fotos y mezcla de luz natural + flash, y $420 por la sesión Golden Hour al amanecer o atardecer con 20 fotos super-editadas y corrección de color cinematográfica. Para proyectos a medida — multi-locación, drone, grupos extendidos o conceptos editoriales — manejamos cotización personalizada.',
         },
         {
           q: '¿Cuál es la mejor playa de Punta Cana para una sesión de fotos?',
@@ -268,7 +268,7 @@ export default async function BeachPhotoSessionsPage({ params: { locale } }: Pro
     : [
         {
           q: 'How much does a beach photo session cost in the Dominican Republic?',
-          a: 'Three flat-rate packages: $250 USD for a mid-day session with 10 edited photos, $330 for a 1-hour standard session with 20 photos and mixed natural light + fill flash, and $400 for the Golden Hour session at sunrise or sunset with 20 super-edited photos and cinematic color grading. For custom projects — multi-location, drone, large groups, or editorial concepts — we offer a custom quote.',
+          a: 'Three flat-rate packages: $270 USD for a mid-day session with 10 edited photos, $350 for a 1-hour standard session with 20 photos and mixed natural light + fill flash, and $420 for the Golden Hour session at sunrise or sunset with 20 super-edited photos and cinematic color grading. For custom projects — multi-location, drone, large groups, or editorial concepts — we offer a custom quote.',
         },
         {
           q: 'Which Punta Cana beach is best for a photo session?',
@@ -330,8 +330,8 @@ export default async function BeachPhotoSessionsPage({ params: { locale } }: Pro
           { '@type': 'Place', name: 'Isla Saona' },
         ],
         description: isEs
-          ? 'Sesiones de fotos profesionales en la playa con cobertura de toda la República Dominicana. Tres paquetes desde $250 (mediodía) hasta $400 (golden hour editorial), más cotización personalizada para proyectos a medida.'
-          : 'Professional beach photo sessions covering the entire Dominican Republic. Three packages from $250 (mid-day) to $400 (editorial golden hour), plus a custom quote option for bespoke projects.',
+          ? 'Sesiones de fotos profesionales en la playa con cobertura de toda la República Dominicana. Tres paquetes desde $270 (mediodía) hasta $420 (golden hour editorial), más cotización personalizada para proyectos a medida.'
+          : 'Professional beach photo sessions covering the entire Dominican Republic. Three packages from $270 (mid-day) to $420 (editorial golden hour), plus a custom quote option for bespoke projects.',
         offers: {
           '@type': 'AggregateOffer',
           priceCurrency: 'USD',
@@ -407,8 +407,8 @@ export default async function BeachPhotoSessionsPage({ params: { locale } }: Pro
             </h1>
             <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-6 leading-relaxed">
               {isEs
-                ? 'Cubrimos toda la costa dominicana — Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Isla Saona, Las Terrenas, Cabarete y más. Tres paquetes desde $250, golden hour editorial y opciones a medida con drone, multi-locación y grupos.'
-                : 'We cover the entire Dominican coast — Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Saona Island, Las Terrenas, Cabarete and beyond. Three packages from $250, editorial golden hour, and custom options with drone, multi-location, and groups.'}
+                ? 'Cubrimos toda la costa dominicana — Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Isla Saona, Las Terrenas, Cabarete y más. Tres paquetes desde $270, golden hour editorial y opciones a medida con drone, multi-locación y grupos.'
+                : 'We cover the entire Dominican coast — Punta Cana, Bávaro, Bayahíbe, Juan Dolio, Saona Island, Las Terrenas, Cabarete and beyond. Three packages from $270, editorial golden hour, and custom options with drone, multi-location, and groups.'}
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link

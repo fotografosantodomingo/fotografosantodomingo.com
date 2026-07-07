@@ -14,8 +14,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Precios y Servicios | Fotógrafo Santo Domingo — Babula Shots'
     : 'Photography Pricing & Services | Santo Domingo — Babula Shots'
   const description = isEs
-    ? 'Precios transparentes para fotografía en República Dominicana: bodas desde $1,000, sesiones playa desde $150, drone desde $160, boudoir, snoot óptico y más. Reserva con 50% de adelanto vía Stripe.'
-    : 'Transparent photography pricing in Dominican Republic: weddings from $1,000, beach sessions from $150, drone from $160, boudoir, snoot optical and more. Book with 50% deposit via Stripe.'
+    ? 'Precios transparentes para fotografía en República Dominicana: bodas desde $1,020, sesiones playa desde $170, drone desde $180, boudoir, snoot óptico y más. Reserva con 50% de adelanto vía Stripe.'
+    : 'Transparent photography pricing in Dominican Republic: weddings from $1,020, beach sessions from $170, drone from $180, boudoir, snoot optical and more. Book with 50% deposit via Stripe.'
   return {
     title,
     description,

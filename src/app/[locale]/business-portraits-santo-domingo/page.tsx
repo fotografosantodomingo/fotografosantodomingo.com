@@ -153,8 +153,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Retratos Corporativos y LinkedIn · Santo Domingo, RD | Babula Shots'
     : 'Corporate & LinkedIn Portraits · Santo Domingo, DR | Babula Shots'
   const description = isEs
-    ? 'Fotos para perfil profesional LinkedIn, retratos corporativos para ejecutivos y sesiones de marca personal en Santo Domingo. Estudio profesional con iluminación controlada o servicio in-house en tu oficina. Desde $400 USD.'
-    : 'LinkedIn profile photos, corporate executive portraits, and personal-branding sessions in Santo Domingo. Professional studio with controlled lighting or on-site service at your office. From $400 USD.'
+    ? 'Fotos para perfil profesional LinkedIn, retratos corporativos para ejecutivos y sesiones de marca personal en Santo Domingo. Estudio profesional con iluminación controlada o servicio in-house en tu oficina. Desde $420 USD.'
+    : 'LinkedIn profile photos, corporate executive portraits, and personal-branding sessions in Santo Domingo. Professional studio with controlled lighting or on-site service at your office. From $420 USD.'
   const keywords = isEs
     ? 'fotos para perfil profesional linkedin santo domingo, retratos corporativos para ejecutivos en rd, sesion de fotos headshots profesionales en estudio, fotografo de marca personal en santo domingo, fotografo corporativo republica dominicana, headshots ejecutivos santo domingo'
     : 'linkedin profile photos santo domingo, corporate executive portraits dominican republic, professional headshot session studio, personal brand photographer santo domingo, corporate photographer dominican republic, executive headshots santo domingo'
@@ -214,7 +214,7 @@ export default async function BusinessPortraitsPage({ params: { locale } }: Prop
   // FAQ — long-tail SEO + rich-result eligibility (FAQPage schema below)
   const FAQS: { q: string; a: string }[] = isEs
     ? [
-        { q: '¿Cuánto cuesta una sesión de retratos corporativos en Santo Domingo?', a: 'Tres paquetes a precio fijo: $400 USD (Esencial · 1 hora · 1 persona), $700 USD (Branding Premium · 3 horas · multi-look + locación) y $1,200 USD (Campaña de Lujo · día completo con dirección de arte). Para empresas con varios ejecutivos cotizamos por persona con descuentos por volumen.' },
+        { q: '¿Cuánto cuesta una sesión de retratos corporativos en Santo Domingo?', a: 'Tres paquetes a precio fijo: $420 USD (Esencial · 1 hora · 1 persona), $720 USD (Branding Premium · 3 horas · multi-look + locación) y $1,220 USD (Campaña de Lujo · día completo con dirección de arte). Para empresas con varios ejecutivos cotizamos por persona con descuentos por volumen.' },
         { q: '¿Hacen sesiones grupales para equipos ejecutivos?', a: 'Sí. Manejamos sesiones de 5 a 50+ ejecutivos en una jornada con consistencia de luz, fondo y dirección — todos con el mismo look para web corporativa, LinkedIn y prensa. Precio por persona en sesiones grupales es típicamente $80-$120 USD según volumen y entregables.' },
         { q: '¿Vienen a la oficina o solo en estudio?', a: 'Ambas opciones. El estudio en Santo Domingo está totalmente equipado (flashes, modeladores, fondos seamless en blanco, gris y negro). Para servicio in-house llegamos a tu oficina con kit completo de iluminación portátil y fondo de viaje — perfecto para días de team photos sin sacar al equipo del edificio.' },
         { q: '¿Cuánto tarda la entrega de fotos?', a: 'Sesión Esencial: 5-7 días con 5 fotos editadas. Branding Premium: 7-10 días con 15 fotos. Campaña de Lujo: 10-14 días con 30 fotos editadas a nivel campaña. Servicio express en 48h disponible con recargo del 50%.' },
@@ -224,7 +224,7 @@ export default async function BusinessPortraitsPage({ params: { locale } }: Prop
         { q: '¿Cómo funciona el depósito y cancelación?', a: '50% de depósito vía Stripe (tarjeta, Apple Pay o Google Pay) para confirmar la fecha. El saldo se paga el día de la sesión. Reembolsable hasta 7 días antes; transferible a otra fecha sin costo dentro del rango.' },
       ]
     : [
-        { q: 'How much does a corporate portrait session cost in Santo Domingo?', a: 'Three flat-rate packages: $400 USD (Essential · 1 hour · 1 person), $700 USD (Premium Branding · 3 hours · multi-look + location), and $1,200 USD (Luxury Campaign · full day with art direction). For companies with multiple executives, we quote per-person with volume discounts.' },
+        { q: 'How much does a corporate portrait session cost in Santo Domingo?', a: 'Three flat-rate packages: $420 USD (Essential · 1 hour · 1 person), $720 USD (Premium Branding · 3 hours · multi-look + location), and $1,220 USD (Luxury Campaign · full day with art direction). For companies with multiple executives, we quote per-person with volume discounts.' },
         { q: 'Do you handle group sessions for executive teams?', a: 'Yes. We run sessions of 5 to 50+ executives in a single day with consistent light, backdrop, and direction — every team member shot the same way for corporate web, LinkedIn, and press use. Per-person pricing in group sessions is typically $80-$120 USD depending on volume and deliverables.' },
         { q: 'Do you come to the office or only shoot in studio?', a: 'Both. The Santo Domingo studio is fully equipped (strobes, modifiers, seamless backdrops in white, grey, and black). For on-site service we arrive at your office with a full portable lighting kit and travel backdrop — perfect for company team-photo days without taking the team out of the building.' },
         { q: 'How long does delivery take?', a: 'Essential session: 5-7 days with 5 edited photos. Premium Branding: 7-10 days with 15 photos. Luxury Campaign: 10-14 days with 30 campaign-grade edits. Express delivery in 48h is available with a 50% surcharge.' },
@@ -553,8 +553,8 @@ export default async function BusinessPortraitsPage({ params: { locale } }: Prop
               </p>
               <p className="text-ink/85 text-base md:text-lg leading-relaxed">
                 {isEs
-                  ? 'Ideal cuando tienes 5 a 50+ personas a fotografiar — sale más rentable que coordinar agendas con cada ejecutivo en estudio. Día completo de cobertura desde $700 USD (Branding Premium) o $1,200 USD (Campaña de Lujo) según volumen y entregables. Cotizamos por persona en sesiones grupales con descuentos por volumen.'
-                  : 'Ideal when you have 5 to 50+ people to photograph — more cost-effective than coordinating schedules with each executive at the studio. Full-day coverage from $700 USD (Premium Branding) or $1,200 USD (Luxury Campaign) depending on volume and deliverables. Per-person pricing in group sessions with volume discounts.'}
+                  ? 'Ideal cuando tienes 5 a 50+ personas a fotografiar — sale más rentable que coordinar agendas con cada ejecutivo en estudio. Día completo de cobertura desde $720 USD (Branding Premium) o $1,220 USD (Campaña de Lujo) según volumen y entregables. Cotizamos por persona en sesiones grupales con descuentos por volumen.'
+                  : 'Ideal when you have 5 to 50+ people to photograph — more cost-effective than coordinating schedules with each executive at the studio. Full-day coverage from $720 USD (Premium Branding) or $1,220 USD (Luxury Campaign) depending on volume and deliverables. Per-person pricing in group sessions with volume discounts.'}
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-hairline-soft max-w-5xl">
