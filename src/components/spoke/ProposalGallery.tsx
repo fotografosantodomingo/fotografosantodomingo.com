@@ -180,7 +180,7 @@ export default function ProposalGallery({ locale }: Props) {
                       {isEs ? 'Estándar' : 'Standard'}
                     </td>
                     <td className="px-5 py-4 font-bold text-amber-500 whitespace-nowrap">
-                      $250 USD
+                      $270 USD
                       <span className="block text-xs font-normal text-neutral-500 dark:text-neutral-400 mt-0.5">
                         + 18% ITBIS
                       </span>

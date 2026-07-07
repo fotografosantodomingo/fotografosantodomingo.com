@@ -430,8 +430,8 @@ export const proposalPhotographyContent: ServiceContent = {
           en: 'How much does a proposal photography session cost?',
         },
         answer: {
-          es: 'El paquete estandar comienza desde $250 USD + 18% ITBIS. El precio varia segun locacion, tipo de propuesta (playa, restaurante, villa privada), necesidad de coordinacion con el venue y productos finales como album impreso. Escribenos por WhatsApp y te cotizamos segun tu plan exacto.',
-          en: 'The standard package starts at $250 USD + 18% tax. Price varies by location, proposal type (beach, restaurant, private villa), venue coordination needs, and final products like a printed album. Message us on WhatsApp and we quote based on your exact plan.',
+          es: 'El paquete estandar comienza desde $270 USD + 18% ITBIS. El precio varia segun locacion, tipo de propuesta (playa, restaurante, villa privada), necesidad de coordinacion con el venue y productos finales como album impreso. Escribenos por WhatsApp y te cotizamos segun tu plan exacto.',
+          en: 'The standard package starts at $270 USD + 18% tax. Price varies by location, proposal type (beach, restaurant, private villa), venue coordination needs, and final products like a printed album. Message us on WhatsApp and we quote based on your exact plan.',
         },
       },
       {

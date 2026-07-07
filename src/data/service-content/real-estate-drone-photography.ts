@@ -517,8 +517,8 @@ export const realEstateDronePhotographyContent: ServiceContent = {
         href: '/services/real-estate-drone-photography/360-simulacion-vistas',
         label: { es: 'Imágenes 360° · Simulación de Vistas de Altura', en: '360° Images · Height View Simulation' },
         description: {
-          es: 'Captura la perspectiva exacta de cada futuro piso antes de construir. Tours virtuales interactivos, archivos RAW para renders 3D y resolución hasta 12K HDR. Desde $350 USD.',
-          en: 'Capture the exact perspective of every future floor before construction. Interactive virtual tours, RAW files for 3D renders, and up to 12K HDR resolution. From $350 USD.',
+          es: 'Captura la perspectiva exacta de cada futuro piso antes de construir. Tours virtuales interactivos, archivos RAW para renders 3D y resolución hasta 12K HDR. Desde $370 USD.',
+          en: 'Capture the exact perspective of every future floor before construction. Interactive virtual tours, RAW files for 3D renders, and up to 12K HDR resolution. From $370 USD.',
         },
       },
     ],
