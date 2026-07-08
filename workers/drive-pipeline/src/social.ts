@@ -116,10 +116,23 @@ async function postToInstagram(
     })
     const cJson = await cRes.json() as { id?: string; error?: { message: string } }
     if (!cRes.ok || cJson.error) throw new Error(cJson.error?.message ?? `container ${cRes.status}`)
+    const creationId = cJson.id!
+
+    // IG ingests the image asynchronously. Publishing before the container is
+    // FINISHED returns "Media ID is not available", so poll status_code first.
+    let ready = false
+    for (let i = 0; i < 6; i++) {
+      await new Promise((r) => setTimeout(r, 3000))
+      const sRes = await fetch(`https://graph.facebook.com/${creationId}?fields=status_code&access_token=${token}`)
+      const sJson = await sRes.json() as { status_code?: string; error?: { message: string } }
+      if (sJson.status_code === 'FINISHED') { ready = true; break }
+      if (sJson.status_code === 'ERROR') throw new Error('IG container processing failed (status ERROR)')
+    }
+    if (!ready) throw new Error('IG container not FINISHED after ~18s (Media not ready)')
 
     const pRes = await fetch(`https://graph.facebook.com/${igId}/media_publish`, {
       method: 'POST',
-      body: new URLSearchParams({ creation_id: cJson.id!, access_token: token }),
+      body: new URLSearchParams({ creation_id: creationId, access_token: token }),
     })
     const pJson = await pRes.json() as { id?: string; error?: { code?: number; message: string } }
     if (!pRes.ok && pJson.error?.code !== 2) throw new Error(pJson.error?.message ?? `publish ${pRes.status}`)
