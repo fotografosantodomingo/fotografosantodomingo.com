@@ -401,7 +401,7 @@ async function runPipeline(env: Env): Promise<void> {
 
       // Update cross_post_jobs
       for (const r of results) {
-        await supabase.from('cross_post_jobs').upsert({
+        const { error: cpjErr } = await supabase.from('cross_post_jobs').upsert({
           blog_post_id: blogPostId,
           platform: r.platform,
           status: r.status,
@@ -409,6 +409,7 @@ async function runPipeline(env: Env): Promise<void> {
           error_msg: r.error ?? null,
           attempted_at: new Date().toISOString(),
         }, { onConflict: 'blog_post_id,platform' })
+        if (cpjErr) console.error(`cross_post_jobs upsert failed (${r.platform}):`, cpjErr.message)
       }
 
       await sendResultsEmail(env, generated.title_es, postUrl, results).catch(console.error)
@@ -485,7 +486,7 @@ async function handleApprove(env: Env, req: Request, ctx: ExecutionContext): Pro
 
     // Update cross_post_jobs
     for (const r of results) {
-      await supabase.from('cross_post_jobs').upsert({
+      const { error: cpjErr } = await supabase.from('cross_post_jobs').upsert({
         blog_post_id: postId,
         platform: r.platform,
         status: r.status,
@@ -493,6 +494,7 @@ async function handleApprove(env: Env, req: Request, ctx: ExecutionContext): Pro
         error_msg: r.error ?? null,
         attempted_at: new Date().toISOString(),
       }, { onConflict: 'blog_post_id,platform' })
+      if (cpjErr) console.error(`cross_post_jobs upsert failed (${r.platform}):`, cpjErr.message)
     }
 
     await sendResultsEmail(env, post.title_es, postUrl, results).catch(console.error)
@@ -571,11 +573,12 @@ async function handleRetryCrossPost(env: Env, req: Request): Promise<Response> {
 
   for (const r of results) {
     if (r.status === 'skipped') continue // never overwrite an existing 'posted' row
-    await supabase.from('cross_post_jobs').upsert({
+    const { error: cpjErr } = await supabase.from('cross_post_jobs').upsert({
       blog_post_id: postId, platform: r.platform, status: r.status,
       platform_post_id: r.postId ?? null, error_msg: r.error ?? null,
       attempted_at: new Date().toISOString(),
     }, { onConflict: 'blog_post_id,platform' })
+    if (cpjErr) console.error(`cross_post_jobs upsert failed (${r.platform}):`, cpjErr.message)
   }
 
   return new Response(JSON.stringify({ post_id: postId, skipped_already_posted: [...skip], results }, null, 2),
