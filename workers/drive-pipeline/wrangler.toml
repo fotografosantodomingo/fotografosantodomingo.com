@@ -18,7 +18,7 @@ ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
 META_ENABLED = "true"
 META_IG_ENABLED = "true"
 LINKEDIN_ENABLED = "true"
-PINTEREST_ENABLED = "false"
+PINTEREST_ENABLED = "true"
 GBP_ENABLED = "true"
 DA_ENABLED = "false"
 

@@ -15,7 +15,7 @@ every social platform — fully automatic, no human approval step.
 ```
 Google Drive folder
       │
-      ▼  (cron, daily)
+      ▼  (cron — this site runs it twice daily, 10:00 & 19:00 AST)
 Cloudflare Worker
       │
       ├─ Downloads images → Supabase Storage (public CDN)
@@ -30,8 +30,13 @@ Cloudflare Worker
       ├─► LinkedIn Page/Person (REST API v202506)
       ├─► Pinterest (API v5)  [requires Standard access]
       ├─► Google Business Profile  [requires partner API approval]
+      ├─► DeviantArt (Stash upload → publish)
       │
       └─ Sends results email (Resend) — what was posted + links
+
+Separately, every cron tick also runs a best-effort Google review sync:
+GBP reviews API → upsert into Supabase `reviews` table (full refresh of
+source='google' rows) → site's /testimonials page reads from there.
 ```
 
 ---
@@ -65,11 +70,12 @@ Cloudflare Worker
 
 ## What this does NOT include
 
-- Content moderation — posts go live automatically; manual `/approve` and `/reject` endpoints exist for one-off overrides
-- Scheduled/queued publishing — cron fires daily, publishes immediately
+- Content moderation — posts go live automatically; manual `/approve` and `/reject` endpoints exist for one-off overrides (but only affect the blog post, not already-published social posts)
+- Scheduled/queued publishing — cron fires on schedule, publishes immediately
 - Engagement analytics pull-back — results stored but metrics not fetched
 - Multi-language captions (other than ES default) — trivially extensible
 - Video/Reels — images only; video requires container upload flows on IG/FB
+- Instagram carousels — deliberately removed; one slow/errored secondary container failed the whole post, so IG now mirrors FB/LinkedIn/GBP/DeviantArt with a single image only
 
 ---
 

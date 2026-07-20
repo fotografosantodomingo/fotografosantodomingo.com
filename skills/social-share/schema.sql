@@ -128,13 +128,17 @@ create index if not exists processed_drive_files_status_idx
 -- ============================================================
 
 -- Cross-post jobs (one row per platform per post)
+-- IMPORTANT: the platform CHECK below must list every platform you enable in
+-- wrangler.toml. Missing one here doesn't error loudly — the upsert in
+-- index.ts just fails silently (CHECK 23514), that platform's status never
+-- reaches 'posted', and /retry-crosspost re-posts it (duplicates) forever.
 create table if not exists cross_post_jobs (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz default now(),
 
   blog_post_id uuid not null references blog_posts(id),
   platform text not null
-    check (platform in ('fb', 'ig', 'li', 'pi', 'gbp')),
+    check (platform in ('fb', 'ig', 'li', 'pi', 'gbp', 'da')),
 
   status text not null
     check (status in ('posted', 'failed', 'skipped')),
@@ -148,6 +152,36 @@ create table if not exists cross_post_jobs (
 
 create index if not exists cross_post_jobs_blog_post_id_idx
   on cross_post_jobs (blog_post_id);
+
+-- ============================================================
+
+-- ============================================================
+
+-- OPTIONAL — only needed if you want the Google review auto-sync feature.
+-- The worker calls the GBP Reviews API on every cron tick (best-effort,
+-- never blocks the main pipeline) and does a full refresh of source='google'
+-- rows here. Your site's testimonials/reviews page reads from this table.
+create table if not exists reviews (
+  id                uuid primary key default gen_random_uuid(),
+  reviewer_name     text not null,
+  reviewer_location text not null default '',
+  rating            smallint not null check (rating >= 1 and rating <= 5),
+  review_text       text not null default '',
+  service_type      text not null default 'general',
+  verified          boolean not null default false,
+  locale            text not null default 'es',
+  created_at        timestamptz not null default now(),
+
+  source            text not null default 'manual',  -- 'google' | 'manual'
+  external_id       text,                             -- platform review id (dedupe key)
+  avatar_url        text,
+  review_url        text,
+  published_at      timestamptz
+);
+
+create unique index if not exists reviews_source_external_id_uniq
+  on reviews (source, external_id)
+  where external_id is not null;
 
 -- ============================================================
 

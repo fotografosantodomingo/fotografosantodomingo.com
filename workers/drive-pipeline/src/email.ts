@@ -135,7 +135,7 @@ export async function sendResultsEmail(
   const rows = results.map((r) => {
     const icon = r.status === 'posted' ? '✓' : r.status === 'skipped' ? '—' : '✗'
     const color = r.status === 'posted' ? '#4ade80' : r.status === 'skipped' ? '#8a8680' : '#f87171'
-    const label = r.platform === 'fb' ? 'Facebook' : r.platform === 'ig' ? 'Instagram' : r.platform === 'li' ? 'LinkedIn' : r.platform === 'pi' ? 'Pinterest' : 'Google Business'
+    const label = r.platform === 'fb' ? 'Facebook' : r.platform === 'ig' ? 'Instagram' : r.platform === 'li' ? 'LinkedIn' : r.platform === 'pi' ? 'Pinterest' : r.platform === 'gbp' ? 'Google Business' : 'DeviantArt'
     const detail = r.status === 'posted' ? (r.postId ?? 'ok') : (r.error ?? r.status)
     return `<tr>
       <td style="padding:10px 20px;color:#8a8680;font-size:12px;border-bottom:1px solid #2e2c29">${label}</td>

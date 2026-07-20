@@ -77,7 +77,7 @@ POST /{ig_id}/media_publish
 → { "id": "post_id" }  OR error code 2 (already published — treat as success)
 ```
 
-### Carousel — 3-step flow
+### Carousel — 3-step flow (NOT used by this pipeline — reference only)
 ```
 # Step 1: Create item containers (one per image, no caption)
 POST /{ig_id}/media  image_url={url}  is_carousel_item=true
@@ -95,11 +95,14 @@ POST /{ig_id}/media
 # Step 4: Publish carousel
 POST /{ig_id}/media_publish  creation_id={carousel_id}
 ```
+This pipeline deliberately does **not** implement carousels — see the gotcha above. Kept here only in case you want to reintroduce it with better per-item error isolation.
 
 ### Gotchas
 - **Error code 2** on `media_publish` = already published (idempotency quirk). Treat as success, verify via `/media` list.
 - Images must be **JPEG or PNG**, min 320px, max 1440px recommended for feed.
-- Carousel: min 2, max 10 items.
+- **Carousels are not used by this pipeline** (removed on purpose): a single slow or errored secondary child container failed the *entire* post with "Only photo or video can be accepted as media type." IG now always posts a single image, mirroring FB/LinkedIn/GBP/DeviantArt.
+- **Container ingestion is async** — publishing right after creating the container returns "Media ID is not available." Poll `GET /{creation_id}?fields=status_code` every ~3s (this pipeline does up to 6 attempts, ~18s) until `status_code=FINISHED` before calling `media_publish`.
+- **Oversized source images fail container creation.** Route IG's `image_url` through Supabase's render endpoint capped to 1440×1440 (`?width=1440&height=1440&resize=contain`) — full-res Drive photos otherwise silently fail this step while FB/LinkedIn (which tolerate full-res) succeed.
 - Caption: 2,200 chars max, 30 hashtags max.
 - IG Business account must be connected to a Facebook Page.
 - `META_IG_BUSINESS_ID` ≠ `META_PAGE_ID` — get it from `GET /me?fields=instagram_business_account`.
@@ -262,6 +265,67 @@ then `GET https://mybusinessbusinessinformation.googleapis.com/v1/{account}/loca
 
 ---
 
+## DeviantArt
+
+**API:** DeviantArt OAuth2 API (Stash + publish)
+**Auth:** OAuth 2.0 with refresh tokens
+**Scopes needed:** `browse publish stash user`
+**Endpoint:** `POST /api/v1/oauth2/stash/submit` then `POST /api/v1/oauth2/stash/publish`
+
+DeviantArt has no direct "create post with image URL" endpoint — you must
+upload the image bytes to the user's private Stash first, then publish that
+Stash item as a deviation.
+
+### Token refresh flow
+```
+POST https://www.deviantart.com/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id={id}&client_secret={secret}&grant_type=refresh_token&refresh_token={refresh_token}
+→ { "access_token": "..." }
+```
+
+### Step 1 — upload to Stash
+```
+POST https://www.deviantart.com/api/v1/oauth2/stash/submit
+Content-Type: multipart/form-data
+
+access_token={token}
+title={title, max 50 chars}
+artist_comments={html caption + link back to your site}
+file={raw image bytes as a Blob}
+→ { "status": "success", "itemid": 123456 }
+```
+The worker downloads the image bytes itself first (`fetch(imageUrl)` →
+`arrayBuffer()`) since this endpoint needs a real file upload, not a URL.
+
+### Step 2 — publish from Stash
+```
+POST https://www.deviantart.com/api/v1/oauth2/stash/publish
+Content-Type: application/x-www-form-urlencoded
+
+access_token={token}
+itemid={itemid from step 1}
+title={title}
+catpath=photography
+is_mature=0
+feature=1
+allow_comments=1
+license_options[commercial]=0
+license_options[modify]=no
+license_options[share]=yes
+→ { "status": "success", "url": "https://www.deviantart.com/...", "deviationid": "..." }
+```
+
+### Gotchas
+- Two-step Stash→publish flow — a single-step "create deviation" endpoint does not exist.
+- `title` is capped at 50 chars on both calls — truncate before sending or the API rejects it.
+- Response bodies are JSON but returned with unpredictable content-types in practice — parse via `res.text()` then `JSON.parse()`, don't rely on `res.json()` succeeding cleanly.
+- Uses the pipeline's Pinterest caption (`pi_caption_es`) rather than a dedicated DeviantArt caption field — no separate `da_caption_es` was added since Pinterest's evergreen, keyword-rich style fit DeviantArt's audience well enough.
+- `license_options` controls whether others can remix/sell derivatives — this pipeline defaults to non-commercial, no-modify, shareable.
+
+---
+
 ## Platform comparison table
 
 | Platform | Token type | Expires | Write scope | Free public posting |
@@ -271,6 +335,7 @@ then `GET https://mybusinessbusinessinformation.googleapis.com/v1/{account}/loca
 | LinkedIn | Access token | 60 days | w_member_social | Yes |
 | Pinterest | Refresh token (sliding) | Never (unless revoked) | pins:write | Requires Standard access approval |
 | GBP | Refresh token | Never | business.manage | Requires Google partner approval |
+| DeviantArt | Refresh token | Never (unless revoked) | stash, publish | Yes — standard app registration only |
 
 ---
 
@@ -284,7 +349,13 @@ WHERE blog_post_id = '<uuid>'
 ORDER BY attempted_at DESC;
 ```
 
-Results email also sent on each approval showing per-platform status.
+**Important:** the `platform` CHECK constraint must include every platform you
+enable. It shipped as `('fb','ig','li')` and silently rejected `gbp`/`pi`/`da`
+rows for a while — the upsert failed, the row never recorded `'posted'`, and
+`/retry-crosspost` kept re-posting those platforms on every retry (duplicate
+GBP local posts in production). Current constraint: see `schema.sql`.
+
+Results email also sent after every cron run / `/approve` / `/retry-crosspost` showing per-platform status.
 
 Common errors:
 
@@ -295,4 +366,7 @@ Common errors:
 | `LI posts: 401` | LinkedIn | Token expired — re-run `/auth/linkedin/start` |
 | `Pinterest token refresh failed` | Pinterest | Refresh token revoked — re-run `/auth/pinterest/start` |
 | `RESOURCE_EXHAUSTED quota_limit_value: 0` | GBP | API not approved — submit partner access request |
+| `DA token refresh failed` | DeviantArt | Refresh token revoked — re-run `/auth/deviantart/start` |
+| `DA stash failed` / `DA publish failed` | DeviantArt | Check `title` isn't over 50 chars; check image bytes actually downloaded (source URL reachable) |
 | `redirect_uri_mismatch` | Any OAuth | Add the callback URL to the OAuth app settings |
+| A platform silently never shows `posted` even though the API call succeeds | Any | Check the `cross_post_jobs.platform` CHECK constraint includes that platform — see note above |

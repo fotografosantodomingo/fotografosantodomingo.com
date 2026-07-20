@@ -33,10 +33,13 @@ META_IG_ENABLED = "false"       # Instagram posting (requires META_ENABLED=true)
 LINKEDIN_ENABLED = "false"      # LinkedIn posting
 PINTEREST_ENABLED = "false"     # Pinterest posting
 GBP_ENABLED = "false"           # Google Business Profile posting
+DA_ENABLED = "false"            # DeviantArt posting
 
 [triggers]
-crons = ["0 17 * * *"]          # Daily at 17:00 UTC = 1 PM AST (Dominican time)
-                                # Adjust to your timezone
+crons = ["0 14 * * *", "0 23 * * *"]   # This site runs twice daily: 14:00 & 23:00 UTC
+                                        # (10:00 & 19:00 AST). Cloudflare Workers accept
+                                        # multiple cron expressions per worker on the
+                                        # free plan — one entry per line is fine too.
 ```
 
 ---
@@ -92,6 +95,15 @@ Never commit secrets. Each is pushed once and stored encrypted in Cloudflare.
 | `GBP_CLIENT_SECRET` | GCP OAuth client secret (optional — falls back to GOOGLE_CLIENT_SECRET) | GCP → Credentials |
 | `GBP_REFRESH_TOKEN` | Business manage scope refresh token | Visit `/auth/gbp/start` |
 | `GBP_LOCATION_NAME` | `accounts/123/locations/456` | Visit `/gbp/locations?token=...` |
+| `GBP_REVIEWS_URL` | (optional, non-secret — can also be a `[vars]` entry) Public URL to your Google listing, stored on synced review rows as `review_url` | Your Google Maps/Search listing URL |
+
+### DeviantArt (optional)
+
+| Secret | Description | How to get |
+|--------|-------------|------------|
+| `DA_CLIENT_ID` | DeviantArt app client ID | deviantart.com/developers/apps |
+| `DA_CLIENT_SECRET` | DeviantArt app client secret | deviantart.com/developers/apps |
+| `DA_REFRESH_TOKEN` | OAuth refresh token | Visit `/auth/deviantart/start` |
 
 ---
 
@@ -116,6 +128,11 @@ All endpoints are on the worker URL (`WORKER_BASE_URL`).
 | `GET` | `/auth/gbp/start` | None | Redirects to Google OAuth (business.manage scope) |
 | `GET` | `/auth/gbp/callback` | Google code | Exchanges code, shows refresh token |
 | `GET` | `/gbp/locations?token=<tok>` | token | Lists GBP accounts + locations |
+| `GET` | `/auth/deviantart/start` | None | Redirects to DeviantArt OAuth |
+| `GET` | `/auth/deviantart/callback` | DeviantArt code | Exchanges code, shows refresh token |
+| `GET` | `/sync-reviews?token=<tok>` | token | Manually triggers the Google review sync (also runs every cron tick) |
+| `GET` | `/retry-crosspost?post_id=<uuid>&token=<tok>` | token | Idempotent retry — re-posts only platforms not already `'posted'` in `cross_post_jobs` |
+| `GET` | `/debug-gbp?token=<tok>` | token | One-time GBP verification: confirms partner approval, lists accounts/locations, probes review read access |
 
 ---
 
@@ -137,9 +154,14 @@ Compare against the table above. Any missing required secret will cause the pipe
 "0 14 * * *"    # Daily at 14:00 UTC (10 AM EST)
 "0 9 * * 1"     # Every Monday at 09:00 UTC
 "0 */6 * * *"   # Every 6 hours
+
+# This site's actual config — twice daily:
+crons = ["0 14 * * *", "0 23 * * *"]   # 10:00 & 19:00 AST
 ```
 
-Cloudflare Free plan: 1 cron trigger per worker. Paid plan: unlimited.
+Each cron tick runs `runPipeline()` (Drive → blog → cross-post, one new
+group per run) followed by a best-effort `syncGbpReviews()` call — the review
+sync never blocks or fails the main pipeline.
 
 ---
 
@@ -162,4 +184,8 @@ open <WORKER_BASE_URL>/auth/pinterest/start
 # Refresh GBP token
 open <WORKER_BASE_URL>/auth/gbp/start
 # → copy refresh token → wrangler secret put GBP_REFRESH_TOKEN
+
+# Refresh DeviantArt token
+open <WORKER_BASE_URL>/auth/deviantart/start
+# → copy refresh token → wrangler secret put DA_REFRESH_TOKEN
 ```

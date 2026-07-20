@@ -138,15 +138,23 @@ Set via `ANTHROPIC_MODEL` env var in wrangler.toml — no code change needed.
 
 ## Prompt iteration strategy
 
-Test changes by hitting `/run` manually:
-```bash
-curl -X POST "<WORKER_URL>/run?token=<token>"
-```
+**⚠️ There is no draft/review gate.** `runPipeline()` inserts the post with
+`status: 'published'` and immediately calls `runCrossPost()` — a manual `/run`
+during prompt iteration goes live on the blog **and** posts to every enabled
+platform (FB, IG, LinkedIn, Pinterest, GBP, DeviantArt) in the same call.
+`/reject` only archives the blog post afterward; it cannot un-post from social
+platforms.
 
-Check the draft in Supabase → `blog_posts` table. Review the generated content.
-Reject the draft, tweak the prompt, redeploy, run again.
-
-Do not approve test drafts — they will cross-post to all platforms.
+To iterate on the prompt safely:
+1. Temporarily set every `*_ENABLED` flag to `"false"` in `wrangler.toml` and redeploy.
+2. Hit `/run` manually:
+   ```bash
+   curl -X POST "<WORKER_URL>/run?token=<token>"
+   ```
+3. Check the generated post in Supabase → `blog_posts` (it will be `published` on your
+   site, but nothing will have gone to social). Use `/reject` to archive it if it's junk.
+4. Tweak the prompt, redeploy, repeat.
+5. Re-enable the platform flags only once you're happy with output quality.
 
 ---
 

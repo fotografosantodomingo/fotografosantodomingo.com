@@ -40,6 +40,7 @@ META_IG_ENABLED = "false"
 LINKEDIN_ENABLED = "false"
 PINTEREST_ENABLED = "false"
 GBP_ENABLED = "false"
+DA_ENABLED = "false"
 ```
 
 Deploy once to get the worker URL:
@@ -281,6 +282,43 @@ In wrangler.toml: `GBP_ENABLED = "true"`
 
 **Note:** GBP_CLIENT_ID and GBP_CLIENT_SECRET are not needed if you reuse your GOOGLE_CLIENT_ID/GOOGLE_CLIENT_SECRET (same GCP project). The worker falls back automatically.
 
+**Bonus:** once GBP is approved, the worker also auto-syncs your Google reviews
+into a Supabase `reviews` table on every cron tick (best-effort, never blocks
+the main pipeline) — see `schema.sql` for the table and `worker-config.md` for
+the `GBP_REVIEWS_URL` var. Trigger it manually with `GET /sync-reviews?token=<tok>`.
+
+---
+
+## Step 9.5 — DeviantArt (optional)
+
+1. deviantart.com/developers/apps → Register your Application
+2. Redirect URI: `<WORKER_BASE_URL>/auth/deviantart/callback`
+3. Copy Client ID and Client Secret — no approval wait, standard registration is enough.
+
+```bash
+echo "<client_id>" | npx wrangler secret put DA_CLIENT_ID
+echo "<client_secret>" | npx wrangler secret put DA_CLIENT_SECRET
+```
+
+Get refresh token:
+
+```bash
+npx wrangler deploy
+```
+
+Visit: `<WORKER_BASE_URL>/auth/deviantart/start`
+→ Page shows refresh token
+
+```bash
+echo "<refresh_token>" | npx wrangler secret put DA_REFRESH_TOKEN
+```
+
+In wrangler.toml: `DA_ENABLED = "true"`
+
+**Note:** DeviantArt has no image-URL posting endpoint — the worker downloads
+the image bytes itself and uploads them to the user's Stash, then publishes
+from there. See `platforms.md` for the two-step flow.
+
 ---
 
 ## Step 10 — Final deploy + test
@@ -306,3 +344,6 @@ Check your email for a results notification — it lists what was published and 
 | Google Drive token | Only if revoked | Visit `/auth/google/start` |
 | Pinterest token | Sliding expiry | Handled automatically by worker |
 | Meta page token | Never expires | Only if token revoked/permissions changed |
+| DeviantArt token | Never expires (unless revoked) | Only if token revoked |
+| GBP token | Never expires (unless revoked) | Only if token revoked |
+| `cross_post_jobs` platform CHECK | Whenever you add a new platform | Add it to the CHECK constraint too — see the note in `platforms.md` debugging section, this exact miss caused duplicate GBP posts in production |
