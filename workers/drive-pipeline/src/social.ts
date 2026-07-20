@@ -146,7 +146,10 @@ async function postToInstagram(
 
 // ── LinkedIn ──────────────────────────────────────────────────────────────────
 
-const LI_VERSION = '202506'
+// LinkedIn only accepts API versions from roughly the last 12 months — this
+// must be bumped periodically or posts start failing with NONEXISTENT_VERSION.
+// Format: YYYYMM. Last bumped 2026-07-20.
+const LI_VERSION = '202607'
 
 async function postToLinkedIn(
   env: Env,
