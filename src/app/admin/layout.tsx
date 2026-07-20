@@ -10,8 +10,7 @@ export const metadata: Metadata = {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-slate-100 font-sans antialiased dark:bg-gray-950">
+    <div className="admin-shell min-h-screen bg-slate-100 font-sans antialiased dark:bg-gray-950">
         <div className="flex min-h-screen flex-col">
           <header className="border-b border-slate-200 bg-white px-6 py-3 dark:border-white/10 dark:bg-gray-900">
             <div className="mx-auto flex max-w-7xl items-center justify-between">
@@ -67,7 +66,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="mx-auto max-w-7xl">{children}</div>
           </main>
         </div>
-      </body>
-    </html>
+    </div>
   )
 }

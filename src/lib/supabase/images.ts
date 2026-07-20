@@ -74,6 +74,57 @@ export async function updateImageSeo(
   }
 }
 
+export type FeaturedReview = { author: string; rating: number; text: string; session_type?: string }
+
+// Deterministic (not random) shuffle: same seed always yields the same rotation,
+// so a given blog post always shows the same 3 reviews on every render/cache hit,
+// while different posts (different seeds) show a different rotation of the pool.
+function seededPick<T>(items: T[], seed: string, count: number): T[] {
+  if (items.length === 0) return []
+  let hash = 0
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
+  const start = hash % items.length
+  const picked: T[] = []
+  for (let i = 0; i < Math.min(count, items.length); i++) picked.push(items[(start + i) % items.length])
+  return picked
+}
+
+/** Real verified reviews from the `reviews` table (populated by the GBP review
+ * sync), rotated per-post via `seed` (pass the post id/slug) so blog posts don't
+ * all show the same 3 testimonials. Falls back to an empty array — callers
+ * should fall back to a static/hardcoded set only when this is empty. */
+export async function getFeaturedReviews(seed: string, limit = 3): Promise<FeaturedReview[]> {
+  try {
+    const supabase = createClient()
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('reviewer_name, reviewer_location, rating, review_text')
+      .eq('verified', true)
+      .order('published_at', { ascending: false })
+      .limit(30)
+
+    if (error || !data) return []
+    const withText = data.filter((r) => r.review_text && r.review_text.trim().length > 0)
+    // Same reviewer can have multiple rows (e.g. reviewed more than once) — dedupe
+    // by name so a single post never shows the same person's face twice among
+    // its 3 testimonials.
+    const seenNames = new Set<string>()
+    const rows = withText.filter((r) => {
+      if (seenNames.has(r.reviewer_name)) return false
+      seenNames.add(r.reviewer_name)
+      return true
+    })
+    return seededPick(rows, seed, limit).map((r) => ({
+      author: r.reviewer_name,
+      rating: r.rating,
+      text: r.review_text,
+      session_type: r.reviewer_location || undefined,
+    }))
+  } catch {
+    return []
+  }
+}
+
 export async function getReviewStats(): Promise<ReviewStats> {
   // 1. Live pull from Google Places API — cached 1 hour at the fetch level
   const mapsKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY

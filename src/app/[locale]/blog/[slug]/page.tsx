@@ -4,8 +4,9 @@ import Script from 'next/script'
 import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getPostBySlug, getRelatedPosts } from '@/lib/supabase/blog'
-import { getReviewStats } from '@/lib/supabase/images'
+import { getReviewStats, getFeaturedReviews } from '@/lib/supabase/images'
 import { CONTACT_INFO } from '@/lib/utils/constants'
+import { schemaGenerators } from '@/components/seo/JsonLd'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const GOOGLE_REVIEWS_URL = 'https://share.google/aJphPsrVL2VXH9EWH'
@@ -123,6 +124,12 @@ function splitParagraphs(text: string | null | undefined) {
   const normalized = text
     .replace(/\r\n/g, '\n')
     .replace(/\n{3,}/g, '\n\n')
+    // Defensive: intro_es/en and location_section_es/en are rendered as plain
+    // text (each wrapped in its own <p> by this component already), never as
+    // HTML. If the source ever contains stray <p>/</p> wrapper tags — from a
+    // pipeline prompt regression, manual edit, etc. — strip them here so they
+    // can never render as literal visible text again.
+    .replace(/<\/?p>/gi, '')
     .trim()
 
   return normalized
@@ -312,7 +319,11 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const selectedFaq = faq.length > 0
     ? faq
     : contextualFallbackFaq(locale, post.service_type || '', post.location || post.geo_city || (isEs ? 'República Dominicana' : 'Dominican Republic'))
-  const selectedReviews = reviews.length > 0 ? reviews : fallbackReviews(locale)
+  // Real verified reviews from the `reviews` table, rotated per-post (seeded by
+  // post id) so different posts show different testimonials instead of the
+  // same 3 fixed examples on every single page.
+  const dbReviews = await getFeaturedReviews(post.id, 3)
+  const selectedReviews = reviews.length > 0 ? reviews : (dbReviews.length > 0 ? dbReviews : fallbackReviews(locale))
   const selectedLinks = internalLinks.length > 0 ? internalLinks : fallbackInternalLinks(locale)
 
   const serviceKey = (post.service_type || '').toLowerCase().includes('saona') ? 'saona' : (post.service_type || 'general')
@@ -327,10 +338,13 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
   const pricesUrl = `${BASE_URL}/${locale}/prices`
   const servicePageLink = getServicePageLink(post)
 
-  // For gallery we prefer the source built from public_id to avoid inherited crop transforms.
-  const galleryImageUrl = post.cover_image_public_id
-    ? `https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/${post.cover_image_public_id}`
-    : originalCloudinaryImage(post.cover_image_public_id, post.cover_image_url)
+  // Genuinely additional session photos (beyond the cover) — from the pipeline's
+  // full upload list. index 0 is always the cover image, already shown as the
+  // hero above; showing it again here was the source of the duplicate-photo bug.
+  // Single-photo posts (the common case) correctly render no extra images.
+  const additionalGalleryImages = (post.auto_draft_meta?.image_urls || [])
+    .slice(1)
+    .filter((url) => url && url !== post.cover_image_url)
 
   let relatedPosts = [] as Awaited<ReturnType<typeof getRelatedPosts>>
   try {
@@ -407,6 +421,11 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
     }
   })
 
+  // Person node reused from the /about page generator (same @id) so this
+  // page's JSON-LD graph is self-contained instead of referencing an entity
+  // that's only ever fully defined elsewhere.
+  const { '@context': _personContext, ...personNode } = schemaGenerators.person(locale)
+
   const jsonLdGraph = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -434,7 +453,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         },
       },
       {
-        '@type': 'Article',
+        '@type': 'BlogPosting',
         '@id': `${pageUrl}#article`,
         headline: title,
         description: isEs ? (post.meta_description_es || excerpt) : (post.meta_description_en || excerpt),
@@ -447,9 +466,10 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           caption: coverImageCaption,
           description: coverImageDescription,
         },
-        // Author = Person node (Michal Babula) — strengthens E-E-A-T
-        // signal for YMYL/lifestyle content. Publisher stays the
-        // Organization. Both nodes are emitted globally via layout.tsx.
+        // Author = Person node (Michal Babula) — strengthens E-E-A-T signal.
+        // Publisher = Organization. Person is defined as its own node below
+        // (not just referenced) so this page's JSON-LD is self-resolving —
+        // the fuller Person profile also lives on /about under the same @id.
         author: { '@id': `${BASE_URL}/#person` },
         publisher: { '@id': `${BASE_URL}/#business` },
         datePublished: post.published_at,
@@ -457,6 +477,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         inLanguage: locale,
         mainEntityOfPage: pageUrl,
       },
+      personNode,
       {
         '@type': ['LocalBusiness', 'ProfessionalService'],
         '@id': `${BASE_URL}/#business`,
@@ -624,28 +645,30 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
         </section>
 
         <section className="container mx-auto px-4 pb-14">
-          <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Galería de la sesión' : 'Session gallery'}</h2>
-          {galleryImageUrl && (
-            <figure className="overflow-hidden rounded-2xl border border-white/10 bg-gray-900 p-3 md:p-5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={galleryImageUrl}
-                alt={coverImageAlt}
-                title={coverImageTitle}
-                className="h-auto max-h-[80vh] w-full rounded-xl object-contain"
-                width={1400}
-                height={933}
-                loading="eager"
-              />
-              <figcaption className="px-2 pt-4 text-sm text-gray-300 md:text-base">
-                {coverImageCaption}
-                <span className="mt-1 block text-xs text-gray-400 md:text-sm">{coverImageDescription}</span>
-              </figcaption>
-            </figure>
+          {additionalGalleryImages.length > 0 && (
+            <>
+              <h2 className="mb-6 text-3xl font-extrabold">{isEs ? 'Galería de la sesión' : 'Session gallery'}</h2>
+              <div className="grid gap-4 md:grid-cols-2">
+                {additionalGalleryImages.map((url, index) => (
+                  <figure key={url} className="overflow-hidden rounded-2xl border border-white/10 bg-gray-900 p-3 md:p-5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={url}
+                      alt={coverImageAlt}
+                      title={coverImageTitle}
+                      className="h-auto max-h-[80vh] w-full rounded-xl object-contain"
+                      width={1400}
+                      height={933}
+                      loading="lazy"
+                    />
+                  </figure>
+                ))}
+              </div>
+            </>
           )}
-          <div className="mt-6">
+          <div className={additionalGalleryImages.length > 0 ? 'mt-6' : ''}>
             <Link href={`/${locale}/portfolio`} className="inline-block rounded-full bg-sky-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-sky-500">
-              {isEs ? 'Ver Galería Completa' : 'See Full Gallery'}
+              {isEs ? 'Ver Portafolio' : 'View Portfolio'}
             </Link>
           </div>
         </section>

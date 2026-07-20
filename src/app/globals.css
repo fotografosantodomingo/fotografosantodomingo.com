@@ -62,6 +62,52 @@
   .btn-secondary {
     @apply border border-primary-600 text-primary-600 px-6 py-3 rounded-lg hover:bg-primary-50 transition-colors font-medium;
   }
+
+}
+
+/* CTA block injected as raw HTML into blog post content (drive-pipeline
+   worker, anthropic.ts CTA_BLOCK_ES/EN) — styles its two links as buttons
+   instead of plain inline text links.
+   Deliberately OUTSIDE @layer components: the class name only ever appears
+   in the worker's source (outside Tailwind's `content` scan globs) and in
+   database-stored HTML, never in a scanned .tsx/.ts file — so Tailwind's
+   content-based purging silently strips anything referencing it if it's
+   inside a @layer block. Plain unlayered CSS is never purged. Still beats
+   Tailwind Typography's :where()-based prose-a utilities (zero specificity)
+   without needing extra specificity tricks. */
+.cta-block {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.4);
+  text-align: center;
+}
+.cta-block p:first-child {
+  margin-bottom: 1.25rem;
+  color: #e5e7eb;
+}
+.cta-block a {
+  display: inline-block;
+  margin: 0.35rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-decoration: none !important;
+  transition: opacity 0.2s;
+}
+.cta-block a:hover {
+  opacity: 0.85;
+}
+.cta-block a:first-of-type {
+  background: #ffffff;
+  color: #111827;
+}
+.cta-block a:last-of-type {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(74, 222, 128, 0.5);
+  color: #bbf7d0;
 }
 
 /* ================================================================
@@ -193,6 +239,55 @@ html.light-mode .dark\:border-white\/30 { border-color: rgba(0, 0, 0, 0.2) !impo
 html.light-mode .dark\:from-slate-900 { --tw-gradient-from: #e2e8f0 var(--tw-gradient-from-position) !important; }
 html.light-mode .dark\:via-cyan-950 { --tw-gradient-to: rgb(236 254 255 / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), #ecfeff var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
 html.light-mode .dark\:to-slate-900 { --tw-gradient-to: #e2e8f0 var(--tw-gradient-to-position) !important; }
+
+/* ================================================================
+   ADMIN SHELL — insulate /admin from the marketing site's theme system.
+   /admin has its own independent light/dark convention (default light,
+   opt-in `dark:` variants) and shares the same <html> element as the
+   marketing site (single root layout). The light-mode overrides above
+   were authored only for the marketing site and were bleeding into
+   admin's color classes whenever a visitor's saved theme was "light",
+   corrupting pairings like `bg-slate-800 text-white` (text forced dark,
+   background left dark → unreadable). These rules restore admin's own
+   authored colors, scoped to `.admin-shell`, regardless of the
+   marketing site's html.dark / html.light-mode state.
+   ================================================================ */
+html.light-mode .admin-shell .bg-gray-950     { background-color: #030712 !important; }
+html.light-mode .admin-shell .bg-gray-900     { background-color: #111827 !important; }
+html.light-mode .admin-shell .bg-gray-800     { background-color: #1f2937 !important; }
+html.light-mode .admin-shell .bg-gray-700     { background-color: #374151 !important; }
+html.light-mode .admin-shell .bg-white\/10    { background-color: rgba(255, 255, 255, 0.1) !important; }
+html.light-mode .admin-shell .bg-white\/20    { background-color: rgba(255, 255, 255, 0.2) !important; }
+html.light-mode .admin-shell .bg-white\/5     { background-color: rgba(255, 255, 255, 0.05) !important; }
+
+html.light-mode .admin-shell .text-white      { color: #ffffff !important; }
+html.light-mode .admin-shell .text-gray-100   { color: #f3f4f6 !important; }
+html.light-mode .admin-shell .text-gray-200   { color: #e5e7eb !important; }
+html.light-mode .admin-shell .text-gray-300   { color: #d1d5db !important; }
+html.light-mode .admin-shell .text-gray-400   { color: #9ca3af !important; }
+html.light-mode .admin-shell .text-gray-500   { color: #6b7280 !important; }
+html.light-mode .admin-shell .text-sky-400    { color: #38bdf8 !important; }
+html.light-mode .admin-shell .text-sky-300    { color: #7dd3fc !important; }
+html.light-mode .admin-shell .text-green-400  { color: #4ade80 !important; }
+html.light-mode .admin-shell .text-green-300  { color: #86efac !important; }
+
+html.light-mode .admin-shell .hover\:text-white:hover    { color: #ffffff !important; }
+html.light-mode .admin-shell .hover\:text-sky-300:hover  { color: #7dd3fc !important; }
+html.light-mode .admin-shell .hover\:text-green-300:hover { color: #86efac !important; }
+
+html.light-mode .admin-shell .border-gray-700   { border-color: #374151 !important; }
+html.light-mode .admin-shell .border-gray-800   { border-color: #1f2937 !important; }
+html.light-mode .admin-shell .border-white\/10  { border-color: rgba(255, 255, 255, 0.1) !important; }
+html.light-mode .admin-shell .border-white\/20  { border-color: rgba(255, 255, 255, 0.2) !important; }
+
+/* Note: deliberately NOT countering `dark:*`-prefixed utilities here.
+   Those are only ever meant to apply alongside a genuine `.dark`
+   ancestor (Tailwind's own conditional) — forcing a value onto the
+   literal `dark:bg-gray-900` class token regardless of ancestor state
+   would reintroduce the same "stuck dark" bug this block exists to
+   fix, just re-scoped. Tailwind's native behavior (rule simply doesn't
+   apply without `.dark`, falling back to the base class) is correct
+   and needs no help. */
 
 /* Mobile photo rule: preserve original ratio and avoid crop on small screens. */
 @media (max-width: 767px) {

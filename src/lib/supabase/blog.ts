@@ -80,6 +80,10 @@ export type PublishedPostDetail = {
   published_at: string
   updated_at: string | null
   status: string
+  // Pipeline metadata — includes `image_urls` (every photo uploaded for this
+  // post, index 0 = cover). Used to render genuinely additional gallery
+  // images instead of re-showing the cover photo a second time.
+  auto_draft_meta: { image_urls?: string[] } | null
 }
 
 // ── Public API ───────────────────────────────────────────────────────────────
