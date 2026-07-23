@@ -100,7 +100,7 @@ export default function Jcc2026Schedule() {
         {/* Masthead */}
         <div className="border-b-[3px] border-[#0f4f4a] py-8 dark:border-[#3fa89a]">
           <div className="text-xs font-bold uppercase tracking-[0.14em] text-[#0f4f4a] dark:text-[#3fa89a]">
-            Centro Caribe Sports · Fotógrafo oficial
+            Centro Caribe Sports · Fotógrafo
           </div>
           <h1 className="mt-1 text-2xl font-extrabold tracking-tight sm:text-3xl" style={{ textWrap: 'balance' }}>
             Hoja de ruta — Santo Domingo 2026
