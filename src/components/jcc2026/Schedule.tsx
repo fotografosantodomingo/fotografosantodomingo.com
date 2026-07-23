@@ -1,39 +1,19 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { SCHEDULE, VENUE, CEREMONY } from './data'
+import { STORAGE_KEY, fmtDate, splitDisc, properCase } from './utils'
 
-const DOW = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
-const MON = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
-// v2: tracking moved from per time-slot to per discipline (the actual job is
-// "photograph each discipline at least once," not "attend every session").
-const STORAGE_KEY = 'jcc2026-done-v2'
 const GATE_CODE = '1234'
 const GAMES_END = new Date(2026, 7, 8, 23, 59, 59) // 8 Aug 2026, local time
-
-function fmtDate(iso: string) {
-  const [y, m, d] = iso.split('-').map(Number)
-  const dt = new Date(Date.UTC(y, m - 1, d))
-  return { dow: DOW[dt.getUTCDay()], label: `${d} ${MON[m - 1]}` }
-}
-
-function splitDisc(raw: string): [string, string] {
-  const spaceIdx = raw.indexOf(' ')
-  const cat = spaceIdx === -1 ? raw : raw.slice(0, spaceIdx)
-  const rest = spaceIdx === -1 ? raw : raw.slice(spaceIdx + 1)
-  return [cat, rest || cat]
-}
-
-function properCase(s: string) {
-  return s
-    .split(' ')
-    .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w))
-    .join(' ')
-}
 
 type PendingAction = { key: string; nextValue: boolean } | null
 
 export default function Jcc2026Schedule() {
+  const pathname = usePathname()
+  const base = pathname?.startsWith('/admin') ? '/admin/jcc2026' : '/jcc2026'
   const dates = useMemo(() => Object.keys(SCHEDULE).sort(), [])
 
   // One entry per distinct discipline (not per session) — this is the real
@@ -109,6 +89,13 @@ export default function Jcc2026Schedule() {
             El trabajo: al menos una foto de cada disciplina, no cada sesión. Toca el círculo cuando
             una disciplina ya quedó cubierta — se marca en todas sus fechas a la vez.
           </p>
+
+          <Link
+            href={`${base}/plan`}
+            className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-[#0f4f4a] hover:underline dark:text-[#3fa89a]"
+          >
+            Ver plan por hora y dirección →
+          </Link>
 
           {/* Top summary — the number that actually matters */}
           <div className="mt-5 rounded-xl border border-[#dcd5c1] bg-[#fffdf8] p-4 dark:border-[#24413d] dark:bg-[#10201f]">
