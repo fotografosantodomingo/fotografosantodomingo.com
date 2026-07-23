@@ -5,7 +5,9 @@ import { SCHEDULE, VENUE, CEREMONY } from './data'
 
 const DOW = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 const MON = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic']
-const STORAGE_KEY = 'jcc2026-done-v1'
+// v2: tracking moved from per time-slot to per discipline (the actual job is
+// "photograph each discipline at least once," not "attend every session").
+const STORAGE_KEY = 'jcc2026-done-v2'
 const GATE_CODE = '1234'
 const GAMES_END = new Date(2026, 7, 8, 23, 59, 59) // 8 Aug 2026, local time
 
@@ -33,7 +35,19 @@ type PendingAction = { key: string; nextValue: boolean } | null
 
 export default function Jcc2026Schedule() {
   const dates = useMemo(() => Object.keys(SCHEDULE).sort(), [])
-  const totalRows = useMemo(() => dates.reduce((sum, d) => sum + SCHEDULE[d].length, 0), [dates])
+
+  // One entry per distinct discipline (not per session) — this is the real
+  // unit of the job: get it photographed once, not attend every game.
+  const totalDisciplines = useMemo(() => {
+    const set = new Set<string>()
+    for (const d of dates) {
+      for (const r of SCHEDULE[d]) {
+        const [cat, discRaw] = splitDisc(r.disc)
+        set.add(`${cat}|${discRaw}`)
+      }
+    }
+    return set.size
+  }, [dates])
 
   const [done, setDone] = useState<Record<string, boolean>>({})
   const [hydrated, setHydrated] = useState(false)
@@ -42,8 +56,6 @@ export default function Jcc2026Schedule() {
   const [code, setCode] = useState('')
   const [error, setError] = useState(false)
 
-  // Load saved progress + compute countdown only on the client, so SSR/hydration
-  // never has to guess a date or read localStorage.
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
@@ -62,8 +74,8 @@ export default function Jcc2026Schedule() {
   }, [done, hydrated])
 
   const completedCount = Object.values(done).filter(Boolean).length
-  const remainingCount = totalRows - completedCount
-  const pct = totalRows > 0 ? Math.round((completedCount / totalRows) * 100) : 0
+  const remainingCount = totalDisciplines - completedCount
+  const pct = totalDisciplines > 0 ? Math.round((completedCount / totalDisciplines) * 100) : 0
 
   function requestToggle(key: string, current: boolean) {
     setPending({ key, nextValue: !current })
@@ -84,7 +96,7 @@ export default function Jcc2026Schedule() {
 
   return (
     <div className="jcc-scope -mx-4 -my-8 min-h-screen bg-[#f4f0e4] pb-24 text-[#10201f] dark:bg-[#0b1615] dark:text-[#eef1ee]">
-      <div className="mx-auto max-w-3xl px-4">
+      <div className="mx-auto max-w-3xl px-5 sm:px-6">
         {/* Masthead */}
         <div className="border-b-[3px] border-[#0f4f4a] py-8 dark:border-[#3fa89a]">
           <div className="text-xs font-bold uppercase tracking-[0.14em] text-[#0f4f4a] dark:text-[#3fa89a]">
@@ -94,9 +106,39 @@ export default function Jcc2026Schedule() {
             Hoja de ruta — Santo Domingo 2026
           </h1>
           <p className="mt-1 max-w-[60ch] text-sm text-[#5c6f6b] dark:text-[#8fa39d]">
-            XXV Juegos Centroamericanos y del Caribe. Disciplinas con sede confirmada en el Gran Santo
-            Domingo, 24 de julio – 8 de agosto. Toca el círculo de cada fila para marcarla completada.
+            El trabajo: al menos una foto de cada disciplina, no cada sesión. Toca el círculo cuando
+            una disciplina ya quedó cubierta — se marca en todas sus fechas a la vez.
           </p>
+
+          {/* Top summary — the number that actually matters */}
+          <div className="mt-5 rounded-xl border border-[#dcd5c1] bg-[#fffdf8] p-4 dark:border-[#24413d] dark:bg-[#10201f]">
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <div className="flex items-baseline gap-1.5 tabular-nums">
+                  <span className="text-3xl font-extrabold text-[#0f4f4a] dark:text-[#3fa89a]">{completedCount}</span>
+                  <span className="text-base text-[#5c6f6b] dark:text-[#8fa39d]">
+                    de {totalDisciplines} disciplinas cubiertas
+                  </span>
+                </div>
+                <div className="mt-0.5 text-xs text-[#5c6f6b] dark:text-[#8fa39d]">
+                  Faltan {remainingCount}
+                  {daysLeft !== null && (
+                    <>
+                      {' '}
+                      · {daysLeft} {daysLeft === 1 ? 'día restante' : 'días restantes'}
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="pb-0.5 text-lg font-extrabold tabular-nums text-[#5c6f6b] dark:text-[#8fa39d]">{pct}%</div>
+            </div>
+            <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-[#e8e2d1] dark:bg-[#1a2f2c]">
+              <div
+                className="h-full rounded-full bg-[#0f4f4a] transition-[width] duration-300 dark:bg-[#3fa89a]"
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+          </div>
 
           <div className="mt-4 flex flex-wrap gap-3 text-xs text-[#5c6f6b] dark:text-[#8fa39d]">
             <span className="inline-flex items-center gap-1.5">
@@ -110,7 +152,7 @@ export default function Jcc2026Schedule() {
               <span className="flex h-2.5 w-2.5 items-center justify-center rounded-full bg-[#0f4f4a] text-[7px] leading-none text-white dark:bg-[#3fa89a] dark:text-[#0b1615]">
                 ✓
               </span>{' '}
-              completada
+              cubierta
             </span>
           </div>
 
@@ -127,7 +169,7 @@ export default function Jcc2026Schedule() {
         </div>
 
         {/* Day nav */}
-        <div className="sticky top-0 z-10 -mx-4 border-b border-[#dcd5c1] bg-[#f4f0e4] px-4 py-2.5 dark:border-[#24413d] dark:bg-[#0b1615]">
+        <div className="sticky top-0 z-10 -mx-5 border-b border-[#dcd5c1] bg-[#f4f0e4] px-5 py-2.5 dark:border-[#24413d] dark:bg-[#0b1615] sm:-mx-6 sm:px-6">
           <nav
             aria-label="Ir a un día"
             className="flex gap-1.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -183,7 +225,7 @@ export default function Jcc2026Schedule() {
                   {rows.map((r, idx) => {
                     const [cat, discRaw] = splitDisc(r.disc)
                     const [venue, confirmed] = VENUE[`${cat}|${discRaw}`] ?? ['Por confirmar', false]
-                    const key = `${iso}|${idx}`
+                    const key = `${cat}|${discRaw}`
                     const isDone = !!done[key]
                     return (
                       <div
@@ -213,7 +255,7 @@ export default function Jcc2026Schedule() {
                         <div className="mt-0.5 justify-self-end">
                           <button
                             type="button"
-                            aria-label={isDone ? 'Desmarcar como completada' : 'Marcar como completada'}
+                            aria-label={isDone ? 'Desmarcar disciplina cubierta' : 'Marcar disciplina cubierta'}
                             onClick={() => requestToggle(key, isDone)}
                             className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-[11px] font-bold leading-none transition-colors ${
                               isDone
@@ -239,20 +281,21 @@ export default function Jcc2026Schedule() {
           Horas del reporte oficial &quot;Programación x Hora x Disciplina&quot; — algunas disciplinas no
           traían hora de inicio (marcadas &quot;s/hora&quot;). Sedes inferidas del listado oficial de venues
           del JPD, Parque del Este y Gran Santo Domingo; las marcadas con el punto hueco son inferencia
-          razonable, no confirmación literal. El progreso se guarda solo en este dispositivo.
+          razonable, no confirmación literal. Marcar una disciplina la cubre en todas sus fechas — el
+          progreso se guarda solo en este dispositivo.
         </footer>
       </div>
 
-      {/* Bottom summary bar. Left padding clears the site-wide floating chat
-          bubble (fixed bottom-5 left-5, h-12 w-12, z-50) that sits on top of
-          this bar on every page. */}
+      {/* Bottom bar — quick glance while scrolling, mirrors the top summary.
+          Left padding clears the site-wide floating chat bubble (fixed
+          bottom-5 left-5, h-12 w-12, z-50) that sits on top of this bar. */}
       <div className="fixed inset-x-0 bottom-0 z-20 border-t border-[#dcd5c1] bg-[#fffdf8]/95 py-3 pl-20 pr-4 shadow-[0_-4px_16px_rgba(0,0,0,0.08)] backdrop-blur dark:border-[#24413d] dark:bg-[#10201f]/95">
         <div className="mx-auto max-w-3xl">
           <div className="flex items-end justify-between gap-3">
             <div>
               <div className="flex items-baseline gap-1.5 tabular-nums">
                 <span className="text-xl font-extrabold text-[#0f4f4a] dark:text-[#3fa89a]">{completedCount}</span>
-                <span className="text-sm text-[#5c6f6b] dark:text-[#8fa39d]">/ {totalRows} completadas</span>
+                <span className="text-sm text-[#5c6f6b] dark:text-[#8fa39d]">/ {totalDisciplines} disciplinas</span>
               </div>
               <div className="text-xs text-[#5c6f6b] dark:text-[#8fa39d]">
                 {remainingCount} por hacer
@@ -288,9 +331,14 @@ export default function Jcc2026Schedule() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-sm font-bold">
-              {pending.nextValue ? 'Marcar como completada' : 'Desmarcar completada'}
+              {pending.nextValue ? 'Marcar disciplina cubierta' : 'Desmarcar disciplina'}
             </div>
-            <p className="mt-1 text-xs text-[#5c6f6b] dark:text-[#8fa39d]">Ingresa el código para confirmar.</p>
+            <p className="mt-1 text-xs text-[#5c6f6b] dark:text-[#8fa39d]">
+              {pending.nextValue
+                ? 'Se marcará en todas las fechas de esta disciplina.'
+                : 'Se desmarcará en todas las fechas de esta disciplina.'}{' '}
+              Ingresa el código para confirmar.
+            </p>
             <input
               type="password"
               inputMode="numeric"
