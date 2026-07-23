@@ -48,6 +48,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Link href="/admin/images" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
                   Images
                 </Link>
+                <Link href="/admin/jcc2026" className="font-medium text-teal-600 hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300">
+                  JCC 2026
+                </Link>
                 <Link href="/admin/account" className="text-slate-600 hover:text-slate-900 dark:text-gray-300 dark:hover:text-white">
                   Account
                 </Link>
