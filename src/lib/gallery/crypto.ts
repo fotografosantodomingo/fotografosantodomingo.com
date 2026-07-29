@@ -104,3 +104,38 @@ export async function verifyGallerySession(token: string, secret: string): Promi
     return null
   }
 }
+
+// ─── Photo preview tokens (for <img> tags in emails — no cookie available) ──
+// Scoped to one photo, expiring with the gallery itself (not a fixed short
+// TTL), since the recipient may open the email any time before then.
+
+export async function signPhotoPreviewToken(
+  slug: string,
+  photoId: string,
+  expiresAt: string,
+  secret: string
+): Promise<string> {
+  const exp = Math.floor(new Date(expiresAt).getTime() / 1000)
+  const payload = `${b64url(slug)}.${b64url(photoId)}.${exp}`
+  const sig = await hmac(secret, payload)
+  return `${payload}.${sig}`
+}
+
+export async function verifyPhotoPreviewToken(
+  token: string,
+  secret: string
+): Promise<{ slug: string; photoId: string } | null> {
+  const parts = token.split('.')
+  if (parts.length !== 4) return null
+  const [slugPart, photoPart, expPart, sig] = parts
+  const payload = `${slugPart}.${photoPart}.${expPart}`
+  const expected = await hmac(secret, payload)
+  if (expected !== sig) return null
+  const exp = Number(expPart)
+  if (!Number.isFinite(exp) || exp < Math.floor(Date.now() / 1000)) return null
+  try {
+    return { slug: unb64url(slugPart), photoId: unb64url(photoPart) }
+  } catch {
+    return null
+  }
+}

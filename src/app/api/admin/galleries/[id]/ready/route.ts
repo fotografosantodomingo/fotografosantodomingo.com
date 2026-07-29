@@ -41,16 +41,18 @@ export async function POST(req: NextRequest, { params }: Params) {
     passwordHash = await hashGalleryPassword(plainPassword)
   }
 
+  // Also doubles as the thumbnail-strip source for the ready email below —
+  // one query covers both the cover-photo fallback and the preview thumbnails.
+  const { data: firstPhotos } = await supabase
+    .from('gallery_photos')
+    .select('id')
+    .eq('gallery_id', params.id)
+    .order('created_at', { ascending: true })
+    .limit(5)
+
   let coverPhotoId = gallery.cover_photo_id
   if (!coverPhotoId) {
-    const { data: firstPhoto } = await supabase
-      .from('gallery_photos')
-      .select('id')
-      .eq('gallery_id', params.id)
-      .order('created_at', { ascending: true })
-      .limit(1)
-      .maybeSingle()
-    coverPhotoId = firstPhoto?.id ?? null
+    coverPhotoId = firstPhotos?.[0]?.id ?? null
   }
 
   const { error } = await supabase
@@ -75,6 +77,8 @@ export async function POST(req: NextRequest, { params }: Params) {
     clientEmail: gallery.client_email,
     expiresAt,
     password: plainPassword, // null on a repeat "ready" — email adapts its wording
+    previewPhotos: firstPhotos ?? [],
+    photoCount: gallery.photo_count,
   })
 
   return NextResponse.json({ ok: true, expires_at: expiresAt, password: plainPassword })

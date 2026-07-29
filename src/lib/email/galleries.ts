@@ -6,10 +6,14 @@
 
 import { sendMail } from './smtp'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { signPhotoPreviewToken } from '@/lib/gallery/crypto'
+import { gallerySessionSecret } from '@/lib/gallery/session'
 
 const FROM = { name: 'Babula Shots', email: 'noreply@fotografosantodomingo.com' }
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
+// Same header/footer fragments as bookings.ts, so gallery emails read as the
+// same system as booking confirmations/reminders, not a different product.
 function shellOpen(title: string, subtitle: string, accent: string = '#0ea5e9') {
   const dark = accent === '#0ea5e9' ? '#0369a1' : '#9a3412'
   return `
@@ -27,8 +31,55 @@ function shellOpen(title: string, subtitle: string, accent: string = '#0ea5e9') 
 function shellClose() {
   return `
         </div>
+        <div style="padding:14px 24px;border-top:1px solid #e2e8f0;background:#f8fafc;text-align:center">
+          <p style="margin:0;color:#94a3b8;font-size:12px;line-height:1.6">
+            Fotógrafo Santo Domingo — Babula Shots · Santo Domingo, República Dominicana<br/>
+            <a href="${BASE_URL}" style="color:#0284c7">fotografosantodomingo.com</a>
+            &nbsp;·&nbsp;
+            <a href="https://wa.me/18097789547" style="color:#0284c7">WhatsApp +1 (809) 778-9547</a>
+          </p>
+        </div>
       </div>
     </div>
+  `
+}
+
+const THUMBNAIL_COUNT = 5
+
+async function thumbnailStrip(
+  slug: string,
+  expiresAt: string,
+  photos: { id: string }[],
+  photoCount: number
+): Promise<string> {
+  if (photos.length === 0) return ''
+
+  const secret = gallerySessionSecret()
+  const shown = photos.slice(0, THUMBNAIL_COUNT)
+  const cells = await Promise.all(
+    shown.map(async (p) => {
+      const token = await signPhotoPreviewToken(slug, p.id, expiresAt, secret)
+      const src = `${BASE_URL}/api/gallery/${slug}/photo/${p.id}/email-preview?token=${token}`
+      return `<td style="padding:0 4px">
+        <img src="${src}" width="88" height="88" alt=""
+             style="display:block;width:88px;height:88px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0" />
+      </td>`
+    })
+  )
+
+  const remaining = photoCount - shown.length
+  if (remaining > 0) {
+    cells.push(`<td style="padding:0 4px">
+      <div style="display:flex;align-items:center;justify-content:center;width:88px;height:88px;border-radius:8px;background:#f1f5f9;color:#64748b;font-size:13px;font-weight:700">
+        +${remaining}
+      </div>
+    </td>`)
+  }
+
+  return `
+    <table role="presentation" style="margin:0 auto 20px;border-collapse:collapse">
+      <tr>${cells.join('')}</tr>
+    </table>
   `
 }
 
@@ -53,10 +104,13 @@ export async function sendGalleryReady(
     clientEmail: string
     expiresAt: string
     password: string | null // null on a repeat "ready" — password already sent previously
+    previewPhotos: { id: string }[] // first few photos, for the thumbnail strip
+    photoCount: number
   }
 ): Promise<void> {
   const url = `${BASE_URL}/g/${ctx.slug}`
   const expiresLabel = fmtDate(ctx.expiresAt)
+  const thumbnails = await thumbnailStrip(ctx.slug, ctx.expiresAt, ctx.previewPhotos, ctx.photoCount)
 
   const passwordBlock = ctx.password
     ? `
@@ -76,6 +130,8 @@ export async function sendGalleryReady(
       <p style="margin:0 0 18px;color:#334155;line-height:1.65;font-size:15px">
         Todas tus fotos en resolución completa están disponibles para descargar individualmente o todas juntas en un ZIP.
       </p>
+
+      ${thumbnails}
 
       ${passwordBlock}
 
