@@ -1,0 +1,130 @@
+/**
+ * Client gallery emails — sent by the "mark ready" admin action and the
+ * expiration cron's T-2-day reminder pass. Style matches bookings.ts (sky
+ * gradient header, slate body).
+ */
+
+import { sendMail } from './smtp'
+import type { SupabaseClient } from '@supabase/supabase-js'
+
+const FROM = { name: 'Babula Shots', email: 'noreply@fotografosantodomingo.com' }
+const BASE_URL = 'https://www.fotografosantodomingo.com'
+
+function shellOpen(title: string, subtitle: string, accent: string = '#0ea5e9') {
+  const dark = accent === '#0ea5e9' ? '#0369a1' : '#9a3412'
+  return `
+    <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#f8fafc;padding:24px 12px">
+      <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden">
+        <div style="background:linear-gradient(135deg,${accent},${dark});padding:26px 24px;text-align:center">
+          <p style="margin:0;color:#e0f2fe;font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:700">Babula Shots</p>
+          <h2 style="margin:10px 0 0;color:#ffffff;font-size:24px;line-height:1.25">${title}</h2>
+          <p style="margin:10px 0 0;color:#e0f2fe;font-size:15px">${subtitle}</p>
+        </div>
+        <div style="padding:26px 24px">
+  `
+}
+
+function shellClose() {
+  return `
+        </div>
+      </div>
+    </div>
+  `
+}
+
+function fmtDate(iso: string, locale: 'es' | 'en' = 'es') {
+  return new Date(iso).toLocaleDateString(locale === 'es' ? 'es-DO' : 'en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 1. Gallery ready — sent when admin marks a gallery 'ready'
+// ═══════════════════════════════════════════════════════════════════════════
+
+export async function sendGalleryReady(
+  _supabase: SupabaseClient,
+  ctx: {
+    galleryId: string
+    slug: string
+    clientName: string
+    clientEmail: string
+    expiresAt: string
+    password: string | null // null on a repeat "ready" — password already sent previously
+  }
+): Promise<void> {
+  const url = `${BASE_URL}/g/${ctx.slug}`
+  const expiresLabel = fmtDate(ctx.expiresAt)
+
+  const passwordBlock = ctx.password
+    ? `
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 16px;margin-bottom:20px;text-align:center">
+        <p style="margin:0 0 4px;color:#166534;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Contraseña</p>
+        <p style="margin:0;color:#14532d;font-size:20px;font-weight:800;letter-spacing:.03em;font-family:monospace">${ctx.password}</p>
+      </div>`
+    : `
+      <p style="margin:0 0 20px;color:#64748b;font-size:13px;text-align:center">Usa la misma contraseña que te compartimos anteriormente.</p>`
+
+  const result = await sendMail({
+    from: FROM,
+    to: ctx.clientEmail,
+    subject: `📸 Tus fotos están listas — ${ctx.clientName}`,
+    html: `
+      ${shellOpen('Tu galería está lista', `Hola ${ctx.clientName}, ya puedes ver y descargar tus fotos.`)}
+      <p style="margin:0 0 18px;color:#334155;line-height:1.65;font-size:15px">
+        Todas tus fotos en resolución completa están disponibles para descargar individualmente o todas juntas en un ZIP.
+      </p>
+
+      ${passwordBlock}
+
+      <div style="text-align:center;margin:6px 0 20px">
+        <a href="${url}"
+           style="display:inline-block;background:#0ea5e9;color:#ffffff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:700;font-size:15px">
+          Ver mi galería
+        </a>
+      </div>
+
+      <p style="margin:0;color:#94a3b8;line-height:1.6;font-size:13px;text-align:center">
+        Disponible hasta el ${expiresLabel}. Después de esa fecha las fotos se eliminan automáticamente — descárgalas antes de que expire el enlace.
+      </p>
+      ${shellClose()}
+    `,
+  })
+
+  if (!result.ok) console.error('sendGalleryReady failed:', result.error)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 2. Expiration reminder — sent by cron at T-2 days
+// ═══════════════════════════════════════════════════════════════════════════
+
+export async function sendGalleryReminder(
+  _supabase: SupabaseClient,
+  ctx: { slug: string; clientName: string; clientEmail: string; expiresAt: string }
+): Promise<void> {
+  const url = `${BASE_URL}/g/${ctx.slug}`
+  const expiresLabel = fmtDate(ctx.expiresAt)
+
+  const result = await sendMail({
+    from: FROM,
+    to: ctx.clientEmail,
+    subject: `⏳ Tu galería expira pronto — ${ctx.clientName}`,
+    html: `
+      ${shellOpen('Tu galería expira en 48 horas', `Hola ${ctx.clientName}, no olvides descargar tus fotos.`, '#f59e0b')}
+      <p style="margin:0 0 20px;color:#334155;line-height:1.65;font-size:15px">
+        Tu galería se elimina automáticamente el <strong>${expiresLabel}</strong>. Si aún no has descargado tus fotos en resolución completa, hazlo antes de esa fecha — después no podremos recuperarlas.
+      </p>
+      <div style="text-align:center;margin:6px 0 6px">
+        <a href="${url}"
+           style="display:inline-block;background:#f59e0b;color:#ffffff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:700;font-size:15px">
+          Descargar mis fotos
+        </a>
+      </div>
+      ${shellClose()}
+    `,
+  })
+
+  if (!result.ok) console.error('sendGalleryReminder failed:', result.error)
+}

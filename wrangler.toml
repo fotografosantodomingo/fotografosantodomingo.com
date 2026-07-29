@@ -29,3 +29,10 @@ compatibility_flags = ["nodejs_compat"]
 
 # pages_build_output_dir is set by @cloudflare/next-on-pages — do not
 # override here; the dashboard's "Build output directory" setting wins.
+
+# Client gallery storage. Photos are streamed through Pages Functions
+# straight to/from R2 (no separate S3-style API tokens to provision) —
+# see src/lib/gallery/r2.ts.
+[[r2_buckets]]
+binding = "GALLERIES_BUCKET"
+bucket_name = "fotografosantodomingo-galleries"

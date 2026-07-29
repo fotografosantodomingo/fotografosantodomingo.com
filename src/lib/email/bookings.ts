@@ -234,6 +234,12 @@ export async function sendBookingConfirmation(
             : 'We will send you a reminder 24 hours before and another on the morning of the session. To reschedule or ask anything, just reply to this email or message us on WhatsApp.'}
         </p>
 
+        <p style="margin:0 0 14px;color:#334155;line-height:1.6;font-size:14px">
+          ${isEs
+            ? 'Una vez que tu sesión sea editada, tus fotos se entregarán en una galería privada en línea — te enviaremos el enlace por email cuando esté lista.'
+            : 'Once your session is edited, your photos will be delivered in a private online gallery — we will email you the link when it is ready.'}
+        </p>
+
         ${calendarButtons(ctx)}
 
         <div style="text-align:center;margin:6px 0 6px">

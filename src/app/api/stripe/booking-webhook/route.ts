@@ -7,6 +7,7 @@ import {
   sendBookingAdminAlert,
   type BookingEmailContext,
 } from '@/lib/email/bookings'
+import { createGallery } from '@/lib/gallery/service'
 
 export const runtime = 'edge'
 
@@ -126,10 +127,17 @@ export async function POST(request: NextRequest) {
           depositUsd: Number(updated.deposit_amount_usd ?? 0),
         }
 
-        // Fire and forget — failure already logged in booking_email_log
+        // Fire and forget — failure already logged in booking_email_log.
+        // Gallery starts in 'draft' (no photos, no expiry clock) — admin
+        // uploads to it after the shoot and marks it ready.
         await Promise.all([
           sendBookingConfirmation(supabase, ctx),
           sendBookingAdminAlert(supabase, { ...ctx, customerPhone: updated.customer_phone }),
+          createGallery(supabase, {
+            clientName: updated.customer_name,
+            clientEmail: updated.customer_email,
+            bookingId: updated.id,
+          }).catch((err) => console.error('createGallery failed for booking', updated.id, err)),
         ])
       }
 

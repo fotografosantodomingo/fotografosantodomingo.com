@@ -1,9 +1,11 @@
 /**
- * Cloudflare Worker — Booking reminders cron trigger.
+ * Cloudflare Worker — hourly cron trigger for the Next.js app's cron
+ * endpoints (booking reminders + gallery expiration).
  *
- * On the schedule defined in wrangler.toml (hourly), this worker calls
- * `${APP_URL}/api/cron/booking-reminders` with `Authorization: Bearer ${CRON_SECRET}`.
- * The Next.js endpoint does the actual work (DB query + Resend sends).
+ * On the schedule defined in wrangler.toml (hourly), this worker calls each
+ * endpoint below with `Authorization: Bearer ${CRON_SECRET}`. The Next.js
+ * side does the actual work (DB query + Resend/Brevo sends); this worker is
+ * intentionally tiny.
  *
  * Why a separate Worker?
  *   The main app deploys to Cloudflare Pages, which doesn't support cron
@@ -11,8 +13,8 @@
  *   is the cleanest pattern.
  *
  * Manual trigger (smoke test): GET / on the worker URL with the same bearer
- * token will run the same logic. Useful for verifying connectivity before the
- * cron actually fires.
+ * token will run all endpoints below. Useful for verifying connectivity
+ * before the cron actually fires.
  */
 
 export interface Env {
@@ -20,16 +22,10 @@ export interface Env {
   APP_URL: string
 }
 
-async function runCron(env: Env): Promise<{ ok: boolean; status: number; body: unknown }> {
-  if (!env.CRON_SECRET || !env.APP_URL) {
-    return {
-      ok: false,
-      status: 500,
-      body: { error: 'CRON_SECRET or APP_URL not configured on the worker' },
-    }
-  }
+const ENDPOINTS = ['/api/cron/booking-reminders', '/api/cron/gallery-expiration']
 
-  const target = `${env.APP_URL.replace(/\/$/, '')}/api/cron/booking-reminders`
+async function callEndpoint(env: Env, path: string): Promise<{ path: string; ok: boolean; status: number; body: unknown }> {
+  const target = `${env.APP_URL.replace(/\/$/, '')}${path}`
 
   let res: Response
   try {
@@ -42,7 +38,7 @@ async function runCron(env: Env): Promise<{ ok: boolean; status: number; body: u
     })
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
-    return { ok: false, status: 0, body: { error: `fetch failed: ${msg}` } }
+    return { path, ok: false, status: 0, body: { error: `fetch failed: ${msg}` } }
   }
 
   let body: unknown
@@ -52,7 +48,19 @@ async function runCron(env: Env): Promise<{ ok: boolean; status: number; body: u
     body = await res.text().catch(() => null)
   }
 
-  return { ok: res.ok, status: res.status, body }
+  return { path, ok: res.ok, status: res.status, body }
+}
+
+async function runCron(env: Env): Promise<{ ok: boolean; results: Awaited<ReturnType<typeof callEndpoint>>[] }> {
+  if (!env.CRON_SECRET || !env.APP_URL) {
+    return {
+      ok: false,
+      results: [{ path: '(config)', ok: false, status: 500, body: { error: 'CRON_SECRET or APP_URL not configured on the worker' } }],
+    }
+  }
+
+  const results = await Promise.all(ENDPOINTS.map((path) => callEndpoint(env, path)))
+  return { ok: results.every((r) => r.ok), results }
 }
 
 export default {
