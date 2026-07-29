@@ -18,7 +18,10 @@ export async function POST(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  const password = typeof body.password === 'string' ? body.password : ''
+  // Trimmed — a stray leading/trailing space or newline from copy-paste is a
+  // paste artifact, not part of the password (we generate these, so there's
+  // never a legitimate reason for one to include whitespace).
+  const password = typeof body.password === 'string' ? body.password.trim() : ''
   if (!password) return NextResponse.json({ error: 'Password required' }, { status: 400 })
 
   const supabase = createServiceClient()

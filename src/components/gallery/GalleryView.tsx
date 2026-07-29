@@ -73,7 +73,7 @@ export default function GalleryView({ slug }: { slug: string }) {
       const res = await fetch(`/api/gallery/${slug}/verify`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password: password.trim() }),
       })
       if (!res.ok) {
         setLoginError(true)
