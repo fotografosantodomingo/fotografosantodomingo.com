@@ -42,6 +42,7 @@ export default function AdminGalleriesPage() {
   const [showCreate, setShowCreate] = useState(false)
   const [clientName, setClientName] = useState('')
   const [clientEmail, setClientEmail] = useState('')
+  const [clientEmail2, setClientEmail2] = useState('')
   const [creating, setCreating] = useState(false)
 
   async function load() {
@@ -65,13 +66,18 @@ export default function AdminGalleriesPage() {
       const res = await fetch('/api/admin/galleries', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ client_name: clientName, client_email: clientEmail }),
+        body: JSON.stringify({
+          client_name: clientName,
+          client_email: clientEmail,
+          client_email_2: clientEmail2 || undefined,
+        }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Failed to create gallery')
       setShowCreate(false)
       setClientName('')
       setClientEmail('')
+      setClientEmail2('')
       await load()
       window.location.href = `/admin/galleries/${data.gallery.id}`
     } catch (err) {
@@ -192,6 +198,18 @@ export default function AdminGalleriesPage() {
                   type="email"
                   value={clientEmail}
                   onChange={(e) => setClientEmail(e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-white/10 dark:bg-gray-950 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-slate-600 dark:text-gray-300">
+                  Second email <span className="font-normal text-slate-400 dark:text-gray-500">(optional)</span>
+                </label>
+                <input
+                  type="email"
+                  value={clientEmail2}
+                  onChange={(e) => setClientEmail2(e.target.value)}
+                  placeholder="e.g. partner's email"
                   className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-white/10 dark:bg-gray-950 dark:text-white"
                 />
               </div>

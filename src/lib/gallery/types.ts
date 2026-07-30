@@ -8,6 +8,7 @@ export type Gallery = {
   booking_id: string | null
   client_name: string
   client_email: string
+  client_email_2: string | null
   password_hash: string
   status: GalleryStatus
   cover_photo_id: string | null

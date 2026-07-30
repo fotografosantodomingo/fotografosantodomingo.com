@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
 
   const clientName = typeof body.client_name === 'string' ? body.client_name.trim() : ''
   const clientEmail = typeof body.client_email === 'string' ? body.client_email.trim().toLowerCase() : ''
+  const clientEmail2 = typeof body.client_email_2 === 'string' ? body.client_email_2.trim().toLowerCase() : ''
   const bookingId = typeof body.booking_id === 'string' && body.booking_id ? body.booking_id : null
 
   if (!clientName || !clientEmail) {
@@ -44,7 +45,12 @@ export async function POST(req: NextRequest) {
 
   const supabase = createServiceClient()
   try {
-    const gallery = await createGallery(supabase, { clientName, clientEmail, bookingId })
+    const gallery = await createGallery(supabase, {
+      clientName,
+      clientEmail,
+      clientEmail2: clientEmail2 || null,
+      bookingId,
+    })
     return NextResponse.json({ gallery })
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
