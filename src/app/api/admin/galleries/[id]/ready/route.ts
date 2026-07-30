@@ -17,7 +17,9 @@ export async function POST(req: NextRequest, { params }: Params) {
   const supabase = createServiceClient()
   const { data: gallery } = await supabase
     .from('galleries')
-    .select('id, slug, client_name, client_email, client_email_2, photo_count, cover_photo_id, status, password_hash')
+    .select(
+      'id, slug, client_name, client_email, client_email_2, topic, photo_count, cover_photo_id, status, password_hash'
+    )
     .eq('id', params.id)
     .single()
 
@@ -76,6 +78,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     clientName: gallery.client_name,
     clientEmail: gallery.client_email,
     clientEmail2: gallery.client_email_2,
+    topic: gallery.topic,
     expiresAt,
     password: plainPassword, // null on a repeat "ready" — email adapts its wording
     previewPhotos: firstPhotos ?? [],

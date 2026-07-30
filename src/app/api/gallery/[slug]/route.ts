@@ -15,7 +15,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   const supabase = createServiceClient()
   const { data: gallery } = await supabase
     .from('galleries')
-    .select('id, slug, client_name, status, photo_count, total_bytes, expires_at')
+    .select('id, slug, client_name, topic, status, photo_count, total_bytes, expires_at')
     .eq('slug', params.slug)
     .single()
 
@@ -35,6 +35,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   const response: PublicGallery = {
     slug: gallery.slug,
     client_name: gallery.client_name,
+    topic: gallery.topic,
     status: gallery.status,
     photo_count: gallery.photo_count,
     total_bytes: gallery.total_bytes,

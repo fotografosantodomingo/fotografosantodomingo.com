@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const { data, error } = await supabase
     .from('galleries')
     .select(
-      'id, slug, client_name, client_email, status, photo_count, total_bytes, created_at, ready_at, expires_at, booking_id'
+      'id, slug, client_name, client_email, topic, status, photo_count, total_bytes, created_at, ready_at, expires_at, booking_id'
     )
     .order('created_at', { ascending: false })
 
@@ -37,10 +37,11 @@ export async function POST(req: NextRequest) {
   const clientName = typeof body.client_name === 'string' ? body.client_name.trim() : ''
   const clientEmail = typeof body.client_email === 'string' ? body.client_email.trim().toLowerCase() : ''
   const clientEmail2 = typeof body.client_email_2 === 'string' ? body.client_email_2.trim().toLowerCase() : ''
+  const topic = typeof body.topic === 'string' ? body.topic.trim() : ''
   const bookingId = typeof body.booking_id === 'string' && body.booking_id ? body.booking_id : null
 
-  if (!clientName || !clientEmail) {
-    return NextResponse.json({ error: 'client_name and client_email are required' }, { status: 400 })
+  if (!clientName || !clientEmail || !topic) {
+    return NextResponse.json({ error: 'client_name, client_email, and topic are required' }, { status: 400 })
   }
 
   const supabase = createServiceClient()
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
       clientName,
       clientEmail,
       clientEmail2: clientEmail2 || null,
+      topic,
       bookingId,
     })
     return NextResponse.json({ gallery })

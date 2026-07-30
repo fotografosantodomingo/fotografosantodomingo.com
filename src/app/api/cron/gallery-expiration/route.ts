@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
 
   const { data: dueForReminder } = await supabase
     .from('galleries')
-    .select('id, slug, client_name, client_email, client_email_2, expires_at')
+    .select('id, slug, client_name, client_email, client_email_2, topic, expires_at')
     .eq('status', 'ready')
     .eq('reminder_sent', false)
     .gte('expires_at', reminderWindowStart.toISOString())
@@ -51,6 +51,7 @@ export async function GET(request: NextRequest) {
       clientName: gallery.client_name,
       clientEmail: gallery.client_email,
       clientEmail2: gallery.client_email_2,
+      topic: gallery.topic,
       expiresAt: gallery.expires_at,
     })
     await supabase.from('galleries').update({ reminder_sent: true }).eq('id', gallery.id)

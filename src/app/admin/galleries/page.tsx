@@ -8,6 +8,7 @@ type GalleryRow = {
   slug: string
   client_name: string
   client_email: string
+  topic: string | null
   status: 'draft' | 'uploading' | 'ready' | 'expired' | 'deleted'
   photo_count: number
   total_bytes: number
@@ -43,6 +44,7 @@ export default function AdminGalleriesPage() {
   const [clientName, setClientName] = useState('')
   const [clientEmail, setClientEmail] = useState('')
   const [clientEmail2, setClientEmail2] = useState('')
+  const [topic, setTopic] = useState('')
   const [creating, setCreating] = useState(false)
 
   async function load() {
@@ -70,6 +72,7 @@ export default function AdminGalleriesPage() {
           client_name: clientName,
           client_email: clientEmail,
           client_email_2: clientEmail2 || undefined,
+          topic,
         }),
       })
       const data = await res.json()
@@ -78,6 +81,7 @@ export default function AdminGalleriesPage() {
       setClientName('')
       setClientEmail('')
       setClientEmail2('')
+      setTopic('')
       await load()
       window.location.href = `/admin/galleries/${data.gallery.id}`
     } catch (err) {
@@ -128,8 +132,10 @@ export default function AdminGalleriesPage() {
             {(galleries ?? []).map((g) => (
               <tr key={g.id}>
                 <td className="py-3">
-                  <div className="font-medium text-slate-900 dark:text-white">{g.client_name}</div>
-                  <div className="text-xs text-slate-500 dark:text-gray-400">{g.client_email}</div>
+                  <div className="font-medium text-slate-900 dark:text-white">{g.topic || g.client_name}</div>
+                  <div className="text-xs text-slate-500 dark:text-gray-400">
+                    {g.client_name} · {g.client_email}
+                  </div>
                 </td>
                 <td className="py-3">
                   <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_STYLE[g.status]}`}>
@@ -182,6 +188,19 @@ export default function AdminGalleriesPage() {
               ready.
             </p>
             <div className="mt-4 space-y-3">
+              <div>
+                <label className="text-xs font-semibold text-slate-600 dark:text-gray-300">Topic</label>
+                <input
+                  required
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  placeholder="e.g. Boda García, Sesión Familiar Playa"
+                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-white/10 dark:bg-gray-950 dark:text-white"
+                />
+                <p className="mt-1 text-[11px] text-slate-400 dark:text-gray-500">
+                  Used as the ZIP filename and shown in the client's email.
+                </p>
+              </div>
               <div>
                 <label className="text-xs font-semibold text-slate-600 dark:text-gray-300">Client name</label>
                 <input

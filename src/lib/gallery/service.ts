@@ -9,7 +9,13 @@ export const GALLERY_REMINDER_DAYS_BEFORE = 2
 // to the client. Nothing to protect while still draft/uploading.
 export async function createGallery(
   supabase: SupabaseClient,
-  params: { clientName: string; clientEmail: string; clientEmail2?: string | null; bookingId?: string | null }
+  params: {
+    clientName: string
+    clientEmail: string
+    clientEmail2?: string | null
+    topic?: string | null
+    bookingId?: string | null
+  }
 ): Promise<{ id: string; slug: string }> {
   // Retry on slug collision — vanishingly unlikely with a random suffix, but cheap to guard.
   for (let attempt = 0; attempt < 3; attempt++) {
@@ -22,6 +28,7 @@ export async function createGallery(
         client_name: params.clientName,
         client_email: params.clientEmail,
         client_email_2: params.clientEmail2 ?? null,
+        topic: params.topic ?? null,
         status: 'draft',
       })
       .select('id, slug')

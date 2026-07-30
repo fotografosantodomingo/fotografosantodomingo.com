@@ -9,6 +9,7 @@ type Gallery = {
   client_name: string
   client_email: string
   client_email_2: string | null
+  topic: string | null
   status: 'draft' | 'uploading' | 'ready' | 'expired' | 'deleted'
   photo_count: number
   total_bytes: number
@@ -38,6 +39,7 @@ export default function AdminGalleryDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [notes, setNotes] = useState('')
   const [email2, setEmail2] = useState('')
+  const [topic, setTopic] = useState('')
 
   const [uploadQueue, setUploadQueue] = useState<{ total: number; done: number; currentName: string } | null>(null)
   const [dragOver, setDragOver] = useState(false)
@@ -59,6 +61,7 @@ export default function AdminGalleryDetailPage() {
     setPhotos(data.photos)
     setNotes(data.gallery.internal_notes ?? '')
     setEmail2(data.gallery.client_email_2 ?? '')
+    setTopic(data.gallery.topic ?? '')
   }, [id])
 
   useEffect(() => {
@@ -184,6 +187,15 @@ export default function AdminGalleryDetailPage() {
     })
   }
 
+  async function saveTopic() {
+    await fetch(`/api/admin/galleries/${id}/topic`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ topic }),
+    })
+    await load()
+  }
+
   if (!gallery) {
     return <div className="text-slate-500 dark:text-gray-400">{error ?? 'Loading…'}</div>
   }
@@ -192,23 +204,35 @@ export default function AdminGalleryDetailPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{gallery.client_name}</h1>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{gallery.topic || gallery.client_name}</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
-            {gallery.client_email} · {gallery.photo_count} photos · {fmtBytes(gallery.total_bytes)} ·{' '}
-            <span className="font-semibold">{gallery.status}</span>
+            {gallery.client_name} · {gallery.client_email} · {gallery.photo_count} photos ·{' '}
+            {fmtBytes(gallery.total_bytes)} · <span className="font-semibold">{gallery.status}</span>
           </p>
-          <div className="mt-2 flex items-center gap-2">
-            <label className="text-xs font-semibold text-slate-500 dark:text-gray-400">
-              Second email <span className="font-normal text-slate-400 dark:text-gray-500">(optional)</span>
-            </label>
-            <input
-              type="email"
-              value={email2}
-              onChange={(e) => setEmail2(e.target.value)}
-              onBlur={saveEmail2}
-              placeholder="e.g. partner's email"
-              className="rounded-md border border-slate-300 px-2 py-1 text-xs dark:border-white/10 dark:bg-gray-950 dark:text-white"
-            />
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-semibold text-slate-500 dark:text-gray-400">Topic</label>
+              <input
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+                onBlur={saveTopic}
+                placeholder="e.g. Boda García"
+                className="rounded-md border border-slate-300 px-2 py-1 text-xs dark:border-white/10 dark:bg-gray-950 dark:text-white"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-semibold text-slate-500 dark:text-gray-400">
+                Second email <span className="font-normal text-slate-400 dark:text-gray-500">(optional)</span>
+              </label>
+              <input
+                type="email"
+                value={email2}
+                onChange={(e) => setEmail2(e.target.value)}
+                onBlur={saveEmail2}
+                placeholder="e.g. partner's email"
+                className="rounded-md border border-slate-300 px-2 py-1 text-xs dark:border-white/10 dark:bg-gray-950 dark:text-white"
+              />
+            </div>
           </div>
           {gallery.status === 'ready' && (
             <p className="mt-1 text-xs text-slate-500 dark:text-gray-400">

@@ -136,6 +136,7 @@ export async function POST(request: NextRequest) {
           createGallery(supabase, {
             clientName: updated.customer_name,
             clientEmail: updated.customer_email,
+            topic: snap?.name_es || snap?.name_en || null,
             bookingId: updated.id,
           }).catch((err) => console.error('createGallery failed for booking', updated.id, err)),
         ])

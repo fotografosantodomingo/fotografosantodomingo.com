@@ -6,6 +6,7 @@ type Photo = { id: string; filename: string; width: number | null; height: numbe
 type PublicGallery = {
   slug: string
   client_name: string
+  topic: string | null
   status: string
   photo_count: number
   total_bytes: number
@@ -22,6 +23,12 @@ function fmtBytes(n: number) {
   if (n < 1024 * 1024) return `${(n / 1024).toFixed(0)} KB`
   if (n < 1024 * 1024 * 1024) return `${(n / (1024 * 1024)).toFixed(1)} MB`
   return `${(n / (1024 * 1024 * 1024)).toFixed(2)} GB`
+}
+
+// Strip characters that break on Windows/some filesystems — spaces and
+// accents are fine, "/\:*?"<>|" aren't.
+function sanitizeFilename(name: string) {
+  return name.replace(/[/\\:*?"<>|]/g, '').trim() || 'galeria'
 }
 
 function fmtExpiresDate(iso: string | null) {
@@ -195,13 +202,16 @@ export default function GalleryView({ slug }: { slug: string }) {
   if (!gallery) return null
 
   const expiresLabel = fmtExpiresDate(gallery.expires_at)
+  const topic = sanitizeFilename(gallery.topic || gallery.client_name)
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20 dark:bg-gray-950">
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         <header className="mb-6 border-b border-slate-200 pb-6 dark:border-white/10">
           <p className="text-xs font-bold uppercase tracking-wide text-sky-600 dark:text-sky-400">Babula Shots</p>
-          <h1 className="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white">{gallery.client_name}</h1>
+          <h1 className="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white">
+            {gallery.topic || gallery.client_name}
+          </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
             {gallery.photo_count} fotos · {fmtBytes(gallery.total_bytes)}
             {expiresLabel && <> · Disponible hasta el {expiresLabel}</>}
@@ -209,7 +219,7 @@ export default function GalleryView({ slug }: { slug: string }) {
 
           {!needsBatching ? (
             <button
-              onClick={() => downloadAsZip(gallery.photos, 'zip', `${gallery.client_name}.zip`)}
+              onClick={() => downloadAsZip(gallery.photos, 'zip', `${topic}.zip`)}
               disabled={!!zipping}
               className="mt-4 rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500 disabled:opacity-50"
             >
@@ -228,7 +238,7 @@ export default function GalleryView({ slug }: { slug: string }) {
                       downloadAsZip(
                         batch,
                         'batch',
-                        `${gallery.client_name} ${i * BATCH_SIZE + 1}-${i * BATCH_SIZE + batch.length}.zip`
+                        `${topic} ${i * BATCH_SIZE + 1}-${i * BATCH_SIZE + batch.length}.zip`
                       )
                     }
                     disabled={!!zipping}

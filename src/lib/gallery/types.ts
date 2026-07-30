@@ -9,6 +9,7 @@ export type Gallery = {
   client_name: string
   client_email: string
   client_email_2: string | null
+  topic: string | null
   password_hash: string
   status: GalleryStatus
   cover_photo_id: string | null
@@ -42,6 +43,7 @@ export type GalleryPhoto = {
 export type PublicGallery = {
   slug: string
   client_name: string
+  topic: string | null
   status: GalleryStatus
   photo_count: number
   total_bytes: number

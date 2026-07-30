@@ -103,6 +103,7 @@ export async function sendGalleryReady(
     clientName: string
     clientEmail: string
     clientEmail2?: string | null
+    topic?: string | null
     expiresAt: string
     password: string | null // null on a repeat "ready" — password already sent previously
     previewPhotos: { id: string }[] // first few photos, for the thumbnail strip
@@ -110,6 +111,7 @@ export async function sendGalleryReady(
   }
 ): Promise<void> {
   const recipients = ctx.clientEmail2 ? [ctx.clientEmail, ctx.clientEmail2] : ctx.clientEmail
+  const topic = ctx.topic || ctx.clientName
   const url = `${BASE_URL}/g/${ctx.slug}`
   const expiresLabel = fmtDate(ctx.expiresAt)
   const thumbnails = await thumbnailStrip(ctx.slug, ctx.expiresAt, ctx.previewPhotos, ctx.photoCount)
@@ -126,9 +128,9 @@ export async function sendGalleryReady(
   const result = await sendMail({
     from: FROM,
     to: recipients,
-    subject: `📸 Tus fotos están listas — ${ctx.clientName}`,
+    subject: `📸 Tus fotos están listas — ${topic}`,
     html: `
-      ${shellOpen('Tu galería está lista', `Hola ${ctx.clientName}, ya puedes ver y descargar tus fotos.`)}
+      ${shellOpen('Tu galería está lista', `Hola ${ctx.clientName}, ya puedes ver y descargar tus fotos de ${topic}.`)}
       <p style="margin:0 0 18px;color:#334155;line-height:1.65;font-size:15px">
         Todas tus fotos en resolución completa están disponibles para descargar individualmente o todas juntas en un ZIP.
       </p>
@@ -160,18 +162,26 @@ export async function sendGalleryReady(
 
 export async function sendGalleryReminder(
   _supabase: SupabaseClient,
-  ctx: { slug: string; clientName: string; clientEmail: string; clientEmail2?: string | null; expiresAt: string }
+  ctx: {
+    slug: string
+    clientName: string
+    clientEmail: string
+    clientEmail2?: string | null
+    topic?: string | null
+    expiresAt: string
+  }
 ): Promise<void> {
   const url = `${BASE_URL}/g/${ctx.slug}`
   const expiresLabel = fmtDate(ctx.expiresAt)
   const recipients = ctx.clientEmail2 ? [ctx.clientEmail, ctx.clientEmail2] : ctx.clientEmail
+  const topic = ctx.topic || ctx.clientName
 
   const result = await sendMail({
     from: FROM,
     to: recipients,
-    subject: `⏳ Tu galería expira pronto — ${ctx.clientName}`,
+    subject: `⏳ Tu galería expira pronto — ${topic}`,
     html: `
-      ${shellOpen('Tu galería expira en 48 horas', `Hola ${ctx.clientName}, no olvides descargar tus fotos.`, '#f59e0b')}
+      ${shellOpen('Tu galería expira en 48 horas', `Hola ${ctx.clientName}, no olvides descargar tus fotos de ${topic}.`, '#f59e0b')}
       <p style="margin:0 0 20px;color:#334155;line-height:1.65;font-size:15px">
         Tu galería se elimina automáticamente el <strong>${expiresLabel}</strong>. Si aún no has descargado tus fotos en resolución completa, hazlo antes de esa fecha — después no podremos recuperarlas.
       </p>
