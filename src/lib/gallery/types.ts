@@ -10,6 +10,7 @@ export type Gallery = {
   client_email: string
   client_email_2: string | null
   topic: string | null
+  included_photo_count: number | null
   password_hash: string
   status: GalleryStatus
   cover_photo_id: string | null

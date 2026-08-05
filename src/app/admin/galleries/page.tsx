@@ -9,6 +9,7 @@ type GalleryRow = {
   client_name: string
   client_email: string
   topic: string | null
+  included_photo_count: number | null
   status: 'draft' | 'uploading' | 'ready' | 'expired' | 'deleted'
   photo_count: number
   total_bytes: number
@@ -45,6 +46,7 @@ export default function AdminGalleriesPage() {
   const [clientEmail, setClientEmail] = useState('')
   const [clientEmail2, setClientEmail2] = useState('')
   const [topic, setTopic] = useState('')
+  const [includedPhotoCount, setIncludedPhotoCount] = useState('')
   const [creating, setCreating] = useState(false)
 
   async function load() {
@@ -73,6 +75,7 @@ export default function AdminGalleriesPage() {
           client_email: clientEmail,
           client_email_2: clientEmail2 || undefined,
           topic,
+          included_photo_count: Number(includedPhotoCount),
         }),
       })
       const data = await res.json()
@@ -82,6 +85,7 @@ export default function AdminGalleriesPage() {
       setClientEmail('')
       setClientEmail2('')
       setTopic('')
+      setIncludedPhotoCount('')
       await load()
       window.location.href = `/admin/galleries/${data.gallery.id}`
     } catch (err) {
@@ -145,7 +149,12 @@ export default function AdminGalleriesPage() {
                     <span className="ml-1.5 text-xs text-slate-400 dark:text-gray-500">· from booking</span>
                   )}
                 </td>
-                <td className="py-3 text-right tabular-nums text-slate-700 dark:text-gray-300">{g.photo_count}</td>
+                <td className="py-3 text-right tabular-nums text-slate-700 dark:text-gray-300">
+                  {g.photo_count}
+                  {g.included_photo_count && (
+                    <span className="text-slate-400 dark:text-gray-500"> / {g.included_photo_count}</span>
+                  )}
+                </td>
                 <td className="py-3 text-right tabular-nums text-slate-700 dark:text-gray-300">
                   {fmtBytes(g.total_bytes)}
                 </td>
@@ -199,6 +208,21 @@ export default function AdminGalleriesPage() {
                 />
                 <p className="mt-1 text-[11px] text-slate-400 dark:text-gray-500">
                   Used as the ZIP filename and shown in the client's email.
+                </p>
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-slate-600 dark:text-gray-300">Free photos included</label>
+                <input
+                  required
+                  type="number"
+                  min={1}
+                  value={includedPhotoCount}
+                  onChange={(e) => setIncludedPhotoCount(e.target.value)}
+                  placeholder="e.g. 15"
+                  className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-white/10 dark:bg-gray-950 dark:text-white"
+                />
+                <p className="mt-1 text-[11px] text-slate-400 dark:text-gray-500">
+                  Package limit — the basis for overage pricing if the client selects more.
                 </p>
               </div>
               <div>

@@ -14,6 +14,7 @@ export async function createGallery(
     clientEmail: string
     clientEmail2?: string | null
     topic?: string | null
+    includedPhotoCount?: number | null
     bookingId?: string | null
   }
 ): Promise<{ id: string; slug: string }> {
@@ -29,6 +30,7 @@ export async function createGallery(
         client_email: params.clientEmail,
         client_email_2: params.clientEmail2 ?? null,
         topic: params.topic ?? null,
+        included_photo_count: params.includedPhotoCount ?? null,
         status: 'draft',
       })
       .select('id, slug')

@@ -11,6 +11,7 @@ type Gallery = {
   client_email: string
   client_email_2: string | null
   topic: string | null
+  included_photo_count: number | null
   status: 'draft' | 'uploading' | 'ready' | 'expired' | 'deleted'
   photo_count: number
   total_bytes: number
@@ -41,6 +42,7 @@ export default function AdminGalleryDetailPage() {
   const [notes, setNotes] = useState('')
   const [email2, setEmail2] = useState('')
   const [topic, setTopic] = useState('')
+  const [includedPhotoCount, setIncludedPhotoCount] = useState('')
 
   const [uploadQueue, setUploadQueue] = useState<{ total: number; done: number; currentName: string } | null>(null)
   const [failedFiles, setFailedFiles] = useState<File[]>([])
@@ -65,6 +67,7 @@ export default function AdminGalleryDetailPage() {
     setNotes(data.gallery.internal_notes ?? '')
     setEmail2(data.gallery.client_email_2 ?? '')
     setTopic(data.gallery.topic ?? '')
+    setIncludedPhotoCount(data.gallery.included_photo_count != null ? String(data.gallery.included_photo_count) : '')
   }, [id])
 
   useEffect(() => {
@@ -257,6 +260,15 @@ export default function AdminGalleryDetailPage() {
     await load()
   }
 
+  async function saveIncludedPhotoCount() {
+    await fetch(`/api/admin/galleries/${id}/included-photo-count`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ included_photo_count: includedPhotoCount }),
+    })
+    await load()
+  }
+
   if (!gallery) {
     return <div className="text-slate-500 dark:text-gray-400">{error ?? 'Loading…'}</div>
   }
@@ -267,7 +279,8 @@ export default function AdminGalleryDetailPage() {
         <div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{gallery.topic || gallery.client_name}</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-gray-400">
-            {gallery.client_name} · {gallery.client_email} · {gallery.photo_count} photos ·{' '}
+            {gallery.client_name} · {gallery.client_email} · {gallery.photo_count}
+            {gallery.included_photo_count && <> / {gallery.included_photo_count}</>} photos ·{' '}
             {fmtBytes(gallery.total_bytes)} · <span className="font-semibold">{gallery.status}</span>
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -279,6 +292,18 @@ export default function AdminGalleryDetailPage() {
                 onBlur={saveTopic}
                 placeholder="e.g. Boda García"
                 className="rounded-md border border-slate-300 px-2 py-1 text-xs dark:border-white/10 dark:bg-gray-950 dark:text-white"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-semibold text-slate-500 dark:text-gray-400">Free photos included</label>
+              <input
+                type="number"
+                min={1}
+                value={includedPhotoCount}
+                onChange={(e) => setIncludedPhotoCount(e.target.value)}
+                onBlur={saveIncludedPhotoCount}
+                placeholder="e.g. 15"
+                className="w-20 rounded-md border border-slate-300 px-2 py-1 text-xs dark:border-white/10 dark:bg-gray-950 dark:text-white"
               />
             </div>
             <div className="flex items-center gap-2">

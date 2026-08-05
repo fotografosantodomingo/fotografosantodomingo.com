@@ -106,6 +106,7 @@ export async function POST(request: NextRequest) {
           name_en?: string
           family_icon?: string
           duration_min?: number
+          photo_count?: number
         } | null
         const snap = (updated.package_snapshot ?? null) as Snap
         const fam = updated.family as unknown as { icon: string } | null
@@ -137,6 +138,7 @@ export async function POST(request: NextRequest) {
             clientName: updated.customer_name,
             clientEmail: updated.customer_email,
             topic: snap?.name_es || snap?.name_en || null,
+            includedPhotoCount: snap?.photo_count ?? null,
             bookingId: updated.id,
           }).catch((err) => console.error('createGallery failed for booking', updated.id, err)),
         ])

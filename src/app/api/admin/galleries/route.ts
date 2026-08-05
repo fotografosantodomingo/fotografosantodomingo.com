@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const { data, error } = await supabase
     .from('galleries')
     .select(
-      'id, slug, client_name, client_email, topic, status, photo_count, total_bytes, created_at, ready_at, expires_at, booking_id'
+      'id, slug, client_name, client_email, topic, included_photo_count, status, photo_count, total_bytes, created_at, ready_at, expires_at, booking_id'
     )
     .order('created_at', { ascending: false })
 
@@ -39,9 +39,13 @@ export async function POST(req: NextRequest) {
   const clientEmail2 = typeof body.client_email_2 === 'string' ? body.client_email_2.trim().toLowerCase() : ''
   const topic = typeof body.topic === 'string' ? body.topic.trim() : ''
   const bookingId = typeof body.booking_id === 'string' && body.booking_id ? body.booking_id : null
+  const includedPhotoCount = Number(body.included_photo_count)
 
   if (!clientName || !clientEmail || !topic) {
     return NextResponse.json({ error: 'client_name, client_email, and topic are required' }, { status: 400 })
+  }
+  if (!Number.isFinite(includedPhotoCount) || includedPhotoCount <= 0) {
+    return NextResponse.json({ error: 'included_photo_count must be a positive number' }, { status: 400 })
   }
 
   const supabase = createServiceClient()
@@ -51,6 +55,7 @@ export async function POST(req: NextRequest) {
       clientEmail,
       clientEmail2: clientEmail2 || null,
       topic,
+      includedPhotoCount,
       bookingId,
     })
     return NextResponse.json({ gallery })
