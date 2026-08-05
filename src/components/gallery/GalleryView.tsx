@@ -266,8 +266,10 @@ export default function GalleryView({ slug }: { slug: string }) {
               <img
                 src={`/api/gallery/${slug}/photo/${p.id}/view`}
                 alt={p.filename}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover opacity-0 transition-opacity duration-300 [&.loaded]:opacity-100"
                 loading="lazy"
+                decoding="async"
+                onLoad={(e) => e.currentTarget.classList.add('loaded')}
               />
               <a
                 href={`/api/gallery/${slug}/photo/${p.id}`}

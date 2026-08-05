@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
+import { generatePreviewBlob } from '@/lib/gallery/resize-client'
 
 type Gallery = {
   id: string
@@ -49,6 +50,7 @@ export default function AdminGalleryDetailPage() {
   const [marking, setMarking] = useState(false)
   const [extending, setExtending] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [regenerating, setRegenerating] = useState<{ total: number; done: number } | null>(null)
 
   const load = useCallback(async () => {
     const res = await fetch(`/api/admin/galleries/${id}`)
@@ -89,6 +91,8 @@ export default function AdminGalleryDetailPage() {
           const data = await res.json().catch(() => ({}))
           throw new Error(data.error ?? `Upload failed for ${file.name}`)
         }
+        const { photo } = await res.json()
+        await uploadPreviewFor(photo.id, file)
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err))
       }
@@ -96,6 +100,46 @@ export default function AdminGalleryDetailPage() {
 
     setUploadQueue(null)
     await load()
+  }
+
+  // Generates a small resized JPEG client-side and uploads it as the grid
+  // preview — separate from the original, which stays untouched for
+  // download. Non-fatal on failure: the grid just falls back to loading the
+  // original for that one photo instead of blocking the whole upload.
+  async function uploadPreviewFor(photoId: string, source: File | Blob) {
+    try {
+      const { blob, width, height } = await generatePreviewBlob(source)
+      await fetch(`/api/admin/galleries/${id}/photos/${photoId}/preview?width=${width}&height=${height}`, {
+        method: 'POST',
+        headers: { 'content-type': 'image/jpeg' },
+        body: blob,
+      })
+    } catch (err) {
+      console.error('Preview generation failed for', photoId, err)
+    }
+  }
+
+  // For photos uploaded before real previews existed — fetches each
+  // original (via the admin preview route, which currently just returns the
+  // original for these), resizes it client-side, and uploads a proper
+  // preview. Same mechanism as uploadPreviewFor, just sourced from R2
+  // instead of a fresh File.
+  async function regeneratePreviews() {
+    setRegenerating({ total: photos.length, done: 0 })
+    for (let i = 0; i < photos.length; i++) {
+      const photo = photos[i]
+      try {
+        const res = await fetch(`/api/admin/galleries/${id}/preview/${photo.id}`)
+        if (res.ok) {
+          const blob = await res.blob()
+          await uploadPreviewFor(photo.id, blob)
+        }
+      } catch (err) {
+        console.error('Regenerate preview failed for', photo.id, err)
+      }
+      setRegenerating({ total: photos.length, done: i + 1 })
+    }
+    setRegenerating(null)
   }
 
   function onDrop(e: React.DragEvent) {
@@ -336,6 +380,19 @@ export default function AdminGalleryDetailPage() {
       </div>
 
       {/* Photo grid */}
+      {photos.length > 0 && (
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-slate-500 dark:text-gray-400">{photos.length} photos</p>
+          <button
+            onClick={regeneratePreviews}
+            disabled={!!regenerating}
+            className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-slate-400 disabled:opacity-50 dark:border-white/10 dark:text-gray-300"
+            title="Rebuild small preview images — fixes slow-loading grids from before previews existed"
+          >
+            {regenerating ? `Regenerating… ${regenerating.done}/${regenerating.total}` : 'Regenerate previews'}
+          </button>
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
         {photos.map((p) => (
           <div
