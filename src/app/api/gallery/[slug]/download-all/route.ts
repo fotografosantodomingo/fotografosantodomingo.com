@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { downloadZip } from 'client-zip'
 import { createServiceClient } from '@/lib/supabase/service'
 import { isAuthorizedForGallery } from '@/lib/gallery/session'
-import { getGalleryObject } from '@/lib/gallery/r2'
+import { getGalleryBucket } from '@/lib/gallery/r2'
 
 export const runtime = 'edge'
 
@@ -58,12 +58,20 @@ export async function GET(req: NextRequest, { params }: Params) {
     user_agent: req.headers.get('user-agent'),
   })
 
+  // getGalleryBucket() resolves the R2 binding via getRequestContext(), which
+  // is only valid synchronously within this handler's own call stack. The
+  // async generator below is consumed lazily by client-zip as the response
+  // stream is actually read — potentially after this function has returned
+  // — so the binding must be captured here, once, up front. Re-deriving it
+  // inside the generator (the original bug) silently failed on every photo,
+  // shipping a technically-valid but empty zip.
+  const bucket = getGalleryBucket()
   const metadata = photos.map((p) => ({ name: p.filename, size: p.file_size }))
 
   async function* inputs() {
     for (const p of photos!) {
-      const obj = await getGalleryObject(p.original_key)
-      if (!obj) continue // skip a photo whose R2 object went missing rather than fail the whole zip
+      const obj = await bucket.get(p.original_key)
+      if (!obj) throw new Error(`Missing R2 object for ${p.filename} (${p.original_key})`)
       yield { input: obj.body, name: p.filename, size: p.file_size }
     }
   }
