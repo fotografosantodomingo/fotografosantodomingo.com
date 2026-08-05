@@ -51,6 +51,7 @@ export default function AdminGalleryDetailPage() {
 
   const [readyPassword, setReadyPassword] = useState<string | null>(null)
   const [marking, setMarking] = useState(false)
+  const [resettingPassword, setResettingPassword] = useState(false)
   const [extending, setExtending] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [regenerating, setRegenerating] = useState<{ total: number; done: number } | null>(null)
@@ -195,11 +196,33 @@ export default function AdminGalleryDetailPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Failed to mark ready')
       if (data.password) setReadyPassword(data.password)
+      if (data.emailSent === false) {
+        setError('Gallery is ready, but the email to the client failed to send — use "Reset password & resend" below.')
+      }
       await load()
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
       setMarking(false)
+    }
+  }
+
+  async function resetPassword() {
+    if (!confirm("Generate a new password and resend it? The client's old password will stop working.")) return
+    setResettingPassword(true)
+    setError(null)
+    try {
+      const res = await fetch(`/api/admin/galleries/${id}/reset-password`, { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Failed to reset password')
+      if (data.password) setReadyPassword(data.password)
+      if (data.emailSent === false) {
+        setError('Password was reset, but the email failed to send — copy the password shown and share it manually.')
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
+    } finally {
+      setResettingPassword(false)
     }
   }
 
@@ -373,6 +396,16 @@ export default function AdminGalleryDetailPage() {
                 : gallery.status === 'ready'
                 ? 'Re-confirm ready'
                 : 'Mark ready'}
+            </button>
+          )}
+          {['selecting', 'selected', 'ready'].includes(gallery.status) && (
+            <button
+              onClick={resetPassword}
+              disabled={resettingPassword}
+              title="Client says they never got a working password — generates a new one and resends"
+              className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-slate-400 disabled:opacity-50 dark:border-white/10 dark:text-gray-300"
+            >
+              {resettingPassword ? 'Resetting…' : 'Reset password & resend'}
             </button>
           )}
           <button

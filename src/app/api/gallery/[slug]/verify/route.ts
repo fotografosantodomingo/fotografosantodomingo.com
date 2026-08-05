@@ -35,7 +35,8 @@ export async function POST(req: NextRequest, { params }: Params) {
   // the password is wrong — don't leak which case it is.
   const genericError = () => NextResponse.json({ error: 'Incorrect password' }, { status: 401 })
 
-  if (!gallery || gallery.status !== 'ready' || !gallery.password_hash) {
+  const loginableStatuses = ['selecting', 'selected', 'ready']
+  if (!gallery || !loginableStatuses.includes(gallery.status) || !gallery.password_hash) {
     return genericError()
   }
 

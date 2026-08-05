@@ -109,7 +109,7 @@ export async function sendGalleryReady(
     previewPhotos: { id: string }[] // first few photos, for the thumbnail strip
     photoCount: number
   }
-): Promise<void> {
+): Promise<boolean> {
   const recipients = ctx.clientEmail2 ? [ctx.clientEmail, ctx.clientEmail2] : ctx.clientEmail
   const topic = ctx.topic || ctx.clientName
   const url = `${BASE_URL}/g/${ctx.slug}`
@@ -154,6 +154,7 @@ export async function sendGalleryReady(
   })
 
   if (!result.ok) console.error('sendGalleryReady failed:', result.error)
+  return result.ok
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -196,4 +197,161 @@ export async function sendGalleryReminder(
   })
 
   if (!result.ok) console.error('sendGalleryReminder failed:', result.error)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 3. Selection ready — sent when admin opens the proofing/selection phase
+// ═══════════════════════════════════════════════════════════════════════════
+
+export async function sendGallerySelectionReady(
+  _supabase: SupabaseClient,
+  ctx: {
+    slug: string
+    clientName: string
+    clientEmail: string
+    clientEmail2?: string | null
+    topic?: string | null
+    includedPhotoCount: number
+    password: string | null
+  }
+): Promise<boolean> {
+  const recipients = ctx.clientEmail2 ? [ctx.clientEmail, ctx.clientEmail2] : ctx.clientEmail
+  const topic = ctx.topic || ctx.clientName
+  const url = `${BASE_URL}/g/${ctx.slug}`
+
+  const passwordBlock = ctx.password
+    ? `
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 16px;margin-bottom:20px;text-align:center">
+        <p style="margin:0 0 4px;color:#166534;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Contraseña</p>
+        <p style="margin:0;color:#14532d;font-size:20px;font-weight:800;letter-spacing:.03em;font-family:monospace">${ctx.password}</p>
+      </div>`
+    : `
+      <p style="margin:0 0 20px;color:#64748b;font-size:13px;text-align:center">Usa la misma contraseña que te compartimos anteriormente.</p>`
+
+  const result = await sendMail({
+    from: FROM,
+    to: recipients,
+    subject: `👉 Elige tus fotos favoritas — ${topic}`,
+    html: `
+      ${shellOpen('Elige tus favoritas', `Hola ${ctx.clientName}, ya puedes seleccionar tus fotos de ${topic}.`)}
+      <p style="margin:0 0 12px;color:#334155;line-height:1.65;font-size:15px">
+        Desliza cada foto: a la derecha si te gusta, a la izquierda si no. Tu paquete incluye
+        <strong>${ctx.includedPhotoCount} fotos</strong> — si eliges más, te mostraremos el costo adicional antes de confirmar.
+      </p>
+
+      ${passwordBlock}
+
+      <div style="text-align:center;margin:6px 0 6px">
+        <a href="${url}"
+           style="display:inline-block;background:#0ea5e9;color:#ffffff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:700;font-size:15px">
+          Elegir mis fotos
+        </a>
+      </div>
+      ${shellClose()}
+    `,
+  })
+
+  if (!result.ok) console.error('sendGallerySelectionReady failed:', result.error)
+  return result.ok
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 4. Selection submitted — notifies the photographer with the picked filenames
+// ═══════════════════════════════════════════════════════════════════════════
+
+export async function sendPhotographerSelectionNotice(ctx: {
+  slug: string
+  clientName: string
+  topic: string | null
+  selectedFilenames: string[]
+  includedPhotoCount: number
+  overageTier: number
+  overageAmountUsd: number | null
+}): Promise<void> {
+  const topic = ctx.topic || ctx.clientName
+  const adminUrl = `${BASE_URL}/admin/galleries`
+  const overCount = Math.max(0, ctx.selectedFilenames.length - ctx.includedPhotoCount)
+
+  const overageLine =
+    ctx.overageTier > 0
+      ? `<p style="margin:0 0 14px;color:#166534;font-weight:700;font-size:14px">
+           +${overCount} sobre el límite · recargo del ${ctx.overageTier}% (${
+          ctx.overageAmountUsd != null ? `$${ctx.overageAmountUsd.toFixed(2)} USD` : 'pendiente'
+        }) — pagado
+         </p>`
+      : `<p style="margin:0 0 14px;color:#64748b;font-size:14px">Dentro del límite incluido — sin cargo adicional.</p>`
+
+  const result = await sendMail({
+    from: FROM,
+    to: 'info@fotografosantodomingo.com',
+    subject: `✅ Selección lista — ${topic} (${ctx.selectedFilenames.length} fotos)`,
+    html: `
+      ${shellOpen('Cliente eligió sus fotos', `${ctx.clientName} — ${topic}`)}
+      <p style="margin:0 0 10px;color:#334155;font-size:14px">
+        <strong>${ctx.selectedFilenames.length}</strong> de <strong>${ctx.includedPhotoCount}</strong> incluidas.
+      </p>
+      ${overageLine}
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:18px;max-height:320px;overflow-y:auto">
+        <p style="margin:0 0 8px;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Archivos seleccionados</p>
+        <ul style="margin:0;padding-left:18px;color:#334155;font-size:13px;line-height:1.8">
+          ${ctx.selectedFilenames.map((f) => `<li>${f}</li>`).join('')}
+        </ul>
+      </div>
+      <div style="text-align:center;margin:6px 0 6px">
+        <a href="${adminUrl}"
+           style="display:inline-block;background:#0ea5e9;color:#ffffff;padding:12px 24px;border-radius:50px;text-decoration:none;font-weight:700;font-size:14px">
+          Abrir en admin
+        </a>
+      </div>
+      ${shellClose()}
+    `,
+  })
+
+  if (!result.ok) console.error('sendPhotographerSelectionNotice failed:', result.error)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 5. Selection confirmed — client-facing receipt
+// ═══════════════════════════════════════════════════════════════════════════
+
+export async function sendClientSelectionConfirmation(ctx: {
+  clientName: string
+  clientEmail: string
+  clientEmail2?: string | null
+  topic: string | null
+  selectedCount: number
+  includedPhotoCount: number
+  overageTier: number
+  overageAmountUsd: number | null
+}): Promise<void> {
+  const recipients = ctx.clientEmail2 ? [ctx.clientEmail, ctx.clientEmail2] : ctx.clientEmail
+  const topic = ctx.topic || ctx.clientName
+
+  const chargeLine =
+    ctx.overageTier > 0
+      ? `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 16px;margin-bottom:18px;text-align:center">
+           <p style="margin:0;color:#166534;font-size:14px">
+             Cargo adicional del ${ctx.overageTier}%${
+          ctx.overageAmountUsd != null ? ` — $${ctx.overageAmountUsd.toFixed(2)} USD` : ''
+        } procesado correctamente.
+           </p>
+         </div>`
+      : ''
+
+  const result = await sendMail({
+    from: FROM,
+    to: recipients,
+    subject: `✅ Selección confirmada — ${topic}`,
+    html: `
+      ${shellOpen('¡Selección confirmada!', `Gracias ${ctx.clientName} — recibimos tus favoritas de ${topic}.`)}
+      <p style="margin:0 0 14px;color:#334155;line-height:1.65;font-size:15px">
+        Elegiste <strong>${ctx.selectedCount}</strong> fotos. Ahora las editaremos y te avisaremos por email en cuanto
+        tu galería final esté lista para descargar.
+      </p>
+      ${chargeLine}
+      ${shellClose()}
+    `,
+  })
+
+  if (!result.ok) console.error('sendClientSelectionConfirmation failed:', result.error)
 }

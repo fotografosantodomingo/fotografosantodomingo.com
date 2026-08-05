@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { isAdminSession } from '@/lib/supabase/admin-auth'
-import { computeExpiresAt } from '@/lib/gallery/service'
-import { generateGalleryPassword, hashGalleryPassword } from '@/lib/gallery/crypto'
+import { computeExpiresAt, ensureGalleryPassword } from '@/lib/gallery/service'
 import { sendGalleryReady } from '@/lib/email/galleries'
 
 export const runtime = 'edge'
@@ -31,17 +30,11 @@ export async function POST(req: NextRequest, { params }: Params) {
   const readyAt = new Date()
   const expiresAt = computeExpiresAt(readyAt)
 
-  // Only generate a password the first time this gallery goes ready — a later
-  // re-ready (e.g. admin added more photos) must not invalidate a password
-  // already handed to the client. We can't recover the old plaintext (only
-  // its hash is stored), so the email just omits it on repeat sends.
-  const isFirstReady = !gallery.password_hash
-  let plainPassword: string | null = null
-  let passwordHash = gallery.password_hash
-  if (isFirstReady) {
-    plainPassword = generateGalleryPassword()
-    passwordHash = await hashGalleryPassword(plainPassword)
-  }
+  // Password may already exist if the client went through the selection
+  // phase first — only generate one here if this is genuinely the first
+  // time (selection was skipped). Repeat "ready" calls reuse the existing
+  // hash; we can't recover old plaintext, so the email adapts its wording.
+  const { passwordHash, plainPassword } = await ensureGalleryPassword(supabase, params.id, gallery.password_hash)
 
   // Also doubles as the thumbnail-strip source for the ready email below —
   // one query covers both the cover-photo fallback and the preview thumbnails.
@@ -72,7 +65,7 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  await sendGalleryReady(supabase, {
+  const emailSent = await sendGalleryReady(supabase, {
     galleryId: gallery.id,
     slug: gallery.slug,
     clientName: gallery.client_name,
@@ -85,5 +78,5 @@ export async function POST(req: NextRequest, { params }: Params) {
     photoCount: gallery.photo_count,
   })
 
-  return NextResponse.json({ ok: true, expires_at: expiresAt, password: plainPassword })
+  return NextResponse.json({ ok: true, expires_at: expiresAt, password: plainPassword, emailSent })
 }
