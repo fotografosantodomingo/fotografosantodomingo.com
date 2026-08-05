@@ -35,12 +35,9 @@ export async function POST(req: NextRequest, { params }: Params) {
   if (gallery.photo_count < 1) {
     return NextResponse.json({ error: 'Cannot open selection — no proof photos uploaded yet' }, { status: 409 })
   }
-  if (!gallery.included_photo_count) {
-    return NextResponse.json(
-      { error: 'Set "Free photos included" for this gallery before opening selection' },
-      { status: 409 }
-    )
-  }
+  // "Free photos included" is optional — leaving it unset means "everything
+  // is free, no overage ever," for clients where selection is purely a way
+  // to find out which photos to edit, not a billing gate.
 
   const { passwordHash, plainPassword } = await ensureGalleryPassword(supabase, params.id, gallery.password_hash)
 
@@ -62,7 +59,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     clientEmail: gallery.client_email,
     clientEmail2: gallery.client_email_2,
     topic: gallery.topic,
-    includedPhotoCount: gallery.included_photo_count,
+    includedPhotoCount: gallery.included_photo_count ?? 0,
     password: plainPassword,
   })
 

@@ -235,8 +235,12 @@ export async function sendGallerySelectionReady(
     html: `
       ${shellOpen('Elige tus favoritas', `Hola ${ctx.clientName}, ya puedes seleccionar tus fotos de ${topic}.`)}
       <p style="margin:0 0 12px;color:#334155;line-height:1.65;font-size:15px">
-        Desliza cada foto: a la derecha si te gusta, a la izquierda si no. Tu paquete incluye
-        <strong>${ctx.includedPhotoCount} fotos</strong> — si eliges más, te mostraremos el costo adicional antes de confirmar.
+        Desliza cada foto: a la derecha si te gusta, a la izquierda si no.
+        ${
+          ctx.includedPhotoCount > 0
+            ? `Tu paquete incluye <strong>${ctx.includedPhotoCount} fotos</strong> — si eliges más, te mostraremos el costo adicional antes de confirmar.`
+            : 'Elige todas las que quieras — no hay límite ni costo adicional.'
+        }
       </p>
 
       ${passwordBlock}
@@ -288,7 +292,11 @@ export async function sendPhotographerSelectionNotice(ctx: {
     html: `
       ${shellOpen('Cliente eligió sus fotos', `${ctx.clientName} — ${topic}`)}
       <p style="margin:0 0 10px;color:#334155;font-size:14px">
-        <strong>${ctx.selectedFilenames.length}</strong> de <strong>${ctx.includedPhotoCount}</strong> incluidas.
+        ${
+          ctx.includedPhotoCount > 0
+            ? `<strong>${ctx.selectedFilenames.length}</strong> de <strong>${ctx.includedPhotoCount}</strong> incluidas.`
+            : `<strong>${ctx.selectedFilenames.length}</strong> fotos seleccionadas.`
+        }
       </p>
       ${overageLine}
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:18px;max-height:320px;overflow-y:auto">

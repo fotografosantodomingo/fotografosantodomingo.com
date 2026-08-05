@@ -220,8 +220,14 @@ function WelcomeScreen({
       <p className="text-xs font-bold uppercase tracking-wide text-sky-400">Babula Shots</p>
       <h1 className="mt-3 text-2xl font-extrabold">Elige tus favoritas</h1>
       <p className="mt-3 max-w-xs text-sm text-white/70">
-        Tienes <strong>{photoCount}</strong> fotos para revisar, una por una. Tu paquete incluye{' '}
-        <strong>{includedPhotoCount}</strong>.
+        Tienes <strong>{photoCount}</strong> fotos para revisar, una por una.{' '}
+        {includedPhotoCount > 0 ? (
+          <>
+            Tu paquete incluye <strong>{includedPhotoCount}</strong>.
+          </>
+        ) : (
+          'Elige todas las que quieras — no hay límite.'
+        )}
       </p>
 
       <div className="mt-8 flex items-center gap-6 text-sm text-white/80">
@@ -274,15 +280,23 @@ function SelectionSummary({
 }) {
   const selected = photos.filter((p) => decisions.get(p.id))
   const selectedCount = selected.length
-  const overCount = Math.max(0, selectedCount - includedPhotoCount)
+  const overCount = includedPhotoCount > 0 ? Math.max(0, selectedCount - includedPhotoCount) : 0
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black text-white" style={{ minHeight: '100dvh' }}>
       <div className="mx-auto max-w-lg px-5 py-8">
         <h1 className="text-xl font-extrabold">Revisa tu selección</h1>
         <p className="mt-1 text-sm text-white/60">
-          Elegiste <strong>{selectedCount}</strong> de {includedPhotoCount} incluidas
-          {overCount > 0 && <> — {overCount} de más</>}.
+          {includedPhotoCount > 0 ? (
+            <>
+              Elegiste <strong>{selectedCount}</strong> de {includedPhotoCount} incluidas
+              {overCount > 0 && <> — {overCount} de más</>}.
+            </>
+          ) : (
+            <>
+              Elegiste <strong>{selectedCount}</strong> fotos.
+            </>
+          )}
         </p>
         {selected.length > 0 && <p className="mt-1 text-xs text-white/40">Toca una foto para quitarla.</p>}
 

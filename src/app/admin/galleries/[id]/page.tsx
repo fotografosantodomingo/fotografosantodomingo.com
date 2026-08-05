@@ -481,13 +481,13 @@ export default function AdminGalleryDetailPage() {
           {['draft', 'uploading'].includes(gallery.status) && (
             <button
               onClick={openSelection}
-              disabled={openingSelection || gallery.photo_count === 0 || !gallery.included_photo_count}
+              disabled={openingSelection || gallery.photo_count === 0}
               title={
-                !gallery.included_photo_count
-                  ? 'Set "Free photos included" first'
-                  : gallery.photo_count === 0
+                gallery.photo_count === 0
                   ? 'Upload proof photos first'
-                  : 'Client swipes through these proofs and picks favorites'
+                  : gallery.included_photo_count
+                  ? 'Client swipes through these proofs and picks favorites'
+                  : 'No "Free photos included" set — everything is free, no overage charge ever'
               }
               className="rounded-md border border-sky-500 px-4 py-1.5 text-sm font-semibold text-sky-600 hover:bg-sky-50 disabled:opacity-50 dark:text-sky-400 dark:hover:bg-sky-950/30"
             >

@@ -75,7 +75,7 @@ export default function AdminGalleriesPage() {
           client_email: clientEmail,
           client_email_2: clientEmail2 || undefined,
           topic,
-          included_photo_count: Number(includedPhotoCount),
+          included_photo_count: includedPhotoCount ? Number(includedPhotoCount) : undefined,
         }),
       })
       const data = await res.json()
@@ -211,18 +211,20 @@ export default function AdminGalleriesPage() {
                 </p>
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-600 dark:text-gray-300">Free photos included</label>
+                <label className="text-xs font-semibold text-slate-600 dark:text-gray-300">
+                  Free photos included <span className="font-normal text-slate-400 dark:text-gray-500">(optional)</span>
+                </label>
                 <input
-                  required
                   type="number"
                   min={1}
                   value={includedPhotoCount}
                   onChange={(e) => setIncludedPhotoCount(e.target.value)}
-                  placeholder="e.g. 15"
+                  placeholder="e.g. 15 — leave blank if everything is free"
                   className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-white/10 dark:bg-gray-950 dark:text-white"
                 />
                 <p className="mt-1 text-[11px] text-slate-400 dark:text-gray-500">
-                  Package limit — the basis for overage pricing if the client selects more.
+                  Basis for overage pricing if the client selects more. Leave blank for no limit — no
+                  charge ever, selection is just used to find out which photos to edit.
                 </p>
               </div>
               <div>
