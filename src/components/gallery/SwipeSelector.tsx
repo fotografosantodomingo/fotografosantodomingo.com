@@ -21,6 +21,9 @@ export default function SwipeSelector({
   submitting: boolean
   onSubmit: (selectedIds: string[]) => void
 }) {
+  // Skip the welcome screen when resuming a session that already has
+  // decisions — no need to re-explain the gesture to someone mid-review.
+  const [started, setStarted] = useState(initialSelected.size > 0)
   // Photos already marked selected (e.g. resumed session) are treated as
   // already-reviewed and skipped to the front of "done" — but still counted.
   const [index, setIndex] = useState(0)
@@ -109,6 +112,12 @@ export default function SwipeSelector({
     else setDragX(0)
   }
 
+  if (!started) {
+    return (
+      <WelcomeScreen photoCount={photos.length} includedPhotoCount={includedPhotoCount} onStart={() => setStarted(true)} />
+    )
+  }
+
   if (done) {
     return (
       <SelectionSummary
@@ -118,6 +127,7 @@ export default function SwipeSelector({
         includedPhotoCount={includedPhotoCount}
         submitting={submitting}
         onBack={() => setIndex(Math.max(0, photos.length - 1))}
+        onRemove={(photoId) => commit(photoId, false)}
         onSubmit={onSubmit}
       />
     )
@@ -193,6 +203,56 @@ export default function SwipeSelector({
   )
 }
 
+function WelcomeScreen({
+  photoCount,
+  includedPhotoCount,
+  onStart,
+}: {
+  photoCount: number
+  includedPhotoCount: number
+  onStart: () => void
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black px-6 text-center text-white"
+      style={{ height: '100dvh' }}
+    >
+      <p className="text-xs font-bold uppercase tracking-wide text-sky-400">Babula Shots</p>
+      <h1 className="mt-3 text-2xl font-extrabold">Elige tus favoritas</h1>
+      <p className="mt-3 max-w-xs text-sm text-white/70">
+        Tienes <strong>{photoCount}</strong> fotos para revisar, una por una. Tu paquete incluye{' '}
+        <strong>{includedPhotoCount}</strong>.
+      </p>
+
+      <div className="mt-8 flex items-center gap-6 text-sm text-white/80">
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-2xl text-red-400">
+            ✕
+          </span>
+          Deslizar izquierda = no
+        </div>
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-2xl text-emerald-400">
+            ❤
+          </span>
+          Deslizar derecha = sí
+        </div>
+      </div>
+
+      <p className="mt-6 max-w-xs text-xs text-white/40">
+        Al final podrás revisar y quitar cualquiera antes de confirmar. Tu progreso se guarda automáticamente.
+      </p>
+
+      <button
+        onClick={onStart}
+        className="mt-8 w-full max-w-xs rounded-full bg-sky-500 px-6 py-3.5 text-sm font-bold text-white"
+      >
+        Empezar
+      </button>
+    </div>
+  )
+}
+
 function SelectionSummary({
   slug,
   photos,
@@ -200,6 +260,7 @@ function SelectionSummary({
   includedPhotoCount,
   submitting,
   onBack,
+  onRemove,
   onSubmit,
 }: {
   slug: string
@@ -208,6 +269,7 @@ function SelectionSummary({
   includedPhotoCount: number
   submitting: boolean
   onBack: () => void
+  onRemove: (photoId: string) => void
   onSubmit: (selectedIds: string[]) => void
 }) {
   const selected = photos.filter((p) => decisions.get(p.id))
@@ -222,17 +284,29 @@ function SelectionSummary({
           Elegiste <strong>{selectedCount}</strong> de {includedPhotoCount} incluidas
           {overCount > 0 && <> — {overCount} de más</>}.
         </p>
+        {selected.length > 0 && <p className="mt-1 text-xs text-white/40">Toca una foto para quitarla.</p>}
 
         <div className="mt-5 grid grid-cols-3 gap-2">
           {selected.map((p) => (
-            <div key={p.id} className="aspect-square overflow-hidden rounded-lg bg-white/5">
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => onRemove(p.id)}
+              disabled={submitting}
+              className="group relative aspect-square overflow-hidden rounded-lg bg-white/5 disabled:opacity-60"
+            >
               <img
                 src={`/api/gallery/${slug}/photo/${p.id}/view`}
                 alt=""
                 className="h-full w-full object-cover"
                 loading="lazy"
               />
-            </div>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/50 group-hover:opacity-100">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-lg font-bold text-red-600">
+                  ✕
+                </span>
+              </div>
+            </button>
           ))}
           {selected.length === 0 && <p className="col-span-3 py-8 text-center text-sm text-white/40">Ninguna foto elegida aún.</p>}
         </div>

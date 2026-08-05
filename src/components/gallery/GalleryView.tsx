@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SwipeSelector from './SwipeSelector'
 
 type Photo = {
@@ -25,9 +25,6 @@ type PublicGallery = {
 
 type ViewState = 'loading' | 'locked' | 'ready' | 'expired' | 'not-found' | 'error'
 
-const ZIP_THRESHOLD_BYTES = 500 * 1024 * 1024 // 500MB — above this, batch download instead
-const BATCH_SIZE = 50
-
 function fmtBytes(n: number) {
   if (n < 1024 * 1024) return `${(n / 1024).toFixed(0)} KB`
   if (n < 1024 * 1024 * 1024) return `${(n / (1024 * 1024)).toFixed(1)} MB`
@@ -51,7 +48,8 @@ export default function GalleryView({ slug }: { slug: string }) {
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [loginError, setLoginError] = useState(false)
-  const [zipping, setZipping] = useState<{ done: number; total: number } | null>(null)
+  const [downloadProgress, setDownloadProgress] = useState<number | null>(null) // 0-100, null = not downloading
+  const [downloadError, setDownloadError] = useState<string | null>(null)
   const [selectionSubmitting, setSelectionSubmitting] = useState(false)
   const [selectionError, setSelectionError] = useState<string | null>(null)
   const [selectionConfirmed, setSelectionConfirmed] = useState(false)
@@ -123,38 +121,36 @@ export default function GalleryView({ slug }: { slug: string }) {
     }
   }
 
-  const totalMb = gallery ? gallery.total_bytes : 0
-  const needsBatching = totalMb > ZIP_THRESHOLD_BYTES
-  const batches = useMemo(() => {
-    if (!gallery || !needsBatching) return []
-    const out: Photo[][] = []
-    for (let i = 0; i < gallery.photos.length; i += BATCH_SIZE) out.push(gallery.photos.slice(i, i + BATCH_SIZE))
-    return out
-  }, [gallery, needsBatching])
-
-  async function downloadAsZip(photos: Photo[], downloadType: 'zip' | 'batch', zipName: string) {
-    setZipping({ done: 0, total: photos.length })
+  // ZIP is built server-side (streamed straight from R2, one photo at a
+  // time — never buffered whole in the Worker) so the response carries an
+  // accurate Content-Length no matter how many hundreds of photos are in
+  // it. We read the stream client-side just to track real download
+  // progress; the browser's own fetch/stream plumbing handles the rest.
+  async function downloadAll(zipName: string) {
+    setDownloadProgress(0)
+    setDownloadError(null)
     try {
-      await fetch(`/api/gallery/${slug}/log-download`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ download_type: downloadType }),
-      })
-
-      const JSZip = (await import('jszip')).default
-      const zip = new JSZip()
-
-      for (let i = 0; i < photos.length; i++) {
-        const p = photos[i]
-        const res = await fetch(`/api/gallery/${slug}/photo/${p.id}?silent=1`)
-        if (res.ok) {
-          const buf = await res.arrayBuffer()
-          zip.file(p.filename, buf)
-        }
-        setZipping({ done: i + 1, total: photos.length })
+      const res = await fetch(`/api/gallery/${slug}/download-all`)
+      if (!res.ok || !res.body) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error ?? 'No se pudo descargar la galería')
       }
 
-      const blob = await zip.generateAsync({ type: 'blob' })
+      const totalStr = res.headers.get('content-length')
+      const total = totalStr ? Number(totalStr) : 0
+      const reader = res.body.getReader()
+      const chunks: Uint8Array[] = []
+      let received = 0
+
+      for (;;) {
+        const { done, value } = await reader.read()
+        if (done) break
+        chunks.push(value)
+        received += value.length
+        setDownloadProgress(total > 0 ? Math.min(99, Math.round((received / total) * 100)) : null)
+      }
+
+      const blob = new Blob(chunks as BlobPart[], { type: 'application/zip' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
@@ -163,8 +159,11 @@ export default function GalleryView({ slug }: { slug: string }) {
       a.click()
       a.remove()
       URL.revokeObjectURL(url)
-    } finally {
-      setZipping(null)
+      setDownloadProgress(100)
+      setTimeout(() => setDownloadProgress(null), 1200)
+    } catch (err) {
+      setDownloadError(err instanceof Error ? err.message : String(err))
+      setDownloadProgress(null)
     }
   }
 
@@ -296,44 +295,26 @@ export default function GalleryView({ slug }: { slug: string }) {
             {expiresLabel && <> · Disponible hasta el {expiresLabel}</>}
           </p>
 
-          {!needsBatching ? (
-            <button
-              onClick={() => downloadAsZip(gallery.photos, 'zip', `${topic}.zip`)}
-              disabled={!!zipping}
-              className="mt-4 rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500 disabled:opacity-50"
-            >
-              {zipping ? `Preparando ZIP… ${zipping.done}/${zipping.total}` : 'Descargar todo (.zip)'}
-            </button>
-          ) : (
-            <div className="mt-4">
-              <p className="mb-2 text-xs text-slate-500 dark:text-gray-400">
-                Galería grande — descarga en partes:
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {batches.map((batch, i) => (
-                  <button
-                    key={i}
-                    onClick={() =>
-                      downloadAsZip(
-                        batch,
-                        'batch',
-                        `${topic} ${i * BATCH_SIZE + 1}-${i * BATCH_SIZE + batch.length}.zip`
-                      )
-                    }
-                    disabled={!!zipping}
-                    className="rounded-full border border-sky-600 px-4 py-2 text-xs font-bold text-sky-600 hover:bg-sky-50 disabled:opacity-50 dark:hover:bg-sky-950/30"
-                  >
-                    {i * BATCH_SIZE + 1}–{i * BATCH_SIZE + batch.length}
-                  </button>
-                ))}
-              </div>
-              {zipping && (
-                <p className="mt-2 text-xs text-slate-500 dark:text-gray-400">
-                  Preparando ZIP… {zipping.done}/{zipping.total}
-                </p>
-              )}
+          <button
+            onClick={() => downloadAll(`${topic}.zip`)}
+            disabled={downloadProgress !== null}
+            className="mt-4 w-full max-w-xs rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500 disabled:opacity-90 sm:w-auto"
+          >
+            {downloadProgress === null
+              ? 'Descargar todo (.zip)'
+              : downloadProgress >= 100
+              ? '¡Listo! ✓'
+              : `Descargando… ${downloadProgress}%`}
+          </button>
+          {downloadProgress !== null && downloadProgress < 100 && (
+            <div className="mt-2 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
+              <div
+                className="h-full rounded-full bg-sky-500 transition-[width] duration-200"
+                style={{ width: `${downloadProgress}%` }}
+              />
             </div>
           )}
+          {downloadError && <p className="mt-2 text-xs font-semibold text-red-500">{downloadError}</p>}
         </header>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">

@@ -49,6 +49,7 @@ export default function AdminGalleryDetailPage() {
   const [includedPhotoCount, setIncludedPhotoCount] = useState('')
   const [sessionPriceUsd, setSessionPriceUsd] = useState('')
   const [openingSelection, setOpeningSelection] = useState(false)
+  const [reopeningSelection, setReopeningSelection] = useState(false)
 
   const [uploadQueue, setUploadQueue] = useState<{ total: number; done: number; currentName: string } | null>(null)
   const [failedFiles, setFailedFiles] = useState<File[]>([])
@@ -327,6 +328,22 @@ export default function AdminGalleryDetailPage() {
     }
   }
 
+  async function reopenSelection() {
+    if (!confirm('Reopen selection so the client can change their picks?')) return
+    setReopeningSelection(true)
+    setError(null)
+    try {
+      const res = await fetch(`/api/admin/galleries/${id}/reopen-selection`, { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Failed to reopen selection')
+      await load()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
+    } finally {
+      setReopeningSelection(false)
+    }
+  }
+
   if (!gallery) {
     return <div className="text-slate-500 dark:text-gray-400">{error ?? 'Loading…'}</div>
   }
@@ -423,6 +440,15 @@ export default function AdminGalleryDetailPage() {
                 Selected filenames were emailed to info@fotografosantodomingo.com. Delete the unselected
                 proofs, upload final edits, then Mark ready as usual.
               </p>
+              {gallery.selection_payment_status !== 'paid' && (
+                <button
+                  onClick={reopenSelection}
+                  disabled={reopeningSelection}
+                  className="mt-2 rounded-md border border-slate-300 px-2.5 py-1 text-xs font-semibold text-slate-600 hover:border-slate-400 disabled:opacity-50 dark:border-white/10 dark:text-gray-300"
+                >
+                  {reopeningSelection ? 'Reopening…' : "Client wants to change their picks — reopen selection"}
+                </button>
+              )}
             </div>
           )}
         </div>
