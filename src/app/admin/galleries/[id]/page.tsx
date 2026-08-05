@@ -43,6 +43,7 @@ export default function AdminGalleryDetailPage() {
   const [topic, setTopic] = useState('')
 
   const [uploadQueue, setUploadQueue] = useState<{ total: number; done: number; currentName: string } | null>(null)
+  const [failedFiles, setFailedFiles] = useState<File[]>([])
   const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -75,6 +76,8 @@ export default function AdminGalleryDetailPage() {
     if (list.length === 0) return
     setUploadQueue({ total: list.length, done: 0, currentName: list[0].name })
 
+    const stillFailed: File[] = []
+
     for (let i = 0; i < list.length; i++) {
       const file = list[i]
       setUploadQueue({ total: list.length, done: i, currentName: file.name })
@@ -95,11 +98,25 @@ export default function AdminGalleryDetailPage() {
         await uploadPreviewFor(photo.id, file)
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err))
+        stillFailed.push(file)
       }
+    }
+
+    // Merge with any failures still pending from a previous batch — a fresh
+    // upload attempt for a different set of files shouldn't hide the fact
+    // that an earlier file never made it in.
+    if (stillFailed.length > 0) {
+      setFailedFiles((prev) => [...prev, ...stillFailed])
     }
 
     setUploadQueue(null)
     await load()
+  }
+
+  async function retryFailed() {
+    const toRetry = failedFiles
+    setFailedFiles([])
+    await uploadFiles(toRetry)
   }
 
   // Generates a small resized JPEG client-side and uploads it as the grid
@@ -314,10 +331,23 @@ export default function AdminGalleryDetailPage() {
           {gallery.status !== 'deleted' && gallery.status !== 'expired' && (
             <button
               onClick={markReady}
-              disabled={marking || gallery.photo_count === 0}
+              disabled={marking || gallery.photo_count === 0 || !!uploadQueue || failedFiles.length > 0}
+              title={
+                uploadQueue
+                  ? 'Wait for the upload in progress to finish'
+                  : failedFiles.length > 0
+                  ? 'Retry or dismiss the failed upload(s) below first'
+                  : undefined
+              }
               className="rounded-md bg-emerald-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-emerald-500 disabled:opacity-50"
             >
-              {marking ? 'Marking ready…' : gallery.status === 'ready' ? 'Re-confirm ready' : 'Mark ready'}
+              {marking
+                ? 'Marking ready…'
+                : uploadQueue
+                ? 'Uploading…'
+                : gallery.status === 'ready'
+                ? 'Re-confirm ready'
+                : 'Mark ready'}
             </button>
           )}
           <button
@@ -333,6 +363,37 @@ export default function AdminGalleryDetailPage() {
       {error && (
         <div className="rounded-lg border border-red-300 bg-red-50 p-4 text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
           {error}
+        </div>
+      )}
+
+      {failedFiles.length > 0 && (
+        <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+          <p className="text-sm font-semibold">
+            {failedFiles.length} file{failedFiles.length > 1 ? 's' : ''} didn&apos;t upload — &quot;Mark ready&quot;
+            is blocked until this is resolved.
+          </p>
+          <ul className="mt-1.5 list-disc pl-5 text-xs">
+            {failedFiles.map((f, i) => (
+              <li key={i}>{f.name}</li>
+            ))}
+          </ul>
+          <div className="mt-3 flex gap-2">
+            <button
+              onClick={retryFailed}
+              disabled={!!uploadQueue}
+              className="rounded-md bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-500 disabled:opacity-50"
+            >
+              Retry {failedFiles.length > 1 ? 'all' : ''}
+            </button>
+            <button
+              onClick={() => setFailedFiles([])}
+              disabled={!!uploadQueue}
+              className="rounded-md border border-amber-400 px-3 py-1.5 text-xs font-semibold text-amber-800 hover:bg-amber-100 disabled:opacity-50 dark:border-amber-700 dark:text-amber-200 dark:hover:bg-amber-900/40"
+              title="Only dismiss if you're intentionally skipping this file"
+            >
+              Dismiss
+            </button>
+          </div>
         </div>
       )}
 
