@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { generateGallerySlug } from './slug'
 import { generateGalleryPassword, hashGalleryPassword } from './crypto'
+import { sendPhotographerSelectionNotice, sendClientSelectionConfirmation } from '@/lib/email/galleries'
 
 export const GALLERY_EXPIRY_DAYS = 30
 export const GALLERY_REMINDER_DAYS_BEFORE = 2
@@ -69,4 +70,76 @@ export function computeExpiresAt(from: Date = new Date()): string {
   const d = new Date(from)
   d.setDate(d.getDate() + GALLERY_EXPIRY_DAYS)
   return d.toISOString()
+}
+
+// Shared by the no-overage submit path (immediate) and the Stripe webhook
+// (after overage payment clears) — both end in the same state, so the
+// status flip + both notification emails live in one place. Idempotent:
+// safe to call twice (e.g. a retried webhook) since it checks status first.
+export async function finalizeSelection(
+  supabase: SupabaseClient,
+  galleryId: string
+): Promise<{ ok: true; photographerNotified: boolean } | { ok: false; error: string }> {
+  const { data: gallery } = await supabase
+    .from('galleries')
+    .select(
+      'id, slug, client_name, client_email, client_email_2, topic, status, included_photo_count, selection_overage_tier, selection_overage_amount_usd'
+    )
+    .eq('id', galleryId)
+    .single()
+
+  if (!gallery) return { ok: false, error: 'Gallery not found' }
+  if (gallery.status === 'selected') return { ok: true, photographerNotified: true } // already finalized — idempotent no-op
+
+  const { data: selectedPhotos } = await supabase
+    .from('gallery_photos')
+    .select('filename')
+    .eq('gallery_id', galleryId)
+    .eq('selected', true)
+
+  const filenames = (selectedPhotos ?? []).map((p) => p.filename)
+
+  const { error } = await supabase
+    .from('galleries')
+    .update({
+      status: 'selected',
+      selection_submitted_at: new Date().toISOString(),
+      selection_payment_status: gallery.selection_overage_tier > 0 ? 'paid' : 'not_required',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', galleryId)
+
+  if (error) return { ok: false, error: error.message }
+
+  // The photographer notice is the critical one — it's the only record of
+  // which filenames to edit until the admin UI can show selections directly
+  // (pending migration). Its result is surfaced to the caller so a failure
+  // isn't silently lost the same way the "ready" email failure was.
+  const [photographerNotified] = await Promise.all([
+    sendPhotographerSelectionNotice({
+      slug: gallery.slug,
+      clientName: gallery.client_name,
+      topic: gallery.topic,
+      selectedFilenames: filenames,
+      includedPhotoCount: gallery.included_photo_count ?? 0,
+      overageTier: gallery.selection_overage_tier,
+      overageAmountUsd: gallery.selection_overage_amount_usd,
+    }),
+    sendClientSelectionConfirmation({
+      clientName: gallery.client_name,
+      clientEmail: gallery.client_email,
+      clientEmail2: gallery.client_email_2,
+      topic: gallery.topic,
+      selectedCount: filenames.length,
+      includedPhotoCount: gallery.included_photo_count ?? 0,
+      overageTier: gallery.selection_overage_tier,
+      overageAmountUsd: gallery.selection_overage_amount_usd,
+    }),
+  ])
+
+  if (!photographerNotified) {
+    console.error(`finalizeSelection: photographer notice failed for gallery ${galleryId} — filenames:`, filenames)
+  }
+
+  return { ok: true, photographerNotified }
 }

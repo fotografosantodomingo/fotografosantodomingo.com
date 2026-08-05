@@ -139,6 +139,10 @@ export async function POST(request: NextRequest) {
             clientEmail: updated.customer_email,
             topic: snap?.name_es || snap?.name_en || null,
             includedPhotoCount: snap?.photo_count ?? null,
+            // Currently a no-op — the DB write is stubbed out in createGallery
+            // pending migration 20260805043. Wired through now so it "just
+            // works" once that's re-enabled, no need to revisit this call site.
+            sessionPriceUsd: Number(updated.stripe_amount_usd) || null,
             bookingId: updated.id,
           }).catch((err) => console.error('createGallery failed for booking', updated.id, err)),
         ])

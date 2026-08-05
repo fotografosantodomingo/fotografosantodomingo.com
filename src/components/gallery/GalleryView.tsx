@@ -1,8 +1,16 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import SwipeSelector from './SwipeSelector'
 
-type Photo = { id: string; filename: string; width: number | null; height: number | null; file_size: number }
+type Photo = {
+  id: string
+  filename: string
+  width: number | null
+  height: number | null
+  file_size: number
+  selected: boolean
+}
 type PublicGallery = {
   slug: string
   client_name: string
@@ -11,6 +19,7 @@ type PublicGallery = {
   photo_count: number
   total_bytes: number
   expires_at: string | null
+  included_photo_count: number | null
   photos: Photo[]
 }
 
@@ -43,6 +52,9 @@ export default function GalleryView({ slug }: { slug: string }) {
   const [submitting, setSubmitting] = useState(false)
   const [loginError, setLoginError] = useState(false)
   const [zipping, setZipping] = useState<{ done: number; total: number } | null>(null)
+  const [selectionSubmitting, setSelectionSubmitting] = useState(false)
+  const [selectionError, setSelectionError] = useState<string | null>(null)
+  const [selectionConfirmed, setSelectionConfirmed] = useState(false)
 
   async function loadGallery() {
     const res = await fetch(`/api/gallery/${slug}`)
@@ -71,6 +83,25 @@ export default function GalleryView({ slug }: { slug: string }) {
     loadGallery()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
+
+  async function handleSelectionSubmit() {
+    setSelectionSubmitting(true)
+    setSelectionError(null)
+    try {
+      const res = await fetch(`/api/gallery/${slug}/submit-selection`, { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'No se pudo enviar tu selección')
+      if (data.requiresPayment && data.checkoutUrl) {
+        window.location.href = data.checkoutUrl
+        return
+      }
+      setSelectionConfirmed(true)
+    } catch (err) {
+      setSelectionError(err instanceof Error ? err.message : String(err))
+    } finally {
+      setSelectionSubmitting(false)
+    }
+  }
 
   async function submitPassword(e: React.FormEvent) {
     e.preventDefault()
@@ -200,6 +231,54 @@ export default function GalleryView({ slug }: { slug: string }) {
   }
 
   if (!gallery) return null
+
+  if (gallery.status === 'selecting') {
+    if (selectionConfirmed) {
+      return (
+        <CenteredMessage>
+          ¡Gracias! Recibimos tu selección.
+          <br />
+          <span className="mt-2 block text-sm text-slate-500">
+            Te avisaremos por email en cuanto tu galería final esté lista para descargar.
+          </span>
+        </CenteredMessage>
+      )
+    }
+    return (
+      <>
+        {selectionError && (
+          <div className="fixed inset-x-0 top-0 z-[60] bg-red-600 px-4 py-3 text-center text-sm font-semibold text-white">
+            {selectionError}
+          </div>
+        )}
+        <SwipeSelector
+          slug={slug}
+          photos={gallery.photos}
+          includedPhotoCount={gallery.included_photo_count ?? 0}
+          initialSelected={new Set(gallery.photos.filter((p) => p.selected).map((p) => p.id))}
+          submitting={selectionSubmitting}
+          onSubmit={handleSelectionSubmit}
+        />
+        {selectionSubmitting && (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 text-white">
+            Enviando tu selección…
+          </div>
+        )}
+      </>
+    )
+  }
+
+  if (gallery.status === 'selected') {
+    return (
+      <CenteredMessage>
+        ¡Ya tenemos tu selección!
+        <br />
+        <span className="mt-2 block text-sm text-slate-500">
+          Estamos editando tus fotos — te avisaremos por email en cuanto tu galería esté lista.
+        </span>
+      </CenteredMessage>
+    )
+  }
 
   const expiresLabel = fmtExpiresDate(gallery.expires_at)
   const topic = sanitizeFilename(gallery.topic || gallery.client_name)

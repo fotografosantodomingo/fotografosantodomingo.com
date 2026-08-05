@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
     .from('galleries')
     .select(
       'id, slug, client_name, client_email, topic, included_photo_count, status, photo_count, total_bytes, created_at, ready_at, expires_at, booking_id'
+      // TODO: add session_price_usd once migration 20260805043 is applied.
     )
     .order('created_at', { ascending: false })
 

@@ -267,7 +267,7 @@ export async function sendPhotographerSelectionNotice(ctx: {
   includedPhotoCount: number
   overageTier: number
   overageAmountUsd: number | null
-}): Promise<void> {
+}): Promise<boolean> {
   const topic = ctx.topic || ctx.clientName
   const adminUrl = `${BASE_URL}/admin/galleries`
   const overCount = Math.max(0, ctx.selectedFilenames.length - ctx.includedPhotoCount)
@@ -308,6 +308,7 @@ export async function sendPhotographerSelectionNotice(ctx: {
   })
 
   if (!result.ok) console.error('sendPhotographerSelectionNotice failed:', result.error)
+  return result.ok
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -323,7 +324,7 @@ export async function sendClientSelectionConfirmation(ctx: {
   includedPhotoCount: number
   overageTier: number
   overageAmountUsd: number | null
-}): Promise<void> {
+}): Promise<boolean> {
   const recipients = ctx.clientEmail2 ? [ctx.clientEmail, ctx.clientEmail2] : ctx.clientEmail
   const topic = ctx.topic || ctx.clientName
 
@@ -354,4 +355,5 @@ export async function sendClientSelectionConfirmation(ctx: {
   })
 
   if (!result.ok) console.error('sendClientSelectionConfirmation failed:', result.error)
+  return result.ok
 }
