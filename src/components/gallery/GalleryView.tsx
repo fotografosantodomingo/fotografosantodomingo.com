@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import SwipeSelector from './SwipeSelector'
+import PhotoFavoriteViewer from './PhotoFavoriteViewer'
 
 type Photo = {
   id: string
@@ -53,6 +54,7 @@ export default function GalleryView({ slug }: { slug: string }) {
   const [selectionSubmitting, setSelectionSubmitting] = useState(false)
   const [selectionError, setSelectionError] = useState<string | null>(null)
   const [selectionConfirmed, setSelectionConfirmed] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
   async function loadGallery() {
     const res = await fetch(`/api/gallery/${slug}`)
@@ -318,10 +320,14 @@ export default function GalleryView({ slug }: { slug: string }) {
         </header>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-          {gallery.photos.map((p) => (
+          {gallery.photos.map((p, i) => (
             <div
               key={p.id}
-              className="group relative aspect-square overflow-hidden rounded-lg border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/5"
+              role="button"
+              tabIndex={0}
+              onClick={() => setLightboxIndex(i)}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setLightboxIndex(i)}
+              className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/5"
             >
               <img
                 src={`/api/gallery/${slug}/photo/${p.id}/view`}
@@ -331,8 +337,14 @@ export default function GalleryView({ slug }: { slug: string }) {
                 decoding="async"
                 onLoad={(e) => e.currentTarget.classList.add('loaded')}
               />
+              {p.selected && (
+                <span className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-sm text-emerald-400">
+                  ❤
+                </span>
+              )}
               <a
                 href={`/api/gallery/${slug}/photo/${p.id}`}
+                onClick={(e) => e.stopPropagation()}
                 className="absolute inset-x-0 bottom-0 bg-black/60 py-1.5 text-center text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100"
               >
                 Descargar
@@ -341,6 +353,18 @@ export default function GalleryView({ slug }: { slug: string }) {
           ))}
         </div>
       </div>
+
+      {lightboxIndex !== null && (
+        <PhotoFavoriteViewer
+          slug={slug}
+          photos={gallery.photos}
+          startIndex={lightboxIndex}
+          onClose={() => {
+            setLightboxIndex(null)
+            loadGallery() // pick up any likes made inside the viewer, for the grid's heart badges
+          }}
+        />
+      )}
     </div>
   )
 }
