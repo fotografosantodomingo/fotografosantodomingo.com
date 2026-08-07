@@ -32,12 +32,6 @@ function fmtBytes(n: number) {
   return `${(n / (1024 * 1024 * 1024)).toFixed(2)} GB`
 }
 
-// Strip characters that break on Windows/some filesystems — spaces and
-// accents are fine, "/\:*?"<>|" aren't.
-function sanitizeFilename(name: string) {
-  return name.replace(/[/\\:*?"<>|]/g, '').trim() || 'galeria'
-}
-
 function fmtExpiresDate(iso: string | null) {
   if (!iso) return null
   return new Date(iso).toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -49,8 +43,7 @@ export default function GalleryView({ slug }: { slug: string }) {
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [loginError, setLoginError] = useState(false)
-  const [downloadProgress, setDownloadProgress] = useState<number | null>(null) // 0-100, null = not downloading
-  const [downloadError, setDownloadError] = useState<string | null>(null)
+  const [downloadStarted, setDownloadStarted] = useState(false)
   const [selectionSubmitting, setSelectionSubmitting] = useState(false)
   const [selectionError, setSelectionError] = useState<string | null>(null)
   const [selectionConfirmed, setSelectionConfirmed] = useState(false)
@@ -123,50 +116,19 @@ export default function GalleryView({ slug }: { slug: string }) {
     }
   }
 
-  // ZIP is built server-side (streamed straight from R2, one photo at a
-  // time — never buffered whole in the Worker) so the response carries an
-  // accurate Content-Length no matter how many hundreds of photos are in
-  // it. We read the stream client-side just to track real download
-  // progress; the browser's own fetch/stream plumbing handles the rest.
-  async function downloadAll(zipName: string) {
-    setDownloadProgress(0)
-    setDownloadError(null)
-    try {
-      const res = await fetch(`/api/gallery/${slug}/download-all`)
-      if (!res.ok || !res.body) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error ?? 'No se pudo descargar la galería')
-      }
-
-      const totalStr = res.headers.get('content-length')
-      const total = totalStr ? Number(totalStr) : 0
-      const reader = res.body.getReader()
-      const chunks: Uint8Array[] = []
-      let received = 0
-
-      for (;;) {
-        const { done, value } = await reader.read()
-        if (done) break
-        chunks.push(value)
-        received += value.length
-        setDownloadProgress(total > 0 ? Math.min(99, Math.round((received / total) * 100)) : null)
-      }
-
-      const blob = new Blob(chunks as BlobPart[], { type: 'application/zip' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = zipName
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      URL.revokeObjectURL(url)
-      setDownloadProgress(100)
-      setTimeout(() => setDownloadProgress(null), 1200)
-    } catch (err) {
-      setDownloadError(err instanceof Error ? err.message : String(err))
-      setDownloadProgress(null)
-    }
+  // The ZIP is streamed server-side straight from R2 (see download-all's own
+  // comment) — but the download itself must be a real browser navigation,
+  // not a fetch()-and-buffer-into-a-Blob. That JS approach (previously used
+  // here, to drive a custom percentage bar) held the entire archive in page
+  // memory before it could be saved, which is exactly what was crashing
+  // mobile browsers on large galleries. A plain link lets the browser write
+  // the incoming stream straight to disk — no memory ceiling, no custom
+  // code — and shows progress in its own native download UI, which is what
+  // every real delivery platform (WeTransfer, Pixieset, etc.) actually does.
+  function downloadAll() {
+    setDownloadStarted(true)
+    window.location.href = `/api/gallery/${slug}/download-all`
+    setTimeout(() => setDownloadStarted(false), 4000)
   }
 
   if (state === 'loading') {
@@ -282,7 +244,6 @@ export default function GalleryView({ slug }: { slug: string }) {
   }
 
   const expiresLabel = fmtExpiresDate(gallery.expires_at)
-  const topic = sanitizeFilename(gallery.topic || gallery.client_name)
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20 dark:bg-gray-950">
@@ -298,25 +259,16 @@ export default function GalleryView({ slug }: { slug: string }) {
           </p>
 
           <button
-            onClick={() => downloadAll(`${topic}.zip`)}
-            disabled={downloadProgress !== null}
-            className="mt-4 w-full max-w-xs rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500 disabled:opacity-90 sm:w-auto"
+            onClick={downloadAll}
+            className="mt-4 w-full max-w-xs rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-sky-500 sm:w-auto"
           >
-            {downloadProgress === null
-              ? 'Descargar todo (.zip)'
-              : downloadProgress >= 100
-              ? '¡Listo! ✓'
-              : `Descargando… ${downloadProgress}%`}
+            Descargar todo (.zip)
           </button>
-          {downloadProgress !== null && downloadProgress < 100 && (
-            <div className="mt-2 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
-              <div
-                className="h-full rounded-full bg-sky-500 transition-[width] duration-200"
-                style={{ width: `${downloadProgress}%` }}
-              />
-            </div>
+          {downloadStarted && (
+            <p className="mt-2 text-xs font-semibold text-slate-500 dark:text-gray-400">
+              Descarga iniciada — revisa las descargas de tu navegador.
+            </p>
           )}
-          {downloadError && <p className="mt-2 text-xs font-semibold text-red-500">{downloadError}</p>}
         </header>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
