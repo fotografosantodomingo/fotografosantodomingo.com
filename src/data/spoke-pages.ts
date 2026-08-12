@@ -632,6 +632,123 @@ export const SPOKE_PAGES: SpokePage[] = [
     waMessageEs: 'Hola! Quiero planear una sesión de fotografía de propuesta secreta en Punta Cana. ¿Podemos coordinar en privado?',
   },
 
+  {
+    id: 'weddings-proposal-photographer-zona-colonial-santo-domingo',
+    enSlug: 'weddings/proposal-photographer-zona-colonial-santo-domingo',
+    esSlug: 'bodas/fotografo-propuesta-matrimonio-zona-colonial-santo-domingo',
+    hubSlug: 'wedding-photography',
+    status: 'published',
+    tier: 1,
+    geo: { latitude: 18.4731, longitude: -69.8837 },
+    geoCity: 'Zona Colonial',
+    geoRegion: 'Santo Domingo',
+
+    titleEn: 'Proposal Photographer Zona Colonial Santo Domingo',
+    titleEs: 'Fotógrafo de Propuesta Zona Colonial Santo Domingo',
+    descriptionEn: "Surprise proposal photography in Santo Domingo's Zona Colonial. We help plan the walk, the spot, and the reveal. Book your Zona Colonial proposal today.",
+    descriptionEs: 'Fotografía de propuesta sorpresa en la Zona Colonial de Santo Domingo. Te ayudamos a planear el recorrido, el lugar y la revelación. Reserva hoy.',
+    keywordsEn: 'proposal photographer zona colonial santo domingo, surprise proposal photography colonial city, engagement photographer historic santo domingo, marriage proposal photos zona colonial, proposal planner photographer santo domingo',
+    keywordsEs: 'fotografo propuesta zona colonial santo domingo, fotografia propuesta sorpresa ciudad colonial, fotografo compromiso zona colonial, fotos propuesta matrimonio zona colonial, organizador propuesta sorpresa santo domingo',
+
+    h1En: 'Surprise Proposal Photographer — Zona Colonial, Santo Domingo',
+    h1Es: 'Fotógrafo de Propuesta Sorpresa — Zona Colonial, Santo Domingo',
+    hookEn: "This isn't hidden-camera mode — we help you plan the whole surprise. The walk, the archway, the exact spot to kneel, and the cover story that keeps her guessing. Five centuries of colonial backdrop, one unforgettable yes.",
+    hookEs: 'Esto no es modo oculto — te ayudamos a planear toda la sorpresa. El recorrido, el arco, el lugar exacto para arrodillarte y la excusa perfecta para que ella no sospeche. Cinco siglos de fondo colonial, un sí inolvidable.',
+
+    heroImagePublicId: 'v1786566174/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_4_cdwhj4',
+    heroImageAltEn: 'Surprise proposal photographer Zona Colonial Santo Domingo — man kneeling in historic plaza — Babula Shots',
+    heroImageAltEs: 'Fotógrafo de propuesta sorpresa Zona Colonial Santo Domingo — hombre arrodillado en plaza histórica — Babula Shots',
+
+    expectCards: [
+      {
+        icon: '🗺️',
+        titleEn: 'We Help You Plan It',
+        titleEs: 'Te Ayudamos a Planificarla',
+        bodyEn: "We're not just a camera behind you — we scout the route, pick the plaza or archway, and help you time it so the light and the crowd both work in your favor.",
+        bodyEs: 'No solo llevamos la cámara — reconocemos el recorrido, elegimos la plaza o el arco y te ayudamos a calcular el momento para que la luz y la gente jueguen a tu favor.',
+      },
+      {
+        icon: '🎭',
+        titleEn: 'A Believable Cover Story',
+        titleEs: 'Una Excusa Creíble',
+        bodyEn: "We pose it as a normal couple's photo session, so she never suspects a thing until you're on one knee.",
+        bodyEs: 'Lo planteamos como una sesión de fotos normal de pareja, para que ella no sospeche nada hasta que estés de rodillas.',
+      },
+      {
+        icon: '🏛️',
+        titleEn: 'Five Centuries of Backdrop',
+        titleEs: 'Cinco Siglos de Escenario',
+        bodyEn: 'Cobblestone streets, fortress walls, colonial plazas and balconies — the oldest city in the Americas gives every frame a cinematic weight no studio can fake.',
+        bodyEs: 'Calles adoquinadas, murallas de fortaleza, plazas y balcones coloniales — la ciudad más antigua de América le da a cada foto un peso cinematográfico que ningún estudio puede imitar.',
+      },
+    ],
+
+    gallery: [
+      { publicId: 'v1786566174/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_4_cdwhj4', altEn: 'Marriage proposal in progress at a historic plaza, Zona Colonial Santo Domingo — Babula Shots', altEs: 'Propuesta de matrimonio en una plaza histórica, Zona Colonial Santo Domingo — Babula Shots' },
+      { publicId: 'v1786566174/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_3_zo2nyj', altEn: 'Man on one knee proposing beside a colonial fortress wall, Zona Colonial — Babula Shots', altEs: 'Hombre de rodillas proponiendo junto a una muralla colonial, Zona Colonial — Babula Shots' },
+      { publicId: 'v1786566174/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_5_jxymhz', altEn: 'Close-up of the ring box moment during a Zona Colonial marriage proposal — Babula Shots', altEs: 'Primer plano del anillo durante una propuesta de matrimonio en la Zona Colonial — Babula Shots' },
+      { publicId: 'v1786566225/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_7_kzqtie', altEn: 'Bride-to-be laughing and showing her new ring in the Zona Colonial — Babula Shots', altEs: 'Futura novia riendo y mostrando su nuevo anillo en la Zona Colonial — Babula Shots' },
+      { publicId: 'v1786566255/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_11_flashr', altEn: 'Couple embracing on a colonial balcony overlooking the Zona Colonial — Babula Shots', altEs: 'Pareja abrazada en un balcón colonial con vista a la Zona Colonial — Babula Shots' },
+      { publicId: 'v1786566255/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_9_j1nkyh', altEn: 'Couple dancing under a stone archway in the Zona Colonial — Babula Shots', altEs: 'Pareja bailando bajo un arco de piedra en la Zona Colonial — Babula Shots' },
+      { publicId: 'v1786566173/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_2_sifb58', altEn: 'Couple walking hand in hand through the streets of the Zona Colonial — Babula Shots', altEs: 'Pareja caminando de la mano por las calles de la Zona Colonial — Babula Shots' },
+      { publicId: 'v1786566254/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_10_itjvis', altEn: 'Couple walking up historic stone steps in the Zona Colonial — Babula Shots', altEs: 'Pareja subiendo escalones históricos de piedra en la Zona Colonial — Babula Shots' },
+    ],
+
+    priceFromUsd: '270',
+    pricingDescEn: 'Full-service surprise proposal photography in the Zona Colonial — package starts at $270 USD + 18% ITBIS. We help plan the location, the walk, and the exact spot for the reveal, then capture it candidly, as if we were just there for a regular photo session. Preview gallery within 24 hours.',
+    pricingDescEs: 'Fotografía de propuesta sorpresa integral en la Zona Colonial — el paquete comienza en $270 USD + 18% ITBIS. Te ayudamos a planear el lugar, el recorrido y el punto exacto para la revelación, y lo capturamos de forma espontánea, como si fuera una sesión de fotos normal. Galería de vista previa en 24 horas.',
+
+    whyUs: [
+      { icon: '🗺️', titleEn: 'We Plan the Whole Route', titleEs: 'Planificamos Todo el Recorrido', bodyEn: 'We scout the Zona Colonial in advance and map out a walking route that ends exactly where the light and backdrop are best for the moment.', bodyEs: 'Reconocemos la Zona Colonial con anticipación y trazamos una ruta que termina exactamente donde la luz y el fondo son mejores para el momento.' },
+      { icon: '🎭', titleEn: 'The Cover Story Works', titleEs: 'La Excusa Funciona', bodyEn: 'We show up as if we are shooting a normal couple session. No hiding behind a telephoto lens — we blend in as your photographer for the day.', bodyEs: 'Llegamos como si fuéramos a hacer una sesión de pareja normal. Sin escondernos con teleobjetivo — nos integramos como tu fotógrafo del día.' },
+      { icon: '🏛️', titleEn: 'We Know Every Corner', titleEs: 'Conocemos Cada Rincón', bodyEn: 'Alcázar de Colón, Fortaleza Ozama, Plaza España, Calle Las Damas — we have photographed proposals across the historic district and know exactly which spot fits your story.', bodyEs: 'Alcázar de Colón, Fortaleza Ozama, Plaza España, Calle Las Damas — hemos fotografiado propuestas en toda la zona histórica y sabemos exactamente qué lugar se ajusta a tu historia.' },
+      { icon: '⭐', titleEn: '4.9 Stars on Google', titleEs: '4.9 Estrellas en Google', bodyEn: '98+ Google reviews from real couples who celebrated in the Dominican Republic. Consistent, honest feedback from clients in your exact situation.', bodyEs: '+98 reseñas de Google de parejas reales que celebraron en República Dominicana. Comentarios consistentes y honestos de clientes en tu misma situación.' },
+    ],
+
+    faq: [
+      {
+        questionEn: 'Is this the same as the hidden ninja mode telephoto service?',
+        questionEs: '¿Es lo mismo que el servicio oculto en modo ninja con teleobjetivo?',
+        answerEn: 'No — ninja mode is for beach proposals where we shoot from 50 to 80 meters away, completely hidden. In the Zona Colonial we work up close, blending in as your regular photographer for the day. She sees us — she just never knows why we are really there.',
+        answerEs: 'No — el modo ninja es para propuestas en playa donde disparamos desde 50 a 80 metros, completamente ocultos. En la Zona Colonial trabajamos de cerca, integrándonos como tu fotógrafo habitual del día. Ella nos ve — solo que nunca sabe por qué estamos ahí realmente.',
+      },
+      {
+        questionEn: 'What is the best spot in the Zona Colonial to propose?',
+        questionEs: '¿Cuál es el mejor lugar de la Zona Colonial para proponer matrimonio?',
+        answerEn: 'Our favorites are the courtyard and plaza in front of the Alcázar de Colón, the archways at the Fortaleza Ozama, the balconies along Calle Las Damas, and the quiet stone stairways near the Ozama River. We choose based on your timeline and the golden-hour window.',
+        answerEs: 'Nuestros favoritos son el patio y la plaza frente al Alcázar de Colón, los arcos de la Fortaleza Ozama, los balcones de la Calle Las Damas y las escaleras de piedra tranquilas cerca del río Ozama. Elegimos según tu horario y la ventana de hora dorada.',
+      },
+      {
+        questionEn: 'Do we need a permit to propose at the Alcázar de Colón or the Fortaleza?',
+        questionEs: '¿Necesitamos permiso para proponer en el Alcázar de Colón o la Fortaleza?',
+        answerEn: 'For a quick, informal proposal moment, generally no. If you want a longer session or a staged setup with decor, we coordinate the Ministry of Culture permit for you as part of the booking.',
+        answerEs: 'Para un momento de propuesta rápido e informal, generalmente no. Si quieres una sesión más larga o un montaje con decoración, coordinamos el permiso del Ministerio de Cultura como parte de tu reserva.',
+      },
+      {
+        questionEn: 'How do you keep it a surprise while we are being photographed?',
+        questionEs: '¿Cómo mantienen la sorpresa mientras nos están fotografiando?',
+        answerEn: 'We frame the whole session as a normal couple photoshoot — walking, portraits, a few candid moments. Most partners have no idea a proposal is coming even while posing for us, right up until you get down on one knee.',
+        answerEs: 'Presentamos toda la sesión como una sesión de pareja normal — caminando, retratos, algunos momentos espontáneos. La mayoría de las parejas no tiene idea de que viene una propuesta, incluso mientras posan para nosotros, hasta que te arrodillas.',
+      },
+      {
+        questionEn: 'When do we receive the proposal photos?',
+        questionEs: '¿Cuándo recibimos las fotos de la propuesta?',
+        answerEn: 'You get a preview gallery the same day or early the next morning. The full edited gallery follows within 48 hours, delivered through a private online link.',
+        answerEs: 'Recibes una galería de vista previa el mismo día o temprano a la mañana siguiente. La galería completa editada llega dentro de 48 horas, entregada a través de un enlace privado en línea.',
+      },
+    ],
+
+    relatedSpokeIds: ['proposal-hidden-mode-ninja-photographer', 'weddings-zona-colonial-santo-domingo', 'weddings-proposal-photographer-dominican-republic'],
+
+    ctaHeadlineEn: 'Ready to plan your Zona Colonial surprise proposal?',
+    ctaHeadlineEs: '¿Listo para planear tu propuesta sorpresa en la Zona Colonial?',
+    ctaValuePropEn: 'Message us on WhatsApp only. We help plan the route, the spot, and the cover story — she will not see it coming. · ⭐ 4.9 on Google (98+ reviews)',
+    ctaValuePropEs: 'Escríbenos solo por WhatsApp. Te ayudamos a planear el recorrido, el lugar y la excusa perfecta — ella no lo verá venir. · ⭐ 4.9 en Google (+98 reseñas)',
+
+    waMessageEn: 'Hello! I want to plan a surprise proposal photography session in the Zona Colonial, Santo Domingo. Can we coordinate?',
+    waMessageEs: 'Hola! Quiero planear una sesión de fotografía de propuesta sorpresa en la Zona Colonial, Santo Domingo. ¿Podemos coordinar?',
+  },
+
   // ── HUB 3: Proposal Photography (standalone hub) ───────────────────────────
   {
     id: 'proposal-hidden-mode-ninja-photographer',

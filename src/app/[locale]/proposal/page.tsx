@@ -97,6 +97,17 @@ const PACKAGES = [
     highlight: false as const,
     price: '$270 USD + ITBIS',
   },
+  {
+    icon: '🏛️',
+    slugEn: 'weddings/proposal-photographer-zona-colonial-santo-domingo',
+    slugEs: 'bodas/fotografo-propuesta-matrimonio-zona-colonial-santo-domingo',
+    labelEn: 'Surprise Proposal — Zona Colonial',
+    labelEs: 'Propuesta Sorpresa — Zona Colonial',
+    descEn: 'We help plan the whole surprise among the UNESCO-listed colonial architecture.',
+    descEs: 'Te ayudamos a planear toda la sorpresa entre la arquitectura colonial Patrimonio de la Humanidad.',
+    highlight: false as const,
+    price: '$270 USD + ITBIS',
+  },
 ]
 
 const LOCATIONS_ES = [
@@ -378,6 +389,12 @@ export default async function ProposalHubPage({ params: { locale } }: Props) {
               className="text-amber-400 hover:underline"
             >
               {isEs ? '🌴 Propuesta en toda la RD →' : '🌴 Proposal across DR →'}
+            </Link>
+            <Link
+              href={`/${locale}/${isEs ? 'bodas/fotografo-propuesta-matrimonio-zona-colonial-santo-domingo' : 'weddings/proposal-photographer-zona-colonial-santo-domingo'}`}
+              className="text-amber-400 hover:underline"
+            >
+              {isEs ? '🏛️ Propuesta Zona Colonial →' : '🏛️ Zona Colonial Proposal →'}
             </Link>
           </div>
         </section>
