@@ -8,8 +8,9 @@ import { CONTACT_INFO } from '@/lib/utils/constants'
  *
  * Phase B · B3.5 — restyled for Bugatti chrome consistency.
  *  - No box-shadow (forbidden by DESIGN.md §6).
- *  - No bg-green palette violation. Brand recognition is carried by the
- *    silhouette icon alone; chrome stays in the monochrome system.
+ *  - Brand-green background (WhatsApp #25D366) by explicit request —
+ *    overrides the monochrome chrome system for this one control so it
+ *    reads instantly as "WhatsApp" in both light and dark mode.
  *  - On form-flow routes (/book, /get-quote, /contact), shifts to
  *    bottom-24 so it sits above the wizard submit pill on mobile rather
  *    than overlapping it.
@@ -52,7 +53,7 @@ export default function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleClick}
-      className={`fixed ${positionClass} z-40 group flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-full bg-canvas border border-hairline text-ink hover:bg-ink hover:text-canvas transition-colors duration-200`}
+      className={`fixed ${positionClass} z-40 group flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-full bg-[#25D366] border border-[#1DA851] text-white hover:bg-[#1DA851] transition-colors duration-200`}
       aria-label="Contact us on WhatsApp"
     >
       <svg

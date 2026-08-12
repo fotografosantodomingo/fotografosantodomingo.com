@@ -163,7 +163,11 @@ export default async function ProposalHubPage({ params: { locale } }: Props) {
       <main className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-white">
 
         {/* ── Hero ──────────────────────────────────────────────────────────── */}
-        <section className="bg-neutral-950 py-20 sm:py-32 px-4 text-center">
+        {/* hero-white-lock: section is hardcoded dark in both themes (bg-neutral-950,
+            not dark:-prefixed) — without this, the site-wide light-mode CSS rule
+            flips bare text-white to near-black, making it invisible on the still-
+            black background. See globals.css "Homepage hero readability lock". */}
+        <section className="hero-white-lock bg-neutral-950 py-20 sm:py-32 px-4 text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-amber-400 mb-4">
             {isEs ? 'Modo Ninja — Teleobjetivo 400–600 mm' : 'Ninja Mode — 400–600 mm Telephoto Lens'}
           </p>
@@ -357,7 +361,8 @@ export default async function ProposalHubPage({ params: { locale } }: Props) {
         </section>
 
         {/* ── Final CTA ─────────────────────────────────────────────────────── */}
-        <section className="py-16 sm:py-24 px-4 bg-neutral-950 text-center">
+        {/* hero-white-lock: same fix as the hero above — always-dark section. */}
+        <section className="hero-white-lock py-16 sm:py-24 px-4 bg-neutral-950 text-center">
           <h2 className="text-2xl font-bold text-white sm:text-3xl max-w-2xl mx-auto">
             {isEs
               ? '¿Listo para planear la propuesta perfecta?'
