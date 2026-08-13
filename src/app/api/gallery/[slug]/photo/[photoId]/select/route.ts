@@ -17,10 +17,6 @@ type Params = { params: { slug: string; photoId: string } }
  * since editing is already done.
  */
 export async function POST(req: NextRequest, { params }: Params) {
-  if (!(await isAuthorizedForGallery(req, params.slug))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   let body: Record<string, unknown>
   try {
     body = await req.json()
@@ -30,9 +26,16 @@ export async function POST(req: NextRequest, { params }: Params) {
   const selected = body.selected === true
 
   const supabase = createServiceClient()
-  const { data: gallery } = await supabase.from('galleries').select('id, status').eq('slug', params.slug).single()
+  const { data: gallery } = await supabase
+    .from('galleries')
+    .select('id, status, password_hash')
+    .eq('slug', params.slug)
+    .single()
   if (!gallery || !['selecting', 'ready'].includes(gallery.status)) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+  if (gallery.password_hash && !(await isAuthorizedForGallery(req, params.slug))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { error } = await supabase

@@ -16,19 +16,18 @@ type Params = { params: { slug: string; photoId: string } }
  * (see /api/gallery/[slug]/log-download).
  */
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!(await isAuthorizedForGallery(req, params.slug))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const supabase = createServiceClient()
   const { data: gallery } = await supabase
     .from('galleries')
-    .select('id, status')
+    .select('id, status, password_hash')
     .eq('slug', params.slug)
     .single()
 
   if (!gallery || gallery.status !== 'ready') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+  if (gallery.password_hash && !(await isAuthorizedForGallery(req, params.slug))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { data: photo } = await supabase

@@ -17,19 +17,18 @@ type Params = { params: { slug: string } }
  * just re-sends the current favorites list.
  */
 export async function POST(req: NextRequest, { params }: Params) {
-  if (!(await isAuthorizedForGallery(req, params.slug))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const supabase = createServiceClient()
   const { data: gallery } = await supabase
     .from('galleries')
-    .select('id, slug, client_name, topic, status')
+    .select('id, slug, client_name, topic, status, password_hash')
     .eq('slug', params.slug)
     .single()
 
   if (!gallery || gallery.status !== 'ready') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+  if (gallery.password_hash && !(await isAuthorizedForGallery(req, params.slug))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { data: favoritePhotos } = await supabase

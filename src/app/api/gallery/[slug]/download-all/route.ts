@@ -25,19 +25,18 @@ function sanitizeFilename(name: string) {
  * galleries since it buffered everything in the browser's memory instead.
  */
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!(await isAuthorizedForGallery(req, params.slug))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const supabase = createServiceClient()
   const { data: gallery } = await supabase
     .from('galleries')
-    .select('id, topic, client_name, status')
+    .select('id, topic, client_name, status, password_hash')
     .eq('slug', params.slug)
     .single()
 
   if (!gallery || gallery.status !== 'ready') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+  if (gallery.password_hash && !(await isAuthorizedForGallery(req, params.slug))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { data: photos } = await supabase

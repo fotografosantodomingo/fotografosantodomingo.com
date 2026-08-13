@@ -11,14 +11,17 @@ type Params = { params: { slug: string; photoId: string } }
 // route, which forces Content-Disposition: attachment and logs a download.
 // Not logged, since just viewing the grid isn't "downloading a photo."
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!(await isAuthorizedForGallery(req, params.slug))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const supabase = createServiceClient()
-  const { data: gallery } = await supabase.from('galleries').select('id, status').eq('slug', params.slug).single()
+  const { data: gallery } = await supabase
+    .from('galleries')
+    .select('id, status, password_hash')
+    .eq('slug', params.slug)
+    .single()
   if (!gallery || gallery.status !== 'ready') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+  if (gallery.password_hash && !(await isAuthorizedForGallery(req, params.slug))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { data: photo } = await supabase

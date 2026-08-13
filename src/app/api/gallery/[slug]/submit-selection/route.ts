@@ -21,19 +21,18 @@ const BASE_URL = 'https://www.fotografosantodomingo.com'
  * session_price_usd; finalization happens in the webhook once paid.
  */
 export async function POST(req: NextRequest, { params }: Params) {
-  if (!(await isAuthorizedForGallery(req, params.slug))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const supabase = createServiceClient()
   const { data: gallery } = await supabase
     .from('galleries')
-    .select('id, slug, topic, client_name, status, included_photo_count, session_price_usd')
+    .select('id, slug, topic, client_name, status, included_photo_count, session_price_usd, password_hash')
     .eq('slug', params.slug)
     .single()
 
   if (!gallery || gallery.status !== 'selecting') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+  if (gallery.password_hash && !(await isAuthorizedForGallery(req, params.slug))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { count: selectedCount } = await supabase

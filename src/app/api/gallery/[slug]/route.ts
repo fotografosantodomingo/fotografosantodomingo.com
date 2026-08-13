@@ -8,19 +8,18 @@ export const runtime = 'edge'
 type Params = { params: { slug: string } }
 
 export async function GET(req: NextRequest, { params }: Params) {
-  if (!(await isAuthorizedForGallery(req, params.slug))) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const supabase = createServiceClient()
   const { data: gallery } = await supabase
     .from('galleries')
-    .select('id, slug, client_name, topic, status, photo_count, total_bytes, expires_at, included_photo_count')
+    .select('id, slug, client_name, topic, status, photo_count, total_bytes, expires_at, included_photo_count, password_hash')
     .eq('slug', params.slug)
     .single()
 
   if (!gallery || gallery.status === 'deleted') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+  if (gallery.password_hash && !(await isAuthorizedForGallery(req, params.slug))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   if (gallery.status === 'expired') {
     return NextResponse.json({ error: 'expired' }, { status: 410 })

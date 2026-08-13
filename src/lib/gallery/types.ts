@@ -13,7 +13,7 @@ export type Gallery = {
   topic: string | null
   included_photo_count: number | null
   session_price_usd: number | null
-  password_hash: string
+  password_hash: string | null
   status: GalleryStatus
   cover_photo_id: string | null
   photo_count: number
