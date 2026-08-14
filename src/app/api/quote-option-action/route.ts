@@ -168,6 +168,7 @@ export async function GET(req: NextRequest) {
       depositUsd: Number(quote.deposit_amount_usd ?? 0),
       availability,
       proposalUrl: `${BASE}/quotations/${quote.proposal_slug}`,
+      proposalSlug: quote.proposal_slug,
     }).catch(err => console.error('quote-option-action: customer email failed:', err))
   }
 

@@ -12,6 +12,8 @@ import { getAdminRecipients } from './admin-recipients'
 import { qdOpen, qdClose, qdCard, qdBtn, FROM } from './resend'
 import type { SlotResult } from '@/lib/quotes/availability-check'
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.fotografosantodomingo.com'
+
 function escape(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -153,6 +155,7 @@ export async function sendCustomerFinalQuoteEmail(data: {
   depositUsd: number
   availability: SlotResult
   proposalUrl: string
+  proposalSlug: string
 }): Promise<void> {
   const isEs = data.locale === 'es'
 
@@ -203,6 +206,7 @@ export async function sendCustomerFinalQuoteEmail(data: {
       </p>
 
       ${qdClose()}
+      <img src="${BASE_URL}/api/quotations/${data.proposalSlug}/email-open" width="1" height="1" alt="" style="display:none;border:0;width:1px;height:1px" />
     `,
   })
 }
