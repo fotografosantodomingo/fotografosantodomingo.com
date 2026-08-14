@@ -1258,22 +1258,25 @@ export default async function FamilyPage({ params }: Props) {
                 {isEs ? 'Continuar' : 'Continue'}
               </p>
               <ul className="grid grid-cols-1 md:grid-cols-2 border-t border-l border-hairline-soft">
-                {content.internalLinks.map((link, i) => (
-                  <li key={i} className="border-r border-b border-hairline-soft">
-                    <Link
-                      href={`/${locale}${link.href}`}
-                      className="group flex flex-col p-6 md:p-7 hover:bg-ink/5 transition-colors duration-200"
-                    >
-                      <span className="font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
-                        {isEs ? link.label.es : link.label.en}
-                        <span aria-hidden="true">→</span>
-                      </span>
-                      <p className="text-ink-muted text-sm leading-relaxed mt-3">
-                        {isEs ? link.description.es : link.description.en}
-                      </p>
-                    </Link>
-                  </li>
-                ))}
+                {content.internalLinks.map((link, i) => {
+                  const linkPath = typeof link.href === 'string' ? link.href : (isEs ? link.href.es : link.href.en)
+                  return (
+                    <li key={i} className="border-r border-b border-hairline-soft">
+                      <Link
+                        href={`/${locale}${linkPath}`}
+                        className="group flex flex-col p-6 md:p-7 hover:bg-ink/5 transition-colors duration-200"
+                      >
+                        <span className="font-mono uppercase tracking-widest text-[11px] text-ink inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200">
+                          {isEs ? link.label.es : link.label.en}
+                          <span aria-hidden="true">→</span>
+                        </span>
+                        <p className="text-ink-muted text-sm leading-relaxed mt-3">
+                          {isEs ? link.description.es : link.description.en}
+                        </p>
+                      </Link>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           </section>

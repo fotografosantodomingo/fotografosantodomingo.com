@@ -38,6 +38,13 @@ export const proposalPhotographyContent: ServiceContent = {
         es: 'Punta Cana es la capital de pedidas de mano sorpresa en el Caribe. Cubrimos propuestas en gazebos de playa de Hard Rock, Iberostar, Excellence y Paradisus, en restaurantes de Tortuga Bay (La Yola), y en las playas públicas de Bávaro y Macao al amanecer o atardecer. Trabajamos modo ninja con teleobjetivo desde 70 a 200 metros para que la pareja no nos vea hasta el momento del "sí". Coordinamos con wedding planners de hotel cuando aplica y respetamos las políticas de fotógrafo externo de cada resort.',
         en: 'Punta Cana is the Caribbean\'s surprise-proposal capital. We cover proposals at Hard Rock, Iberostar, Excellence, and Paradisus beach gazebos, at Tortuga Bay restaurants (La Yola), and on the public Bávaro and Macao beaches at sunrise or sunset. We work ninja-style with telephoto from 70–200 meters so the couple doesn\'t see us until the "yes" moment. We coordinate with hotel wedding planners when applicable and respect each resort\'s outside-photographer policies.',
       },
+      image: {
+        src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786713407/engagement_proposal_punta_cana_gazebo_balloons_setup.webp',
+        alt: {
+          es: 'Propuesta de matrimonio con decoración de globos y velas en Punta Cana, República Dominicana',
+          en: 'Marriage proposal setup with balloon decor and candles in Punta Cana, Dominican Republic',
+        },
+      },
       venues: {
         es: [
           'Hard Rock Punta Cana — gazebo de playa para propuesta privada',
@@ -502,6 +509,22 @@ export const proposalPhotographyContent: ServiceContent = {
         href: '/get-quote',
         label: { es: 'Coordinar propuesta en privado', en: 'Coordinate your proposal privately' },
         description: { es: 'Solo por WhatsApp — te cotizamos según tu locación y fecha.', en: 'WhatsApp only — we quote based on your location and date.' },
+      },
+      {
+        href: {
+          es: '/propuesta/fotografo-propuesta-oculta-modo-ninja',
+          en: '/proposal/proposal-hidden-mode-ninja-photographer',
+        },
+        label: { es: 'Modo Oculto — Fotógrafo Ninja', en: 'Hidden Mode — Ninja Photographer' },
+        description: { es: 'Teleobjetivo 400–600 mm desde 50–80 m. Ella nunca nos ve. Toda la isla.', en: '400–600 mm telephoto from 50–80 m away. She never sees us. Island-wide.' },
+      },
+      {
+        href: {
+          es: '/bodas/fotografo-propuesta-matrimonio-zona-colonial-santo-domingo',
+          en: '/weddings/proposal-photographer-zona-colonial-santo-domingo',
+        },
+        label: { es: 'Propuesta Sorpresa — Zona Colonial', en: 'Surprise Proposal — Zona Colonial' },
+        description: { es: 'Te ayudamos a planear toda la sorpresa entre la arquitectura colonial Patrimonio de la Humanidad.', en: 'We help plan the whole surprise among the UNESCO-listed colonial architecture.' },
       },
     ],
 }

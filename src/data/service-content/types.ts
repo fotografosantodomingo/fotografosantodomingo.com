@@ -96,7 +96,10 @@ export type Seasonality = {
 }
 
 export type InternalLink = {
-  href: string
+  /** Plain string when the path is identical in both locales (e.g. hub
+   *  pages like '/proposal'). Use Bilingual when the ES/EN slugs differ
+   *  (e.g. spoke pages with translated slugs). */
+  href: string | Bilingual
   label: Bilingual
   description: Bilingual
 }
