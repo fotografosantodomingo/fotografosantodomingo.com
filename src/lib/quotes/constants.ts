@@ -79,7 +79,7 @@ export const QUOTE_CALLBACK_WINDOWS = [
 // match resolve to null and submit as a generic RFQ.
 export const QUOTE_SERVICE_TYPE_TO_FAMILY_SLUG: Record<QuoteServiceType, string | null> = {
   WEDDINGS: 'wedding-photography',
-  ENGAGEMENT_SESSION: 'wedding-photography',
+  ENGAGEMENT_SESSION: 'proposal-photography',
   QUINCEANERAS: 'birthday-event-photography',
   MATERNITY: 'family-beach-photography',
   FAMILY: 'family-beach-photography',
