@@ -40,13 +40,6 @@ export const proposalPhotographyContent: ServiceContent = {
       },
       images: [
         {
-          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714439/proposal_puntacana_wide_establishing_setup.webp',
-          alt: {
-            es: 'Montaje completo de propuesta de matrimonio con globos y velas junto a una laguna en Punta Cana',
-            en: 'Full marriage proposal setup with balloons and candles beside a lagoon in Punta Cana',
-          },
-        },
-        {
           src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714428/proposal_puntacana_kneeling_lakeside.webp',
           alt: {
             es: 'Hombre arrodillado proponiendo matrimonio junto a un lago en Punta Cana al atardecer',
@@ -135,6 +128,13 @@ export const proposalPhotographyContent: ServiceContent = {
           alt: {
             es: 'Pareja frente a frente en la playa de Punta Cana durante el atardecer',
             en: 'Couple face to face on the beach in Punta Cana at sunset',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714439/proposal_puntacana_wide_establishing_setup.webp',
+          alt: {
+            es: 'Montaje completo de propuesta de matrimonio con globos y velas junto a una laguna en Punta Cana',
+            en: 'Full marriage proposal setup with balloons and candles beside a lagoon in Punta Cana',
           },
         },
       ],
