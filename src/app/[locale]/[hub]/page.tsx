@@ -293,19 +293,25 @@ export default async function GeoPageRoute({ params }: Props) {
             geoCoverage[citySlug].images array. */}
         {geoBlock?.images && geoBlock.images.length > 0 && (
           <section className="border-b border-hairline-soft bg-canvas">
-            {geoBlock.images.map((src, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={`${src}-${i}`}
-                src={src}
-                alt={isEs
-                  ? `${cityName} — fotografía inmobiliaria y drone profesional ${i + 1}`
-                  : `${cityName} — professional real-estate and drone photography ${i + 1}`}
-                className="block h-auto w-full"
-                loading={i === 0 ? 'eager' : 'lazy'}
-                fetchPriority={i === 0 ? 'high' : 'auto'}
-              />
-            ))}
+            {geoBlock.images.map((item, i) => {
+              const src = typeof item === 'string' ? item : item.src
+              const alt = typeof item === 'string'
+                ? (isEs
+                    ? `${familyTitle} — ${cityName} ${i + 1}`
+                    : `${familyTitle} — ${cityName} ${i + 1}`)
+                : (isEs ? item.alt.es : item.alt.en)
+              return (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={`${src}-${i}`}
+                  src={src}
+                  alt={alt}
+                  className="block h-auto w-full"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={i === 0 ? 'high' : 'auto'}
+                />
+              )
+            })}
           </section>
         )}
 

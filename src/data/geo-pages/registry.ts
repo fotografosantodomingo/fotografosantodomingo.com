@@ -127,6 +127,20 @@ export const GEO_PAGES: GeoPage[] = [
     sitemapPriority: 0.95, // highest — captures destination wedding intl traffic
   },
 
+  // ── PROPOSAL (1 city) ──────────────────────────────────────────────────
+  {
+    enSlug: 'punta-cana-proposal-photographer',
+    esSlug: 'fotografo-de-propuesta-en-punta-cana',
+    familySlug: 'proposal-photography',
+    citySlug: 'punta-cana',
+    cityName: { es: 'Punta Cana', en: 'Punta Cana' },
+    h1Override: {
+      es: 'Fotógrafo de Propuesta de Matrimonio en Punta Cana',
+      en: 'Marriage Proposal Photographer in Punta Cana',
+    },
+    sitemapPriority: 0.85,
+  },
+
   // ── REAL ESTATE (2 cities) ────────────────────────────────────────────
   {
     enSlug: 'punta-cana-real-estate-photographer',

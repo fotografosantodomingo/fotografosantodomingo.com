@@ -142,8 +142,10 @@ export type GeoBlock = {
   /** Optional gallery rendered full-bleed ABOVE the intro on the dedicated
    *  geo URL ([locale]/[hub]/page.tsx). One entry per image — Cloudinary
    *  URLs preferred. Each renders edge-to-edge with no crop, stacked on
-   *  both desktop and mobile. Leave empty/undefined to skip the section. */
-  images?: string[]
+   *  both desktop and mobile. Leave empty/undefined to skip the section.
+   *  Pass `string[]` for a quick generic alt; pass `RichImage[]` to give
+   *  every photo bilingual alt text — preferred for SEO image ranking. */
+  images?: string[] | RichImage[]
   /** Optional single image rendered BELOW the intro paragraph (and above
    *  the venue list) on the family page's geo-coverage section
    *  ([locale]/services/[service]/page.tsx). Use RichImage for proper

@@ -38,6 +38,106 @@ export const proposalPhotographyContent: ServiceContent = {
         es: 'Punta Cana es la capital de pedidas de mano sorpresa en el Caribe. Cubrimos propuestas en gazebos de playa de Hard Rock, Iberostar, Excellence y Paradisus, en restaurantes de Tortuga Bay (La Yola), y en las playas públicas de Bávaro y Macao al amanecer o atardecer. Trabajamos modo ninja con teleobjetivo desde 70 a 200 metros para que la pareja no nos vea hasta el momento del "sí". Coordinamos con wedding planners de hotel cuando aplica y respetamos las políticas de fotógrafo externo de cada resort.',
         en: 'Punta Cana is the Caribbean\'s surprise-proposal capital. We cover proposals at Hard Rock, Iberostar, Excellence, and Paradisus beach gazebos, at Tortuga Bay restaurants (La Yola), and on the public Bávaro and Macao beaches at sunrise or sunset. We work ninja-style with telephoto from 70–200 meters so the couple doesn\'t see us until the "yes" moment. We coordinate with hotel wedding planners when applicable and respect each resort\'s outside-photographer policies.',
       },
+      images: [
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714439/proposal_puntacana_wide_establishing_setup.webp',
+          alt: {
+            es: 'Montaje completo de propuesta de matrimonio con globos y velas junto a una laguna en Punta Cana',
+            en: 'Full marriage proposal setup with balloons and candles beside a lagoon in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714428/proposal_puntacana_kneeling_lakeside.webp',
+          alt: {
+            es: 'Hombre arrodillado proponiendo matrimonio junto a un lago en Punta Cana al atardecer',
+            en: 'Man on one knee proposing beside a lake in Punta Cana at sunset',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714427/proposal_puntacana_ring_reveal_hand_mouth.webp',
+          alt: {
+            es: 'Mujer sorprendida mostrando su anillo de compromiso recién puesto en Punta Cana',
+            en: 'Woman in surprise reaction showing her newly placed engagement ring in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714438/proposal_puntacana_ring_closeup_portrait.webp',
+          alt: {
+            es: 'Primer plano del anillo de compromiso durante una propuesta de matrimonio en Punta Cana',
+            en: 'Close-up of the engagement ring during a marriage proposal in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714434/proposal_puntacana_kiss_sunset_lake.webp',
+          alt: {
+            es: 'Pareja besándose después de la propuesta de matrimonio junto al lago al atardecer',
+            en: 'Couple kissing after the marriage proposal by the lake at sunset',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714436/proposal_puntacana_carrying_celebration_sunset.webp',
+          alt: {
+            es: 'Celebración después del sí — él carga a su prometida junto al lago en Punta Cana',
+            en: 'Celebration after the yes — he carries his newly engaged fiancée by the lake in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714435/proposal_puntacana_champagne_celebration.webp',
+          alt: {
+            es: 'Pareja celebrando con champán después de la propuesta de matrimonio en Punta Cana',
+            en: 'Couple celebrating with champagne after the marriage proposal in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714437/proposal_puntacana_toast_laughing_couple.webp',
+          alt: {
+            es: 'Pareja recién comprometida riendo y brindando durante su sesión de propuesta en Punta Cana',
+            en: 'Newly engaged couple laughing and toasting during their proposal session in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714430/proposal_puntacana_seated_couple_lakeside.webp',
+          alt: {
+            es: 'Pareja sentada junto al lago después de la propuesta de matrimonio en Punta Cana',
+            en: 'Couple seated by the lake after the marriage proposal in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714431/proposal_puntacana_embrace_portrait_lakeside.webp',
+          alt: {
+            es: 'Retrato de pareja recién comprometida abrazándose junto al lago en Punta Cana',
+            en: 'Portrait of a newly engaged couple embracing by the lake in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714433/proposal_puntacana_close_embrace_bouquet_ring.webp',
+          alt: {
+            es: 'Pareja abrazada mostrando el ramo de flores y el anillo de compromiso en Punta Cana',
+            en: 'Couple embracing while showing the flower bouquet and engagement ring in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714429/proposal_puntacana_bouquet_celebration_portrait.webp',
+          alt: {
+            es: 'Futura novia posando con ramo de flores y globos de corazón tras la propuesta en Punta Cana',
+            en: 'Bride-to-be posing with a flower bouquet and heart balloons after the proposal in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714426/proposal_puntacana_beach_kiss_balloons.webp',
+          alt: {
+            es: 'Pareja besándose en la playa junto a globos de corazón rojos en Punta Cana',
+            en: 'Couple kissing on the beach beside red heart balloons in Punta Cana',
+          },
+        },
+        {
+          src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786714424/proposal_puntacana_beach_sunset_couple_profile.jpg',
+          alt: {
+            es: 'Pareja frente a frente en la playa de Punta Cana durante el atardecer',
+            en: 'Couple face to face on the beach in Punta Cana at sunset',
+          },
+        },
+      ],
       image: {
         src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786713407/engagement_proposal_punta_cana_gazebo_balloons_setup.webp',
         alt: {
