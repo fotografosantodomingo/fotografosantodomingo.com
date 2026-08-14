@@ -49,7 +49,7 @@ async function handleSlugCheckout(
   const supabase = createServiceClient()
   const { data: quote, error } = await supabase
     .from('quotes')
-    .select('id, locale, full_name, email, service_type, final_price_usd, payment_mode, deposit_amount_usd, status, proposal_expires_at')
+    .select('id, locale, full_name, email, service_type, final_price_usd, payment_mode, deposit_amount_usd, status, proposal_expires_at, package_id, booking_id')
     .eq('proposal_slug', slug)
     .single()
 
@@ -67,6 +67,12 @@ async function handleSlugCheckout(
   }
   if (!quote.final_price_usd) {
     return NextResponse.json({ error: 'Proposal price is not set' }, { status: 422 })
+  }
+  // Self-service bookable quotes (package_id set) must have a slot picked
+  // (booking_id set via /api/quotations/[slug]/select-slot) before paying —
+  // otherwise a customer could pay with no calendar hold ever created.
+  if (quote.package_id && !quote.booking_id) {
+    return NextResponse.json({ error: 'Select a time before paying' }, { status: 409 })
   }
 
   const totalCents = Math.round(Number(quote.final_price_usd) * 100)

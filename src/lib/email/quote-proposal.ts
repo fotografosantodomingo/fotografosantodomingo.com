@@ -32,38 +32,41 @@ function fmtMoney(usd: number): string {
   return `$${usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`
 }
 
-/** Availability line for the ADMIN alert — short, factual, no persuasion. */
+/** Availability line for the ADMIN alert — short, factual, no persuasion.
+ *  Informational only: approving does NOT hold anything — the customer
+ *  picks their own slot on the quote page. */
 function adminAvailabilityLine(a: SlotResult): string {
   switch (a.kind) {
     case 'no_date_requested':
       return 'No date requested by customer'
     case 'confirmed':
-      return `✅ Available — ${a.date} at ${a.time} AST`
+      return `✅ Looked open at draft time — ${a.date} (earliest ${a.time} AST). Customer picks their own exact time.`
     case 'alternate':
-      return `⚠️ Requested date is full — nearest opening: ${a.date} at ${a.time} AST (+${a.daysOffset}d)`
+      return `⚠️ Requested date looked full at draft time — nearest opening was ${a.date} AST (+${a.daysOffset}d). Customer picks their own exact time.`
     case 'no_slots_found':
-      return `⚠️ No openings found in the lookahead window`
+      return `⚠️ No openings found in the lookahead window at draft time`
   }
 }
 
-/** Availability sentence for the CUSTOMER email — warm, decided. */
+/** Availability sentence for the CUSTOMER email — invites them to pick their
+ *  own slot rather than claiming one is already held. */
 function customerAvailabilitySentence(a: SlotResult, locale: 'es' | 'en'): string {
   const isEs = locale === 'es'
   if (a.kind === 'confirmed') {
     const date = fmtDate(a.date, locale)
     return isEs
-      ? `¡Buenas noticias! Confirmamos que <strong>${date}</strong> está disponible — hemos reservado las <strong>${a.time}</strong> para ti.`
-      : `Good news — we're happy to confirm <strong>${date}</strong> is available. We've held <strong>${a.time}</strong> for you.`
+      ? `¡Buenas noticias! Parece que <strong>${date}</strong> tiene disponibilidad — elige la hora exacta que prefieras en tu página de cotización.`
+      : `Good news — <strong>${date}</strong> looks open. Pick your exact time on your quote page below.`
   }
   if (a.kind === 'alternate') {
     const date = fmtDate(a.date, locale)
     return isEs
-      ? `La fecha que solicitaste ya está reservada, pero tenemos disponibilidad el <strong>${date}</strong> a las <strong>${a.time}</strong>. Hemos reservado ese espacio para ti — si prefieres otra fecha, respóndenos y lo coordinamos.`
-      : `The date you requested is already booked, but we have an opening on <strong>${date}</strong> at <strong>${a.time}</strong>. We've held that slot for you — reply if you'd prefer a different date and we'll coordinate.`
+      ? `La fecha que solicitaste está bastante ocupada, pero vimos disponibilidad a partir del <strong>${date}</strong>. Elige el día y la hora que prefieras en tu página de cotización.`
+      : `The date you requested looks pretty booked, but we saw openings starting <strong>${date}</strong>. Pick whichever day and time works for you on your quote page below.`
   }
   return isEs
-    ? 'Coordinemos la fecha y hora exactas de tu sesión — responde a este correo o escríbenos por WhatsApp.'
-    : "Let's coordinate the exact date and time for your session — reply to this email or reach us on WhatsApp."
+    ? 'Elige el día y la hora que prefieras para tu sesión en tu página de cotización.'
+    : 'Pick whichever day and time works best for your session on your quote page below.'
 }
 
 // ─── Admin: dual-quote alert ───────────────────────────────────────────────
@@ -197,7 +200,7 @@ export async function sendCustomerFinalQuoteEmail(data: {
         { label: isEs ? 'DEPÓSITO PARA RESERVAR (50%)' : 'DEPOSIT TO RESERVE (50%)', value: fmtMoney(data.depositUsd) },
       ])}
 
-      ${qdBtn(data.proposalUrl, isEs ? 'RESERVAR MI FECHA →' : 'RESERVE MY DATE →')}
+      ${qdBtn(data.proposalUrl, isEs ? 'ELIGE TU FECHA Y HORA →' : 'CHOOSE YOUR DATE & TIME →')}
 
       <p style="margin:0;color:#5a5753;font-size:11px;text-align:center;line-height:1.9;letter-spacing:.03em">
         ${isEs

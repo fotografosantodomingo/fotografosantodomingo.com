@@ -1,9 +1,17 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { TermContent } from '@/lib/quotes/terms'
+import StepDate from '@/components/booking/steps/StepDate'
+import StepTime, { type Slot } from '@/components/booking/steps/StepTime'
 
 type LineItem = { description: string; amount_usd: number }
+
+type BookingFlow = {
+  staffId: string
+  durationMin: number
+  confirmedSlot: { date: string; time: string } | null
+}
 
 type Props = {
   slug: string
@@ -23,6 +31,7 @@ type Props = {
   terms: TermContent[]
   eventDate: string | null
   eventTime: string | null
+  bookingFlow?: BookingFlow
 }
 
 type Lang = 'es' | 'en'
@@ -53,6 +62,10 @@ const T = {
     depositPaidSub: (bal: string) => `Saldo restante ${bal} — se liquida el día de la sesión.`,
     payBalance: (amt: string) => `Pagar saldo completo — ${amt}`,
     accepted: '✓ Pago completo recibido — su reserva está confirmada.',
+    pickTitle: 'Elige tu fecha y hora',
+    pickSub: 'Elige el día y la hora que mejor te funcione para tu sesión.',
+    pickedFor: 'Tu sesión',
+    pickError: 'No se pudo reservar ese horario. Intenta con otro.',
   },
   en: {
     preparedFor: 'Prepared exclusively for',
@@ -79,6 +92,10 @@ const T = {
     depositPaidSub: (bal: string) => `Remaining balance ${bal} — due on session day.`,
     payBalance: (amt: string) => `Pay remaining balance — ${amt}`,
     accepted: '✓ Full payment received — your booking is confirmed.',
+    pickTitle: 'Choose your date and time',
+    pickSub: 'Pick whichever day and time works best for your session.',
+    pickedFor: 'Your session',
+    pickError: 'Could not book that time. Please try another.',
   },
 }
 
@@ -173,10 +190,94 @@ function CheckoutButton({
   )
 }
 
+function SlotPicker({
+  lang, slug, staffId, durationMin, onConfirmed,
+}: {
+  lang: Lang
+  slug: string
+  staffId: string
+  durationMin: number
+  onConfirmed: (slot: { date: string; time: string }) => void
+}) {
+  const t = T[lang]
+  const [step, setStep] = useState<'date' | 'time'>('date')
+  const [pickedDate, setPickedDate] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handlePickSlot(slot: Slot) {
+    setSubmitting(true)
+    setError(null)
+    try {
+      const res = await fetch(`/api/quotations/${slug}/select-slot`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ startsAtUtc: slot.startsAtUtc }),
+      })
+      const json = await res.json()
+      if (!res.ok || !json.ok) {
+        setError(t.pickError)
+        setStep('date')
+        setPickedDate(null)
+        return
+      }
+      onConfirmed({ date: json.date, time: json.time })
+    } catch {
+      setError(t.pickError)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  // StepDate/StepTime are driven entirely by the site-wide --bugatti-* CSS
+  // custom properties, which flip with the global light-mode toggle
+  // (localStorage, site-wide, not scoped to this page). ProposalView itself
+  // is always dark regardless of that toggle, so force the same dark values
+  // here via inline custom properties — a plain "dark" class wouldn't work
+  // since the tokens are scoped to the html.dark/html.light-mode selectors,
+  // not a generic .dark class (see src/app/globals.css).
+  const forceDarkTokens = {
+    '--bugatti-canvas': '0 0 0',
+    '--bugatti-ink': '255 255 255',
+    '--bugatti-ink-muted': '153 153 153',
+    '--bugatti-hairline': 'rgba(255, 255, 255, 0.6)',
+    '--bugatti-hairline-soft': 'rgba(255, 255, 255, 0.18)',
+  } as CSSProperties
+
+  return (
+    <div className="border border-[#2e2c29] bg-[#0e0e0d] p-6" style={forceDarkTokens}>
+      <p className="mb-1 text-xs tracking-[0.25em] text-[#8a8680] uppercase">{t.pickTitle}</p>
+      <p className="mb-6 text-sm text-[#8a8680]">{t.pickSub}</p>
+      {error && <p className="mb-4 text-xs text-red-400">{error}</p>}
+      {submitting ? (
+        <p className="text-center text-sm text-[#8a8680]">…</p>
+      ) : step === 'date' ? (
+        <StepDate
+          locale={lang}
+          serviceDuration={durationMin}
+          staffId={staffId}
+          onBack={() => {}}
+          onPick={(date) => { setPickedDate(date); setStep('time') }}
+        />
+      ) : (
+        <StepTime
+          locale={lang}
+          date={pickedDate!}
+          staffId={staffId}
+          durationMin={durationMin}
+          onBack={() => { setStep('date'); setPickedDate(null) }}
+          onPick={handlePickSlot}
+        />
+      )}
+    </div>
+  )
+}
+
 export default function ProposalView({
   slug, quoteId, clientName, clientCompany, serviceType,
   description, lineItems, totalUsd, paymentMode, depositUsd,
   adminNote, expiresAt, status, locale, terms, eventDate, eventTime,
+  bookingFlow,
 }: Props) {
   const [lang, setLang] = useState<Lang>(locale)
   const t = T[lang]
@@ -194,6 +295,12 @@ export default function ProposalView({
   const balanceUsd = Math.round((totalUsd - depositUsd) * 100) / 100
   const isDepositPaid = status === 'DEPOSIT_PAID'
   const isAccepted = status === 'ACCEPTED'
+
+  // Self-service slot picker — only applies when the server determined this
+  // quote is tied to a real catalog package (bookingFlow present). Manually-
+  // drafted quotes (bookingFlow undefined) skip all of this untouched.
+  const [confirmedSlot, setConfirmedSlot] = useState(bookingFlow?.confirmedSlot ?? null)
+  const needsSlotPick = !!bookingFlow && !confirmedSlot
 
   // Read URL params for Stripe redirect messages
   const [urlMsg, setUrlMsg] = useState<{ type: 'paid' | 'cancelled'; text: string } | null>(null)
@@ -351,10 +458,28 @@ export default function ProposalView({
             </div>
           )}
 
-          {/* Not yet paid — normal flow */}
-          {!isAccepted && !isDepositPaid && !isExpired && urlMsg?.type !== 'paid' && (
+          {/* Self-service slot picker — must pick before payment options appear */}
+          {!isAccepted && !isDepositPaid && !isExpired && urlMsg?.type !== 'paid' && needsSlotPick && bookingFlow && (
+            <SlotPicker
+              lang={lang}
+              slug={slug}
+              staffId={bookingFlow.staffId}
+              durationMin={bookingFlow.durationMin}
+              onConfirmed={setConfirmedSlot}
+            />
+          )}
+
+          {/* Not yet paid — normal flow (also gated on a slot already being picked, when applicable) */}
+          {!isAccepted && !isDepositPaid && !isExpired && !needsSlotPick && urlMsg?.type !== 'paid' && (
             <div className="border border-[#1e1c1a] p-8">
               <p className="mb-1 text-xs tracking-[0.25em] text-[#8a8680]">{t.reserveTitle}</p>
+              {bookingFlow && confirmedSlot && (
+                <p className="mb-4 text-xs text-[#8a8680]">
+                  {t.pickedFor}: <span className="text-[#c8a96e]">
+                    {new Date(confirmedSlot.date + 'T00:00:00').toLocaleDateString(lang === 'es' ? 'es-DO' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })} · {confirmedSlot.time}
+                  </span>
+                </p>
+              )}
               {expiresAt && (
                 <div className="mb-6">
                   <Countdown expiresAt={expiresAt} lang={lang} />

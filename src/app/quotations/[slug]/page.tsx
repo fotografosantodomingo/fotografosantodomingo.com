@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/service'
 import { getTermsForService } from '@/lib/quotes/terms'
+import { getPrimaryStaffId } from '@/lib/quotes/availability-check'
+import { utcToAstDate, utcToAstTime } from '@/lib/bookings/availability'
 import ProposalView from './ProposalView'
 
 export const runtime = 'edge'
@@ -26,12 +28,46 @@ export default async function QuotationPage({ params }: Props) {
   const { data: quote, error } = await supabase
     .from('quotes')
     .select(
-      'id, full_name, client_company, service_type, description, line_items, final_price_usd, deposit_amount_usd, payment_mode, admin_note_customer, proposal_expires_at, locale, status, event_date, event_time'
+      'id, full_name, client_company, service_type, description, line_items, final_price_usd, deposit_amount_usd, payment_mode, admin_note_customer, proposal_expires_at, locale, status, event_date, event_time, package_id, booking_id'
     )
     .eq('proposal_slug', slug)
     .single()
 
   if (error || !quote) notFound()
+
+  // Self-service date/time picker — only for quotes tied to a real catalog
+  // package (auto-generated dual-quote options). Manually-drafted quotes
+  // have no package_id and keep the static event_date/event_time display.
+  let bookingFlow: {
+    staffId: string
+    durationMin: number
+    confirmedSlot: { date: string; time: string } | null
+  } | undefined
+
+  if (quote.package_id) {
+    const [{ data: pkg }, staffId] = await Promise.all([
+      supabase.from('service_packages').select('duration_min').eq('id', quote.package_id).single(),
+      getPrimaryStaffId(supabase),
+    ])
+
+    if (pkg && staffId) {
+      let confirmedSlot: { date: string; time: string } | null = null
+      if (quote.booking_id) {
+        const { data: booking } = await supabase
+          .from('bookings')
+          .select('starts_at')
+          .eq('id', quote.booking_id)
+          .single()
+        if (booking) {
+          confirmedSlot = {
+            date: utcToAstDate(booking.starts_at),
+            time: utcToAstTime(booking.starts_at),
+          }
+        }
+      }
+      bookingFlow = { staffId, durationMin: pkg.duration_min, confirmedSlot }
+    }
+  }
 
   // Build line items — support both new line_items JSONB and legacy single price
   const lineItems: { description: string; amount_usd: number }[] =
@@ -69,6 +105,7 @@ export default async function QuotationPage({ params }: Props) {
       terms={terms}
       eventDate={quote.event_date ?? null}
       eventTime={quote.event_time ?? null}
+      bookingFlow={bookingFlow}
     />
   )
 }

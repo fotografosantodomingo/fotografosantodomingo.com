@@ -85,55 +85,19 @@ export async function GET(req: NextRequest) {
   const staffId = await getPrimaryStaffId(sb)
   if (!staffId) return page('Error', 'No active staff member configured.', 500)
 
-  // Live re-check — never trust the draft-time availability shown in the admin email.
+  // Read-only — informs the customer email's copy (does their requested date
+  // currently look open?) but no longer holds anything. The customer picks
+  // their own slot on the hosted proposal page (src/app/api/quotations/[slug]/select-slot),
+  // which does the actual booking insert at the moment they choose a time.
   const availability = await findAvailableSlotOrAlternate(sb, {
     staffId,
     requestedDateYmd: quote.event_date,
     durationMin: pkg.duration_min,
   })
 
-  // Hold the slot on the real calendar so no other lead can take it while
-  // this customer decides whether to pay the deposit.
-  let bookingId: string | null = null
-  if (availability.kind === 'confirmed' || availability.kind === 'alternate') {
-    const { data: booking, error: bookErr } = await sb
-      .from('bookings')
-      .insert({
-        package_id: quote.package_id,
-        family_id: quote.family_id,
-        package_snapshot: {
-          family_id: quote.family_id,
-          package_id: quote.package_id,
-          name_es: pkg.name_es,
-          name_en: pkg.name_en,
-          duration_min: pkg.duration_min,
-          price_usd: Number(quote.final_price_usd),
-          inclusions_es: pkg.inclusions_es ?? [],
-          inclusions_en: pkg.inclusions_en ?? [],
-          snapshotted_at: new Date().toISOString(),
-        },
-        staff_id: staffId,
-        customer_name: quote.full_name,
-        customer_email: quote.email,
-        customer_phone: quote.whatsapp_phone,
-        locale: quote.locale,
-        starts_at: availability.startsAtUtc,
-        ends_at: availability.endsAtUtc,
-        status: 'PENDING_PAYMENT',
-        stripe_amount_usd: Number(quote.final_price_usd),
-        deposit_amount_usd: Number(quote.deposit_amount_usd ?? 0),
-        currency_display: 'USD',
-        terms_accepted: false,
-      })
-      .select('id')
-      .single()
-    if (bookErr) console.error('quote-option-action: bookings insert failed:', bookErr)
-    else bookingId = booking.id
-  }
-
   const { error: updErr } = await sb
     .from('quotes')
-    .update({ status: 'SENT_TO_CUSTOMER', booking_id: bookingId })
+    .update({ status: 'SENT_TO_CUSTOMER' })
     .eq('id', quoteId)
   if (updErr) return page('Error', `Could not update the quote: ${updErr.message}`, 500)
 
@@ -174,7 +138,7 @@ export async function GET(req: NextRequest) {
 
   return page(
     'Quote sent ✓',
-    `The ${escapeHtml(packageName)} quote (${Number(quote.final_price_usd).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}) was emailed to ${escapeHtml(quote.full_name ?? quote.email ?? 'the customer')}.${bookingId ? ' The slot is held on the calendar for 30 minutes while they decide.' : ''}`,
+    `The ${escapeHtml(packageName)} quote (${Number(quote.final_price_usd).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}) was emailed to ${escapeHtml(quote.full_name ?? quote.email ?? 'the customer')}. They'll pick their own date and time on their quote page.`,
   )
 }
 
