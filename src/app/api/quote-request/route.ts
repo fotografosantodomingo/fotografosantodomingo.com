@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createServiceClient } from '@/lib/supabase/service'
 import { sendQuoteRequestNotification } from '@/lib/email/quote-requests'
+import { generateAndSendDualQuoteOptions } from '@/lib/quotes/auto-generate'
 
 export const runtime = 'edge'
 
@@ -218,6 +219,21 @@ export async function POST(request: NextRequest) {
     submittedAt: inserted.created_at,
   }).catch(err => {
     console.error('quote-request admin notification dispatch failed:', err)
+  })
+
+  // Fire and forget — separate from the plain lead alert above, so a failure
+  // here (pricing lookup, availability RPC, quote insert) never blocks or
+  // suppresses the notification the admin already relies on.
+  generateAndSendDualQuoteOptions({
+    quoteRequestId: inserted.id,
+    familyId,
+    locale: data.locale,
+    eventDate: data.event_date ?? null,
+    customerName: data.client_name,
+    customerEmail: data.client_email,
+    customerPhone: data.client_phone ?? null,
+  }).catch(err => {
+    console.error('quote-request auto dual-quote pipeline failed:', err)
   })
 
   return NextResponse.json({ id: inserted.id }, { status: 201 })

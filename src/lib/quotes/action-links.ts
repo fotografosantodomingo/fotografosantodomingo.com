@@ -51,3 +51,27 @@ export async function buildActionLinks(quoteId: string): Promise<{
     editUrl:    `${BASE()}/admin/quotes/${quoteId}`,
   }
 }
+
+/**
+ * Same HMAC scheme as buildActionLinks (the signed message has no route-path
+ * dependency), but points at /api/quote-option-action — the sibling route for
+ * auto-generated dual-quote options (src/lib/quotes/auto-generate.ts). Kept
+ * separate from buildActionLinks so the WhatsApp-bot accept/decline route
+ * (/api/quote-action) never needs to change.
+ */
+export async function buildAutoQuoteActionLinks(quoteId: string): Promise<{
+  acceptUrl: string
+  declineUrl: string
+}> {
+  const ts = Math.floor(Date.now() / 1000)
+  const acceptSig  = await hmacSign(SECRET(), `${quoteId}:accept:${ts}`)
+  const declineSig = await hmacSign(SECRET(), `${quoteId}:decline:${ts}`)
+
+  const link = (action: string, sig: string) =>
+    `${BASE()}/api/quote-option-action?id=${quoteId}&action=${action}&ts=${ts}&sig=${encodeURIComponent(sig)}`
+
+  return {
+    acceptUrl:  link('accept', acceptSig),
+    declineUrl: link('decline', declineSig),
+  }
+}

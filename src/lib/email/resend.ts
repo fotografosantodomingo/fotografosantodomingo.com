@@ -10,7 +10,7 @@
 import { sendMail } from './smtp'
 import { getAdminRecipients } from './admin-recipients'
 
-const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
+export const FROM = 'Babula Shots <noreply@fotografosantodomingo.com>'
 
 export interface ContactData {
   id: string
@@ -340,7 +340,7 @@ export async function sendQuoteSubmissionConfirmation(data: QuoteEmailPayload) {
 // ─── Dark luxury email shell (matches /quotations/[slug] proposal page) ──────
 // Used for all quote-related emails. Booking emails keep their own blue shell.
 
-function qdOpen(title: string, subtitle: string): string {
+export function qdOpen(title: string, subtitle: string): string {
   return `
     <div style="font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;background:#0e0e0d;padding:24px 12px">
       <div style="max-width:640px;margin:0 auto;background:#161513;border:1px solid #2e2c29;overflow:hidden">
@@ -354,7 +354,7 @@ function qdOpen(title: string, subtitle: string): string {
   `
 }
 
-function qdClose(): string {
+export function qdClose(): string {
   return `
         </div>
         <div style="background:#0a0a09;border-top:1px solid #2e2c29;padding:18px 28px;text-align:center">
@@ -370,7 +370,7 @@ function qdClose(): string {
   `
 }
 
-function qdCard(rows: Array<{ label: string; value: string; gold?: boolean }>): string {
+export function qdCard(rows: Array<{ label: string; value: string; gold?: boolean }>): string {
   const last = rows.length - 1
   return `
     <table style="width:100%;border-collapse:collapse;background:#1a1815;border:1px solid #2e2c29;margin:20px 0">
@@ -384,7 +384,7 @@ function qdCard(rows: Array<{ label: string; value: string; gold?: boolean }>): 
   `
 }
 
-function qdBtn(href: string, label: string): string {
+export function qdBtn(href: string, label: string): string {
   return `
     <table width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0">
       <tr>

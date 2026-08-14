@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     // Fetch quote data before updating (needed for emails + idempotency check)
     const { data: quote } = await supabase
       .from('quotes')
-      .select('id, status, full_name, client_company, email, locale, service_type, final_price_usd, deposit_amount_usd, whatsapp_phone')
+      .select('id, status, full_name, client_company, email, locale, service_type, final_price_usd, deposit_amount_usd, whatsapp_phone, booking_id')
       .eq('id', quoteId)
       .single()
 
@@ -73,6 +73,21 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Webhook: failed to update quote status:', error)
       return NextResponse.json({ error: 'DB update failed' }, { status: 500 })
+    }
+
+    // Auto dual-quote pipeline only: if this quote holds a bookings row
+    // (inserted at admin-approve time — see /api/quote-option-action),
+    // flip it to CONFIRMED now that the deposit/full payment landed. No-op
+    // for every manually-drafted (WhatsApp-origin) quote, which never sets
+    // booking_id.
+    if (quote.booking_id) {
+      const { error: bookingErr } = await supabase
+        .from('bookings')
+        .update({ status: 'CONFIRMED' })
+        .eq('id', quote.booking_id)
+      if (bookingErr) {
+        console.error('Webhook: failed to confirm linked booking:', bookingErr)
+      }
     }
 
     console.log(`Quote ${quoteId} → ${newStatus} via Stripe webhook (mode: ${paymentMode})`)
