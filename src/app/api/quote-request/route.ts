@@ -221,10 +221,13 @@ export async function POST(request: NextRequest) {
     console.error('quote-request admin notification dispatch failed:', err)
   })
 
-  // Fire and forget — separate from the plain lead alert above, so a failure
-  // here (pricing lookup, availability RPC, quote insert) never blocks or
-  // suppresses the notification the admin already relies on.
-  generateAndSendDualQuoteOptions({
+  // Awaited (not truly fire-and-forget) — same reason as the notification
+  // call above: this runs on Cloudflare's edge runtime, which can tear down
+  // the execution context as soon as a response is returned, silently
+  // killing any un-awaited promise (there's no ctx.waitUntil exposed here).
+  // .catch() keeps a failure here from ever blocking or failing the
+  // customer's response, separate from the plain lead alert above.
+  await generateAndSendDualQuoteOptions({
     quoteRequestId: inserted.id,
     familyId,
     locale: data.locale,
