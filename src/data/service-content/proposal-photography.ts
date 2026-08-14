@@ -142,6 +142,13 @@ export const proposalPhotographyContent: ServiceContent = {
         es: 'Santo Domingo es el escenario de propuestas urbanas y románticas con peso histórico — Plaza España con la Catedral Primada al fondo, el Alcázar de Colón, la Calle Las Damas iluminada al atardecer. Sumamos propuestas en restaurantes rooftop con vista al Malecón y Mar Caribe, y propuestas íntimas en hoteles boutique de la Zona Colonial. Para parejas dominicanas o extranjeros que prefieren ciudad sobre playa, Santo Domingo entrega lo que ningún resort puede: 500 años de historia como fondo.',
         en: 'Santo Domingo is the stage for urban, history-laden proposals — Plaza España with the Primada Cathedral behind, Alcázar de Colón, Calle Las Damas lit at sunset. We add proposals at rooftop restaurants with Malecón and Caribbean views, and intimate proposals in Colonial Zone boutique hotels. For Dominican couples or international visitors who prefer city over beach, Santo Domingo delivers what no resort can: 500 years of history as backdrop.',
       },
+      image: {
+        src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/v1786566174/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_4_cdwhj4.webp',
+        alt: {
+          es: 'Propuesta de matrimonio en la Plaza España con el Alcázar de Colón de fondo, Zona Colonial de Santo Domingo',
+          en: 'Marriage proposal at Plaza España with the Alcázar de Colón in the background, Colonial Zone, Santo Domingo',
+        },
+      },
       venues: {
         es: [
           'Plaza España — propuesta histórica con la Catedral Primada al fondo',

@@ -765,6 +765,26 @@ export default async function FamilyPage({ params }: Props) {
                         </p>
                       )}
 
+                      {/* Optional single geo image — bilingual SEO alt via RichImage */}
+                      {geo.image && (
+                        <div className="mt-10 max-w-3xl">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={geo.image.src}
+                            alt={isEs ? geo.image.alt.es : geo.image.alt.en}
+                            width={geo.image.width}
+                            height={geo.image.height}
+                            className="block h-auto w-full rounded-sm"
+                            loading="lazy"
+                          />
+                          {geo.image.caption && (
+                            <p className="mt-3 font-mono uppercase tracking-widest text-[11px] text-ink-muted">
+                              {isEs ? geo.image.caption.es : geo.image.caption.en}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
                       {/* Named venues */}
                       <div className="mt-10">
                         <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">

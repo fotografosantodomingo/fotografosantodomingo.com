@@ -141,6 +141,11 @@ export type GeoBlock = {
    *  URLs preferred. Each renders edge-to-edge with no crop, stacked on
    *  both desktop and mobile. Leave empty/undefined to skip the section. */
   images?: string[]
+  /** Optional single image rendered BELOW the intro paragraph (and above
+   *  the venue list) on the family page's geo-coverage section
+   *  ([locale]/services/[service]/page.tsx). Use RichImage for proper
+   *  bilingual SEO alt text — required for image-search ranking. */
+  image?: RichImage
 }
 
 /**
