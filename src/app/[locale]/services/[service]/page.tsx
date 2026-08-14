@@ -306,6 +306,25 @@ export default async function FamilyPage({ params }: Props) {
           </div>
         </section>
 
+        {/* ── PROPOSAL HERO IMAGE ── Full-bleed shot under the tagline,
+             all viewports. Telephoto/hidden-mode coverage shot. */}
+        {family.slug === 'proposal-photography' && (
+          <section className="border-b border-hairline-soft bg-canvas">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto/Session_de_fotos_fotografo_punta_cana_propuesta_de_matrimonio_sjrds4.webp"
+              alt={
+                isEs
+                  ? 'Cobertura oculta con teleobjetivo de una propuesta de matrimonio sorpresa en la playa de Punta Cana, República Dominicana'
+                  : 'Hidden telephoto coverage of a surprise marriage proposal on the beach in Punta Cana, Dominican Republic'
+              }
+              className="block h-auto w-full"
+              loading="eager"
+              fetchPriority="high"
+            />
+          </section>
+        )}
+
         {/* ── MOBILE HERO IMAGE ── Single full-bleed shot rendered ONLY on
              phones (md:hidden). Desktop visitors see the typographic hero
              alone since their viewport already supports it; phone screens
