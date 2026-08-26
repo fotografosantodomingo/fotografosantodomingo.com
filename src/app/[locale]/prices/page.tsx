@@ -6,6 +6,15 @@ import { formatServicePrice } from '@/lib/currency/format'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
+// Matches the convention already used by nearly every sibling page in this
+// app ([hub]/page.tsx, blog/page.tsx, book/page.tsx, etc). Without this,
+// this route was subject to next-on-pages' persistent KV/Cache-API-backed
+// full-route caching (tied to getUsdToDopRate()'s 24h fetch cache) — a
+// deploy doesn't bust that cache, so a stale pre-deploy render can keep
+// being served for up to 24h. Confirmed: this is exactly what silently
+// hid new schema markup added to this page from ever reaching production.
+export const dynamic = 'force-dynamic'
+
 type Props = { params: { locale: string } }
 
 export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
@@ -481,34 +490,22 @@ export default async function PricesPage({ params: { locale } }: Props) {
     { name: isEs ? 'Precios' : 'Pricing', url: `${BASE_URL}/${locale}/prices` },
   ])
 
-  let priceCatalogDebug = 'not-attempted'
-  let priceCatalogSchema: unknown = null
-  try {
-    priceCatalogSchema = schemaGenerators.priceCatalog(
-      CATEGORIES.flatMap((cat) => cat.services).map((svc) => ({
-        name: isEs ? svc.nameEs : svc.nameEn,
-        description: (isEs ? svc.includesEs : svc.includesEn).join('. '),
-        priceUsd: svc.priceUsd,
-        url: svc.canonicalPackageSlug
-          ? `${BASE_URL}/${locale}/book?service=${svc.canonicalPackageSlug}`
-          : `${BASE_URL}/${locale}/get-quote?family=${svc.familySlug}`,
-      })),
-      locale
-    )
-    priceCatalogDebug = `ok-${CATEGORIES.flatMap((c) => c.services).length}-items`
-  } catch (err) {
-    priceCatalogDebug = `error: ${(err as Error).message}`
-  }
+  const priceCatalogSchema = schemaGenerators.priceCatalog(
+    CATEGORIES.flatMap((cat) => cat.services).map((svc) => ({
+      name: isEs ? svc.nameEs : svc.nameEn,
+      description: (isEs ? svc.includesEs : svc.includesEn).join('. '),
+      priceUsd: svc.priceUsd,
+      url: svc.canonicalPackageSlug
+        ? `${BASE_URL}/${locale}/book?service=${svc.canonicalPackageSlug}`
+        : `${BASE_URL}/${locale}/get-quote?family=${svc.familySlug}`,
+    })),
+    locale
+  )
 
   return (
     <>
-      {/* TEMP DEBUG — remove once priceCatalogSchema render gap is diagnosed */}
-      {/* eslint-disable-next-line react/no-danger */}
-      <div dangerouslySetInnerHTML={{ __html: `<!-- priceCatalogDebug: ${priceCatalogDebug} -->` }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
-      {priceCatalogSchema ? (
-        <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(priceCatalogSchema)} />
-      ) : null}
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(priceCatalogSchema)} />
 
       <main className="min-h-screen bg-canvas text-ink">
         {/* ── Hero ─────────────────────────────────────────────────────────── */}
