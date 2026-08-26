@@ -5,7 +5,7 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getPostBySlug, getRelatedPosts } from '@/lib/supabase/blog'
 import { getReviewStats, getFeaturedReviews } from '@/lib/supabase/images'
-import { CONTACT_INFO } from '@/lib/utils/constants'
+import { CONTACT_INFO, SAME_AS_LINKS } from '@/lib/utils/constants'
 import { schemaGenerators } from '@/components/seo/JsonLd'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
@@ -493,11 +493,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
           postalCode: '10210',
           addressCountry: 'DO',
         },
-        sameAs: [
-          'https://www.instagram.com/babulashotsrd',
-          GOOGLE_REVIEWS_URL,
-          'https://www.babulashotsrd.com',
-        ],
+        sameAs: SAME_AS_LINKS,
         aggregateRating: {
           '@type': 'AggregateRating',
           ratingValue: ratingValueDisplay,
