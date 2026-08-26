@@ -59,6 +59,16 @@ const lhf = qRec.filter((r) => r.position >= 7.5 && r.position <= 20.5 && r.impr
 if (!lhf.length) console.log('  (brak fraz w tym przedziale z ≥5 wyświetleń)')
 for (const r of lhf) console.log(`  impr=${r.impressions}  pos=${fx(r.position)}  clk=${r.clicks}  ctr=${fx(r.ctr * 100)}%  "${r.keys[0]}"`)
 
+// ── 1b. QUESTION QUERIES: informational-intent searches (EN/ES) — content ideas ──
+// Anchored to the start of the query so it catches "how much does..." but not
+// queries that merely contain "is"/"do"/etc. mid-phrase.
+console.log('\n═══ 1b. QUESTION QUERIES (EN/ES) — real questions people typed to find this site ═══')
+const QUESTION_RE = /^(?:who|what|when|where|why|how|which|whose|whom|can|could|should|would|will|is|are|do|does|did|qu[eé]|qui[eé]nes?|cu[aá]ndo|d[oó]nde|por\s+qu[eé]|c[oó]mo|cu[aá]les?|cu[aá]nt[oa]s?)\b/i
+const questions = qRec.filter((r) => QUESTION_RE.test(r.keys[0]))
+  .sort((a, b) => b.impressions - a.impressions)
+if (!questions.length) console.log('  (none found in this window)')
+for (const r of questions) console.log(`  impr=${r.impressions}  pos=${fx(r.position)}  clk=${r.clicks}  ctr=${fx(r.ctr * 100)}%  "${r.keys[0]}"`)
+
 // ── 2. CANNIBALIZATION: same query ranking with 2+ pages ─────────────────────
 console.log('\n═══ 2. KANIBALIZACJA (ta sama fraza, ≥2 URL-e konkurują) ═══')
 const byQuery = {}

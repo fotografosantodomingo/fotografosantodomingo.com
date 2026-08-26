@@ -1,0 +1,108 @@
+# RANGE recent 2026-07-27..2026-08-23 | prior 2026-06-29..2026-07-26
+
+## TOTALS (recent): clicks=10 impressions=998 queries=164 pages=197
+## TOTALS (prior):  clicks=9 impressions=1216 queries=153
+
+═══ 1. LOW-HANGING FRUIT (pozycja 8–20, dużo wyświetleń → szybkie wejście do TOP10) ═══
+  impr=83  pos=19.2  clk=2  ctr=2.4%  "fotografo en santo domingo"
+  impr=42  pos=10.0  clk=0  ctr=0.0%  "estudio fotográfico santo domingo"
+  impr=42  pos=8.4  clk=0  ctr=0.0%  "fotografa"
+  impr=27  pos=14.6  clk=0  ctr=0.0%  "cobertura de eventos"
+  impr=22  pos=7.5  clk=0  ctr=0.0%  "fotógrafo"
+  impr=17  pos=17.1  clk=0  ctr=0.0%  "camera operator santo domingo este"
+  impr=16  pos=15.1  clk=0  ctr=0.0%  "videographer santo domingo este"
+  impr=13  pos=8.5  clk=0  ctr=0.0%  "estudio de fotos santo domingo"
+  impr=12  pos=16.8  clk=0  ctr=0.0%  "camera operator santo domingo"
+  impr=10  pos=7.9  clk=0  ctr=0.0%  "fotografo dominicano"
+  impr=10  pos=10.8  clk=0  ctr=0.0%  "sesion de fotos"
+  impr=9  pos=15.6  clk=0  ctr=0.0%  "fotografía profesional"
+  impr=8  pos=17.6  clk=0  ctr=0.0%  "fotografia profesional republica dominicana"
+  impr=8  pos=10.6  clk=0  ctr=0.0%  "videographer santo domingo"
+  impr=7  pos=11.1  clk=0  ctr=0.0%  "fotografo republica dominicana"
+  impr=7  pos=9.7  clk=0  ctr=0.0%  "sesion de fotos en la zona colonial"
+  impr=6  pos=7.7  clk=0  ctr=0.0%  "fotógrafos"
+  impr=5  pos=8.0  clk=0  ctr=0.0%  "fotografo de boda"
+  impr=5  pos=18.4  clk=0  ctr=0.0%  "fotografo en casa de campo"
+  impr=5  pos=9.6  clk=0  ctr=0.0%  "fotógrafa"
+
+═══ 1b. QUESTION QUERIES (EN/ES) — real questions people typed to find this site ═══
+  impr=2  pos=11.0  clk=0  ctr=0.0%  "cuanto cuesta casarse en la catedral primada de america"
+  impr=1  pos=11.0  clk=0  ctr=0.0%  "cuanto cuesta una sesión de fotos en república dominicana"
+
+═══ 2. KANIBALIZACJA (ta sama fraza, ≥2 URL-e konkurują) ═══
+  "fotografo" — 2 URL-e (impr=186):
+      pos=6.8 impr=185 clk=1  /es
+      pos=1.0 impr=1 clk=0  /
+  "fotografo en santo domingo" — 7 URL-e (impr=91):
+      pos=18.8 impr=76 clk=2  /es
+      pos=18.3 impr=9 clk=0  /es/blog/fotografo-profesional-en-estudio-santo-domingo
+      pos=9.0 impr=2 clk=0  /es/blog/fotografo-zona-colonial-santo-domingo
+      pos=11.0 impr=1 clk=0  /en
+  "estudio fotográfico santo domingo" — 3 URL-e (impr=43):
+      pos=10.3 impr=34 clk=0  /es/photo-studio-santo-domingo
+      pos=9.6 impr=5 clk=0  /es
+      pos=11.3 impr=4 clk=0  /es/blog/sesion-de-fotos-en-estudio-santo-domingo-arte-blanco-y-negro
+  "fotografo santo domingo" — 6 URL-e (impr=26):
+      pos=5.0 impr=20 clk=2  /es
+      pos=19.5 impr=2 clk=0  /en
+      pos=13.0 impr=1 clk=0  /es/blog/fotografo-bodas-santo-domingo-zona-colonial
+      pos=24.0 impr=1 clk=0  /es/blog/fotografo-profesional-en-estudio-santo-domingo
+  "babula shots" — 8 URL-e (impr=24):
+      pos=6.0 impr=5 clk=0  /es/blog/sesion-de-fotos-punta-cana
+      pos=3.5 impr=4 clk=0  /en
+      pos=6.3 impr=4 clk=0  /es/blog/retrato-urbano-profesional-santo-domingo
+      pos=6.3 impr=3 clk=0  /en/blog/editorial-photographer-santo-domingo
+  "photographer" — 2 URL-e (impr=21):
+      pos=5.3 impr=20 clk=0  /en
+      pos=1.0 impr=1 clk=0  /es
+  "sesion de fotos" — 2 URL-e (impr=10):
+      pos=10.7 impr=9 clk=0  /es
+      pos=12.0 impr=1 clk=0  /es/blog/sesion-fotos-playa-casa-de-campo-republica-dominicana
+  "punta cana proposal photographer" — 2 URL-e (impr=9):
+      pos=7.4 impr=8 clk=0  /en/weddings/proposal-photographer-dominican-republic
+      pos=2.0 impr=1 clk=0  /en/fotografo-de-propuesta-en-punta-cana
+  "dominican republic wedding photographer" — 3 URL-e (impr=8):
+      pos=29.6 impr=5 clk=0  /en/services/wedding-photography
+      pos=18.5 impr=2 clk=0  /en/dominican-republic-destination-wedding-photographer
+      pos=6.0 impr=1 clk=0  /en
+  "fotografia profesional republica dominicana" — 3 URL-e (impr=8):
+      pos=18.8 impr=4 clk=0  /es/blog/fotografo-profesional-en-estudio-santo-domingo
+      pos=3.3 impr=3 clk=0  /es
+      pos=56.0 impr=1 clk=0  /es/portfolio
+
+═══ 3. SPADKI (recent vs poprzednie 28 dni) ═══
+  ↓ Spadki kliknięć (fraza):
+     (brak)
+  ↓ Spadki pozycji (fraza, ≥5 impr):
+     pos 4.3→7.1 (+2.8)  impr=23  "fotografo santo domingo"
+  ↓ Spadki kliknięć (URL):
+     -4 clk (4→0)  /es/blog/fotografo-zona-colonial-santo-domingo
+     -3 clk (30→27)  /es
+     -3 clk (3→0)  /es/blog/servicio-foto-y-video-con-dron-en-republica-dominicana
+     -2 clk (3→1)  /es/services/proposal-photography
+     -1 clk (3→2)  /es/beach-photo-sessions
+     -1 clk (3→2)  /es/blog/fotografo-quinceaneras-santo-domingo-locaciones-paquetes
+
+═══ 4. KANDYDACI DO PRZEPISANIA TITLE/META (pozycja 1–10, niski CTR, dużo impr) ═══
+  impr=185 pos=6.8 ctr=0.5% clk=1  "fotografo"
+  impr=54 pos=4.1 ctr=3.7% clk=2  "fotografos santo domingo"
+  impr=42 pos=10.0 ctr=0.0% clk=0  "estudio fotográfico santo domingo"
+  impr=42 pos=8.4 ctr=0.0% clk=0  "fotografa"
+  impr=35 pos=6.4 ctr=0.0% clk=0  "fotografos"
+  impr=24 pos=6.4 ctr=0.0% clk=0  "fotografía santo domingo"
+  impr=22 pos=7.5 ctr=0.0% clk=0  "fotógrafo"
+  impr=21 pos=5.0 ctr=0.0% clk=0  "photographer"
+  impr=19 pos=3.6 ctr=0.0% clk=0  "fotografos en santo domingo"
+  impr=15 pos=4.9 ctr=0.0% clk=0  "fotografo en republica dominicana"
+  impr=14 pos=5.5 ctr=0.0% clk=0  "fotografos cerca de mi"
+  impr=13 pos=8.5 ctr=0.0% clk=0  "estudio de fotos santo domingo"
+  impr=11 pos=3.9 ctr=0.0% clk=0  "babula shots"
+  impr=10 pos=7.9 ctr=0.0% clk=0  "fotografo dominicano"
+
+═══ 5. KLASTRY INTENCJI (udział wyświetleń) ═══
+  informational   48.6%  (485 impr)
+  local           43.7%  (436 impr)
+  transactional   6.6%  (66 impr)
+  brand           1.1%  (11 impr)
+
+# DONE
