@@ -467,7 +467,6 @@ export default function GetQuoteWizard({ locale }: Props) {
                     aria-pressed={active}
                     className={`group flex flex-col w-full h-full min-h-[80px] sm:min-h-[96px] p-3 sm:p-4 lg:p-5 text-left hover:bg-ink/5 transition-colors duration-200 ${active ? 'bg-ink/10' : ''}`}
                   >
-                    <div className="text-base sm:text-lg lg:text-xl mb-1.5 sm:mb-2 lg:mb-3" aria-hidden="true">{item.icon}</div>
                     <p className="font-mono uppercase tracking-widest text-[10px] sm:text-[11px] text-ink leading-tight">
                       {isEs ? item.labelEs : item.labelEn}
                     </p>
