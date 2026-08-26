@@ -481,9 +481,22 @@ export default async function PricesPage({ params: { locale } }: Props) {
     { name: isEs ? 'Precios' : 'Pricing', url: `${BASE_URL}/${locale}/prices` },
   ])
 
+  const priceCatalogSchema = schemaGenerators.priceCatalog(
+    CATEGORIES.flatMap((cat) => cat.services).map((svc) => ({
+      name: isEs ? svc.nameEs : svc.nameEn,
+      description: (isEs ? svc.includesEs : svc.includesEn).join('. '),
+      priceUsd: svc.priceUsd,
+      url: svc.canonicalPackageSlug
+        ? `${BASE_URL}/${locale}/book?service=${svc.canonicalPackageSlug}`
+        : `${BASE_URL}/${locale}/get-quote?family=${svc.familySlug}`,
+    })),
+    locale
+  )
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(priceCatalogSchema)} />
 
       <main className="min-h-screen bg-canvas text-ink">
         {/* ── Hero ─────────────────────────────────────────────────────────── */}

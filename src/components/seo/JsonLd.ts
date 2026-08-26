@@ -166,12 +166,7 @@ export const schemaGenerators = {
         `${BASE_URL}/es/portfolio#image-${image.id}`,
         `${BASE_URL}/en/portfolio#image-${image.id}`,
       ],
-      author: {
-        '@type': 'Person',
-        name: 'Babula Shots',
-        url: BASE_URL,
-        sameAs: ['https://instagram.com/babulashots'],
-      },
+      author: { '@type': 'Person', '@id': `${BASE_URL}/#person` },
       creator: {
         '@type': 'Organization',
         name: 'Fotografo Santo Domingo | Babula Shots',
@@ -200,11 +195,7 @@ export const schemaGenerators = {
       ? 'Colección de fotografías profesionales: bodas, retratos, drones y eventos en República Dominicana'
       : 'Professional photography collection: weddings, portraits, drones and events in Dominican Republic',
     url: pageUrl,
-    author: {
-      '@type': 'Person',
-      name: 'Babula Shots',
-      url: BASE_URL,
-    },
+    author: { '@type': 'Person', '@id': `${BASE_URL}/#person` },
     hasPart: images.map((img) => {
       const loc = resolveLocale(img, locale)
       return {
@@ -261,12 +252,10 @@ export const schemaGenerators = {
       headline: title,
       description,
       image: { '@type': 'ImageObject', url: image, width: 1200, height: 630 },
-      author: {
-        '@type': 'Person',
-        name: 'Babula Shots',
-        url: BASE_URL,
-        sameAs: ['https://www.instagram.com/babulashotsrd'],
-      },
+      // Reference the same Person entity as the About page (@id match) instead
+      // of a thin duplicate stub — consolidates E-E-A-T/authorship signal onto
+      // one real, fully-described entity instead of fragmenting it per post.
+      author: { '@type': 'Person', '@id': `${BASE_URL}/#person` },
       publisher: {
         '@type': 'Organization',
         name: 'Fotografo Santo Domingo | Babula Shots',
@@ -376,6 +365,40 @@ export const schemaGenerators = {
           price: svc.pricing.starting.replace(/[^0-9.]/g, ''),
           priceCurrency: 'USD',
           availability: 'https://schema.org/InStock',
+        },
+      },
+    })),
+  }),
+
+  // ----------------------------------------------------------
+  // PriceCatalog — for the /prices page specifically. Distinct from
+  // serviceList above (which pulls from the generic services catalog) —
+  // this uses the /prices page's own real per-package pricing data, so
+  // "how much does X cost" answer-engine queries have a structured,
+  // extractable Offer for every line item actually shown on the page.
+  // ----------------------------------------------------------
+  priceCatalog: (
+    items: Array<{ name: string; description: string; priceUsd: number; url: string }>,
+    locale: string
+  ) => ({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: locale === 'es' ? 'Precios de Fotografía — Babula Shots' : 'Photography Pricing — Babula Shots',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Product',
+        name: item.name,
+        description: item.description,
+        brand: { '@type': 'Brand', name: 'Babula Shots' },
+        url: item.url,
+        offers: {
+          '@type': 'Offer',
+          price: item.priceUsd,
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+          url: item.url,
         },
       },
     })),
