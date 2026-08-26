@@ -73,7 +73,7 @@ export default function Navigation() {
       { key: 'portfolio', labelKey: 'portfolio_menu', items: portfolioItems },
       { key: 'info', labelKey: 'info', items: infoItems },
     ]
-  }, [locale])
+  }, [])
 
   const baseNavItems = [
     { href: '/', label: t('home') },

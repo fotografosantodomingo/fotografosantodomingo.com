@@ -207,7 +207,7 @@ export default function AdminGalleriesPage() {
                   className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-white/10 dark:bg-gray-950 dark:text-white"
                 />
                 <p className="mt-1 text-[11px] text-slate-400 dark:text-gray-500">
-                  Used as the ZIP filename and shown in the client's email.
+                  Used as the ZIP filename and shown in the client&apos;s email.
                 </p>
               </div>
               <div>

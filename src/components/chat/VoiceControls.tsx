@@ -292,7 +292,7 @@ export function VoiceControls({
           aria-live="polite"
           className="max-w-[90%] text-center text-xs italic text-slate-400 dark:text-gray-500"
         >
-          "{interim}"
+          &quot;{interim}&quot;
         </p>
       )}
     </div>
