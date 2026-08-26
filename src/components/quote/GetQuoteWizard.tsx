@@ -463,6 +463,12 @@ export default function GetQuoteWizard({ locale }: Props) {
                         serviceAnswers: prev.serviceType === item.value ? prev.serviceAnswers : {},
                         addDrone: DRONE_ADDON_ELIGIBLE_SERVICES.includes(item.value) ? prev.addDrone : false,
                       }))
+                      // A tile click is itself a complete, valid answer for
+                      // this step — advance immediately instead of making
+                      // the user also press Continue. Skips validateCurrentStep
+                      // (which would read a stale form.serviceType from this
+                      // closure) since the click already guarantees validity.
+                      setStep((s) => Math.min(s + 1, maxStep))
                     }}
                     aria-pressed={active}
                     className={`group flex flex-col w-full h-full min-h-[80px] sm:min-h-[96px] p-3 sm:p-4 lg:p-5 text-left hover:bg-ink/5 transition-colors duration-200 ${active ? 'bg-ink/10' : ''}`}
@@ -659,7 +665,12 @@ export default function GetQuoteWizard({ locale }: Props) {
             min={minDate}
             className="w-full bg-transparent border-0 border-b border-hairline-soft px-0 py-2.5 text-base text-ink outline-none focus:border-ink transition-colors md:max-w-sm"
             value={form.eventDate}
-            onChange={(e) => update('eventDate', e.target.value)}
+            onChange={(e) => {
+              update('eventDate', e.target.value)
+              // Native date inputs only fire onChange once a complete, valid
+              // date is set (not per-keystroke) — safe to auto-advance here.
+              if (e.target.value) setStep((s) => Math.min(s + 1, maxStep))
+            }}
           />
         </FieldBlock>
       )}

@@ -30,12 +30,18 @@ export default function PreferredSourceButton({ locale }: { locale: string }) {
   return (
     <>
       <Script async src="https://news.google.com/swg/js/v1/publisher.js" strategy="afterInteractive" />
-      <div
-        ref={ref}
-        google-add-preferred-source-btn=""
-        data-theme={theme}
-        data-lang={locale === 'es' ? 'es' : 'en'}
-      />
+      {/* Google's widget sets width:100% on itself, which collapses to 0 in a
+          flex row with no explicit basis (confirmed — it initializes and
+          injects its iframe correctly, just invisible at 0px wide). Give it
+          a fixed box so it doesn't get squeezed out by sibling flex items. */}
+      <div className="w-[180px] shrink-0">
+        <div
+          ref={ref}
+          google-add-preferred-source-btn=""
+          data-theme={theme}
+          data-lang={locale === 'es' ? 'es' : 'en'}
+        />
+      </div>
     </>
   )
 }

@@ -5,7 +5,6 @@ import { getTranslations } from 'next-intl/server'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
-import CookieConsent from '@/components/CookieConsent'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { formatSiteLastUpdated, SITE_LAST_UPDATED_ISO } from '@/lib/seo/freshness'
 import { generateJsonLd, schemaGenerators } from '@/components/seo/JsonLd'
@@ -161,7 +160,6 @@ export default async function RootLayout({
         <Footer locale={normalizedLocale} />
       </ErrorBoundary>
       <WhatsAppButton />
-      <CookieConsent />
     </NextIntlClientProvider>
   )
 }
