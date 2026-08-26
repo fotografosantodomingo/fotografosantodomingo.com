@@ -481,22 +481,34 @@ export default async function PricesPage({ params: { locale } }: Props) {
     { name: isEs ? 'Precios' : 'Pricing', url: `${BASE_URL}/${locale}/prices` },
   ])
 
-  const priceCatalogSchema = schemaGenerators.priceCatalog(
-    CATEGORIES.flatMap((cat) => cat.services).map((svc) => ({
-      name: isEs ? svc.nameEs : svc.nameEn,
-      description: (isEs ? svc.includesEs : svc.includesEn).join('. '),
-      priceUsd: svc.priceUsd,
-      url: svc.canonicalPackageSlug
-        ? `${BASE_URL}/${locale}/book?service=${svc.canonicalPackageSlug}`
-        : `${BASE_URL}/${locale}/get-quote?family=${svc.familySlug}`,
-    })),
-    locale
-  )
+  let priceCatalogDebug = 'not-attempted'
+  let priceCatalogSchema: unknown = null
+  try {
+    priceCatalogSchema = schemaGenerators.priceCatalog(
+      CATEGORIES.flatMap((cat) => cat.services).map((svc) => ({
+        name: isEs ? svc.nameEs : svc.nameEn,
+        description: (isEs ? svc.includesEs : svc.includesEn).join('. '),
+        priceUsd: svc.priceUsd,
+        url: svc.canonicalPackageSlug
+          ? `${BASE_URL}/${locale}/book?service=${svc.canonicalPackageSlug}`
+          : `${BASE_URL}/${locale}/get-quote?family=${svc.familySlug}`,
+      })),
+      locale
+    )
+    priceCatalogDebug = `ok-${CATEGORIES.flatMap((c) => c.services).length}-items`
+  } catch (err) {
+    priceCatalogDebug = `error: ${(err as Error).message}`
+  }
 
   return (
     <>
+      {/* TEMP DEBUG — remove once priceCatalogSchema render gap is diagnosed */}
+      {/* eslint-disable-next-line react/no-danger */}
+      <div dangerouslySetInnerHTML={{ __html: `<!-- priceCatalogDebug: ${priceCatalogDebug} -->` }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(priceCatalogSchema)} />
+      {priceCatalogSchema ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(priceCatalogSchema)} />
+      ) : null}
 
       <main className="min-h-screen bg-canvas text-ink">
         {/* ── Hero ─────────────────────────────────────────────────────────── */}
