@@ -5,6 +5,10 @@ export const faqData = {
       answer: 'Las sesiones comienzan desde $75 USD para sesiones en estudio con snoot óptico (10 fotos), sesiones en Punta Cana desde $300 USD, y paquetes de boda con diferentes niveles: Essential, Signature y Luxury. Contáctanos para un presupuesto personalizado según tu evento.',
     },
     {
+      question: '¿Cuánto cuesta una sesión de fotos en República Dominicana?',
+      answer: 'El precio varía según la ciudad y el tipo de sesión: desde $75 USD en sesiones de estudio en Santo Domingo, desde $270 USD en sesiones de propuesta de matrimonio, desde $300 USD en Punta Cana, y desde $920 USD en paquetes de boda completos. La ubicación (estudio, playa, Zona Colonial, resort) y la duración de cobertura son los factores que más afectan el precio final.',
+    },
+    {
       question: '¿Qué servicios de fotografía ofrecen en República Dominicana?',
       answer: 'Ofrecemos fotografía de bodas, sesiones pre boda, quinceañeras, cumpleaños, retratos exteriores e interiores, fotografía de moda y pasarela, fotografía corporativa, cobertura de eventos, sesiones en estudio con snoot óptico, fotografía con drone certificado, fotografía en Isla Saona, Punta Cana, Tortuga Bay y toda República Dominicana.',
     },
@@ -45,6 +49,10 @@ export const faqData = {
     {
       question: 'How much does a photo session in Santo Domingo cost?',
       answer: 'Sessions start from $75 USD for studio sessions with optical snoot (10 photos), Punta Cana sessions from $300 USD, and wedding packages at different levels: Essential, Signature and Luxury. Contact us for a custom quote based on your event.',
+    },
+    {
+      question: 'How much does a photo session cost in the Dominican Republic?',
+      answer: 'Price depends on the city and session type: from $75 USD for studio sessions in Santo Domingo, from $270 USD for marriage proposal sessions, from $300 USD in Punta Cana, and from $920 USD for full wedding packages. Location (studio, beach, Colonial Zone, resort) and coverage length are what most affect the final price.',
     },
     {
       question: 'What photography services do you offer in Dominican Republic?',

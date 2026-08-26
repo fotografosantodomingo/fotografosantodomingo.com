@@ -211,6 +211,16 @@ export const weddingPhotographyContent: ServiceContent = {
       miniFaq: [
         {
           question: {
+            es: '¿Cuánto cuesta casarse en la Catedral Primada de América?',
+            en: 'How much does it cost to get married at the Primada Cathedral?',
+          },
+          answer: {
+            es: 'La tarifa de la propia Catedral (separada de la fotografía) ronda los RD$30,000, y se recomienda apartar la fecha con hasta un año de anticipación dada la demanda. Ambos novios necesitan cédula de identidad vigente, y se solicita la de los padres, padrino y madrina. Estos requisitos y montos los define la Catedral directamente — te recomendamos confirmar el monto actual llamando a sus oficinas (809-682-3848) antes de reservar. Nuestros paquetes de fotografía de boda para una ceremonia aquí empiezan desde $920 USD.',
+            en: 'The Cathedral\'s own fee (separate from photography) is commonly cited around RD$30,000, and booking the date up to a year in advance is recommended given demand. Both spouses need a valid ID, and the couple\'s parents plus the padrino and madrina are also asked for theirs. These requirements and amounts are set directly by the Cathedral — we recommend confirming the current fee by calling their office (809-682-3848) before booking. Our wedding photography packages for a ceremony here start from $920 USD.',
+          },
+        },
+        {
+          question: {
             es: '¿Cubren bodas religiosas en la Catedral Primada de América?',
             en: 'Do you cover religious weddings at the Primada Cathedral?',
           },

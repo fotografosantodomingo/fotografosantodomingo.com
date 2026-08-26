@@ -33,6 +33,24 @@ export const SOCIAL_LINKS = {
   twitter: 'https://twitter.com/babulashots',
 }
 
+// Single source of truth for every schema.org `sameAs` array on the site
+// (organization/localBusiness/person generators in JsonLd.ts, spoke-schema.ts).
+// Each entry confirms the same real-world entity to Google's Knowledge Graph
+// and AI answer engines — add a profile here once and every schema builder
+// picks it up, instead of drifting per-generator.
+export const SAME_AS_LINKS: string[] = [
+  SOCIAL_LINKS.instagram,
+  SOCIAL_LINKS.facebook,
+  SOCIAL_LINKS.tiktok,
+  SOCIAL_LINKS.linkedin,
+  SOCIAL_LINKS.pinterest,
+  SOCIAL_LINKS.youtube,
+  SOCIAL_LINKS.twitter,
+  SOCIAL_LINKS.trustpilot,
+  'https://g.page/r/Cfzh-OCc5eftEAE/review', // Google Business Profile reviews
+  'https://share.google/aJphPsrVL2VXH9EWH', // Google Business Profile share link
+]
+
 // Business rating — single source of truth used in schema builders and page copy.
 // Update count here when Google review total changes; do NOT hardcode elsewhere.
 export const BUSINESS_RATING = {

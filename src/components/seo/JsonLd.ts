@@ -1,6 +1,7 @@
 import { PortfolioImage, ReviewStats, resolveLocale } from '@/lib/types/portfolio'
 import { getServiceCatalog, serviceSlugById } from '@/lib/services/catalog'
 import { SITE_LAST_UPDATED_ISO } from '@/lib/seo/freshness'
+import { SAME_AS_LINKS } from '@/lib/utils/constants'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const CLOUDINARY_BASE = `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
@@ -14,12 +15,7 @@ export const schemaGenerators = {
     url: BASE_URL,
     logo: `${BASE_URL}/images/logo.png`,
     dateModified: SITE_LAST_UPDATED_ISO,
-    sameAs: [
-      'https://www.instagram.com/babulashotsrd',
-      'https://www.facebook.com/babulashots',
-      'https://www.tiktok.com/@babulashots',
-      'https://www.trustpilot.com/review/fotografosantodomingo.com',
-    ],
+    sameAs: SAME_AS_LINKS,
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: '+1-809-720-9547',
@@ -80,12 +76,7 @@ export const schemaGenerators = {
       { '@type': 'City', name: 'Santiago' },
       { '@type': 'AdministrativeArea', name: 'República Dominicana' }
     ],
-    sameAs: [
-      'https://www.instagram.com/babulashotsrd',
-      'https://www.facebook.com/babulashots',
-      'https://www.tiktok.com/@babulashots',
-      'https://www.trustpilot.com/review/fotografosantodomingo.com',
-    ],
+    sameAs: SAME_AS_LINKS,
   }),
 
   // ----------------------------------------------------------
@@ -126,12 +117,7 @@ export const schemaGenerators = {
       bestRating: '5',
       worstRating: '1',
     },
-    sameAs: [
-      'https://www.instagram.com/babulashotsrd',
-      'https://www.facebook.com/babulashots',
-      'https://www.tiktok.com/@babulashots',
-      'https://www.trustpilot.com/review/fotografosantodomingo.com',
-    ],
+    sameAs: SAME_AS_LINKS,
   }),
 
   professionalServiceReference: () => ({
@@ -346,13 +332,9 @@ export const schemaGenerators = {
     knowsAbout: locale === 'es'
       ? ['fotografía de bodas', 'fotografía de retratos', 'fotografía con dron', 'fotografía de eventos', 'fotografía comercial', 'fotografía inmobiliaria', 'fotografía de propuesta de matrimonio', 'producción de campañas']
       : ['wedding photography', 'portrait photography', 'drone photography', 'event photography', 'commercial photography', 'real estate photography', 'marriage proposal photography', 'campaign production'],
-    // sameAs strengthens entity recognition in Google's Knowledge Graph.
-    // Each link should resolve to a profile that confirms identity.
-    sameAs: [
-      'https://www.instagram.com/babulashotsrd',
-      'https://www.trustpilot.com/review/fotografosantodomingo.com',
-      'https://share.google/aJphPsrVL2VXH9EWH',
-    ],
+    // sameAs strengthens entity recognition in Google's Knowledge Graph
+    // and AI answer engines — single source of truth in lib/utils/constants.ts.
+    sameAs: SAME_AS_LINKS,
     // Operating since 2015 per About page copy → 10+ years professional photography.
     workLocation: [
       { '@type': 'Place', name: 'Santo Domingo, República Dominicana' },

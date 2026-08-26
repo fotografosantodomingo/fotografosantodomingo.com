@@ -2,7 +2,7 @@
 
 Babula Shots is a professional photography studio in Santo Domingo, Dominican Republic. We provide wedding, portrait, event, family, commercial, and drone photography services with bilingual content (Spanish and English).
 
-Last updated: 2026-04-25
+Last updated: 2026-08-26
 
 ## Primary pages
 
@@ -22,6 +22,14 @@ Last updated: 2026-04-25
 - https://www.fotografosantodomingo.com/en/book - Online booking wizard with live calendar, slot picker, and 50% deposit Stripe checkout (English).
 - https://www.fotografosantodomingo.com/es/prices - Transparent service pricing in Spanish (50% deposit per service).
 - https://www.fotografosantodomingo.com/en/prices - Transparent service pricing in English (50% deposit per service).
+
+## Proposal & wedding photography (dedicated hubs)
+
+- https://www.fotografosantodomingo.com/en/proposal - Proposal photography hub covering all of Dominican Republic, with package comparison.
+- https://www.fotografosantodomingo.com/es/propuesta/fotografo-propuesta-oculta-modo-ninja - Hidden/telephoto discreet proposal photography, island-wide.
+- https://www.fotografosantodomingo.com/es/bodas/fotografo-propuesta-matrimonio-zona-colonial-santo-domingo - Surprise proposal planning + photography in the Colonial Zone, Santo Domingo.
+- https://www.fotografosantodomingo.com/en/punta-cana-proposal-photographer - Dedicated Punta Cana proposal photography landing page.
+- https://www.fotografosantodomingo.com/es/services/proposal-photography - Full proposal photography service page with per-city coverage (Santo Domingo, Punta Cana).
 
 ## Content hubs
 

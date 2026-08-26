@@ -10,7 +10,7 @@
  */
 
 import type { SpokePage } from '@/data/spoke-pages'
-import { PHOTOGRAPHER } from '@/lib/utils/constants'
+import { PHOTOGRAPHER, SAME_AS_LINKS } from '@/lib/utils/constants'
 
 const DEFAULT_BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -91,10 +91,7 @@ function buildLocalService(spoke: SpokePage, locale: string, baseUrl: string) {
           name: PHOTOGRAPHER.address.country,
         },
       },
-      sameAs: [
-        PHOTOGRAPHER.instagram,
-        PHOTOGRAPHER.facebook,
-      ],
+      sameAs: SAME_AS_LINKS,
     },
     areaServed: {
       '@type': 'City',

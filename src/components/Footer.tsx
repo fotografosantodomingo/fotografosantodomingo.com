@@ -2,6 +2,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import NewsletterForm from './NewsletterForm'
 import ThemeToggle from './ThemeToggle'
+import PreferredSourceButton from './PreferredSourceButton'
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/lib/utils/constants'
 import ObfuscatedEmail from '@/components/ui/ObfuscatedEmail'
 
@@ -201,6 +202,7 @@ export default function Footer({ locale: localeProp }: { locale?: string } = {})
               {isEs ? 'Términos' : 'Terms'}
             </Link>
             <ThemeToggle />
+            <PreferredSourceButton locale={locale} />
           </div>
         </div>
 
