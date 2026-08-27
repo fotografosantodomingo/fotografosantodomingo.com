@@ -8,6 +8,31 @@ const intlMiddleware = createIntlMiddleware({
   localeDetection: false,
 })
 
+/**
+ * Security headers for every real page response.
+ *
+ * public/_headers covers genuinely static files (llms.txt, robots.txt,
+ * sitemaps, images) fine, but this deployment runs on @cloudflare/next-on-pages
+ * in "Advanced Mode" (a single _worker.js) — Cloudflare Pages does not apply
+ * _headers to routes the Worker itself renders, which is every SSR'd page.
+ * Middleware is the one mechanism that reliably runs for those routes on
+ * this adapter (same reason the admin auth check below already lives here),
+ * so it's the actual place these headers take effect for real pages.
+ *
+ * No Content-Security-Policy here deliberately — a CSP tight enough to
+ * matter can silently break Stripe Checkout, GA/GTM, or the Supabase client
+ * if the allowlist is wrong, and that hasn't been tested yet.
+ */
+function applySecurityHeaders(response: NextResponse): NextResponse {
+  response.headers.set('X-Frame-Options', 'SAMEORIGIN')
+  response.headers.set('X-Content-Type-Options', 'nosniff')
+  response.headers.set('Referrer-Policy', 'origin-when-cross-origin')
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+  response.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload')
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups')
+  return response
+}
+
 async function adminMiddleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl
 
@@ -53,10 +78,10 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (pathname.startsWith('/admin')) {
-    return adminMiddleware(request)
+    return applySecurityHeaders(await adminMiddleware(request))
   }
 
-  return intlMiddleware(request)
+  return applySecurityHeaders(intlMiddleware(request))
 }
 
 export const config = {
