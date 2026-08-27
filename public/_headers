@@ -1,0 +1,25 @@
+# Cloudflare Pages headers file — applied at the edge for every route.
+#
+# next.config.js already defines an equivalent `headers()` block, but it is
+# NOT actually applied in production: this project deploys via
+# @cloudflare/next-on-pages, and Next's headers() config does not carry
+# through that adapter onto Cloudflare Pages (verified — curl against the
+# live site showed none of these headers present despite the config
+# existing in code, the same class of bug as the /prices static-cache issue
+# documented in NEW_PAGE_SPEC.md). This file is the actual source of truth
+# for response headers on this deployment.
+#
+# Intentionally NOT included here: a strict Content-Security-Policy. A CSP
+# tight enough to matter can silently break Stripe Checkout, Google
+# Analytics/Tag Manager, or the Supabase client if the allowlist is wrong —
+# that risk isn't worth taking without dedicated testing of every
+# third-party integration first.
+
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  X-DNS-Prefetch-Control: on
+  Referrer-Policy: origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Cross-Origin-Opener-Policy: same-origin-allow-popups

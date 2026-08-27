@@ -65,7 +65,7 @@ export default function BookingCTA({
       {isInternalBookUrl ? (
         <Link
           href={resolvedBookUrl}
-          className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-md transition-all hover:bg-amber-400 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+          className="inline-flex items-center gap-2 rounded-full bg-amber-700 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-md transition-all hover:bg-amber-800 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
         >
           <span>📅</span>
           {resolvedBookLabel}
@@ -75,7 +75,7 @@ export default function BookingCTA({
           href={resolvedBookUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-md transition-all hover:bg-amber-400 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+          className="inline-flex items-center gap-2 rounded-full bg-amber-700 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-md transition-all hover:bg-amber-800 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
         >
           <span>📅</span>
           {resolvedBookLabel}

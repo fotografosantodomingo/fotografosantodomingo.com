@@ -123,7 +123,7 @@ function ExpectSection({ spoke, locale }: Props) {
           >
             {heading}
           </h2>
-          <p className="mt-3 text-neutral-500 dark:text-neutral-400">{subheading}</p>
+          <p className="mt-3 text-neutral-600">{subheading}</p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-3">
@@ -230,7 +230,7 @@ function PricingSection({ spoke, locale }: Props) {
         >
           {heading}
         </h2>
-        <p className="mt-2 text-neutral-500 dark:text-neutral-400">{subheading}</p>
+        <p className="mt-2 text-neutral-600">{subheading}</p>
 
         <div className="mt-10 rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm dark:border-neutral-700 dark:bg-neutral-900">
           <p className="text-sm font-semibold uppercase tracking-widest text-amber-500">
@@ -512,7 +512,7 @@ function FinalCTASection({ spoke, locale }: Props) {
             bookLabel={isEs ? 'Reservar fecha' : 'Book a date'}
             waLabel="WhatsApp"
             quoteLabel={isEs ? 'Solicitar cotización' : 'Get a quote'}
-            className="[&_a:first-child]:bg-white [&_a:first-child]:text-amber-600 [&_a:first-child]:hover:bg-amber-50"
+            className="[&_a:first-child]:bg-white [&_a:first-child]:text-amber-700 [&_a:first-child]:hover:bg-amber-50"
           />
         </div>
         {/* Trust signal */}

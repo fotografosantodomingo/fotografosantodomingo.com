@@ -1,44 +1,46 @@
 # Fotografo Santo Domingo | Babula Shots
 
-Babula Shots is a professional photography studio in Santo Domingo, Dominican Republic. We provide wedding, portrait, event, family, commercial, and drone photography services with bilingual content (Spanish and English).
+> Babula Shots is a professional photography studio based in Santo Domingo, Dominican Republic, offering wedding, portrait, event, family, commercial, and drone photography. Content and booking are fully bilingual (Spanish and English).
 
-Last updated: 2026-08-26
+Last updated: 2026-08-27
 
 ## Primary pages
 
-- https://www.fotografosantodomingo.com/es - Spanish homepage with core service overview and booking CTAs.
-- https://www.fotografosantodomingo.com/en - English homepage for international users.
-- https://www.fotografosantodomingo.com/es/services - Main services landing page in Spanish.
-- https://www.fotografosantodomingo.com/en/services - Main services landing page in English.
-- https://www.fotografosantodomingo.com/es/portfolio - Portfolio gallery in Spanish.
-- https://www.fotografosantodomingo.com/en/portfolio - Portfolio gallery in English.
-- https://www.fotografosantodomingo.com/es/about - Photographer profile and background in Spanish.
-- https://www.fotografosantodomingo.com/en/about - Photographer profile and background in English.
-- https://www.fotografosantodomingo.com/es/contact - Contact and booking details in Spanish.
-- https://www.fotografosantodomingo.com/en/contact - Contact and booking details in English.
-- https://www.fotografosantodomingo.com/es/get-quote - Quote request flow in Spanish.
-- https://www.fotografosantodomingo.com/en/get-quote - Quote request flow in English.
-- https://www.fotografosantodomingo.com/es/book - Online booking wizard with live calendar, slot picker, and 50% deposit Stripe checkout (Spanish).
-- https://www.fotografosantodomingo.com/en/book - Online booking wizard with live calendar, slot picker, and 50% deposit Stripe checkout (English).
-- https://www.fotografosantodomingo.com/es/prices - Transparent service pricing in Spanish (50% deposit per service).
-- https://www.fotografosantodomingo.com/en/prices - Transparent service pricing in English (50% deposit per service).
+- [Spanish homepage](https://www.fotografosantodomingo.com/es): Core service overview and booking CTAs.
+- [English homepage](https://www.fotografosantodomingo.com/en): English-language homepage for international visitors.
+- [Services (ES)](https://www.fotografosantodomingo.com/es/services): Main services landing page in Spanish.
+- [Services (EN)](https://www.fotografosantodomingo.com/en/services): Main services landing page in English.
+- [Portfolio (ES)](https://www.fotografosantodomingo.com/es/portfolio): Portfolio gallery in Spanish.
+- [Portfolio (EN)](https://www.fotografosantodomingo.com/en/portfolio): Portfolio gallery in English.
+- [About the photographer (ES)](https://www.fotografosantodomingo.com/es/about): Photographer profile and background in Spanish.
+- [About the photographer (EN)](https://www.fotografosantodomingo.com/en/about): Photographer profile and background in English.
+- [Contact (ES)](https://www.fotografosantodomingo.com/es/contact): Contact and booking details in Spanish.
+- [Contact (EN)](https://www.fotografosantodomingo.com/en/contact): Contact and booking details in English.
+- [Get a quote (ES)](https://www.fotografosantodomingo.com/es/get-quote): Quote request flow in Spanish.
+- [Get a quote (EN)](https://www.fotografosantodomingo.com/en/get-quote): Quote request flow in English.
+- [Book online (ES)](https://www.fotografosantodomingo.com/es/book): Booking wizard with live calendar, slot picker, and 50% deposit Stripe checkout, in Spanish.
+- [Book online (EN)](https://www.fotografosantodomingo.com/en/book): Booking wizard with live calendar, slot picker, and 50% deposit Stripe checkout, in English.
+- [Pricing (ES)](https://www.fotografosantodomingo.com/es/prices): Transparent service pricing in Spanish (50% deposit per service).
+- [Pricing (EN)](https://www.fotografosantodomingo.com/en/prices): Transparent service pricing in English (50% deposit per service).
 
-## Proposal & wedding photography (dedicated hubs)
+## Proposal & wedding photography
 
-- https://www.fotografosantodomingo.com/en/proposal - Proposal photography hub covering all of Dominican Republic, with package comparison.
-- https://www.fotografosantodomingo.com/es/propuesta/fotografo-propuesta-oculta-modo-ninja - Hidden/telephoto discreet proposal photography, island-wide.
-- https://www.fotografosantodomingo.com/es/bodas/fotografo-propuesta-matrimonio-zona-colonial-santo-domingo - Surprise proposal planning + photography in the Colonial Zone, Santo Domingo.
-- https://www.fotografosantodomingo.com/en/punta-cana-proposal-photographer - Dedicated Punta Cana proposal photography landing page.
-- https://www.fotografosantodomingo.com/es/services/proposal-photography - Full proposal photography service page with per-city coverage (Santo Domingo, Punta Cana).
+- [Proposal photography hub (EN)](https://www.fotografosantodomingo.com/en/proposal): Proposal photography covering all of the Dominican Republic, with package comparison.
+- [Hidden/telephoto proposal photography (ES)](https://www.fotografosantodomingo.com/es/propuesta/fotografo-propuesta-oculta-modo-ninja): Discreet, hidden-mode proposal photography, island-wide.
+- [Zona Colonial proposal photography (ES)](https://www.fotografosantodomingo.com/es/bodas/fotografo-propuesta-matrimonio-zona-colonial-santo-domingo): Surprise proposal planning and photography in the Colonial Zone, Santo Domingo.
+- [Punta Cana proposal photographer (EN)](https://www.fotografosantodomingo.com/en/punta-cana-proposal-photographer): Dedicated Punta Cana proposal photography landing page.
+- [Proposal photography service page (ES)](https://www.fotografosantodomingo.com/es/services/proposal-photography): Full proposal photography service page with per-city coverage (Santo Domingo, Punta Cana).
+- [Zona Colonial wedding photography (ES)](https://www.fotografosantodomingo.com/es/bodas/zona-colonial-santo-domingo): Wedding photography in Santo Domingo's UNESCO-listed Zona Colonial.
+- [Baptism photography, Santo Domingo (ES)](https://www.fotografosantodomingo.com/es/eventos/fotografo-bautizo-santo-domingo): Baptism photography in Santo Domingo's Zona Colonial churches, with coverage across the Dominican Republic.
 
 ## Content hubs
 
-- https://www.fotografosantodomingo.com/es/blog - Spanish photography blog and local guidance.
-- https://www.fotografosantodomingo.com/en/blog - English photography blog and local guidance.
+- [Blog (ES)](https://www.fotografosantodomingo.com/es/blog): Spanish photography blog and local guidance.
+- [Blog (EN)](https://www.fotografosantodomingo.com/en/blog): English photography blog and local guidance.
 
-## Canonical technical resources
+## Optional
 
-- https://www.fotografosantodomingo.com/robots.txt - Crawl policy.
-- https://www.fotografosantodomingo.com/sitemap.xml - Primary XML sitemap.
-- https://www.fotografosantodomingo.com/image-sitemap.xml - Image sitemap.
-- https://www.fotografosantodomingo.com/hreflang-sitemap.xml - Hreflang sitemap.
+- [robots.txt](https://www.fotografosantodomingo.com/robots.txt): Crawl policy.
+- [XML sitemap](https://www.fotografosantodomingo.com/sitemap.xml): Primary sitemap.
+- [Image sitemap](https://www.fotografosantodomingo.com/image-sitemap.xml): Image sitemap.
+- [Hreflang sitemap](https://www.fotografosantodomingo.com/hreflang-sitemap.xml): Hreflang sitemap.
