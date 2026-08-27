@@ -50,6 +50,7 @@ function HeroSection({ spoke, locale, noHeroImage }: Props) {
   const h1 = isEs ? spoke.h1Es : spoke.h1En
   const hookLocalized = isEs ? spoke.hookEs : spoke.hookEn
   const waMessage = isEs ? spoke.waMessageEs : spoke.waMessageEn
+  const bookUrl = spoke.bookingServiceSlug ? `/${locale}/book?service=${spoke.bookingServiceSlug}` : undefined
   const heroSrc = cloudinaryUrl(spoke.heroImagePublicId, 'c_fill,w_1920,h_1080,f_auto,q_auto:good')
   const heroAlt = isEs ? spoke.heroImageAltEs : spoke.heroImageAltEn
 
@@ -88,7 +89,7 @@ function HeroSection({ spoke, locale, noHeroImage }: Props) {
           {hookLocalized}
         </p>
         <div className="mt-10">
-          <BookingCTA locale={locale} waMessage={waMessage} layout="horizontal" />
+          <BookingCTA locale={locale} waMessage={waMessage} bookUrl={bookUrl} layout="horizontal" />
         </div>
         {/* Geo trust signal */}
         <p className={`mt-6 text-sm ${
@@ -218,6 +219,7 @@ function PricingSection({ spoke, locale }: Props) {
     : 'Transparent pricing. No surprise fees.'
   const desc = isEs ? spoke.pricingDescEs : spoke.pricingDescEn
   const waMessage = isEs ? spoke.waMessageEs : spoke.waMessageEn
+  const bookUrl = spoke.bookingServiceSlug ? `/${locale}/book?service=${spoke.bookingServiceSlug}` : undefined
 
   return (
     <section className="py-16 sm:py-24" aria-labelledby="pricing-heading">
@@ -244,7 +246,7 @@ function PricingSection({ spoke, locale }: Props) {
             {desc !== '[CONTENT — Sprint 2]' ? desc : ''}
           </p>
           <div className="mt-8">
-            <BookingCTA locale={locale} waMessage={waMessage} layout="horizontal" />
+            <BookingCTA locale={locale} waMessage={waMessage} bookUrl={bookUrl} layout="horizontal" />
           </div>
         </div>
       </div>
@@ -480,6 +482,7 @@ function FinalCTASection({ spoke, locale }: Props) {
   const headline = isEs ? spoke.ctaHeadlineEs : spoke.ctaHeadlineEn
   const valueProp = isEs ? spoke.ctaValuePropEs : spoke.ctaValuePropEn
   const waMessage = isEs ? spoke.waMessageEs : spoke.waMessageEn
+  const bookUrl = spoke.bookingServiceSlug ? `/${locale}/book?service=${spoke.bookingServiceSlug}` : undefined
   const hasContent =
     headline !== '[CONTENT — Sprint 2]' && headline !== '[CONTENT]'
 
@@ -504,6 +507,7 @@ function FinalCTASection({ spoke, locale }: Props) {
           <BookingCTA
             locale={locale}
             waMessage={waMessage}
+            bookUrl={bookUrl}
             layout="horizontal"
             bookLabel={isEs ? 'Reservar fecha' : 'Book a date'}
             waLabel="WhatsApp"
@@ -512,7 +516,7 @@ function FinalCTASection({ spoke, locale }: Props) {
           />
         </div>
         {/* Trust signal */}
-        <p className="mt-8 text-sm text-amber-900/70">
+        <p className="mt-8 text-sm font-medium text-amber-950">
           {isEs
             ? '⭐ 4.9 en Google · +98 reseñas · bodas y sesiones en República Dominicana'
             : '⭐ 4.9 on Google · 98+ reviews · weddings and sessions across the Dominican Republic'}

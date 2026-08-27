@@ -159,11 +159,11 @@ const CATEGORIES: ServiceCategory[] = [
         nameEn: 'Baptism Photography',
         durationEs: '2 horas',
         durationEn: '2 hours',
-        priceUsd: 270,
-        includesEs: ['Ceremonia + celebración familiar', 'Fotos grupales organizadas', 'Galería online'],
-        includesEn: ['Ceremony + family celebration', 'Organized group photos', 'Online gallery'],
+        priceUsd: 275,
+        includesEs: ['Ceremonia + bendición + retrato familiar', 'Fotos grupales organizadas', 'Galería online'],
+        includesEn: ['Ceremony + blessing + family portrait', 'Organized group photos', 'Online gallery'],
         familySlug: 'birthday-event-photography',
-        // Canonical essential-event is $200/1hr (vs $250/2hr here) — route to quote
+        canonicalPackageSlug: 'baptism', // EXACT MATCH: $275, 2hr — dedicated package
       },
       {
         slug: 'graduation',

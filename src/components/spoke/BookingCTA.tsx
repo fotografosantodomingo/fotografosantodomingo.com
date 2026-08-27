@@ -18,6 +18,12 @@ type BookingCTAProps = {
   bookLabel?: string
   waLabel?: string
   quoteLabel?: string
+  /**
+   * Overrides the primary button's destination. Defaults to the Setmore
+   * booking page; pass an internal `/[locale]/book?service=...` URL to
+   * route straight into the real calendar + Stripe wizard instead.
+   */
+  bookUrl?: string
   /** Render a full-width horizontal or stacked card layout */
   layout?: 'horizontal' | 'stacked'
   className?: string
@@ -33,6 +39,7 @@ export default function BookingCTA({
   bookLabel,
   waLabel,
   quoteLabel,
+  bookUrl,
   layout = 'horizontal',
   className = '',
 }: BookingCTAProps) {
@@ -44,6 +51,8 @@ export default function BookingCTA({
 
   const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeWa(waMessage)}`
   const quoteUrl = `/${locale}/${isEs ? 'cotizaciones' : 'get-quote'}`
+  const isInternalBookUrl = Boolean(bookUrl)
+  const resolvedBookUrl = bookUrl ?? SETMORE_URL
 
   const containerClass =
     layout === 'horizontal'
@@ -52,16 +61,26 @@ export default function BookingCTA({
 
   return (
     <div className={`${containerClass} ${className}`}>
-      {/* Primary — Book online */}
-      <a
-        href={SETMORE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-md transition-all hover:bg-amber-400 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
-      >
-        <span>📅</span>
-        {resolvedBookLabel}
-      </a>
+      {/* Primary — Book online (internal calendar+Stripe wizard when bookUrl is set, else Setmore) */}
+      {isInternalBookUrl ? (
+        <Link
+          href={resolvedBookUrl}
+          className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-md transition-all hover:bg-amber-400 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+        >
+          <span>📅</span>
+          {resolvedBookLabel}
+        </Link>
+      ) : (
+        <a
+          href={resolvedBookUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-md transition-all hover:bg-amber-400 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
+        >
+          <span>📅</span>
+          {resolvedBookLabel}
+        </a>
+      )}
 
       {/* Secondary — WhatsApp */}
       <a

@@ -75,6 +75,12 @@ export type SpokePage = {
   status: SpokeStatus
   /** Sitemap priority tier; 1=0.8, 2=0.75, 3=0.7 */
   tier: SpokeTier
+  /**
+   * Optional deep-link into the real /book calendar+Stripe wizard, in
+   * "<family_slug>__<package_slug>" form (matches /book's ?service= param).
+   * When set, the page's "Book a date" CTA routes here instead of Setmore.
+   */
+  bookingServiceSlug?: string
 
   // ── Geo — use coordinates for the SPOKE location, not Santo Domingo ─────────
   geo: { latitude: number; longitude: number }
@@ -909,6 +915,7 @@ export const SPOKE_PAGES: SpokePage[] = [
     hubSlug: 'event-photography',
     status: 'published',
     tier: 2,
+    bookingServiceSlug: 'birthday-event-photography__baptism',
     geo: { latitude: 18.4861, longitude: -69.9312 },
     geoCity: 'Santo Domingo',
     geoRegion: 'Distrito Nacional',
