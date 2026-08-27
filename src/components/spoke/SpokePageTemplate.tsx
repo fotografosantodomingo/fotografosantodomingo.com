@@ -236,7 +236,9 @@ function PricingSection({ spoke, locale }: Props) {
           </p>
           <p className="mt-2 text-5xl font-extrabold tabular-nums text-neutral-900 dark:text-white">
             {spoke.priceFromUsd !== '[CONTENT — Sprint 2]' ? spoke.priceFromUsd : '—'}
-            <span className="ml-1 text-xl font-normal text-neutral-400">USD</span>
+            {(spoke.priceSuffix ?? 'USD') !== '' && (
+              <span className="ml-1 text-xl font-normal text-neutral-400">{spoke.priceSuffix ?? 'USD'}</span>
+            )}
           </p>
           <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
             {desc !== '[CONTENT — Sprint 2]' ? desc : ''}

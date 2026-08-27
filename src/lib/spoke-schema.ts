@@ -108,8 +108,8 @@ function buildLocalService(spoke: SpokePage, locale: string, baseUrl: string) {
       ? {
           offers: {
             '@type': 'Offer',
-            price: spoke.priceFromUsd.replace('$', ''),
-            priceCurrency: 'USD',
+            price: spoke.priceFromUsd.replace(/[^0-9.]/g, ''),
+            priceCurrency: spoke.priceFromUsd.includes('RD$') ? 'DOP' : 'USD',
             description: isEs ? spoke.pricingDescEs : spoke.pricingDescEn,
           },
         }

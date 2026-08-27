@@ -113,6 +113,8 @@ export type SpokePage = {
 
   // ── Pricing (Section 4) ──────────────────────────────────────────────────────
   priceFromUsd: string
+  /** Overrides the default "USD" suffix shown after priceFromUsd (e.g. '' when the currency symbol is already embedded, like "RD$16,000") */
+  priceSuffix?: string
   pricingDescEn: string
   pricingDescEs: string
 
@@ -899,7 +901,124 @@ export const SPOKE_PAGES: SpokePage[] = [
   // ── HUB 7: Event Photography ───────────────────────────────────────────────
   draftSpoke('events-corporate-sd',         'events/corporate-events-santo-domingo',               'eventos/eventos-corporativos-santo-domingo',          'event-photography', 1, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
   draftSpoke('events-private-party-sd',     'events/private-party-photographer-santo-domingo',     'eventos/fotografo-fiestas-privadas-santo-domingo',    'event-photography', 2, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
-  draftSpoke('events-baptism-sd',           'events/baptism-photographer-santo-domingo',           'eventos/fotografo-bautizo-santo-domingo',             'event-photography', 2, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
+  // ✅  events/baptism-photographer-santo-domingo — status: 'published' — live + indexed
+  {
+    id: 'events-baptism-sd',
+    enSlug: 'events/baptism-photographer-santo-domingo',
+    esSlug: 'eventos/fotografo-bautizo-santo-domingo',
+    hubSlug: 'event-photography',
+    status: 'published',
+    tier: 2,
+    geo: { latitude: 18.4861, longitude: -69.9312 },
+    geoCity: 'Santo Domingo',
+    geoRegion: 'Distrito Nacional',
+
+    titleEn: 'Baptism Photographer Santo Domingo, DR',
+    titleEs: 'Fotógrafo de Bautizo en Santo Domingo',
+    descriptionEn: "Baptism photography in Santo Domingo's colonial churches from RD$16,000 — available in every DR city. Book your baptism photographer today.",
+    descriptionEs: 'Fotografía de bautizo en las iglesias coloniales de Santo Domingo desde RD$16,000 — disponible en toda República Dominicana. Reserva tu fotógrafo hoy.',
+    keywordsEn: 'baptism photographer santo domingo, christening photographer dominican republic, baptism photography zona colonial, baptism photographer all dominican republic, catholic baptism photos santo domingo',
+    keywordsEs: 'fotógrafo de bautizo santo domingo, fotógrafo bautizo república dominicana, fotografía de bautizo zona colonial, fotógrafo de bautizo toda república dominicana, fotos bautizo católico santo domingo',
+
+    h1En: 'Baptism Photographer in Santo Domingo — All Dominican Republic',
+    h1Es: 'Fotógrafo de Bautizo en Santo Domingo — Toda República Dominicana',
+    hookEn: "Real, unposed coverage of your child's baptism in the historic stone churches of Santo Domingo's Zona Colonial — the blessing, the baptismal font, and the family portraits at the altar. RD$16,000 in Santo Domingo, RD$20,000 anywhere else in the Dominican Republic.",
+    hookEs: 'Cobertura real y espontánea del bautizo de tu hijo en las iglesias históricas de piedra de la Zona Colonial de Santo Domingo — la bendición, la fuente bautismal y el retrato familiar frente al altar. RD$16,000 en Santo Domingo, RD$20,000 en cualquier otra ciudad de República Dominicana.',
+
+    heroImagePublicId: 'v1787789555/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_4_cxhrje',
+    heroImageAltEn: 'The baptism moment at the font inside a historic Zona Colonial church, Santo Domingo — Babula Shots baptism photographer',
+    heroImageAltEs: 'El momento del bautizo en la fuente bautismal dentro de una iglesia histórica de la Zona Colonial, Santo Domingo — fotógrafo de bautizo Babula Shots',
+
+    expectCards: [
+      {
+        icon: '⛪',
+        titleEn: 'Zona Colonial Church Coverage',
+        titleEs: 'Cobertura en Iglesias de la Zona Colonial',
+        bodyEn: 'We regularly photograph baptisms inside the historic stone churches of the Zona Colonial — gilded Baroque altarpieces, stained glass, and centuries-old naves. We know where to stand during the rite so we never block the priest or the family\'s view.',
+        bodyEs: 'Fotografiamos bautizos con regularidad dentro de las iglesias históricas de piedra de la Zona Colonial — retablos barrocos dorados, vitrales y naves centenarias. Sabemos dónde ubicarnos durante el rito para nunca obstruir al sacerdote ni la vista de la familia.',
+      },
+      {
+        icon: '💧',
+        titleEn: 'The Real Moment, Not Just Posed Portraits',
+        titleEs: 'El Momento Real, No Solo Retratos Posados',
+        bodyEn: "The water at the font, the priest's blessing, the baby's reaction — these seconds never repeat. We shoot documentary-style through the entire rite, then switch to portraits with the family and godparents once the ceremony ends.",
+        bodyEs: 'El agua en la fuente, la bendición del sacerdote, la reacción del bebé — estos segundos no se repiten. Fotografiamos en estilo documental durante todo el rito, y luego pasamos a retratos con la familia y los padrinos al terminar la ceremonia.',
+      },
+      {
+        icon: '🇩🇴',
+        titleEn: 'Every City in the Dominican Republic',
+        titleEs: 'Cualquier Ciudad de República Dominicana',
+        bodyEn: 'Based in Santo Domingo, but we travel for baptisms nationwide — Santiago, Puerto Plata, La Romana, Punta Cana, and beyond. One flat travel rate covers any city outside the capital.',
+        bodyEs: 'Con base en Santo Domingo, pero viajamos para bautizos a nivel nacional — Santiago, Puerto Plata, La Romana, Punta Cana y más. Una tarifa de traslado fija cubre cualquier ciudad fuera de la capital.',
+      },
+    ],
+
+    gallery: [
+      { publicId: 'v1787789555/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_4_cxhrje', altEn: 'The baptism moment at the font, colonial church Santo Domingo — Babula Shots', altEs: 'El momento del bautizo en la fuente bautismal, iglesia colonial de Santo Domingo — Babula Shots' },
+      { publicId: 'v1787789564/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_14_hs1rlx', altEn: 'Extended family group portrait before the gilded altar after a baptism, Santo Domingo — Babula Shots', altEs: 'Retrato grupal de la familia extendida frente al altar dorado tras el bautizo, Santo Domingo — Babula Shots' },
+      { publicId: 'v1787789558/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_7_a9djog', altEn: 'Priest blessing the family before the gilded Baroque altarpiece, Zona Colonial church — Babula Shots', altEs: 'Sacerdote bendiciendo a la familia frente al retablo barroco dorado, iglesia de la Zona Colonial — Babula Shots' },
+      { publicId: 'v1787789560/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_9_tq0w0y', altEn: "Close-up of a priest's blessing gesture over a baby during a baptism, Santo Domingo — Babula Shots", altEs: 'Primer plano del gesto de bendición del sacerdote sobre un bebé durante el bautizo, Santo Domingo — Babula Shots' },
+      { publicId: 'v1787789561/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_12_ic8dk0', altEn: 'Father and daughter arriving at a historic stone church doorway in the Zona Colonial — Babula Shots', altEs: 'Padre e hija llegando a la puerta de piedra de una iglesia histórica de la Zona Colonial — Babula Shots' },
+      { publicId: 'v1787789554/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_2_hliana', altEn: 'Wide shot of a baptism ceremony inside a stone-arched colonial church nave, Santo Domingo — Babula Shots', altEs: 'Toma amplia de una ceremonia de bautizo dentro de la nave de piedra de una iglesia colonial, Santo Domingo — Babula Shots' },
+      { publicId: 'v1787789555/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_5_af3w37', altEn: 'Baby at the baptismal font with holy oil, family gathered around the altar — Babula Shots', altEs: 'Bebé en la fuente bautismal con óleo sagrado, familia reunida junto al altar — Babula Shots' },
+      { publicId: 'v1787789559/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_8_ez7hm7', altEn: 'Father holding his baby as the priest blesses them before the gilded altar — Babula Shots', altEs: 'Padre sosteniendo a su bebé mientras el sacerdote los bendice frente al altar dorado — Babula Shots' },
+    ],
+
+    priceFromUsd: 'RD$16,000',
+    priceSuffix: '',
+    pricingDescEn: 'Baptism photography in Santo Domingo starts at RD$16,000, covering the ceremony from arrival through the blessing at the font and closing family portraits at the altar. For baptisms anywhere else in the Dominican Republic — Santiago, Puerto Plata, La Romana, Punta Cana, and every other city — the rate is RD$20,000, travel included. A 50% deposit secures your date; the balance is due the day of the session. Every package includes edited high-resolution photos delivered to a private online gallery.',
+    pricingDescEs: 'La fotografía de bautizo en Santo Domingo comienza en RD$16,000, cubriendo la ceremonia desde la llegada hasta la bendición en la fuente y los retratos familiares de cierre frente al altar. Para bautizos en cualquier otra ciudad de República Dominicana — Santiago, Puerto Plata, La Romana, Punta Cana y demás — la tarifa es de RD$20,000, traslado incluido. Un depósito del 50% asegura tu fecha; el saldo se paga el día de la sesión. Cada paquete incluye fotos editadas en alta resolución entregadas en una galería privada en línea.',
+
+    whyUs: [
+      { icon: '⛪', titleEn: 'Zona Colonial Specialists', titleEs: 'Especialistas en la Zona Colonial', bodyEn: 'Years photographing weddings and family events inside the Zona Colonial\'s historic churches means we already know the light, the layout, and the etiquette expected during a Catholic baptism.', bodyEs: 'Años fotografiando bodas y eventos familiares dentro de las iglesias históricas de la Zona Colonial significan que ya conocemos la luz, la disposición del espacio y la etiqueta que se espera durante un bautizo católico.' },
+      { icon: '🕊️', titleEn: 'Respectful, Unobtrusive Presence', titleEs: 'Presencia Respetuosa y Discreta', bodyEn: 'We move quietly during the rite itself — no flash interrupting the priest, no stepping into the aisle. Ceremony photos are taken from a respectful distance with a long lens.', bodyEs: 'Nos movemos con discreción durante el rito — sin flash que interrumpa al sacerdote, sin invadir el pasillo. Las fotos de la ceremonia se toman a distancia respetuosa con un teleobjetivo.' },
+      { icon: '🇩🇴', titleEn: 'One Flat Rate, Any DR City', titleEs: 'Una Tarifa Fija en Todo el País', bodyEn: 'RD$16,000 in Santo Domingo, RD$20,000 anywhere else in the country — no surprise travel quotes, no per-kilometer math. You know the total cost before you book.', bodyEs: 'RD$16,000 en Santo Domingo, RD$20,000 en cualquier otra ciudad del país — sin cotizaciones de traslado sorpresa, sin cálculos por kilómetro. Sabes el costo total antes de reservar.' },
+      { icon: '⭐', titleEn: '4.9 Stars on Google', titleEs: '4.9 Estrellas en Google', bodyEn: '98+ Google reviews from real Dominican families. Consistent, honest feedback from clients in your exact situation.', bodyEs: '+98 reseñas de Google de familias dominicanas reales. Comentarios consistentes y honestos de clientes en tu misma situación.' },
+    ],
+
+    faq: [
+      {
+        questionEn: 'How much does a baptism photographer cost in Santo Domingo?',
+        questionEs: '¿Cuánto cuesta un fotógrafo de bautizo en Santo Domingo?',
+        answerEn: 'Baptism photography in Santo Domingo starts at RD$16,000. For baptisms in any other Dominican city — Santiago, Puerto Plata, La Romana, Punta Cana, and beyond — the rate is RD$20,000, travel included. A 50% deposit secures your date.',
+        answerEs: 'La fotografía de bautizo en Santo Domingo comienza en RD$16,000. Para bautizos en cualquier otra ciudad de República Dominicana — Santiago, Puerto Plata, La Romana, Punta Cana y más — la tarifa es de RD$20,000, traslado incluido. Un depósito del 50% asegura tu fecha.',
+      },
+      {
+        questionEn: 'Do you photograph baptisms outside Santo Domingo?',
+        questionEs: '¿Fotografían bautizos fuera de Santo Domingo?',
+        answerEn: "Yes — we travel to any city in the Dominican Republic for a flat RD$20,000 rate, travel included. We've covered baptisms in Santiago, Puerto Plata, La Romana, and Punta Cana, in addition to Santo Domingo.",
+        answerEs: 'Sí — viajamos a cualquier ciudad de República Dominicana por una tarifa fija de RD$20,000, traslado incluido. Hemos cubierto bautizos en Santiago, Puerto Plata, La Romana y Punta Cana, además de Santo Domingo.',
+      },
+      {
+        questionEn: 'Can you photograph inside the historic churches of the Zona Colonial?',
+        questionEs: '¿Pueden fotografiar dentro de las iglesias históricas de la Zona Colonial?',
+        answerEn: 'Yes. Most parish churches in the Zona Colonial allow photography during a baptism once the family has arranged it with the priest beforehand — which most families already do as part of scheduling the ceremony. We use a long lens and never use flash during the rite itself, so we stay unobtrusive throughout.',
+        answerEs: 'Sí. La mayoría de las parroquias de la Zona Colonial permiten fotografía durante un bautizo una vez que la familia lo coordina previamente con el sacerdote — algo que la mayoría de las familias ya hace al agendar la ceremonia. Usamos teleobjetivo y nunca flash durante el rito, así que permanecemos discretos en todo momento.',
+      },
+      {
+        questionEn: 'How long does baptism photography coverage last?',
+        questionEs: '¿Cuánto dura la cobertura fotográfica de un bautizo?',
+        answerEn: 'Standard coverage is 2 hours — enough for the arrival and family portraits beforehand, the full ceremony, and 20–30 minutes of portraits with the family and godparents at the altar once the rite is complete.',
+        answerEs: 'La cobertura estándar es de 2 horas — suficiente para la llegada y retratos previos, la ceremonia completa, y 20–30 minutos de retratos con la familia y los padrinos frente al altar al terminar el rito.',
+      },
+      {
+        questionEn: 'How soon after the baptism do we receive the photos?',
+        questionEs: '¿Cuánto tiempo después del bautizo recibimos las fotos?',
+        answerEn: 'You receive a quick preview gallery within 72 hours so you can share right away. The full edited gallery follows within the timeframe agreed in your booking.',
+        answerEs: 'Recibes una mini galería de avance en 72 horas para que puedas compartir de inmediato. La galería completa y editada se entrega en el plazo acordado en tu reserva.',
+      },
+    ],
+
+    relatedSpokeIds: ['weddings-zona-colonial-santo-domingo', 'weddings-proposal-photographer-zona-colonial-santo-domingo'],
+
+    ctaHeadlineEn: 'Ready to book your baptism photographer?',
+    ctaHeadlineEs: '¿Listo para reservar tu fotógrafo de bautizo?',
+    ctaValuePropEn: 'RD$16,000 in Santo Domingo, RD$20,000 anywhere else in the Dominican Republic. Check availability and hold your date today. · ⭐ 4.9 on Google (98+ reviews)',
+    ctaValuePropEs: 'RD$16,000 en Santo Domingo, RD$20,000 en cualquier otra ciudad de República Dominicana. Verifica disponibilidad y reserva tu fecha hoy. · ⭐ 4.9 en Google (+98 reseñas)',
+
+    waMessageEn: "Hello! I'm interested in baptism photography. Can you check availability for my date?",
+    waMessageEs: 'Hola! Me interesa fotografía de bautizo. ¿Pueden verificar disponibilidad para mi fecha?',
+  },
   draftSpoke('events-graduation-sd',        'events/graduation-photographer-santo-domingo',        'eventos/fotografo-graduacion-santo-domingo',          'event-photography', 3, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
   draftSpoke('events-conference-sd',        'events/conference-photographer-santo-domingo',        'eventos/fotografo-congresos-santo-domingo',           'event-photography', 3, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
 

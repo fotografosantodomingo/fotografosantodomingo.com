@@ -19,6 +19,7 @@ import SpokePageTemplate from '@/components/spoke/SpokePageTemplate'
 import ZonaColonialGallery from '@/components/spoke/ZonaColonialGallery'
 import ProposalGallery from '@/components/spoke/ProposalGallery'
 import ProposalZonaColonialGallery from '@/components/spoke/ProposalZonaColonialGallery'
+import BautismoSantoDomingoGallery from '@/components/spoke/BautismoSantoDomingoGallery'
 import { buildSpokeSchemas } from '@/lib/spoke-schema'
 import {
   findSpokeByRoute,
@@ -155,6 +156,7 @@ export default function SpokePage({
     spokeData.id === 'weddings-proposal-photographer-dominican-republic' ||
     spokeData.id === 'proposal-hidden-mode-ninja-photographer'
   const isProposalZonaColonial = spokeData.id === 'weddings-proposal-photographer-zona-colonial-santo-domingo'
+  const isBautismoSantoDomingo = spokeData.id === 'events-baptism-sd'
 
   return (
     <>
@@ -172,7 +174,7 @@ export default function SpokePage({
       <SpokePageTemplate
         spoke={spokeData}
         locale={params.locale}
-        noHeroImage={isZonaColonial || isProposalSpoke || isProposalZonaColonial}
+        noHeroImage={isZonaColonial || isProposalSpoke || isProposalZonaColonial || isBautismoSantoDomingo}
         customGallery={
           isZonaColonial ? (
             <ZonaColonialGallery locale={params.locale} />
@@ -180,6 +182,8 @@ export default function SpokePage({
             <ProposalZonaColonialGallery locale={params.locale} />
           ) : isProposalSpoke ? (
             <ProposalGallery locale={params.locale} />
+          ) : isBautismoSantoDomingo ? (
+            <BautismoSantoDomingoGallery locale={params.locale} />
           ) : undefined
         }
       />
