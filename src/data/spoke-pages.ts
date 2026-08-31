@@ -873,6 +873,123 @@ export const SPOKE_PAGES: SpokePage[] = [
   draftSpoke('portraits-personal-branding',    'portraits/personal-branding-santo-domingo', 'retratos/personal-branding-santo-domingo',              'portrait-photography', 3, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
 
   // ── HUB 3: Family Photography ──────────────────────────────────────────────
+  // ✅  family/zona-colonial-santo-domingo — status: 'published' — live + indexed
+  {
+    id: 'family-zona-colonial-santo-domingo',
+    enSlug: 'family/zona-colonial-santo-domingo',
+    esSlug: 'familia/zona-colonial-santo-domingo',
+    hubSlug: 'family-photography',
+    status: 'published',
+    tier: 1,
+    bookingServiceSlug: 'family-beach-photography__essential',
+    geo: { latitude: 18.4731, longitude: -69.8837 },
+    geoCity: 'Zona Colonial',
+    geoRegion: 'Santo Domingo',
+
+    titleEn: 'Family Photographer Zona Colonial Santo Domingo',
+    titleEs: 'Fotógrafo Familiar Zona Colonial Santo Domingo',
+    descriptionEn: "Family photography in Santo Domingo's Zona Colonial — stone archways, the Catedral Primada, golden-hour steps. Paced for young kids. Book your family session today.",
+    descriptionEs: 'Fotografía familiar en la Zona Colonial de Santo Domingo — arcos de piedra, la Catedral Primada, escalinatas al atardecer. Ritmo pensado para niños pequeños. Reserva tu sesión familiar hoy.',
+    keywordsEn: 'family photographer zona colonial santo domingo, family photoshoot zona colonial, bilingual family photographer santo domingo, family portraits colonial zone dominican republic, multigenerational photo session santo domingo',
+    keywordsEs: 'fotógrafo familiar zona colonial santo domingo, sesión de fotos familiar zona colonial, fotógrafo de familias santo domingo, fotos familiares al aire libre santo domingo, sesión familiar bilingüe santo domingo',
+
+    h1En: 'Family Photographer in the Zona Colonial, Santo Domingo',
+    h1Es: 'Fotógrafo Familiar en la Zona Colonial, Santo Domingo',
+    hookEn: "Stone archways, the Catedral Primada's facade, granite steps at golden hour — the Zona Colonial gives your family session the same backdrop that's made our wedding and baptism work here stand out, without a beach trip. Sessions run bilingual (English/Spanish) and paced for young kids.",
+    hookEs: 'Arcos de piedra, la fachada de la Catedral Primada, escalinatas en hora dorada — la Zona Colonial le da a tu sesión familiar el mismo escenario que ha distinguido nuestro trabajo de bodas y bautizos aquí, sin necesidad de ir a la playa. Sesiones bilingües (inglés/español) y a ritmo de niños pequeños.',
+
+    heroImagePublicId: 'v1788218696/Fotografo_Zona_Colonial_Santo_Domingo_Republica_Dominicana_babula_SHots_4_iunguk',
+    heroImageAltEn: 'Family walking hand in hand in front of a grand colonial cathedral facade, Zona Colonial, Santo Domingo — Babula Shots family photographer',
+    heroImageAltEs: 'Familia caminando de la mano frente a la fachada de una gran catedral colonial, Zona Colonial, Santo Domingo — fotógrafo familiar Babula Shots',
+
+    expectCards: [
+      {
+        icon: '🏛️',
+        titleEn: 'Colonial Architecture, Zero Travel',
+        titleEs: 'Arquitectura Colonial, Sin Traslados',
+        bodyEn: 'Stone archways, iron gates, cathedral facades, and granite steps — all within a short walk of each other. No beach trip, no long drive, no fighting traffic with a toddler in the car.',
+        bodyEs: 'Arcos de piedra, rejas de hierro, fachadas de catedral y escalinatas de granito — todo a poca distancia caminando. Sin viaje a la playa, sin trayectos largos, sin pelear con el tráfico con un niño en el carro.',
+      },
+      {
+        icon: '👶',
+        titleEn: 'Paced for Young Kids',
+        titleEs: 'A Ritmo de Niños Pequeños',
+        bodyEn: "We plan a short route between two or three locations, not a marathon — enough variety for a real gallery without pushing a toddler's patience past its limit.",
+        bodyEs: 'Planificamos una ruta corta entre dos o tres locaciones, no un maratón — suficiente variedad para una galería completa sin agotar la paciencia de un niño pequeño.',
+      },
+      {
+        icon: '🗣️',
+        titleEn: 'Bilingual Direction',
+        titleEs: 'Dirección Bilingüe',
+        bodyEn: 'Instructions and posing direction run smoothly in English and Spanish, so it works whether the whole family speaks Spanish, English, or a mix of both.',
+        bodyEs: 'Las indicaciones y la dirección de poses fluyen en inglés y español, así que funciona sin importar si la familia habla español, inglés, o una mezcla de ambos.',
+      },
+    ],
+
+    gallery: [
+      { publicId: 'v1788218696/Fotografo_Zona_Colonial_Santo_Domingo_Republica_Dominicana_babula_SHots_4_iunguk', altEn: 'Family walking hand in hand in front of a grand colonial cathedral facade, Santo Domingo — Babula Shots', altEs: 'Familia caminando de la mano frente a la fachada de una gran catedral colonial, Santo Domingo — Babula Shots' },
+      { publicId: 'v1788218696/Fotografo_Zona_Colonial_Santo_Domingo_Republica_Dominicana_babula_SHots_1_a69rq4', altEn: 'Family portrait under a stone archway with an iron gate, Zona Colonial, Santo Domingo — Babula Shots', altEs: 'Retrato familiar bajo un arco de piedra con reja de hierro, Zona Colonial, Santo Domingo — Babula Shots' },
+      { publicId: 'v1788218695/Fotografo_Zona_Colonial_Santo_Domingo_Republica_Dominicana_babula_SHots_2_vfgtsd', altEn: 'Family walking through a colonial colonnade, mother holding a newborn, Santo Domingo — Babula Shots', altEs: 'Familia caminando por un corredor colonial de columnas, madre con su bebé recién nacido, Santo Domingo — Babula Shots' },
+      { publicId: 'v1788218701/Fotografo_Zona_Colonial_Santo_Domingo_Republica_Dominicana_babula_SHots_10_jpu3ep', altEn: 'Two siblings running hand in hand toward the camera in front of a colonial stone archway, Santo Domingo — Babula Shots', altEs: 'Dos hermanos corriendo de la mano hacia la cámara frente a una portada de piedra colonial, Santo Domingo — Babula Shots' },
+      { publicId: 'v1788218696/Fotografo_Zona_Colonial_Santo_Domingo_Republica_Dominicana_babula_SHots_5_azyfeg', altEn: 'Pregnant mother in a pink dress with her two children on stone steps, Santo Domingo — Babula Shots', altEs: 'Madre embarazada en vestido rosa con sus dos hijos en una escalinata de piedra, Santo Domingo — Babula Shots' },
+      { publicId: 'v1788218701/Fotografo_Zona_Colonial_Santo_Domingo_Republica_Dominicana_babula_SHots_9_xdmfgg', altEn: 'Little girl sitting on stone steps at dusk with string lights and greenery, Santo Domingo — Babula Shots', altEs: 'Niña sentada en una escalinata de piedra al atardecer con luces cálidas y vegetación, Santo Domingo — Babula Shots' },
+    ],
+
+    priceFromUsd: '$370',
+    pricingDescEn: 'Family sessions in the Zona Colonial start at $370 for up to 5 people, 1 hour, and 20 edited high-resolution photos. Larger families, multigenerational groups, or a combined studio-plus-outdoor session can be arranged as a custom quote. Every package includes a private online gallery, delivered within 7 days. A 50% deposit secures your date.',
+    pricingDescEs: 'Las sesiones familiares en la Zona Colonial comienzan en $370 para hasta 5 personas, 1 hora, y 20 fotos editadas en alta resolución. Familias más grandes, reuniones multigeneracionales, o una sesión combinada de estudio y exterior se pueden coordinar como cotización personalizada. Cada paquete incluye galería online privada, entregada en 7 días. Un depósito del 50% asegura tu fecha.',
+
+    whyUs: [
+      { icon: '🏛️', titleEn: 'Same Location Expertise as Our Weddings', titleEs: 'La Misma Experiencia de Nuestras Bodas', bodyEn: "We've been photographing weddings and baptisms in the Zona Colonial's churches and streets since 2015 — the same location knowledge applies directly to a family session.", bodyEs: 'Llevamos fotografiando bodas y bautizos en las iglesias y calles de la Zona Colonial desde 2015 — el mismo conocimiento del lugar aplica directamente a una sesión familiar.' },
+      { icon: '🌅', titleEn: 'Real Golden Hour Timing', titleEs: 'Hora Dorada Real', bodyEn: 'The Zona Colonial faces west, giving dramatic late-afternoon light — we plan family sessions around the 5:30–6:10 PM window for the same warm light seen in our wedding galleries.', bodyEs: 'La Zona Colonial mira al oeste, con una luz dramática al final de la tarde — planificamos las sesiones familiares alrededor de la ventana de 5:30–6:10 PM para la misma luz cálida que se ve en nuestras galerías de bodas.' },
+      { icon: '👨‍👩‍👧‍👦', titleEn: 'Multigenerational Experience', titleEs: 'Experiencia con Grupos Multigeneracionales', bodyEn: 'From newborns to grandparents in the same frame, we know how to manage pacing and grouping so everyone — including the youngest and oldest — actually enjoys the session.', bodyEs: 'Desde recién nacidos hasta abuelos en la misma toma, sabemos manejar el ritmo y la agrupación para que todos — incluyendo a los más pequeños y los mayores — disfruten realmente la sesión.' },
+      { icon: '⭐', titleEn: '4.9 Stars on Google', titleEs: '4.9 Estrellas en Google', bodyEn: '98+ Google reviews from real clients in the Dominican Republic.', bodyEs: '+98 reseñas de Google de clientes reales en República Dominicana.' },
+    ],
+
+    faq: [
+      {
+        questionEn: 'How much does a family photo session cost in the Zona Colonial?',
+        questionEs: '¿Cuánto cuesta una sesión de fotos familiar en la Zona Colonial?',
+        answerEn: 'Sessions start at $370 for up to 5 people, 1 hour, and 20 edited photos. Larger families or multigenerational groups are quoted individually since group size affects timing and locations.',
+        answerEs: 'Las sesiones comienzan en $370 para hasta 5 personas, 1 hora, y 20 fotos editadas. Familias más grandes o grupos multigeneracionales se cotizan individualmente ya que el tamaño del grupo afecta el tiempo y las locaciones.',
+      },
+      {
+        questionEn: 'What is the best time for a family photo session in the Zona Colonial?',
+        questionEs: '¿Cuál es el mejor horario para una sesión familiar en la Zona Colonial?',
+        answerEn: 'Late afternoon, around 5:30–6:10 PM, gives the warmest light and the streets thin out from midday tourist traffic. An early morning session is the alternative if nap schedules make a late-afternoon session hard.',
+        answerEs: 'La tarde, alrededor de las 5:30–6:10 PM, da la luz más cálida y las calles se vacían del tráfico turístico del mediodía. Una sesión temprano en la mañana es la alternativa si los horarios de siesta hacen difícil una sesión al final de la tarde.',
+      },
+      {
+        questionEn: 'Do we need a permit for family photos in the Zona Colonial?',
+        questionEs: '¿Se necesita permiso para fotos familiares en la Zona Colonial?',
+        answerEn: "A session on the public streets and plazas of the Zona Colonial doesn't require a permit. Specific landmark interiors — like the Alcázar de Colón or the Fortaleza Ozama — are managed separately and would need their own entrance/permit if you want those specifically included.",
+        answerEs: 'Una sesión en las calles y plazas públicas de la Zona Colonial no requiere permiso. Interiores de monumentos específicos — como el Alcázar de Colón o la Fortaleza Ozama — se manejan aparte y necesitarían su propia entrada/permiso si quieres incluirlos específicamente.',
+      },
+      {
+        questionEn: 'What should our family wear for the session?',
+        questionEs: '¿Qué debería usar la familia para la sesión?',
+        answerEn: 'Light, breathable fabrics in soft neutral or pastel tones photograph best against the stone and brick backdrops — the family in our own gallery here wore whites and blush tones for exactly that reason.',
+        answerEs: 'Telas ligeras y frescas en tonos neutros o pasteles suaves se ven mejor contra los fondos de piedra y ladrillo — la familia de nuestra propia galería aquí usó blancos y tonos rosados justamente por esta razón.',
+      },
+      {
+        questionEn: 'How soon do we receive the edited photos?',
+        questionEs: '¿Cuánto tiempo después recibimos las fotos editadas?',
+        answerEn: 'The private online gallery is delivered within 7 days of the session.',
+        answerEs: 'La galería online privada se entrega dentro de los 7 días posteriores a la sesión.',
+      },
+    ],
+
+    relatedSpokeIds: ['weddings-zona-colonial-santo-domingo', 'events-baptism-sd'],
+
+    ctaHeadlineEn: 'Ready to book your Zona Colonial family session?',
+    ctaHeadlineEs: '¿Listo para reservar tu sesión familiar en la Zona Colonial?',
+    ctaValuePropEn: 'Sessions from $370 · bilingual, paced for young kids · Check availability and hold your date today. · ⭐ 4.9 on Google (98+ reviews)',
+    ctaValuePropEs: 'Sesiones desde $370 · bilingüe, a ritmo de niños pequeños · Verifica disponibilidad y reserva tu fecha hoy. · ⭐ 4.9 en Google (+98 reseñas)',
+
+    waMessageEn: "Hello! I'm interested in a family photo session in the Zona Colonial. Can you check availability for my date?",
+    waMessageEs: 'Hola! Me interesa una sesión de fotos familiar en la Zona Colonial. ¿Pueden verificar disponibilidad para mi fecha?',
+  },
+
   draftSpoke('family-punta-cana-beach',        'family/punta-cana-beach',                  'familia/playa-punta-cana',                              'family-photography', 1, { latitude: 18.5601, longitude: -68.3725 }, 'Punta Cana',    'La Altagracia'),
   draftSpoke('family-cap-cana',                'family/cap-cana-family-photographer',      'familia/fotografo-familia-cap-cana',                    'family-photography', 3, { latitude: 18.4732, longitude: -68.4228 }, 'Cap Cana',      'La Altagracia'),
   draftSpoke('family-santo-domingo',           'family/santo-domingo-family-photographer', 'familia/fotografo-familia-santo-domingo',               'family-photography', 2, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
