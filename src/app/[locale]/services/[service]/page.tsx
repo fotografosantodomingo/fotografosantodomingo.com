@@ -947,6 +947,10 @@ export default async function FamilyPage({ params }: Props) {
                     name: isEs ? img.alt.es : img.alt.en,
                     caption: img.caption ? (isEs ? img.caption.es : img.caption.en) : undefined,
                     creator: { '@type': 'Person', name: 'Michal Babula' },
+                    author: { '@type': 'Person', name: 'Michal Babula' },
+                    copyrightNotice: '© Babula Shots',
+                    license: `${BASE_URL}/${locale}/terms`,
+                    acquireLicensePage: `${BASE_URL}/${locale}/get-quote`,
                   })),
                 }),
               }}
@@ -1263,6 +1267,10 @@ export default async function FamilyPage({ params }: Props) {
                     url: img.src,
                     name: isEs ? img.alt.es : img.alt.en,
                     creator: { '@type': 'Person', name: 'Michal Babula' },
+                    author: { '@type': 'Person', name: 'Michal Babula' },
+                    copyrightNotice: '© Babula Shots',
+                    license: `${BASE_URL}/${locale}/terms`,
+                    acquireLicensePage: `${BASE_URL}/${locale}/get-quote`,
                   })),
                 }),
               }}
