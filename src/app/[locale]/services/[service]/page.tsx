@@ -286,7 +286,7 @@ export default async function FamilyPage({ params }: Props) {
               <span className="text-5xl md:text-6xl shrink-0" aria-hidden="true">{family.icon}</span>
               <div>
                 <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-3">
-                  {isEs ? 'Familia' : 'Family'}
+                  {isEs ? 'Servicio' : 'Service'}
                 </p>
                 <h1
                   className="font-display uppercase text-ink"
