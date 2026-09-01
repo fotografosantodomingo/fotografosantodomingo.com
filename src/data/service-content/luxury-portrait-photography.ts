@@ -25,6 +25,31 @@ export const luxuryPortraitPhotographyContent: ServiceContent = {
   },
   schemaAdditionalType: 'https://schema.org/ProfessionalService',
 
+  // ── PRE-GEO IMAGE ── full-bleed studio portrait, shown right before
+  // Geographic Coverage. Desktop and mobile use different crops of the
+  // same session — desktop gets the wider environmental framing, mobile
+  // gets the taller portrait-oriented framing.
+  preGeoImage: {
+    desktop: {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1788259073/Fotografo_estudio_retratos_Republica_Dominicana_2_h2aosx.webp',
+      width: 2242,
+      height: 1261,
+      alt: {
+        es: 'Retrato de estudio de un hombre con saco mostaza sentado en un sillón de cuero color burdeos, sosteniendo una copa de whisky junto a una mesa con decantador',
+        en: 'Studio portrait of a man in a mustard blazer seated in a burgundy leather chair, holding a whiskey glass beside a side table with a decanter',
+      },
+    },
+    mobile: {
+      src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1788259072/Fotografo_estudio_retratos_Republica_Dominicana_1_hpouw5.webp',
+      width: 1200,
+      height: 1500,
+      alt: {
+        es: 'Retrato vertical de estudio de un hombre con saco mostaza y pantalón caqui, sentado en un sillón de cuero burdeos con una copa de whisky en mano',
+        en: 'Vertical studio portrait of a man in a mustard blazer and khaki pants, seated in a burgundy leather chair with a whiskey glass in hand',
+      },
+    },
+  },
+
   // ── GEO COVERAGE ────────────────────────────────────────────────────
   // 3 cities: Santo Domingo (HQ city for executives, finance, agencies),
   // Punta Cana (resort residents, hospitality C-suite), Cap Cana (luxury

@@ -229,4 +229,9 @@ export type ServiceContent = {
   /** Cuisine-specific showcase grids (5 desktop cols, 1 mobile col),
    *  rendered in order immediately before the FAQ section. */
   cuisineGalleries?: CuisineGallery[]
+  /** Single full-bleed image rendered immediately before the Geographic
+   *  Coverage section — a different photo/crop for desktop (`hidden
+   *  md:block`) vs mobile (`md:hidden`), each shown edge-to-edge with no
+   *  crop and no aspect-ratio change (`object-contain`). */
+  preGeoImage?: { desktop: RichImage; mobile: RichImage }
 }

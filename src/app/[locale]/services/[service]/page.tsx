@@ -721,6 +721,38 @@ export default async function FamilyPage({ params }: Props) {
           </section>
         )}
 
+        {/* ── PRE-GEO IMAGE ── single full-bleed photo immediately before
+             Geographic Coverage. Different image for desktop vs mobile,
+             each shown edge-to-edge with no crop / no ratio change. */}
+        {content?.preGeoImage && (
+          <section className="border-b border-hairline-soft bg-canvas" aria-hidden="true">
+            <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={content.preGeoImage.desktop.src}
+                alt={isEs ? content.preGeoImage.desktop.alt.es : content.preGeoImage.desktop.alt.en}
+                width={content.preGeoImage.desktop.width ?? 2242}
+                height={content.preGeoImage.desktop.height ?? 1261}
+                sizes="100vw"
+                loading="lazy"
+                decoding="async"
+                className="hidden md:block w-full h-auto object-contain"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={content.preGeoImage.mobile.src}
+                alt={isEs ? content.preGeoImage.mobile.alt.es : content.preGeoImage.mobile.alt.en}
+                width={content.preGeoImage.mobile.width ?? 1200}
+                height={content.preGeoImage.mobile.height ?? 1500}
+                sizes="100vw"
+                loading="lazy"
+                decoding="async"
+                className="md:hidden w-full h-auto object-contain"
+              />
+            </div>
+          </section>
+        )}
+
         {/* ── GEO COVERAGE ── Tier-2 SEO geo capture: per-city H2 anchors,
              named venues, mini-FAQ, and per-geo CTAs that flow `?city=`
              into the booking + quote wizards for attribution. */}
