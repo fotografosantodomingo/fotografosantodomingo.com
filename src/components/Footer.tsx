@@ -2,7 +2,6 @@ import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import NewsletterForm from './NewsletterForm'
 import ThemeToggle from './ThemeToggle'
-import PreferredSourceButton from './PreferredSourceButton'
 import { CONTACT_INFO, SOCIAL_LINKS } from '@/lib/utils/constants'
 import ObfuscatedEmail from '@/components/ui/ObfuscatedEmail'
 
@@ -203,18 +202,6 @@ export default function Footer({ locale: localeProp }: { locale?: string } = {})
             </Link>
             <ThemeToggle />
           </div>
-        </div>
-
-        {/* Google Preferred Sources — renders as a cross-origin iframe, so its
-            internal look (colors, font, shape, logo) can't be restyled from
-            here; only light/dark theme is controllable. Boxed with the
-            site's own hairline-soft border + mono-caps label so it reads as
-            an intentional module instead of a foreign rectangle. */}
-        <div className="mt-8 flex flex-col items-center gap-2 border border-hairline-soft p-4 md:mx-auto md:w-fit">
-          <p className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
-            {isEs ? 'Síguenos en Google' : 'Follow us on Google'}
-          </p>
-          <PreferredSourceButton locale={locale} />
         </div>
 
         {/* Cross-site link */}

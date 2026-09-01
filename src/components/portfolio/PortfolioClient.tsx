@@ -171,28 +171,30 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
         </div>
       </section>
 
-      {/* Featured Work — full-bleed photograph */}
-      <section className="border-b border-hairline-soft py-12 md:py-16 bg-black">
-        <div className="container mx-auto px-0 md:px-4">
-          <figure className="m-0">
-            <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
-              <Image
-                src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/photo_sessions_dominican_republic_Photographer_in_santo_domingo_laidus"
-                alt={locale === 'es'
-                  ? 'Fotografo en Santo Domingo Republica Dominicana sesion de fotos profesional'
-                  : 'Photographer in Santo Domingo Dominican Republic professional photo session'}
-                title={locale === 'es'
-                  ? 'Sesion de fotos en Santo Domingo Republica Dominicana'
-                  : 'Photo session in Santo Domingo Dominican Republic'}
-                width={2400}
-                height={1350}
-                className="w-full h-auto object-contain"
-                priority
-              />
-            </div>
-          </figure>
-        </div>
-      </section>
+      {/* Featured Work — full-bleed photograph. Main/unfiltered portfolio view only. */}
+      {activeFilter === 'all' && (
+        <section className="border-b border-hairline-soft py-12 md:py-16 bg-black">
+          <div className="container mx-auto px-0 md:px-4">
+            <figure className="m-0">
+              <div className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden">
+                <Image
+                  src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_2400/photo_sessions_dominican_republic_Photographer_in_santo_domingo_laidus"
+                  alt={locale === 'es'
+                    ? 'Fotografo en Santo Domingo Republica Dominicana sesion de fotos profesional'
+                    : 'Photographer in Santo Domingo Dominican Republic professional photo session'}
+                  title={locale === 'es'
+                    ? 'Sesion de fotos en Santo Domingo Republica Dominicana'
+                    : 'Photo session in Santo Domingo Dominican Republic'}
+                  width={2400}
+                  height={1350}
+                  className="w-full h-auto object-contain"
+                  priority
+                />
+              </div>
+            </figure>
+          </div>
+        </section>
+      )}
 
       {/* Filter + Grid */}
       <section className="border-b border-hairline-soft py-16 md:py-20">
