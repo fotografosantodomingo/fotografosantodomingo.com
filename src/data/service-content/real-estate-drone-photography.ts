@@ -100,6 +100,34 @@ export const realEstateDronePhotographyContent: ServiceContent = {
     {
       citySlug: 'cap-cana',
       cityName: { es: 'Cap Cana', en: 'Cap Cana' },
+      // Real drone-footage samples from our own YouTube channel — quality
+      // reference for prospective Cap Cana real estate clients.
+      videos: [
+        {
+          youtubeId: 'YLyQBy59bPY',
+          title: {
+            es: 'Fotografía y Video Aéreo con Dron en República Dominicana | Babula Shots',
+            en: 'Aerial Drone Photography and Video in the Dominican Republic | Babula Shots',
+          },
+          description: {
+            es: 'Segundo día de grabaciones aéreas y producción de contenido con dron para bienes raíces y proyectos inmobiliarios en Santo Domingo y República Dominicana.',
+            en: 'Second day of aerial filming and drone content production for real estate and property projects in Santo Domingo and the Dominican Republic.',
+          },
+          uploadDate: '2026-09-01T04:05:30-07:00',
+        },
+        {
+          youtubeId: '3AYlaFwE574',
+          title: {
+            es: 'Fotografía Aérea e Inmobiliaria con Dron en República Dominicana | Babula Shots',
+            en: 'Aerial Real Estate Drone Photography in the Dominican Republic | Babula Shots',
+          },
+          description: {
+            es: 'Fotografía y video aéreo con dron de alta calidad para bienes raíces en Santo Domingo y toda República Dominicana.',
+            en: 'High-quality real estate drone photography and video services in Santo Domingo and across the Dominican Republic.',
+          },
+          uploadDate: '2026-09-01T03:58:20-07:00',
+        },
+      ],
       intro: {
         es: 'Cap Cana es el mercado de bienes raíces de mayor ticket promedio del este — villas en Hacienda Cap Cana, residencias en Las Iguanas, y propiedades de marina con acceso directo a yates. La fotografía aquí debe transmitir privacidad, exclusividad y arquitectura singular. Tenemos acceso de fotógrafos acreditados al gated community y conocimiento de los puntos de vuelo permitidos para drone (Cap Cana tiene reglas internas además de las del IDAC).',
         en: 'Cap Cana is the east\'s highest-ticket real estate market — villas in Hacienda Cap Cana, residences in Las Iguanas, and marina properties with direct yacht access. Photography here must convey privacy, exclusivity, and architectural singularity. We hold accredited photographer access to the gated community and know the permitted drone flight zones (Cap Cana has internal rules on top of IDAC\'s).',

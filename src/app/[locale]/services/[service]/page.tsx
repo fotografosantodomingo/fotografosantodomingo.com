@@ -11,6 +11,7 @@ import { GEO_PAGES } from '@/data/geo-pages'
 import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
 import { formatServicePrice } from '@/lib/currency/format'
 import { getRelatedPostsForFamily } from '@/lib/supabase/blog'
+import YouTubeFacade from '@/components/YouTubeFacade'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'edge'
@@ -797,6 +798,42 @@ export default async function FamilyPage({ params }: Props) {
                     : `${familyTitle} in ${cityName}`
                   return (
                     <article key={geo.citySlug} id={geo.citySlug} className="scroll-mt-24">
+                      {/* Optional video samples — rendered above the H3 */}
+                      {geo.videos && geo.videos.length > 0 && (
+                        <>
+                          <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+                            {geo.videos.map((video) => (
+                              <YouTubeFacade
+                                key={video.youtubeId}
+                                youtubeId={video.youtubeId}
+                                title={isEs ? video.title.es : video.title.en}
+                              />
+                            ))}
+                          </div>
+                          <script
+                            type="application/ld+json"
+                            dangerouslySetInnerHTML={{
+                              __html: JSON.stringify(
+                                geo.videos.map((video) => ({
+                                  '@context': 'https://schema.org',
+                                  '@type': 'VideoObject',
+                                  name: isEs ? video.title.es : video.title.en,
+                                  description: isEs ? video.description.es : video.description.en,
+                                  thumbnailUrl: [`https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`],
+                                  uploadDate: video.uploadDate,
+                                  contentUrl: `https://youtu.be/${video.youtubeId}`,
+                                  embedUrl: `https://www.youtube.com/embed/${video.youtubeId}`,
+                                  publisher: {
+                                    '@type': 'Organization',
+                                    name: 'Babula Shots',
+                                    url: BASE_URL,
+                                  },
+                                }))
+                              ),
+                            }}
+                          />
+                        </>
+                      )}
                       <h3
                         className="font-display uppercase text-ink mb-6"
                         style={{ fontSize: 'clamp(24px, 3vw, 36px)', lineHeight: '1.05' }}

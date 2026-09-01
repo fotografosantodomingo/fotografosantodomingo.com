@@ -151,6 +151,14 @@ export type GeoBlock = {
    *  ([locale]/services/[service]/page.tsx). Use RichImage for proper
    *  bilingual SEO alt text — required for image-search ranking. */
   image?: RichImage
+  /** Optional YouTube video(s) rendered ABOVE this city's H3 heading —
+   *  e.g. real drone-footage samples for a geo block about drone work.
+   *  Click-to-play facade (title card + play button), no iframe loaded
+   *  until the visitor clicks, to keep the page lightweight. Also feeds
+   *  a VideoObject JSON-LD block per video. uploadDate must be the
+   *  video's real publish date (from YouTube's own metadata) — never
+   *  invented. */
+  videos?: { youtubeId: string; title: Bilingual; description: Bilingual; uploadDate: string }[]
 }
 
 /**
