@@ -1249,6 +1249,24 @@ export default async function FamilyPage({ params }: Props) {
                 ))}
               </div>
             </div>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  '@context': 'https://schema.org',
+                  '@type': 'ImageGallery',
+                  name: isEs ? gallery.title.es : gallery.title.en,
+                  description: isEs ? gallery.intro.es : gallery.intro.en,
+                  image: gallery.images.map((img) => ({
+                    '@type': 'ImageObject',
+                    contentUrl: img.src,
+                    url: img.src,
+                    name: isEs ? img.alt.es : img.alt.en,
+                    creator: { '@type': 'Person', name: 'Michal Babula' },
+                  })),
+                }),
+              }}
+            />
           </section>
         ))}
 
