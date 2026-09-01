@@ -106,12 +106,24 @@ function buildLocalService(spoke: SpokePage, locale: string, baseUrl: string) {
     },
     ...(spoke.priceFromUsd !== '[CONTENT — Sprint 2]'
       ? {
-          offers: {
-            '@type': 'Offer',
-            price: spoke.priceFromUsd.replace(/[^0-9.]/g, ''),
-            priceCurrency: spoke.priceFromUsd.includes('RD$') ? 'DOP' : 'USD',
-            description: isEs ? spoke.pricingDescEs : spoke.pricingDescEn,
-          },
+          offers: [
+            {
+              '@type': 'Offer',
+              price: spoke.priceFromUsd.replace(/[^0-9.]/g, ''),
+              priceCurrency: spoke.priceFromUsd.includes('RD$') ? 'DOP' : 'USD',
+              description: isEs ? spoke.pricingDescEs : spoke.pricingDescEn,
+              url: `${baseUrl}/${locale}/${slug}`,
+            },
+            ...(spoke.pricingTiers ?? []).map((tier) => ({
+              '@type': 'Offer',
+              name: isEs ? tier.labelEs : tier.labelEn,
+              price: tier.priceUsd.replace(/[^0-9.]/g, ''),
+              priceCurrency: 'USD',
+              description: isEs ? tier.descriptionEs : tier.descriptionEn,
+              url: `${baseUrl}/${locale}/book?service=${tier.bookingServiceSlug}`,
+              availability: 'https://schema.org/InStock',
+            })),
+          ],
         }
       : {}),
   }

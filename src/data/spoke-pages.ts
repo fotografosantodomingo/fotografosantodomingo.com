@@ -45,6 +45,17 @@ export type SpokeCard = {
   bodyEs: string
 }
 
+export type SpokePricingTier = {
+  labelEn: string
+  labelEs: string
+  priceUsd: string
+  descriptionEn: string
+  descriptionEs: string
+  /** "<family_slug>__<package_slug>" — must be a real, active, bookable_direct
+   *  row in service_packages so the CTA routes into the real /book flow. */
+  bookingServiceSlug: string
+}
+
 export type SpokeTestimonial = {
   /** Full name of the real client — never anonymous */
   clientName: string
@@ -123,6 +134,10 @@ export type SpokePage = {
   priceSuffix?: string
   pricingDescEn: string
   pricingDescEs: string
+  /** Optional additional bookable tiers shown alongside the primary price
+   *  card — each with its own real package (bookingServiceSlug) so it's
+   *  directly bookable, not just descriptive text. */
+  pricingTiers?: SpokePricingTier[]
 
   // ── Why us (Section 5) — 3–4 reasons ────────────────────────────────────────
   whyUs: SpokeCard[]
@@ -817,6 +832,16 @@ export const SPOKE_PAGES: SpokePage[] = [
     priceFromUsd: '250',
     pricingDescEn: 'Standard package starts at $270 USD + 18% ITBIS — full ninja mode coverage, private gallery in 24 h. Custom packages available for multi-location proposals, private venues, second photographer, or luxury album delivery. Contact us to quote your exact plan.',
     pricingDescEs: 'El paquete estándar comienza desde $270 USD + 18% ITBIS — cobertura completa en modo ninja, galería privada en 24 h. Paquetes personalizados disponibles para propuestas en múltiples locaciones, lugares privados, segundo fotógrafo o entrega de álbum de lujo. Contáctanos para cotizar tu plan.',
+    pricingTiers: [
+      {
+        labelEn: 'Personalized Surprise Proposal — 1 Hour',
+        labelEs: 'Propuesta Sorpresa Personalizada — 1 Hora',
+        priceUsd: '350',
+        descriptionEn: 'Hidden proposal capture with telephoto lens, a couple session right after the yes, and drone footage of the couple and beach during that after-session. Add-ons available on request: discreet drone during the proposal moment itself (+$100), or a short highlight video (+$100).',
+        descriptionEs: 'Cobertura oculta de la propuesta con teleobjetivo, sesión de pareja inmediatamente después del sí, y tomas con drone de la pareja y la playa durante esa sesión posterior. Add-ons disponibles: drone en modo oculto durante la propuesta (+$100), o video corto tipo highlight (+$100).',
+        bookingServiceSlug: 'proposal-photography__personalized-hidden-proposal',
+      },
+    ],
     whyUs: [
       { icon: '📡', titleEn: '400–600 mm Telephoto — Total Invisibility', titleEs: '400–600 mm Teleobjetivo — Invisibilidad Total', bodyEn: 'We shoot from 50 to 80 meters away with professional telephoto lenses. The images look like we were right next to you. She never sees us — not once.', bodyEs: 'Disparamos desde 50 a 80 metros con lentes de teleobjetivo profesionales. Las imágenes parecen tomadas justo a tu lado. Ella nunca nos ve — ni una sola vez.' },
       { icon: '🗺️', titleEn: 'Island-Wide Coverage', titleEs: 'Cobertura en Toda la Isla', bodyEn: 'Punta Cana, Cap Cana, Bávaro, Santo Domingo, Samaná, Las Terrenas, Casa de Campo, Puerto Plata, Bayahíbe — we travel to every beach and venue across DR.', bodyEs: 'Punta Cana, Cap Cana, Bávaro, Santo Domingo, Samaná, Las Terrenas, Casa de Campo, Puerto Plata, Bayahíbe — viajamos a cada playa y locación en toda la RD.' },

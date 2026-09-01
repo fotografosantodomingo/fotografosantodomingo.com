@@ -249,6 +249,39 @@ function PricingSection({ spoke, locale }: Props) {
             <BookingCTA locale={locale} waMessage={waMessage} bookUrl={bookUrl} layout="horizontal" />
           </div>
         </div>
+
+        {spoke.pricingTiers && spoke.pricingTiers.length > 0 && (
+          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            {spoke.pricingTiers.map((tier) => {
+              const tierLabel = isEs ? tier.labelEs : tier.labelEn
+              const tierDesc = isEs ? tier.descriptionEs : tier.descriptionEn
+              const tierBookUrl = `/${locale}/book?service=${tier.bookingServiceSlug}`
+              return (
+                <div
+                  key={tier.bookingServiceSlug}
+                  className="rounded-2xl border border-amber-200 bg-amber-50/40 p-8 text-left shadow-sm dark:border-amber-900/40 dark:bg-amber-950/10"
+                >
+                  <p className="text-sm font-semibold uppercase tracking-widest text-amber-500">
+                    {tierLabel}
+                  </p>
+                  <p className="mt-2 text-4xl font-extrabold tabular-nums text-neutral-900 dark:text-white">
+                    {tier.priceUsd}
+                    <span className="ml-1 text-lg font-normal text-neutral-400">USD</span>
+                  </p>
+                  <p className="mt-4 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+                    {tierDesc}
+                  </p>
+                  <Link
+                    href={tierBookUrl}
+                    className="mt-6 inline-block rounded-lg bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-neutral-700 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+                  >
+                    {isEs ? 'Reservar esta opción' : 'Book this option'}
+                  </Link>
+                </div>
+              )
+            })}
+          </div>
+        )}
       </div>
     </section>
   )
