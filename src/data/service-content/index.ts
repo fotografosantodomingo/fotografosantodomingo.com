@@ -30,6 +30,7 @@ import { realEstateDronePhotographyContent } from './real-estate-drone-photograp
 import { corporateEventPhotographyContent } from './corporate-event-photography'
 import { birthdayEventPhotographyContent } from './birthday-event-photography'
 import { customSpecialtyPhotographyContent } from './custom-specialty-photography'
+import { foodPhotographyContent } from './food-photography'
 
 const CONTENT_BY_FAMILY_SLUG: Record<string, ServiceContent> = {
   'wedding-photography': weddingPhotographyContent,
@@ -41,6 +42,7 @@ const CONTENT_BY_FAMILY_SLUG: Record<string, ServiceContent> = {
   'corporate-event-photography': corporateEventPhotographyContent,
   'birthday-event-photography': birthdayEventPhotographyContent,
   'custom-specialty-photography': customSpecialtyPhotographyContent,
+  'food-photography': foodPhotographyContent,
 }
 
 export function getServiceContent(familySlug: string): ServiceContent | null {
