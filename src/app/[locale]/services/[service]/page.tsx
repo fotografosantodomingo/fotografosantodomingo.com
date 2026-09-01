@@ -1212,6 +1212,46 @@ export default async function FamilyPage({ params }: Props) {
           </section>
         )}
 
+        {/* ── CUISINE SHOWCASE GALLERIES ── fixed-grid portfolio work by
+             cuisine type: 5 columns desktop, 1 column mobile. Rendered in
+             order, immediately before the FAQ section. */}
+        {content?.cuisineGalleries && content.cuisineGalleries.length > 0 && content.cuisineGalleries.map((gallery) => (
+          <section key={gallery.id} className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <div className="max-w-3xl mb-10 md:mb-12">
+                <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                  {isEs ? 'Portafolio' : 'Portfolio'}
+                </p>
+                <h2
+                  className="font-display uppercase text-ink mb-6"
+                  style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+                >
+                  {isEs ? gallery.title.es : gallery.title.en}
+                </h2>
+                <p className="text-ink-muted text-base md:text-lg leading-relaxed">
+                  {isEs ? gallery.intro.es : gallery.intro.en}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4">
+                {gallery.images.map((img) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={img.src}
+                    src={img.src}
+                    alt={isEs ? img.alt.es : img.alt.en}
+                    width={img.width ?? 1433}
+                    height={img.height ?? 1843}
+                    sizes="(min-width: 768px) 20vw, 100vw"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-auto object-contain block"
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        ))}
+
         {/* ── FAQ ── drives Google FAQ rich-result snippet via FAQPage JSON-LD */}
         {content?.faqs && content.faqs.length > 0 && (
           <section className="border-b border-hairline-soft py-16 md:py-20">

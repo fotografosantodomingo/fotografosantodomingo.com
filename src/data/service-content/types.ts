@@ -154,6 +154,19 @@ export type GeoBlock = {
 }
 
 /**
+ * One cuisine-specific showcase gallery — a fixed-column photo grid
+ * (5 columns on desktop, single column on mobile) demonstrating coverage
+ * of a specific cuisine type. Rendered as its own section, title + intro
+ * + grid, immediately before the FAQ section on the family page.
+ */
+export type CuisineGallery = {
+  id: string
+  title: Bilingual
+  intro: Bilingual
+  images: RichImage[]
+}
+
+/**
  * Full SEO content payload for one family. All sections are optional —
  * the page renders only what's present, so a family can ship with just
  * a couple of sections and grow over time.
@@ -213,4 +226,7 @@ export type ServiceContent = {
    *  "Cómo trabajamos" section. Accepts RichImage[] for bilingual SEO
    *  metadata. Images with mobileOnly:true render only on small screens. */
   preProcessGallery?: RichImage[]
+  /** Cuisine-specific showcase grids (5 desktop cols, 1 mobile col),
+   *  rendered in order immediately before the FAQ section. */
+  cuisineGalleries?: CuisineGallery[]
 }
