@@ -11,8 +11,8 @@ import type { ServiceContent } from './types'
 export const realEstateDronePhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Contratar Fotógrafo Inmobiliario y Drone en Punta Cana | Bavaro, Casa de Campo & Santo Domingo | Babula Shots',
-      en: 'Hire a Real Estate & Drone Photographer in Punta Cana | Bavaro, Casa de Campo & Santo Domingo | Babula Shots',
+      es: 'Contratar Fotógrafo Inmobiliario y Drone en Punta Cana | Bavaro, Casa de Campo & Santo Domingo',
+      en: 'Hire a Real Estate & Drone Photographer in Punta Cana | Bavaro, Casa de Campo & Santo Domingo',
     },
     description: {
       es: 'Fotografía inmobiliaria, aéreas con drone, twilight y tours Matterport para propiedades en Punta Cana, Bavaro y Santo Domingo. Reserva online con depósito seguro.',

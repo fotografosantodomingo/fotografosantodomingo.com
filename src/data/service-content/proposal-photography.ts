@@ -11,8 +11,8 @@ import type { ServiceContent } from './types'
 export const proposalPhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Contratar Fotógrafo de Pedida de Mano en Punta Cana | Resorts y Restaurantes RD | Babula Shots',
-      en: 'Hire a Surprise Proposal Photographer in Punta Cana | Resorts & Beaches DR | Babula Shots',
+      es: 'Contratar Fotógrafo de Pedida de Mano en Punta Cana | Resorts y Restaurantes RD',
+      en: 'Hire a Surprise Proposal Photographer in Punta Cana | Resorts & Beaches DR',
     },
     description: {
       es: 'Cobertura oculta de pedidas de mano sorpresa en resorts de Punta Cana y restaurantes de Santo Domingo. Discreta, editorial y con reserva online segura.',

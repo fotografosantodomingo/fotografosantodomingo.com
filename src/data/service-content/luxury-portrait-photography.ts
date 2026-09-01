@@ -11,8 +11,8 @@ import type { ServiceContent } from './types'
 export const luxuryPortraitPhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Fotógrafo de Retratos y Headshots Editoriales | Santo Domingo, Punta Cana & RD | Babula Shots',
-      en: 'Editorial Portrait & Executive Headshot Photographer | Santo Domingo & Punta Cana | Babula Shots',
+      es: 'Fotógrafo de Retratos y Headshots Editoriales | Santo Domingo, Punta Cana & RD',
+      en: 'Editorial Portrait & Executive Headshot Photographer | Santo Domingo & Punta Cana',
     },
     description: {
       es: 'Retratos editoriales y headshots ejecutivos para profesionales y marcas personales en Santo Domingo y Punta Cana. Estética premium y reserva online segura.',

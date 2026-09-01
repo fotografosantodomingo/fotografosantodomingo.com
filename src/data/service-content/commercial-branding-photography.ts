@@ -11,8 +11,8 @@ import type { ServiceContent } from './types'
 export const commercialBrandingPhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Fotografía Comercial Profesional en República Dominicana | Hoteles, Productos & Marcas | Babula Shots',
-      en: 'Professional Commercial Photography Dominican Republic | Hotels, Products & Brands | Babula Shots',
+      es: 'Fotografía Comercial Profesional en República Dominicana | Hoteles, Productos & Marcas',
+      en: 'Professional Commercial Photography Dominican Republic | Hotels, Products & Brands',
     },
     description: {
       es: 'Fotografía comercial para hoteles de Punta Cana, restaurantes de Santo Domingo, productos y marcas en RD. Derechos de uso claros y entrega rápida con reserva online.',

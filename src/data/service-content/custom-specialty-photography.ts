@@ -12,8 +12,8 @@ import type { ServiceContent } from './types'
 export const customSpecialtyPhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Producción Fotográfica y Video a Medida en República Dominicana | Editorial, Multi-día & Campañas | Babula Shots',
-      en: 'Custom Photo & Video Production in Dominican Republic | Editorial, Multi-Day & Campaigns | Babula Shots',
+      es: 'Producción Fotográfica y Video a Medida en República Dominicana | Editorial, Multi-día & Campañas',
+      en: 'Custom Photo & Video Production in Dominican Republic | Editorial, Multi-Day & Campaigns',
     },
     description: {
       es: 'Producciones fotográficas y de video a medida: campañas editoriales, multi-día, video musical y proyectos especiales en RD. Propuesta personalizada en 5 días.',

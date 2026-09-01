@@ -11,8 +11,8 @@ import type { ServiceContent } from './types'
 export const familyBeachPhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Sesiones Familiares y de Playa Premium en Punta Cana | Santo Domingo & Boca Chica | Babula Shots',
-      en: 'Premium Family & Beach Photography in Punta Cana | Santo Domingo & Boca Chica | Babula Shots',
+      es: 'Sesiones Familiares y de Playa Premium en Punta Cana | Santo Domingo & Boca Chica',
+      en: 'Premium Family & Beach Photography in Punta Cana | Santo Domingo & Boca Chica',
     },
     description: {
       es: 'Sesiones familiares, maternidad y recién nacido en estudio o playas premium de Punta Cana y Santo Domingo. Dirección natural y reserva online inmediata.',

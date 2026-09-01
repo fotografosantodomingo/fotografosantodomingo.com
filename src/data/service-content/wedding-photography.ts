@@ -12,8 +12,8 @@ import type { ServiceContent } from './types'
 export const weddingPhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Fotógrafo de Bodas en República Dominicana | Santo Domingo & Punta Cana | Babula Shots',
-      en: 'Wedding Photographer in Dominican Republic | Punta Cana & Santo Domingo | Babula Shots',
+      es: 'Fotógrafo de Bodas en República Dominicana | Santo Domingo & Punta Cana',
+      en: 'Wedding Photographer in Dominican Republic | Punta Cana & Santo Domingo',
     },
     description: {
       es: 'Fotografía de bodas premium en Punta Cana, Santo Domingo y toda República Dominicana. Cobertura natural, editorial, galería editada y reserva online inmediata.',

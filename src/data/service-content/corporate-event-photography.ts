@@ -11,8 +11,8 @@ import type { ServiceContent } from './types'
 export const corporateEventPhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Fotógrafo de Eventos Corporativos Premium en Santo Domingo | Punta Cana & Resorts RD | Babula Shots',
-      en: 'Premium Corporate Event Photographer in Santo Domingo | Punta Cana & DR Resorts | Babula Shots',
+      es: 'Fotógrafo de Eventos Corporativos Premium en Santo Domingo | Punta Cana & Resorts RD',
+      en: 'Premium Corporate Event Photographer in Santo Domingo | Punta Cana & DR Resorts',
     },
     description: {
       es: 'Cobertura premium de conferencias, lanzamientos, premiaciones e incentivos en Santo Domingo, Punta Cana y resorts de RD. Reserva por hora o día completo.',

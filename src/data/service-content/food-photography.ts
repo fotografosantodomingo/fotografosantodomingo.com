@@ -14,8 +14,8 @@ import type { ServiceContent } from './types'
 export const foodPhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Fotografía Gastronómica para Restaurantes en RD | Menú, Redes y Publicidad | Babula Shots',
-      en: 'Restaurant Food Photography in the Dominican Republic | Menu, Social & Ads | Babula Shots',
+      es: 'Fotografía Gastronómica para Restaurantes en RD | Menú, Redes y Publicidad',
+      en: 'Restaurant Food Photography in the Dominican Republic | Menu, Social & Ads',
     },
     description: {
       es: 'Fotografía y video para restaurantes en Santo Domingo y Punta Cana — platos, cocina en acción, bar y ambiente. Contenido listo para menú, redes sociales y publicidad.',

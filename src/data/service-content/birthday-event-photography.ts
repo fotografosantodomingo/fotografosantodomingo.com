@@ -15,8 +15,8 @@ import type { ServiceContent } from './types'
 export const birthdayEventPhotographyContent: ServiceContent = {
   seo: {
     title: {
-      es: 'Fotógrafo de Quinceañeras, Cumpleaños y Bautizos | Santo Domingo & Punta Cana | Babula Shots',
-      en: 'Quinceañera, Birthday & Baptism Photographer | Santo Domingo & Punta Cana | Babula Shots',
+      es: 'Fotógrafo de Quinceañeras, Cumpleaños y Bautizos | Santo Domingo & Punta Cana',
+      en: 'Quinceañera, Birthday & Baptism Photographer | Santo Domingo & Punta Cana',
     },
     description: {
       es: 'Cobertura premium de quinceañeras, cumpleaños, bautizos y graduaciones en Santo Domingo, Punta Cana y Boca Chica. Galería editada y reserva online con depósito.',
