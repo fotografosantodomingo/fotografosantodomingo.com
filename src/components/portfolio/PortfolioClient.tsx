@@ -76,6 +76,7 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
   const categories = [
     { id: 'all',        label: locale === 'es' ? 'Todos'     : 'All' },
     { id: 'wedding',   label: locale === 'es' ? 'Bodas'     : 'Weddings' },
+    { id: 'family-zona-colonial', label: locale === 'es' ? 'Familia Zona Colonial' : 'Family Zona Colonial' },
     { id: 'beach',     label: locale === 'es' ? 'Playa'     : 'Beach' },
     { id: 'birthday',  label: locale === 'es' ? 'Cumpleanos' : 'Birthdays' },
     { id: 'portrait',  label: locale === 'es' ? 'Retratos'  : 'Portraits' },
@@ -85,12 +86,12 @@ export default function PortfolioClient({ images, locale }: PortfolioClientProps
   ]
 
   const categoryEmoji: Record<string, string> = {
-    wedding: '💍', beach: '🏖️', birthday: '🎂', portrait: '👤', drone: '🚁', event: '🎉', commercial: '📸',
+    wedding: '💍', 'family-zona-colonial': '🏛️', beach: '🏖️', birthday: '🎂', portrait: '👤', drone: '🚁', event: '🎉', commercial: '📸',
   }
 
   useEffect(() => {
     const category = searchParams.get('category')
-    const valid = ['wedding', 'beach', 'birthday', 'portrait', 'drone', 'event', 'commercial']
+    const valid = ['wedding', 'family-zona-colonial', 'beach', 'birthday', 'portrait', 'drone', 'event', 'commercial']
     if (category && valid.includes(category)) {
       setActiveFilter(category)
       return
