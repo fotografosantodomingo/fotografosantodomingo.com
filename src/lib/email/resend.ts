@@ -245,6 +245,7 @@ function formatServiceLabel(serviceType: string, locale: string) {
     CORPORATE_EVENTS: { es: 'Eventos corporativos', en: 'Corporate Events' },
     CORPORATE_PORTRAITS: { es: 'Retratos corporativos', en: 'Corporate Portraits' },
     FOOD_AND_BEVERAGE: { es: 'Alimentos y bebidas', en: 'Food and Beverage' },
+    PRODUCT_PHOTOGRAPHY: { es: 'Fotografía de producto', en: 'Product Photography' },
     VIDEO_PRODUCTION: { es: 'Produccion de video', en: 'Video Production' },
     DRONE_AERIAL: { es: 'Drone aereo', en: 'Drone Aerial' },
     OTHER: { es: 'Otro', en: 'Other' },

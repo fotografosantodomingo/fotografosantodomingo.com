@@ -74,6 +74,7 @@ const SERVICE_TERMS: Record<string, TermId[]> = {
   ARCHITECTURE:       ['cancellation', 'image_rights', 'commercial_use'],
   CORPORATE_EVENTS:   ['cancellation', 'image_rights', 'commercial_use'],
   FOOD_AND_BEVERAGE:  ['cancellation', 'image_rights', 'commercial_use'],
+  PRODUCT_PHOTOGRAPHY:['cancellation', 'image_rights', 'commercial_use'],
   VIDEO_PRODUCTION:   ['cancellation', 'image_rights', 'commercial_use'],
   DRONE_AERIAL:       ['cancellation', 'weather', 'drone_regulation', 'image_rights'],
   OTHER:              ['cancellation', 'image_rights'],

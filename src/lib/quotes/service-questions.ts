@@ -523,6 +523,34 @@ export const SERVICE_QUESTIONS: Record<QuoteServiceType, ServiceQuestion[]> = {
     { type: 'yes_no', key: 'fnb_food_stylist', labelEs: '¿Necesitas food stylist?', labelEn: 'Need a food stylist?' },
   ],
 
+  PRODUCT_PHOTOGRAPHY: [
+    {
+      type: 'select', key: 'product_purpose', required: true,
+      labelEs: '¿Para qué se usarán las fotos?', labelEn: 'What will the photos be used for?',
+      options: [
+        { value: 'ecommerce', labelEs: 'Tienda online / e-commerce', labelEn: 'Online store / e-commerce' },
+        { value: 'social', labelEs: 'Redes sociales', labelEn: 'Social media' },
+        { value: 'catalog', labelEs: 'Catálogo / lookbook', labelEn: 'Catalog / lookbook' },
+        { value: 'packaging', labelEs: 'Empaque / impresos', labelEn: 'Packaging / print' },
+      ],
+    },
+    {
+      type: 'text', key: 'product_count', required: true,
+      labelEs: 'Cantidad de productos a fotografiar', labelEn: 'Number of products to photograph',
+      placeholderEs: 'Ejemplo: 10 carteras', placeholderEn: 'Example: 10 handbags',
+    },
+    {
+      type: 'select', key: 'product_style', required: true,
+      labelEs: 'Estilo de fotos', labelEn: 'Photo style',
+      options: [
+        { value: 'clean_white', labelEs: 'Fondo blanco / limpio (catálogo)', labelEn: 'Clean / white background (catalog)' },
+        { value: 'lifestyle', labelEs: 'Estilo lifestyle / con modelo', labelEn: 'Lifestyle / with model' },
+        { value: 'mixed', labelEs: 'Mezcla de ambos', labelEn: 'Mix of both' },
+      ],
+    },
+    { type: 'yes_no', key: 'product_model_needed', labelEs: '¿Necesitas modelo para las fotos?', labelEn: 'Do you need a model for the photos?' },
+  ],
+
   VIDEO_PRODUCTION: [
     {
       type: 'select', key: 'video_type', required: true,

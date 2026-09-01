@@ -95,6 +95,14 @@ const CHECKLISTS: Record<string, ServiceChecklist> = {
     { id: 'usage', label: 'Usage rights (menu / social / ads)' },
     { id: 'delivery', label: 'Delivery format' },
   ],
+  PRODUCT_PHOTOGRAPHY: [
+    { id: 'date', label: 'Date & time confirmed' },
+    { id: 'location', label: 'Studio / client location' },
+    { id: 'product_count', label: 'Number of products / SKUs' },
+    { id: 'style', label: 'Style (clean/white vs. lifestyle)' },
+    { id: 'usage', label: 'Usage rights (e-commerce / social / print)' },
+    { id: 'delivery', label: 'Delivery format' },
+  ],
   VIDEO_PRODUCTION: [
     { id: 'date', label: 'Date & time confirmed' },
     { id: 'location', label: 'Location' },

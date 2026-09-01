@@ -29,7 +29,7 @@ Return ONLY valid JSON matching this schema (use null for any field you cannot c
   "full_name": string | null,       // client's first + last name
   "whatsapp_phone": string | null,  // phone number as dialed, keep + and country code if present
   "email": string | null,
-  "service_type": string | null,    // one of: WEDDINGS, ENGAGEMENT_SESSION, QUINCEANERAS, MATERNITY, FAMILY, BIRTHDAY_PARTY, BAPTISMS, GRADUATION, CHILDRENS_SESSIONS, ARCHITECTURE, PORTRAITS, CORPORATE_PORTRAITS, FOOD_AND_BEVERAGE, VIDEO_PRODUCTION, DRONE_AERIAL, OTHER
+  "service_type": string | null,    // one of: WEDDINGS, ENGAGEMENT_SESSION, QUINCEANERAS, MATERNITY, FAMILY, BIRTHDAY_PARTY, BAPTISMS, GRADUATION, CHILDRENS_SESSIONS, ARCHITECTURE, PORTRAITS, CORPORATE_PORTRAITS, FOOD_AND_BEVERAGE, PRODUCT_PHOTOGRAPHY, VIDEO_PRODUCTION, DRONE_AERIAL, OTHER
   "event_date": string | null,      // ISO 8601 date yyyy-mm-dd, current year is 2026
   "city": string | null,
   "country": string | null,

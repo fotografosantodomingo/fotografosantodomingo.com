@@ -13,6 +13,7 @@ export type QuoteServiceType =
   | 'CORPORATE_EVENTS'
   | 'CORPORATE_PORTRAITS'
   | 'FOOD_AND_BEVERAGE'
+  | 'PRODUCT_PHOTOGRAPHY'
   | 'VIDEO_PRODUCTION'
   | 'DRONE_AERIAL'
   | 'OTHER'
@@ -39,6 +40,7 @@ export const QUOTE_SERVICE_TYPES: Array<{
   { value: 'CORPORATE_EVENTS', icon: '🏢', labelEs: 'Eventos corporativos', labelEn: 'Corporate Events' },
   { value: 'CORPORATE_PORTRAITS', icon: '📷', labelEs: 'Retratos corporativos', labelEn: 'Corporate Portraits' },
   { value: 'FOOD_AND_BEVERAGE', icon: '🍽️', labelEs: 'Alimentos y bebidas', labelEn: 'Food and Beverage' },
+  { value: 'PRODUCT_PHOTOGRAPHY', icon: '📦', labelEs: 'Fotografía de Producto', labelEn: 'Product Photography' },
   { value: 'VIDEO_PRODUCTION', icon: '🎬', labelEs: 'Produccion de video', labelEn: 'Video Production' },
   { value: 'DRONE_AERIAL', icon: '🚁', labelEs: 'Drone aereo', labelEn: 'Drone Aerial' },
   { value: 'OTHER', icon: '✨', labelEs: 'Otro', labelEn: 'Other' },
@@ -92,6 +94,7 @@ export const QUOTE_SERVICE_TYPE_TO_FAMILY_SLUG: Record<QuoteServiceType, string 
   CORPORATE_EVENTS: 'corporate-event-photography',
   CORPORATE_PORTRAITS: 'luxury-portrait-photography',
   FOOD_AND_BEVERAGE: 'commercial-branding-photography',
+  PRODUCT_PHOTOGRAPHY: 'commercial-branding-photography',
   VIDEO_PRODUCTION: 'custom-specialty-photography',
   DRONE_AERIAL: 'real-estate-drone-photography',
   OTHER: null,

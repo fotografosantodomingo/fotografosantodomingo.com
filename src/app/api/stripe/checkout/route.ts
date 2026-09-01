@@ -29,6 +29,7 @@ const SERVICE_LABELS: Record<string, { es: string; en: string }> = {
   CORPORATE_EVENTS:   { es: 'Evento Corporativo',          en: 'Corporate Event' },
   CORPORATE_PORTRAITS:{ es: 'Retratos Corporativos',       en: 'Corporate Portraits' },
   FOOD_AND_BEVERAGE:  { es: 'Alimentos y Bebidas',         en: 'Food and Beverage' },
+  PRODUCT_PHOTOGRAPHY:{ es: 'Fotografía de Producto',      en: 'Product Photography' },
   VIDEO_PRODUCTION:   { es: 'Producción de Video',         en: 'Video Production' },
   DRONE_AERIAL:       { es: 'Fotografía con Drone',        en: 'Drone Photography' },
   OTHER:              { es: 'Servicio Fotográfico',        en: 'Photography Service' },
