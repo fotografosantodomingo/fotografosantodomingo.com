@@ -4,6 +4,7 @@ import { CONTACT_INFO } from '@/lib/utils/constants'
 import { generateJsonLd, schemaGenerators } from '@/components/seo/JsonLd'
 
 export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const PAGE_SLUG = 'services/drone'
