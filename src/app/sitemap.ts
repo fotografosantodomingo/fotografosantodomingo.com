@@ -1,7 +1,5 @@
 import { MetadataRoute } from 'next'
 import { getAllSlugs } from '@/lib/supabase/blog'
-import { serviceLandingSlugs } from '@/lib/services/catalog'
-import { LEGACY_SERVICE_SLUG_TO_FAMILY } from '@/lib/services/legacy-aliases'
 import { getPublishedSpokes, spokeTierToPriority } from '@/data/spoke-pages'
 import { createServiceClient } from '@/lib/supabase/service'
 import { GEO_PAGES } from '@/data/geo-pages'
@@ -11,6 +9,30 @@ export const runtime = 'edge'
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
 export const revalidate = 0
+
+/**
+ * Loads every active family's slug straight from Supabase — the same
+ * source [locale]/services/[service]/page.tsx queries live, with no
+ * hardcoded list. Fixes a real gap: the previous canonicalServiceSlugs
+ * (derived from src/lib/services/catalog.ts's legacy serviceSlugById map)
+ * only had 3 of 10 canonical family slugs — food-photography,
+ * birthday-event-photography, custom-specialty-photography, and 5 others
+ * were entirely absent from that map (only reachable via legacy-alias
+ * slugs, which the sitemap correctly excludes since they 307-redirect).
+ * Falls back to empty array on DB error so the sitemap never 500s.
+ */
+async function loadFamilySlugs(): Promise<string[]> {
+  try {
+    const supabase = createServiceClient()
+    const { data } = await supabase
+      .from('service_families')
+      .select('slug')
+      .eq('active', true)
+    return (data ?? []).map((r) => r.slug as string)
+  } catch {
+    return []
+  }
+}
 
 /**
  * Loads all canonical (family_slug, package_slug) pairs from active rows
@@ -34,19 +56,13 @@ async function loadPackagePairs(): Promise<Array<{ familySlug: string; packageSl
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [slugs, packagePairs] = await Promise.all([
+  const [slugs, packagePairs, familySlugs] = await Promise.all([
     getAllSlugs(),
     loadPackagePairs(),
+    loadFamilySlugs(),
   ])
 
-  // Exclude legacy marketing slugs that 307-redirect to canonical family URLs
-  // (e.g. portrait-photography → luxury-portrait-photography). Sitemaps must
-  // list only final 200 URLs, otherwise GSC reports them as "Page with redirect".
-  const canonicalServiceSlugs = serviceLandingSlugs.filter(
-    (slug) => !(slug in LEGACY_SERVICE_SLUG_TO_FAMILY),
-  )
-
-  const serviceEntries: MetadataRoute.Sitemap = canonicalServiceSlugs.flatMap((serviceSlug) => [
+  const serviceEntries: MetadataRoute.Sitemap = familySlugs.flatMap((serviceSlug) => [
     {
       url: `${BASE_URL}/es/services/${serviceSlug}`,
       lastModified: new Date(),
@@ -173,6 +189,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${BASE_URL}/es/services/birthday-photographer`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.82,
+    },
+    {
+      url: `${BASE_URL}/en/services/drone`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.82,
+    },
+    {
+      url: `${BASE_URL}/es/services/drone`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.82,
+    },
+    {
+      url: `${BASE_URL}/en/services/video-cinematography`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.82,
+    },
+    {
+      url: `${BASE_URL}/es/services/video-cinematography`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.82,
