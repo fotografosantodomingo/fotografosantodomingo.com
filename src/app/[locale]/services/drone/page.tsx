@@ -17,8 +17,8 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Servicios de Drone en República Dominicana | Bienes Raíces, Industrial y Eventos | Babula Shots'
     : 'Drone Services in the Dominican Republic | Real Estate, Industrial & Events | Babula Shots'
   const description = isEs
-    ? 'Fotografía y video aéreo con drone en toda República Dominicana — bienes raíces, bodas, y proyectos industriales/comerciales como análisis de tráfico y levantamientos portuarios. 4K, piloto certificado.'
-    : 'Aerial drone photography and video across the Dominican Republic — real estate, weddings, and industrial/commercial projects like traffic analytics and port surveys. 4K, certified pilot.'
+    ? 'Fotografía y video aéreo con drone en toda República Dominicana — bienes raíces y proyectos industriales/comerciales como análisis de tráfico y levantamientos portuarios. 4K, piloto certificado.'
+    : 'Aerial drone photography and video across the Dominican Republic — real estate and industrial/commercial projects like traffic analytics and port surveys. 4K, certified pilot.'
   return {
     title,
     description,
@@ -56,10 +56,10 @@ const cards = [
   {
     href: 'services/real-estate-drone-photography',
     icon: '🏝️',
-    titleEs: 'Bienes Raíces y Bodas',
-    titleEn: 'Real Estate & Weddings',
-    descEs: 'Fotografía y video aéreo para propiedades, resorts y bodas en Punta Cana, Cap Cana y toda la isla — desde $250 USD.',
-    descEn: 'Aerial photography and video for properties, resorts, and weddings in Punta Cana, Cap Cana, and island-wide — starting at $250 USD.',
+    titleEs: 'Bienes Raíces',
+    titleEn: 'Real Estate',
+    descEs: 'Fotografía y video aéreo para propiedades y resorts en Punta Cana, Cap Cana y toda la isla — desde $250 USD.',
+    descEn: 'Aerial photography and video for properties and resorts in Punta Cana, Cap Cana, and island-wide — starting at $250 USD.',
   },
   {
     href: 'drone/proyecto-drone-zona-industrial-haina',
@@ -95,8 +95,8 @@ export default function DroneServicesPage({ params: { locale } }: Props) {
     name: isEs ? 'Servicios de Drone' : 'Drone Services',
     serviceType: isEs ? 'Fotografía y Video Aéreo con Drone' : 'Aerial Drone Photography & Video',
     description: isEs
-      ? 'Servicios de drone en República Dominicana para bienes raíces, bodas, y proyectos industriales/comerciales — análisis de tráfico, levantamientos portuarios, y más.'
-      : 'Drone services in the Dominican Republic for real estate, weddings, and industrial/commercial projects — traffic analytics, port surveys, and more.',
+      ? 'Servicios de drone en República Dominicana para bienes raíces y proyectos industriales/comerciales — análisis de tráfico, levantamientos portuarios, y más.'
+      : 'Drone services in the Dominican Republic for real estate and industrial/commercial projects — traffic analytics, port surveys, and more.',
     provider: {
       '@type': 'LocalBusiness',
       '@id': `${BASE_URL}/#business`,
@@ -137,8 +137,8 @@ export default function DroneServicesPage({ params: { locale } }: Props) {
               </h1>
               <p className="text-xl text-ink-muted mb-8 max-w-3xl leading-relaxed">
                 {isEs
-                  ? 'Bienes raíces y bodas frente al mar, pero también proyectos industriales y comerciales reales — análisis de tráfico, levantamientos portuarios, documentación de infraestructura. Piloto certificado, 4K, cobertura en toda la isla.'
-                  : 'Beachfront real estate and weddings, but also real industrial and commercial projects — traffic analytics, port surveys, infrastructure documentation. Certified pilot, 4K, island-wide coverage.'}
+                  ? 'Bienes raíces frente al mar, pero también proyectos industriales y comerciales reales — análisis de tráfico, levantamientos portuarios, documentación de infraestructura. Piloto certificado, 4K, cobertura en toda la isla.'
+                  : 'Beachfront real estate, but also real industrial and commercial projects — traffic analytics, port surveys, infrastructure documentation. Certified pilot, 4K, island-wide coverage.'}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <a
