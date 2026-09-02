@@ -1,5 +1,27 @@
 // Cloudinary configuration and utilities
 
+/**
+ * Inserts a Cloudinary transformation as the first chained segment right
+ * after /image/upload/ in a full delivery URL. Works whether the URL
+ * already has a transform (chains before it) or not. Non-Cloudinary URLs
+ * are returned unchanged. Mirrors the loader in src/lib/cloudinary/loader.ts
+ * for plain <img> tags that don't go through next/image.
+ */
+export function withCloudinaryTransform(url: string, transform: string): string {
+  const marker = '/image/upload/'
+  const idx = url.startsWith('https://res.cloudinary.com/') ? url.indexOf(marker) : -1
+  if (idx === -1) return url
+  const insertAt = idx + marker.length
+  return `${url.slice(0, insertAt)}${transform}/${url.slice(insertAt)}`
+}
+
+/** Builds a responsive srcSet string for a raw Cloudinary URL across the given widths. */
+export function cloudinarySrcSet(url: string, widths: number[]): string {
+  return widths
+    .map((w) => `${withCloudinaryTransform(url, `f_auto,q_auto,c_limit,w_${w}`)} ${w}w`)
+    .join(', ')
+}
+
 export const CLOUDINARY_CONFIG = {
   cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,

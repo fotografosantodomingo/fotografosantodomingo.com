@@ -32,7 +32,7 @@ export const weddingPhotographyContent: ServiceContent = {
   // copy. Desktop visitors don't see it (the hero typography fills the
   // viewport on large screens already).
   mobileHeroImage: {
-    src: 'https://res.cloudinary.com/dwewurxla/image/upload/v1777557415/sesion-fotos-playa-blanca-punta-cana_ggc81c.webp',
+    src: 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,c_limit,w_900/v1777557415/sesion-fotos-playa-blanca-punta-cana_ggc81c.webp',
     alt: {
       es: 'Sesión de fotos en playa blanca de Punta Cana — fotógrafo de bodas Babula Shots',
       en: 'Photo session on Punta Cana white-sand beach — wedding photographer Babula Shots',

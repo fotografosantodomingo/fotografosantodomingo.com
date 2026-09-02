@@ -8,7 +8,7 @@ export const runtime = 'edge'
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 const PAGE_SLUG = 'services/real-estate-drone-photography/360-simulacion-vistas'
 const PARENT_SLUG = 'services/real-estate-drone-photography'
-const IMAGE_URL = `${BASE_URL}/images/imagenes-360-drone-simulacion-vistas.webp`
+const IMAGE_URL = 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1600/real-estate-drone-photography/imagenes-360-drone-simulacion-vistas'
 
 type Props = { params: { locale: string } }
 

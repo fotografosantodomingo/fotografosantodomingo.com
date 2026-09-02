@@ -11,6 +11,7 @@ import { GEO_PAGES } from '@/data/geo-pages'
 import { getUsdToDopRate } from '@/lib/currency/exchange-rate'
 import { formatServicePrice } from '@/lib/currency/format'
 import { getRelatedPostsForFamily } from '@/lib/supabase/blog'
+import { cloudinarySrcSet, withCloudinaryTransform } from '@/lib/cloudinary'
 import YouTubeFacade from '@/components/YouTubeFacade'
 
 export const dynamic = 'force-dynamic'
@@ -144,6 +145,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       url: `${BASE_URL}/${locale}/services/${family.slug}`,
+      images: [{
+        url: `${BASE_URL}/api/og?title=${encodeURIComponent(isEs ? family.title_es : family.title_en)}`,
+        width: 1200,
+        height: 630,
+        alt: title,
+      }],
       locale: isEs ? 'es_DO' : 'en_US',
     },
     robots: { index: true, follow: true },
@@ -561,7 +568,9 @@ export default async function FamilyPage({ params }: Props) {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={`${src}-${i}`}
-                src={src}
+                src={withCloudinaryTransform(src, 'f_auto,q_auto,c_limit,w_1600')}
+                srcSet={cloudinarySrcSet(src, [640, 1024, 1600, 1920])}
+                sizes="100vw"
                 alt={isEs
                   ? `${title} — galería ${i + 1}`
                   : `${title} — gallery ${i + 1}`}
