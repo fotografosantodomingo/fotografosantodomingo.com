@@ -46,11 +46,16 @@ export default function ObfuscatedEmail({ className, label, locale = 'en' }: Pro
   // continuity through hydration: same tag, same classes, no layout shift.
   const fallbackLabel = label ?? (locale === 'es' ? 'Correo' : 'Email')
 
+  // aria-label only makes sense for the generic pre-hydration fallback text
+  // ("Correo"/"Email"). Once the real address (or a custom label) is shown,
+  // dropping it lets the accessible name derive from the visible text —
+  // overriding it here would otherwise mismatch WCAG's
+  // label-content-name-mismatch rule as soon as email !== null.
   return (
     <a
       href={email ? `mailto:${email}` : '#contact'}
       className={className}
-      aria-label={locale === 'es' ? 'enviar correo' : 'email address'}
+      aria-label={email ? undefined : (locale === 'es' ? 'enviar correo' : 'email address')}
       onClick={(e) => {
         if (email) e.currentTarget.href = `mailto:${email}`
       }}

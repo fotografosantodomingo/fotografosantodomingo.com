@@ -488,7 +488,7 @@ export default async function AboutPage({ params: { locale } }: Props) {
               href={`https://wa.me/${CONTACT_INFO.whatsapp}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-green-500 hover:bg-green-600 px-8 py-4 rounded-lg font-semibold transition-colors"
+              className="bg-green-700 hover:bg-green-800 text-white px-8 py-4 rounded-lg font-semibold transition-colors"
             >
               WhatsApp: {CONTACT_INFO.phone}
             </a>

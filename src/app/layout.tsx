@@ -3,6 +3,8 @@ import { Inter, Unbounded, JetBrains_Mono } from 'next/font/google'
 import { getLocale } from 'next-intl/server'
 import './globals.css'
 import AiChat from '@/components/AiChat'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
+import GoogleTagManager from '@/components/GoogleTagManager'
 
 // Bugatti Display substitute. Geometric extended display face for the
 // monumental hero scale (DESIGN.md §3 Note on Substitutes — Unbounded works
@@ -72,20 +74,16 @@ export default async function RootLayout({
             __html: `(function(){try{var d=document.documentElement;var t=localStorage.getItem('theme');var isLight=t==='light';d.classList.toggle('light-mode',isLight);d.classList.toggle('dark',!isLight);d.style.colorScheme=isLight?'light':'dark';}catch(e){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}})();`,
           }}
         />
-        {/* Google Analytics — in <head> for verification bots; consent mode defaults to denied until user accepts */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-C59XKYJNTQ" />
+        {/* Tiny synchronous stub only — establishes window.dataLayer and the
+            consent-mode default before anything else can run, per Google's
+            recommended pattern. The actual gtag.js/gtm.js library files are
+            loaded later (see <GoogleAnalytics />/<GoogleTagManager /> below)
+            so they don't compete with LCP/FCP on the critical rendering
+            path; dataLayer.push() calls queued in the meantime aren't lost. */}
         <script
           id="gtag-init"
           dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('consent','default',{'analytics_storage':'denied'});gtag('config','G-C59XKYJNTQ');`,
-          }}
-        />
-        {/* Google Tag Manager — standard head snippet, hardcoded ID */}
-        <script
-          id="gtm-init"
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WM442J55');`,
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('consent','default',{'analytics_storage':'denied'});`,
           }}
         />
       </head>
@@ -101,6 +99,8 @@ export default async function RootLayout({
         </noscript>
         {children}
         <AiChat />
+        <GoogleAnalytics />
+        <GoogleTagManager />
       </body>
     </html>
   )

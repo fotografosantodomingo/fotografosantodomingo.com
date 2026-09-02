@@ -275,7 +275,7 @@ export default function DroneServicesPage({ params: { locale } }: Props) {
                 href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(isEs ? 'Hola, quisiera información sobre servicios de drone.' : 'Hi, I would like information about drone services.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-green-500 hover:bg-green-600 px-8 py-4 rounded-lg font-semibold text-white transition-colors"
+                className="bg-green-700 hover:bg-green-800 px-8 py-4 rounded-lg font-semibold text-white transition-colors"
               >
                 WhatsApp: {CONTACT_INFO.phone}
               </a>

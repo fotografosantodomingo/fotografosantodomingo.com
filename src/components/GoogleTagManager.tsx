@@ -2,75 +2,34 @@
 
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import Script from 'next/script'
 
-declare global {
-  interface Window {
-    dataLayer: any[]
-  }
-}
+const GTM_ID = 'GTM-WM442J55'
 
+// window.dataLayer is declared globally in
+// src/lib/analytics/booking-events.ts — not re-declared here to avoid
+// TypeScript's "must have identical modifiers" conflict across files.
+
+/**
+ * Loads the GTM container once the browser is idle (next/script's
+ * lazyOnload). Keeps this third-party script off the critical rendering
+ * path so it doesn't compete with LCP/FCP for real visitors — the
+ * dataLayer stub is already initialized synchronously in the root
+ * layout's <head>, so pushes queued before this loads aren't lost.
+ */
 export default function GoogleTagManager() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const gtmId = process.env.NEXT_PUBLIC_GTM_ID
-    if (!gtmId) return
-
-    // Initialize dataLayer
-    window.dataLayer = window.dataLayer || []
-
-    let script: HTMLScriptElement | null = null
-    let loaded = false
-
-    const loadGtm = () => {
-      if (loaded) return
-      loaded = true
-      script = document.createElement('script')
-      script.async = true
-      script.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`
-      document.head.appendChild(script)
-    }
-
-    // Bumped from 5s → 15s so Lighthouse's measurement window finishes
-    // before GTM injects (Lighthouse stabilizes between 5-10s, so 15s
-    // pushes the GTM bytes off the Performance score completely).
-    // Interaction listeners below still fire instantly for real users.
-    const timeoutId = window.setTimeout(loadGtm, 15000)
-    const interactionEvents: Array<keyof WindowEventMap> = ['pointerdown', 'keydown', 'touchstart', 'scroll']
-    const onFirstInteraction = () => {
-      loadGtm()
-      interactionEvents.forEach((eventName) => {
-        window.removeEventListener(eventName, onFirstInteraction)
-      })
-    }
-
-    interactionEvents.forEach((eventName) => {
-      window.addEventListener(eventName, onFirstInteraction, { passive: true, once: true })
-    })
-
-    // Track page views
-    const handleRouteChange = (url: string) => {
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
-          event: 'pageview',
-          page: url,
-        })
-      }
-    }
-
-    handleRouteChange(pathname)
-
-    return () => {
-      window.clearTimeout(timeoutId)
-      interactionEvents.forEach((eventName) => {
-        window.removeEventListener(eventName, onFirstInteraction)
-      })
-      // Cleanup
-      if (script && document.head.contains(script)) {
-        document.head.removeChild(script)
-      }
-    }
+    if (typeof window === 'undefined' || !window.dataLayer) return
+    window.dataLayer.push({ event: 'pageview', page: pathname })
   }, [pathname])
 
-  return null
+  return (
+    <Script id="gtm-loader" strategy="lazyOnload">
+      {`
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');
+      `}
+    </Script>
+  )
 }

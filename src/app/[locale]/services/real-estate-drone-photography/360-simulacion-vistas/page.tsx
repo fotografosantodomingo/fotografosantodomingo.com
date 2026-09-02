@@ -653,7 +653,7 @@ export default function Drone360Page({ params: { locale } }: Props) {
                 href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(isEs ? 'Hola, me interesa el servicio de imágenes 360° con dron para simulación de vistas.' : 'Hi, I am interested in the 360° drone image view simulation service.')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-green-500 hover:bg-green-600 px-8 py-4 rounded-lg font-semibold text-white transition-colors"
+                className="bg-green-700 hover:bg-green-800 px-8 py-4 rounded-lg font-semibold text-white transition-colors"
               >
                 WhatsApp: {CONTACT_INFO.phone}
               </a>
