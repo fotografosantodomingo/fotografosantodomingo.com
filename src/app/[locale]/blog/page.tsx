@@ -1,10 +1,10 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import type { Metadata } from 'next'
 import { getPublishedPosts } from '@/lib/supabase/blog'
 import { CONTACT_INFO } from '@/lib/utils/constants'
 import { schemaGenerators, generateJsonLd } from '@/components/seo/JsonLd'
+import { cloudinarySrcSet } from '@/lib/cloudinary'
 
 const BASE_URL = 'https://www.fotografosantodomingo.com'
 
@@ -224,14 +224,16 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
               {filteredPosts.map(post => (
                 <article key={post.slug} className="bg-gray-900 rounded-xl border border-white/10 overflow-hidden hover:border-sky-500/40 transition-colors">
                   <div className="relative aspect-video bg-black/40">
-                    <Image
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                       src={post.cover_image_thumbnail_url || `${BASE_URL}/api/og?title=Babula+Shots`}
+                      srcSet={cloudinarySrcSet(post.cover_image_thumbnail_url || `${BASE_URL}/api/og?title=Babula+Shots`, [400, 640, 828, 1200])}
                       alt={post.cover_image_alt || post.title}
                       title={post.cover_image_title || post.cover_image_alt || post.title}
-                      fill
                       loading="lazy"
-                      className="object-contain p-2"
+                      decoding="async"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="absolute inset-0 h-full w-full object-contain p-2"
                     />
                   </div>
 
