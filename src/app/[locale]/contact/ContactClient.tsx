@@ -316,7 +316,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-sky-600 hover:bg-sky-700 disabled:bg-gray-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
+                  className="w-full bg-sky-700 hover:bg-sky-800 disabled:bg-gray-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center"
                 >
                   {isSubmitting ? (
                     <>
@@ -347,7 +347,7 @@ export default function ContactPage() {
                       {t('contact.info.phone') || 'Phone'}
                     </h3>
                     <p className="text-ink-muted">{CONTACT_INFO.phone}</p>
-                    <p className="text-ink-muted/70 text-sm mb-1">{t('contact.info.callNote') || 'Local line — calls only'}</p>
+                    <p className="text-ink-muted text-sm mb-1">{t('contact.info.callNote') || 'Local line — calls only'}</p>
                     <a
                       href={`tel:${CONTACT_INFO.phone}`}
                       className="text-ink hover:text-ink font-medium"
@@ -367,7 +367,7 @@ export default function ContactPage() {
                       {t('contact.info.whatsapp') || 'WhatsApp'}
                     </h3>
                     <p className="text-ink-muted">{CONTACT_INFO.whatsappDisplay}</p>
-                    <p className="text-ink-muted/70 text-sm mb-1">{t('contact.info.whatsappNote') || 'Message us and we reply within minutes'}</p>
+                    <p className="text-ink-muted text-sm mb-1">{t('contact.info.whatsappNote') || 'Message us and we reply within minutes'}</p>
                     <a
                       href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(CONTACT_INFO.whatsappMessage)}`}
                       target="_blank"
@@ -404,7 +404,7 @@ export default function ContactPage() {
                     </h3>
                     <p className="text-ink-muted">C. El Conde 142</p>
                     <p className="text-ink-muted">Santo Domingo 11111</p>
-                    <p className="text-ink-muted/70 text-sm">{t('contact.info.locationDetail')}</p>
+                    <p className="text-ink-muted text-sm">{t('contact.info.locationDetail')}</p>
                   </div>
                 </div>
 
@@ -478,7 +478,7 @@ export default function ContactPage() {
                 href={BOOKING_LINKS.setmore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-3 bg-white text-sky-600 hover:bg-gray-100 font-bold text-lg px-10 py-4 rounded-xl transition-colors shadow-lg"
+                className="inline-flex items-center justify-center gap-3 bg-white text-sky-700 hover:bg-gray-100 font-bold text-lg px-10 py-4 rounded-xl transition-colors shadow-lg"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />

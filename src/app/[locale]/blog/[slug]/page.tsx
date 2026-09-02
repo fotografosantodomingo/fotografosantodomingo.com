@@ -663,7 +663,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
             </>
           )}
           <div className={additionalGalleryImages.length > 0 ? 'mt-6' : ''}>
-            <Link href={`/${locale}/portfolio`} className="inline-block rounded-full bg-sky-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-sky-500">
+            <Link href={`/${locale}/portfolio`} className="inline-block rounded-full bg-sky-700 px-5 py-3 text-sm font-bold text-white transition hover:bg-sky-800">
               {isEs ? 'Ver Portafolio' : 'View Portfolio'}
             </Link>
           </div>
@@ -705,7 +705,7 @@ export default async function BlogPostPage({ params: { locale, slug } }: Props) 
                   <Link href={`/${locale}/services/${offer.familySlug}`} className="inline-block rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:border-sky-300 hover:text-sky-300">
                     {isEs ? 'Ver detalles' : 'View details'}
                   </Link>
-                  <Link href={`/${locale}/get-quote?family=${offer.familySlug}`} className="inline-block rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-400">
+                  <Link href={`/${locale}/get-quote?family=${offer.familySlug}`} className="inline-block rounded-full bg-sky-700 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-800">
                     {isEs ? 'Pedir cotización' : 'Get a quote'}
                   </Link>
                 </div>

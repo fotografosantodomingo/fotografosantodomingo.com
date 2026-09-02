@@ -135,7 +135,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
+                  className="px-6 py-3 bg-sky-700 text-white rounded-lg hover:bg-sky-800 transition-colors"
                 >
                   🔍
                 </button>
@@ -153,7 +153,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
               href={`/${locale}/blog`}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 !categoryFilter && !searchQuery
-                  ? 'bg-sky-600 text-white'
+                  ? 'bg-sky-700 text-white'
                   : 'bg-white/10 text-gray-300 hover:bg-white/20'
               }`}
             >
@@ -165,7 +165,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                 href={`/${locale}/blog?category=${category.key}`}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   categoryFilter === category.key
-                    ? 'bg-sky-600 text-white'
+                    ? 'bg-sky-700 text-white'
                     : 'bg-white/10 text-gray-300 hover:bg-white/20'
                 }`}
               >
@@ -236,18 +236,18 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                   </div>
 
                   <div className="p-6">
-                    <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                    <div className="flex items-center gap-4 text-sm text-gray-400 mb-3">
                       <span>{formatDate(post.published_at)}</span>
                     </div>
 
-                    <h3 className="text-xl font-bold text-white mb-3">
+                    <h2 className="text-xl font-bold text-white mb-3">
                       <Link
                         href={`/${locale}/blog/${post.slug}`}
                         className="hover:text-sky-400 transition-colors"
                       >
                         {post.title}
                       </Link>
-                    </h3>
+                    </h2>
 
                     <p className="text-gray-400 mb-4 line-clamp-3">
                       {post.excerpt}
@@ -290,7 +290,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-semibold"
+                className="px-6 py-3 bg-sky-700 text-white rounded-lg hover:bg-sky-800 transition-colors font-semibold"
               >
                 Subscribe
               </button>
@@ -319,7 +319,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
             </a>
             <Link
               href={`/${locale}/contact`}
-              className="bg-sky-600 hover:bg-sky-700 px-8 py-4 rounded-lg font-semibold transition-colors"
+              className="bg-sky-700 hover:bg-sky-800 px-8 py-4 rounded-lg font-semibold transition-colors"
             >
               {t('contact.form.send')}
             </Link>
