@@ -29,7 +29,7 @@
 
 const BASE = 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto'
 
-const IMAGES = {
+export const IMAGES = {
   kneelWide: {
     id: 'v1786566174/Fotografo_Propuesta_de_Matrimonio_Republica_Dominicana_4_cdwhj4',
     altEn: 'Marriage proposal in progress at a historic plaza, Zona Colonial Santo Domingo — Babula Shots',

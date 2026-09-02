@@ -23,7 +23,7 @@
 
 const BASE = 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto'
 
-const IMAGES = {
+export const IMAGES = {
   arrivalFatherDaughter: {
     id: 'v1787789561/Fotografo_Bautismo_Santo_Domingo_Republiica_Dominicana_Babula_Shots_12_ic8dk0',
     altEn: 'Father and daughter in white christening dress arriving at a historic stone church doorway in the Zona Colonial, Santo Domingo — Babula Shots',

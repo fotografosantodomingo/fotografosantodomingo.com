@@ -49,4 +49,9 @@ export function getServiceContent(familySlug: string): ServiceContent | null {
   return CONTENT_BY_FAMILY_SLUG[familySlug] ?? null
 }
 
+/** All family slugs with registered rich content — used by the image
+ *  sitemap generator to enumerate every family's image fields without
+ *  hardcoding the list a second time. */
+export const ALL_SERVICE_FAMILY_SLUGS = Object.keys(CONTENT_BY_FAMILY_SLUG)
+
 export type { ServiceContent } from './types'

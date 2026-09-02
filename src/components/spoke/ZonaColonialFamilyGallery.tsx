@@ -19,7 +19,7 @@ const BASE = 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto'
 
 type Img = { id: string; altEn: string; altEs: string }
 
-const IMAGES = {
+export const IMAGES = {
   archwayFamily: {
     id: 'v1788218696/Fotografo_Zona_Colonial_Santo_Domingo_Republica_Dominicana_babula_SHots_1_a69rq4',
     altEn: 'Family portrait under a stone archway with an iron gate in the Zona Colonial, Santo Domingo — Babula Shots',

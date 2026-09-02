@@ -29,7 +29,7 @@
 
 const BASE = 'https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto'
 
-const IMAGES = {
+export const IMAGES = {
   telephotoNinja: {
     id: 'fotografo_para_propuesta_de_matrimonio_santo_domingo_punta_cana_playa_fh3htf',
     altEn: 'Ninja mode — photographer invisible with telephoto lens from far distance, couple has no idea — Babula Shots',
