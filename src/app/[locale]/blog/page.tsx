@@ -259,6 +259,7 @@ export default async function BlogPage({ params: { locale }, searchParams }: Pro
                         className="text-sky-400 hover:text-sky-300 font-medium text-sm"
                       >
                         {t('blog.read_more')}
+                        <span className="sr-only"> {post.title}</span>
                       </Link>
                     </div>
                   </div>

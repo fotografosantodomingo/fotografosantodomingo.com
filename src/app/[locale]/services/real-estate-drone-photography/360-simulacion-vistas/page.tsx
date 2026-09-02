@@ -447,7 +447,7 @@ export default function Drone360Page({ params: { locale } }: Props) {
                   ? 'Para garantizar integraciones arquitectónicas perfectas y visualizaciones nítidas, trabajamos bajo los más estrictos estándares de la industria.'
                   : 'To guarantee perfect architectural integrations and sharp visualizations, we work under the strictest industry standards.'}
               </p>
-              <div className="space-y-4">
+              <dl className="space-y-4">
                 {[
                   {
                     labelEs: 'Resolución de Captura',
@@ -497,7 +497,7 @@ export default function Drone360Page({ params: { locale } }: Props) {
                     <dd className="text-ink-muted">{isEs ? spec.valueEs : spec.valueEn}</dd>
                   </div>
                 ))}
-              </div>
+              </dl>
             </div>
           </div>
         </section>
@@ -563,7 +563,7 @@ export default function Drone360Page({ params: { locale } }: Props) {
                   className={`relative rounded-2xl p-8 flex flex-col gap-6 border ${plan.popular ? 'bg-sky-950 border-sky-500 shadow-lg shadow-sky-500/10' : 'bg-gray-900 border-hairline-soft'}`}
                 >
                   {plan.popular && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-sky-500 text-white font-mono text-[10px] uppercase tracking-widest px-4 py-1 rounded-full whitespace-nowrap">
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-sky-700 text-white font-mono text-[10px] uppercase tracking-widest px-4 py-1 rounded-full whitespace-nowrap">
                       {isEs ? 'Más Popular' : 'Most Popular'}
                     </span>
                   )}
@@ -587,7 +587,7 @@ export default function Drone360Page({ params: { locale } }: Props) {
                     href={`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(isEs ? `Hola, me interesa el ${plan.nameEs} de imágenes 360° con dron ($${plan.price} USD).` : `Hi, I am interested in the ${plan.nameEn} for 360° drone images ($${plan.price} USD).`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`w-full text-center py-3 rounded-lg font-semibold text-sm transition-colors ${plan.popular ? 'bg-sky-500 hover:bg-sky-400 text-white' : 'bg-gray-800 hover:bg-gray-700 text-white border border-hairline'}`}
+                    className={`w-full text-center py-3 rounded-lg font-semibold text-sm transition-colors ${plan.popular ? 'bg-sky-700 hover:bg-sky-800 text-white' : 'bg-gray-800 hover:bg-gray-700 text-white border border-hairline'}`}
                   >
                     {isEs ? 'Solicitar este plan' : 'Request this plan'}
                   </a>
@@ -645,7 +645,7 @@ export default function Drone360Page({ params: { locale } }: Props) {
                 href={BOOKING_LINKS.setmore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-sky-600 hover:bg-sky-700 px-8 py-4 rounded-lg font-semibold text-white transition-colors"
+                className="bg-sky-700 hover:bg-sky-800 px-8 py-4 rounded-lg font-semibold text-white transition-colors"
               >
                 📅 {isEs ? 'Reservar Consulta' : 'Book a Consultation'}
               </a>
