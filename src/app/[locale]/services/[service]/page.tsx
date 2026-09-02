@@ -587,12 +587,12 @@ export default async function FamilyPage({ params }: Props) {
                     <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted">
                       {String(i + 1).padStart(2, '0')}
                     </span>
-                    <h3
+                    <h2
                       className="font-display uppercase text-ink mt-3"
                       style={{ fontSize: 'clamp(20px, 2vw, 26px)', lineHeight: '1.1' }}
                     >
                       {isEs ? d.title.es : d.title.en}
-                    </h3>
+                    </h2>
                     <p className="text-ink-muted text-sm leading-relaxed mt-3">
                       {isEs ? d.proof.es : d.proof.en}
                     </p>
