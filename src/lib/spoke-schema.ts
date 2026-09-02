@@ -199,6 +199,31 @@ function buildImageObject(spoke: SpokePage, locale: string, baseUrl: string) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// VideoObject — one per spoke.videos entry
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildVideoObjects(spoke: SpokePage, locale: string) {
+  if (!spoke.videos || spoke.videos.length === 0) return null
+  const isEs = locale === 'es'
+
+  return spoke.videos.map((video) => ({
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: isEs ? video.titleEs : video.titleEn,
+    description: isEs ? video.descriptionEs : video.descriptionEn,
+    thumbnailUrl: [`https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`],
+    uploadDate: video.uploadDate,
+    contentUrl: `https://youtu.be/${video.youtubeId}`,
+    embedUrl: `https://www.youtube.com/embed/${video.youtubeId}`,
+    publisher: {
+      '@type': 'Organization',
+      name: PHOTOGRAPHER.brandName,
+      url: PHOTOGRAPHER.aboutUrl,
+    },
+  }))
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Main builder
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -213,5 +238,6 @@ export function buildSpokeSchemas(
     buildLocalService(spoke, locale, baseUrl),
     buildFaq(spoke, locale),
     buildImageObject(spoke, locale, baseUrl),
+    ...(buildVideoObjects(spoke, locale) ?? []),
   ].filter(Boolean)
 }

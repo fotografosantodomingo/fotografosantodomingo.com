@@ -586,6 +586,53 @@ export default function BirthdayPhotographerPage({ params: { locale } }: Props) 
           </div>
         </section>
 
+        {/* ── FEATURED SESSIONS ── teaser cards linking to dedicated case-study pages */}
+        <section className="border-b border-hairline-soft py-16 md:py-20 bg-canvas">
+          <div className="container mx-auto px-4">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'Sesiones Destacadas' : 'Featured Sessions'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink mb-12"
+              style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+            >
+              {isEs ? 'Sesiones reales que nos encantan' : 'Real sessions we love'}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl">
+              <Link
+                href={`/${locale}/cumpleanos/sesion-fotos-jardin-botanico-primer-anito-santo-domingo`}
+                className="group block border border-hairline-soft overflow-hidden hover:border-ink/40 transition-colors"
+              >
+                <div className="overflow-hidden">
+                  <Image
+                    src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_800/Fotografo_Jardin_Botanico_Santo_Domingo_Babula_Shots_t9vnsx.webp"
+                    alt={isEs
+                      ? 'Familia celebrando un primer añito en el Jardín Botánico de Santo Domingo — Babula Shots'
+                      : 'Family celebrating a first birthday at the Santo Domingo Botanical Garden — Babula Shots'}
+                    width={800}
+                    height={534}
+                    className="w-full h-auto block transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-5">
+                  <h3 className="text-ink text-base md:text-lg font-medium leading-snug">
+                    {isEs ? 'Sesión de Primer Añito — Jardín Botánico' : 'First Birthday Session — Botanical Garden'}
+                  </h3>
+                  <p className="text-ink-muted text-sm mt-2 leading-relaxed">
+                    {isEs
+                      ? 'Luz dorada, el jardín japonés, y momentos familiares tan buenos que fue difícil elegir la galería final.'
+                      : 'Golden light, the Japanese garden, and family moments so good it was hard to pick the final gallery.'}
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-sm font-medium text-ink mt-4 group-hover:underline underline-offset-4">
+                    {isEs ? 'Ver la sesión' : 'See the session'} →
+                  </span>
+                </div>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* ── BOOKING PACKAGES ── 4 package cards in hairline grid */}
         <section className="border-b border-hairline-soft py-16 md:py-20">
           <div className="container mx-auto px-4">

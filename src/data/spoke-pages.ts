@@ -56,6 +56,16 @@ export type SpokePricingTier = {
   bookingServiceSlug: string
 }
 
+export type SpokeVideo = {
+  youtubeId: string
+  titleEn: string
+  titleEs: string
+  descriptionEn: string
+  descriptionEs: string
+  /** Real publish date from YouTube's own watch-page metadata — never invented. */
+  uploadDate: string
+}
+
 export type SpokeTestimonial = {
   /** Full name of the real client — never anonymous */
   clientName: string
@@ -127,6 +137,10 @@ export type SpokePage = {
 
   // ── Gallery (Section 3) — 6–8 real images ───────────────────────────────────
   gallery: SpokeGalleryItem[]
+  /** Optional real YouTube video(s) — used by spokes with a customGallery
+   *  override that renders them (e.g. via TwoColumnGallery), and feeds a
+   *  VideoObject JSON-LD block per video in buildSpokeSchemas. */
+  videos?: SpokeVideo[]
 
   // ── Pricing (Section 4) ──────────────────────────────────────────────────────
   priceFromUsd: string
@@ -1024,6 +1038,200 @@ export const SPOKE_PAGES: SpokePage[] = [
   draftSpoke('family-newborn-santo-domingo',   'family/newborn-photographer-santo-domingo',     'familia/fotografo-recien-nacido-santo-domingo',    'family-photography', 2, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
 
   // ── HUB 4: Drone Services ──────────────────────────────────────────────────
+  // ✅ drone/proyecto-haina-zona-industrial — status: 'published' — live
+  {
+    id: 'drone-haina-industrial-santo-domingo',
+    enSlug: 'drone/haina-industrial-zone-drone-project',
+    esSlug: 'drone/proyecto-drone-zona-industrial-haina',
+    hubSlug: 'real-estate-drone-photography',
+    status: 'published',
+    tier: 1,
+    geo: { latitude: 18.4167, longitude: -70.0333 },
+    geoCity: 'Haina',
+    geoRegion: 'San Cristóbal',
+    titleEn: 'Industrial Drone Photographer Haina Santo Domingo | Traffic & Logistics Data',
+    titleEs: 'Fotógrafo de Drone Industrial en Haina Santo Domingo | Datos de Tráfico y Logística',
+    h1En: 'Industrial Drone Coverage in Haina — Aerial Data for Traffic Planning',
+    h1Es: 'Drone Industrial en Haina — Datos Aéreos para Planificación de Tráfico',
+    hookEn: 'A continuous 1-hour flight over the Haina industrial zone for a traffic-analytics and planning company — every bus arrival and departure documented in 4K, frame by frame.',
+    hookEs: 'Vuelo continuo de 1 hora sobre la zona industrial de Haina para una empresa de análisis y planificación de tráfico — cada llegada y salida de autobuses documentada en 4K, cuadro por cuadro.',
+    descriptionEn: 'Industrial drone coverage in Haina, Santo Domingo — 4K aerial data for traffic-analytics and logistics-planning companies. Full 1-hour continuous flight, bus arrivals and departures documented.',
+    descriptionEs: 'Cobertura de drone industrial en Haina, Santo Domingo — datos aéreos en 4K para empresas de análisis de tráfico y planificación logística. Vuelo continuo de 1 hora, llegadas y salidas de autobuses documentadas.',
+    keywordsEn: 'drone traffic analysis dominican republic, aerial video industrial zone haina, drone for logistics companies DR, industrial drone photographer santo domingo, drone data urban traffic planning',
+    keywordsEs: 'dron para analisis de trafico republica dominicana, video aereo zona industrial haina, dron para empresas de logistica RD, fotografo drone industrial santo domingo, datos aereos planificacion de trafico',
+    heroImagePublicId: '',
+    heroImageAltEn: 'Industrial drone photographer Haina Santo Domingo — Babula Shots',
+    heroImageAltEs: 'Fotógrafo de drone industrial Haina Santo Domingo — Babula Shots',
+    videos: [
+      {
+        youtubeId: '-ezciXHZs3w',
+        titleEn: 'Haina Santo Domingo Drone Service Dominican Republic',
+        titleEs: 'Haina Santo Domingo Servicio con Drone República Dominicana',
+        descriptionEn: 'High-resolution 4K drone footage covering the industrial area of Haina, Santo Domingo — a speed-up summary of a continuous 1-hour flight designed for urban traffic analytics and planning, capturing full bus arrivals and departures.',
+        descriptionEs: 'Video en 4K de alta resolución sobre la zona industrial de Haina, Santo Domingo — resumen acelerado de un vuelo continuo de 1 hora diseñado para análisis y planificación de tráfico urbano, capturando llegadas y salidas completas de autobuses.',
+        uploadDate: '2026-09-01T17:20:29-07:00',
+      },
+    ],
+    expectCards: [
+      {
+        icon: '🚁',
+        titleEn: 'Continuous 1-Hour Flight',
+        titleEs: 'Vuelo Continuo de 1 Hora',
+        bodyEn: 'No shortcuts — a full hour of uninterrupted aerial coverage over the zone, capturing every operational detail a traffic study needs, not just a highlight reel.',
+        bodyEs: 'Sin atajos — una hora completa de cobertura aérea ininterrumpida sobre la zona, capturando cada detalle operativo que un estudio de tráfico necesita, no solo un resumen.',
+      },
+      {
+        icon: '🚌',
+        titleEn: 'Bus Arrivals & Departures Tracked',
+        titleEs: 'Llegadas y Salidas de Autobuses Rastreadas',
+        bodyEn: 'Positioned and timed specifically to document vehicle flow — arrivals, departures, and movement patterns — the exact data a planning company needs for traffic analysis.',
+        bodyEs: 'Posicionado y cronometrado específicamente para documentar el flujo vehicular — llegadas, salidas y patrones de movimiento — exactamente el dato que una empresa de planificación necesita para análisis de tráfico.',
+      },
+      {
+        icon: '📊',
+        titleEn: 'Built for Analytics, Not Just Marketing',
+        titleEs: 'Hecho para Análisis, No Solo Marketing',
+        bodyEn: 'This project was commissioned for real urban-planning use — high-precision visual data a traffic-analytics team can actually work with, delivered in 4K.',
+        bodyEs: 'Este proyecto fue encargado para uso real de planificación urbana — datos visuales de alta precisión con los que un equipo de análisis de tráfico realmente puede trabajar, entregados en 4K.',
+      },
+    ],
+    gallery: [],
+    priceFromUsd: '250',
+    pricingDescEn: 'Industrial and commercial drone data projects are quoted based on flight duration, deliverable format, and analytics requirements. Standard aerial photography packages start at $250 USD — message us with your project scope for a custom quote.',
+    pricingDescEs: 'Los proyectos de datos aéreos industriales y comerciales se cotizan según duración del vuelo, formato de entrega y requisitos de análisis. Los paquetes estándar de fotografía aérea comienzan en $250 USD — escríbenos con el alcance de tu proyecto para una cotización personalizada.',
+    whyUs: [
+      { icon: '🎯', titleEn: 'Real Commercial Project', titleEs: 'Proyecto Comercial Real', bodyEn: 'Commissioned by a traffic-analytics and urban-planning company — not a demo reel. Real operational data delivered for real decision-making.', bodyEs: 'Encargado por una empresa de análisis de tráfico y planificación urbana — no es un video de muestra. Datos operativos reales entregados para decisiones reales.' },
+      { icon: '🚁', titleEn: 'FAA-Style Certified Piloting', titleEs: 'Pilotaje con Certificación Profesional', bodyEn: 'Licensed, insured drone piloting for industrial and commercial sites — safety and airspace compliance handled before every flight.', bodyEs: 'Pilotaje de drone licenciado y asegurado para sitios industriales y comerciales — seguridad y cumplimiento de espacio aéreo gestionados antes de cada vuelo.' },
+      { icon: '📽️', titleEn: '4K Raw + Edited Delivery', titleEs: 'Entrega en 4K Raw + Editado', bodyEn: 'Full raw footage available alongside the edited summary — so analytics teams can work from source material, not just the highlight cut.', bodyEs: 'Metraje raw completo disponible junto al resumen editado — para que los equipos de análisis trabajen desde el material fuente, no solo del corte destacado.' },
+    ],
+    faq: [
+      {
+        questionEn: 'Can you do drone projects for data/analytics companies, not just real estate?',
+        questionEs: '¿Hacen proyectos de drone para empresas de datos/análisis, no solo bienes raíces?',
+        answerEn: 'Yes — the Haina project is a direct example. We work with companies that need aerial data for traffic studies, urban planning, logistics, and industrial documentation, not just property marketing.',
+        answerEs: 'Sí — el proyecto de Haina es un ejemplo directo. Trabajamos con empresas que necesitan datos aéreos para estudios de tráfico, planificación urbana, logística y documentación industrial, no solo marketing de propiedades.',
+      },
+      {
+        questionEn: 'How long can a single drone flight last?',
+        questionEs: '¿Cuánto puede durar un solo vuelo de drone?',
+        answerEn: 'The Haina project involved a continuous 1-hour flight. Flight duration depends on battery rotation and project scope — we plan this with you before the shoot based on what data you need.',
+        answerEs: 'El proyecto de Haina implicó un vuelo continuo de 1 hora. La duración del vuelo depende de la rotación de baterías y el alcance del proyecto — lo planificamos contigo antes del rodaje según los datos que necesites.',
+      },
+      {
+        questionEn: 'What format is the footage delivered in?',
+        questionEs: '¿En qué formato se entrega el metraje?',
+        answerEn: '4K raw footage plus an edited summary video. For analytics use, we can deliver full unedited footage so your team has every frame to work with.',
+        answerEs: 'Metraje raw en 4K más un video resumen editado. Para uso de análisis, podemos entregar el metraje completo sin editar para que tu equipo tenga cada cuadro con el que trabajar.',
+      },
+    ],
+    relatedSpokeIds: [],
+    ctaHeadlineEn: 'Need aerial data for your industrial or logistics project?',
+    ctaHeadlineEs: '¿Necesitas datos aéreos para tu proyecto industrial o logístico?',
+    ctaValuePropEn: 'Message us with your project scope — flight duration, deliverable format, and analytics needs — and we\'ll put together a plan.',
+    ctaValuePropEs: 'Escríbenos con el alcance de tu proyecto — duración del vuelo, formato de entrega y necesidades de análisis — y armamos un plan.',
+    waMessageEn: 'Hello! I have an industrial/commercial drone project (similar to the Haina traffic-analytics project) I would like to discuss.',
+    waMessageEs: 'Hola! Tengo un proyecto de drone industrial/comercial (similar al proyecto de análisis de tráfico en Haina) que me gustaría conversar.',
+  },
+  // ✅ drone/proyecto-puerto-manzanillo — status: 'published' — live
+  {
+    id: 'drone-puerto-manzanillo-monte-cristi',
+    enSlug: 'drone/puerto-manzanillo-heavy-lift-drone-project',
+    esSlug: 'drone/proyecto-drone-puerto-manzanillo-monte-cristi',
+    hubSlug: 'real-estate-drone-photography',
+    status: 'published',
+    tier: 1,
+    geo: { latitude: 19.7167, longitude: -71.6500 },
+    geoCity: 'Manzanillo, Monte Cristi',
+    geoRegion: 'Monte Cristi',
+    titleEn: 'Port & Heavy-Lift Drone Photographer Manzanillo Monte Cristi | Babula Shots',
+    titleEs: 'Fotógrafo de Drone Portuario e Industrial Manzanillo Monte Cristi | Babula Shots',
+    h1En: 'Aerial Survey of Puerto de Manzanillo — Heavy-Lift & Port Operations',
+    h1Es: 'Levantamiento Aéreo del Puerto de Manzanillo — Operaciones Portuarias e Izaje Pesado',
+    hookEn: '4K aerial documentation of heavy-lift infrastructure and maritime logistics at Puerto de Manzanillo, Monte Cristi — port expansion, cargo handling, and structural layouts captured for engineering and planning use.',
+    hookEs: 'Documentación aérea en 4K de infraestructura de izaje pesado y logística marítima en el Puerto de Manzanillo, Monte Cristi — expansión portuaria, manejo de carga y trazados estructurales capturados para uso de ingeniería y planificación.',
+    descriptionEn: 'Port and heavy-lift industrial drone photography at Puerto de Manzanillo, Monte Cristi. 4K aerial survey for port engineering, logistics planning, and commercial presentation.',
+    descriptionEs: 'Fotografía de drone industrial portuario y de izaje pesado en el Puerto de Manzanillo, Monte Cristi. Levantamiento aéreo en 4K para ingeniería portuaria, planificación logística y presentación comercial.',
+    keywordsEn: 'drone photographer puerto manzanillo, aerial survey monte cristi port, heavy lift drone documentation dominican republic, industrial port drone photography DR, maritime logistics aerial video',
+    keywordsEs: 'fotografo drone puerto manzanillo, levantamiento aereo puerto monte cristi, documentacion drone izaje pesado republica dominicana, fotografia drone portuaria industrial RD, video aereo logistica maritima',
+    heroImagePublicId: 'Servicio_foto_video_drone_republica_dominicana_Babula_Shots_kmoxc1',
+    heroImageAltEn: 'Aerial drone survey of Puerto de Manzanillo port and heavy-lift operations, Monte Cristi — Babula Shots',
+    heroImageAltEs: 'Levantamiento aéreo con drone del Puerto de Manzanillo y operaciones de izaje pesado, Monte Cristi — Babula Shots',
+    videos: [
+      {
+        youtubeId: 'lzl-clTPXfI',
+        titleEn: 'Port Aerial Survey & Drone Footage — Babula Shots',
+        titleEs: 'Levantamiento Aéreo Portuario y Video con Drone — Babula Shots',
+        descriptionEn: 'High-resolution 4K aerial documentation of heavy industrial operations, heavy-lift infrastructure, and maritime logistics at Puerto de Manzanillo, Monte Cristi — port expansion, cargo handling, and structural layouts for engineering and planning.',
+        descriptionEs: 'Documentación aérea en 4K de alta resolución de operaciones industriales pesadas, infraestructura de izaje y logística marítima en el Puerto de Manzanillo, Monte Cristi — expansión portuaria, manejo de carga y trazados estructurales para ingeniería y planificación.',
+        uploadDate: '2026-09-01T17:27:31-07:00',
+      },
+    ],
+    expectCards: [
+      {
+        icon: '⚓',
+        titleEn: 'Full Port Documentation',
+        titleEs: 'Documentación Portuaria Completa',
+        bodyEn: 'Heavy-lift cranes, cargo handling zones, structural layouts, and vessel operations — captured from angles ground photography simply can\'t reach.',
+        bodyEs: 'Grúas de izaje pesado, zonas de manejo de carga, trazados estructurales y operaciones de embarcaciones — capturados desde ángulos que la fotografía terrestre simplemente no puede alcanzar.',
+      },
+      {
+        icon: '🏗️',
+        titleEn: 'Built for Engineering Use',
+        titleEs: 'Hecho para Uso de Ingeniería',
+        bodyEn: 'Spatial data and structural detail captured with planning and engineering teams in mind — not just a promotional flyover.',
+        bodyEs: 'Datos espaciales y detalle estructural capturados pensando en equipos de planificación e ingeniería — no solo un sobrevuelo promocional.',
+      },
+      {
+        icon: '📍',
+        titleEn: 'Remote-Location Coverage',
+        titleEs: 'Cobertura en Locación Remota',
+        bodyEn: 'Monte Cristi is far from our Santo Domingo base — we travel island-wide for industrial and commercial drone projects.',
+        bodyEs: 'Monte Cristi está lejos de nuestra base en Santo Domingo — viajamos a toda la isla para proyectos de drone industrial y comercial.',
+      },
+    ],
+    gallery: [
+      { publicId: 'Servicio_foto_video_drone_republica_dominicana_Babula_Shots_kmoxc1', altEn: 'Aerial view of Puerto de Manzanillo port infrastructure, Monte Cristi — Babula Shots', altEs: 'Vista aérea de la infraestructura del Puerto de Manzanillo, Monte Cristi — Babula Shots' },
+      { publicId: 'Servicio_foto_video_drone_republica_dominicana_Babula_Shots_-14_q8apfe', altEn: 'Heavy-lift crane operations at Puerto de Manzanillo — Babula Shots', altEs: 'Operaciones de grúa de izaje pesado en el Puerto de Manzanillo — Babula Shots' },
+      { publicId: 'Servicio_foto_video_drone_republica_dominicana_Babula_Shots_-13_awhn6b', altEn: 'Aerial survey of cargo handling zones, Puerto de Manzanillo — Babula Shots', altEs: 'Levantamiento aéreo de zonas de manejo de carga, Puerto de Manzanillo — Babula Shots' },
+      { publicId: 'Servicio_foto_video_drone_republica_dominicana_Babula_Shots_-12_c1a2g9', altEn: 'Port structural layout captured by drone, Monte Cristi — Babula Shots', altEs: 'Trazado estructural portuario capturado con drone, Monte Cristi — Babula Shots' },
+      { publicId: 'Servicio_foto_video_drone_republica_dominicana_Babula_Shots_-11_otd2i9', altEn: 'Maritime logistics operations from above, Puerto de Manzanillo — Babula Shots', altEs: 'Operaciones de logística marítima desde el aire, Puerto de Manzanillo — Babula Shots' },
+    ],
+    priceFromUsd: '250',
+    pricingDescEn: 'Port and industrial drone survey projects are quoted based on site size, flight duration, and deliverable requirements. Standard aerial photography packages start at $250 USD — message us with your project scope for a custom quote.',
+    pricingDescEs: 'Los proyectos de levantamiento aéreo portuario e industrial se cotizan según tamaño del sitio, duración del vuelo y requisitos de entrega. Los paquetes estándar de fotografía aérea comienzan en $250 USD — escríbenos con el alcance de tu proyecto para una cotización personalizada.',
+    whyUs: [
+      { icon: '⚓', titleEn: 'Real Port & Industrial Experience', titleEs: 'Experiencia Real Portuaria e Industrial', bodyEn: 'The Puerto de Manzanillo project is real commissioned work, not a portfolio sample — heavy-lift and maritime logistics documented for actual operational use.', bodyEs: 'El proyecto del Puerto de Manzanillo es trabajo real encargado, no una muestra de portafolio — izaje pesado y logística marítima documentados para uso operativo real.' },
+      { icon: '🚁', titleEn: 'Island-Wide Travel', titleEs: 'Viajamos a Toda la Isla', bodyEn: 'From Santo Domingo to Monte Cristi — we travel for industrial and commercial drone projects anywhere in the Dominican Republic.', bodyEs: 'De Santo Domingo a Monte Cristi — viajamos para proyectos de drone industrial y comercial a cualquier punto de República Dominicana.' },
+      { icon: '📽️', titleEn: '4K Raw + Edited Delivery', titleEs: 'Entrega en 4K Raw + Editado', bodyEn: 'Full raw footage alongside an edited summary, so engineering and planning teams can work from source material.', bodyEs: 'Metraje raw completo junto a un resumen editado, para que los equipos de ingeniería y planificación trabajen desde el material fuente.' },
+    ],
+    faq: [
+      {
+        questionEn: 'Do you travel to Monte Cristi / the northwest for drone projects?',
+        questionEs: '¿Viajan a Monte Cristi / el noroeste para proyectos de drone?',
+        answerEn: 'Yes — the Puerto de Manzanillo project is a direct example. We travel island-wide for industrial and commercial drone work; travel cost is quoted based on distance from Santo Domingo.',
+        answerEs: 'Sí — el proyecto del Puerto de Manzanillo es un ejemplo directo. Viajamos a toda la isla para trabajo de drone industrial y comercial; el costo de traslado se cotiza según la distancia desde Santo Domingo.',
+      },
+      {
+        questionEn: 'Can you document heavy-lift and port operations specifically?',
+        questionEs: '¿Pueden documentar específicamente operaciones de izaje pesado y portuarias?',
+        answerEn: 'Yes — this is exactly what the Manzanillo project covers: heavy-lift cranes, cargo handling zones, and port structural layouts, captured for engineering and planning use.',
+        answerEs: 'Sí — esto es exactamente lo que cubre el proyecto de Manzanillo: grúas de izaje pesado, zonas de manejo de carga y trazados estructurales portuarios, capturados para uso de ingeniería y planificación.',
+      },
+      {
+        questionEn: 'What format is the footage delivered in?',
+        questionEs: '¿En qué formato se entrega el metraje?',
+        answerEn: '4K raw footage plus an edited summary video, along with high-resolution still photography of the site.',
+        answerEs: 'Metraje raw en 4K más un video resumen editado, junto con fotografía fija en alta resolución del sitio.',
+      },
+    ],
+    relatedSpokeIds: ['drone-haina-industrial-santo-domingo'],
+    ctaHeadlineEn: 'Need aerial documentation for a port or industrial site?',
+    ctaHeadlineEs: '¿Necesitas documentación aérea para un sitio portuario o industrial?',
+    ctaValuePropEn: 'Message us with your site location and project scope — we travel island-wide for industrial and commercial drone work.',
+    ctaValuePropEs: 'Escríbenos con la ubicación de tu sitio y el alcance del proyecto — viajamos a toda la isla para trabajo de drone industrial y comercial.',
+    waMessageEn: 'Hello! I have a port/industrial drone project (similar to the Puerto de Manzanillo project) I would like to discuss.',
+    waMessageEs: 'Hola! Tengo un proyecto de drone portuario/industrial (similar al proyecto del Puerto de Manzanillo) que me gustaría conversar.',
+  },
   draftSpoke('drone-punta-cana',               'drone/punta-cana',                         'drone/punta-cana',                                     'drone-services-photography-punta-cana', 1, { latitude: 18.5601, longitude: -68.3725 }, 'Punta Cana',    'La Altagracia'),
   draftSpoke('drone-cap-cana',                 'drone/cap-cana',                           'drone/cap-cana',                                       'drone-services-photography-punta-cana', 2, { latitude: 18.4732, longitude: -68.4228 }, 'Cap Cana',      'La Altagracia'),
   draftSpoke('drone-santo-domingo',            'drone/santo-domingo',                      'drone/santo-domingo',                                  'drone-services-photography-punta-cana', 2, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
@@ -1033,6 +1241,112 @@ export const SPOKE_PAGES: SpokePage[] = [
   draftSpoke('drone-real-estate',              'drone/real-estate-aerial-photography',     'drone/fotografia-aerea-inmobiliaria',                  'drone-services-photography-punta-cana', 2, { latitude: 18.5601, longitude: -68.3725 }, 'Punta Cana',    'La Altagracia'),
 
   // ── HUB 5: Birthday & Quinceañera ─────────────────────────────────────────
+  // ✅ cumpleanos/sesion-fotos-jardin-botanico-primer-anito — status: 'published' — live
+  {
+    id: 'birthday-jardin-botanico-primer-anito',
+    enSlug: 'birthday/first-birthday-photo-session-botanical-garden-santo-domingo',
+    esSlug: 'cumpleanos/sesion-fotos-jardin-botanico-primer-anito-santo-domingo',
+    hubSlug: 'birthday-photographer',
+    status: 'published',
+    tier: 1,
+    geo: { latitude: 18.4844, longitude: -69.9394 },
+    geoCity: 'Jardín Botánico Nacional',
+    geoRegion: 'Santo Domingo',
+    titleEn: 'First Birthday Photo Session Botanical Garden Santo Domingo | Babula Shots',
+    titleEs: 'Sesión de Fotos Primer Añito Jardín Botánico Santo Domingo | Babula Shots',
+    h1En: 'First Birthday Photo Session at the Santo Domingo Botanical Garden',
+    h1Es: 'Sesión de Fotos de Primer Añito en el Jardín Botánico de Santo Domingo',
+    hookEn: 'A full family session at the National Botanical Garden to celebrate the first year — golden light, green lawns by the pond, and the kind of candid family moments that make picking a final gallery genuinely hard.',
+    hookEs: 'Una sesión familiar completa en el Jardín Botánico Nacional para celebrar el primer año — luz dorada, jardines verdes junto al estanque, y esos momentos familiares espontáneos que hacen que elegir la galería final sea genuinamente difícil.',
+    descriptionEn: 'First birthday family photo session at the Santo Domingo Botanical Garden. Golden-hour portraits by the pond, candid family moments, real session from a 1-year-old\'s celebration.',
+    descriptionEs: 'Sesión de fotos familiar de primer añito en el Jardín Botánico de Santo Domingo. Retratos en golden hour junto al estanque, momentos familiares espontáneos, sesión real de la celebración de 1 año.',
+    keywordsEn: 'photo session jardin botanico, botanical garden photographer santo domingo, first birthday photographer santo domingo, family photo session botanical garden, one year old birthday photos DR',
+    keywordsEs: 'sesion de fotos jardin botanico, fotografo jardin botanico santo domingo, fotografo primer anito santo domingo, sesion de fotos familiar jardin botanico, fotos cumpleanos 1 ano republica dominicana',
+    heroImagePublicId: 'Fotografo_Jardin_Botanico_Santo_Domingo_Babula_Shots_t9vnsx',
+    heroImageAltEn: 'Family celebrating a first birthday on a picnic blanket at the Santo Domingo Botanical Garden — Babula Shots',
+    heroImageAltEs: 'Familia celebrando un primer añito en una manta de picnic en el Jardín Botánico de Santo Domingo — Babula Shots',
+    expectCards: [
+      {
+        icon: '🌳',
+        titleEn: 'The Japanese Garden Backdrop',
+        titleEs: 'El Fondo del Jardín Japonés',
+        bodyEn: 'Bonsai trees, a still pond, and a red wooden bridge — the botanical garden\'s Japanese section gives every shot a layered, cinematic backdrop no studio can match.',
+        bodyEs: 'Árboles bonsái, un estanque tranquilo y un puente de madera rojo — la sección japonesa del jardín botánico le da a cada toma un fondo cinematográfico y con profundidad que ningún estudio puede igualar.',
+      },
+      {
+        icon: '🧺',
+        titleEn: 'Picnic-Style Family Setup',
+        titleEs: 'Montaje Familiar Estilo Picnic',
+        bodyEn: 'A blanket on the lawn, a birthday balloon, and room for a 1-year-old to actually move and play — the setup that gets genuine reactions, not posed stiffness.',
+        bodyEs: 'Una manta en el césped, un globo de cumpleaños y espacio para que el bebé de 1 año realmente se mueva y juegue — el montaje que consigue reacciones genuinas, no poses forzadas.',
+      },
+      {
+        icon: '📸',
+        titleEn: 'So Many Good Ones, It\'s Hard to Choose',
+        titleEs: 'Tantas Buenas, Que Es Difícil Elegir',
+        bodyEn: 'This is the kind of session where almost every frame works — candid laughs, in-between moments, and posed family shots all in the same set.',
+        bodyEs: 'Este es el tipo de sesión donde casi cada toma funciona — risas espontáneas, momentos intermedios y fotos familiares posadas, todo en el mismo set.',
+      },
+    ],
+    gallery: [
+      { publicId: 'Fotografo_Jardin_Botanico_Santo_Domingo_Babula_Shots_t9vnsx', altEn: 'Parents celebrating with their one-year-old on a picnic blanket at the Botanical Garden, Santo Domingo — Babula Shots', altEs: 'Padres celebrando con su bebé de un año en una manta de picnic en el Jardín Botánico, Santo Domingo — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-2_onpddb', altEn: 'Father helping his one-year-old celebrate next to a number-one balloon, Botanical Garden Santo Domingo — Babula Shots', altEs: 'Padre ayudando a su bebé de un año a celebrar junto a un globo número uno, Jardín Botánico Santo Domingo — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-3_nlulfb', altEn: 'Parents and baby sitting on a picnic blanket beside the Japanese garden pond, Santo Domingo — Babula Shots', altEs: 'Padres y bebé sentados en una manta de picnic junto al estanque del jardín japonés, Santo Domingo — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-4_gznlae', altEn: 'Candid family laughter during a first birthday session at the Botanical Garden — Babula Shots', altEs: 'Risas familiares espontáneas durante una sesión de primer añito en el Jardín Botánico — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-5_uv18uj', altEn: 'Family portrait beside the pond with a number-one balloon, Botanical Garden Santo Domingo — Babula Shots', altEs: 'Retrato familiar junto al estanque con globo número uno, Jardín Botánico Santo Domingo — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-6_wda92y', altEn: 'Father holding his one-year-old while mother looks on, Japanese garden pond backdrop — Babula Shots', altEs: 'Padre cargando a su bebé de un año mientras la madre observa, fondo del estanque del jardín japonés — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-7_mjjatw', altEn: 'Family portrait on the lawn with the Botanical Garden\'s green landscape in the background — Babula Shots', altEs: 'Retrato familiar en el césped con el paisaje verde del Jardín Botánico de fondo — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-8_v2swsz', altEn: 'Parents embracing their one-year-old on the picnic blanket, sunny day at the Botanical Garden — Babula Shots', altEs: 'Padres abrazando a su bebé de un año en la manta de picnic, día soleado en el Jardín Botánico — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-9_tjfjim', altEn: 'Family gathered together for a first birthday portrait, Botanical Garden Santo Domingo — Babula Shots', altEs: 'Familia reunida para un retrato de primer añito, Jardín Botánico Santo Domingo — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-10_pfpksq', altEn: 'Mother laughing while holding her one-year-old, natural light portrait at the Botanical Garden — Babula Shots', altEs: 'Madre riendo mientras carga a su bebé de un año, retrato con luz natural en el Jardín Botánico — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-11_ucdoao', altEn: 'Candid family moment mid-motion during a first birthday photo session — Babula Shots', altEs: 'Momento familiar espontáneo en movimiento durante una sesión de fotos de primer añito — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-12_ce3uw6', altEn: 'Family portrait beside the still pond, Japanese garden section of the Botanical Garden — Babula Shots', altEs: 'Retrato familiar junto al estanque tranquilo, sección japonesa del Jardín Botánico — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-13_s7mfqk', altEn: 'Family walking together on the Botanical Garden\'s red wooden bridge — Babula Shots', altEs: 'Familia caminando juntos sobre el puente de madera rojo del Jardín Botánico — Babula Shots' },
+      { publicId: 'Session_de_fotos_santo_domingo_parque_botanico_fotografo_Babula_Shots_-14_byfiid', altEn: 'Family portrait on the red bridge over the Japanese garden pond, Santo Domingo — Babula Shots', altEs: 'Retrato familiar en el puente rojo sobre el estanque del jardín japonés, Santo Domingo — Babula Shots' },
+    ],
+    priceFromUsd: '250',
+    priceSuffix: 'USD',
+    pricingDescEn: 'First birthday family sessions at the Botanical Garden start at $250 USD for a 1-hour session with edited high-resolution gallery. Larger family groups or multi-location sessions (studio + garden) can be arranged as a custom quote.',
+    pricingDescEs: 'Las sesiones familiares de primer añito en el Jardín Botánico comienzan en $250 USD por 1 hora de sesión con galería editada en alta resolución. Grupos familiares más grandes o sesiones multi-locación (estudio + jardín) se pueden coordinar como cotización personalizada.',
+    whyUs: [
+      { icon: '🌳', titleEn: 'We Know the Garden\'s Best Light', titleEs: 'Conocemos la Mejor Luz del Jardín', bodyEn: 'From the Japanese garden pond to the open lawns, we know exactly where and when to shoot for the softest, most flattering natural light.', bodyEs: 'Desde el estanque del jardín japonés hasta los céspedes abiertos, sabemos exactamente dónde y cuándo disparar para la luz natural más suave y favorecedora.' },
+      { icon: '👶', titleEn: 'Paced for a One-Year-Old', titleEs: 'Ritmo Pensado para un Bebé de 1 Año', bodyEn: 'We work around nap schedules and short attention spans — capturing real moments instead of fighting for a forced smile.', bodyEs: 'Trabajamos alrededor de horarios de siesta y atención corta — capturando momentos reales en lugar de forzar una sonrisa.' },
+      { icon: '📸', titleEn: 'Real Session, Real Results', titleEs: 'Sesión Real, Resultados Reales', bodyEn: 'Every photo on this page is from a real client\'s first birthday session — not a styled sample shoot.', bodyEs: 'Cada foto en esta página es de una sesión real de primer añito de un cliente — no un rodaje de muestra estilizado.' },
+    ],
+    faq: [
+      {
+        questionEn: 'Why the Botanical Garden instead of a studio?',
+        questionEs: '¿Por qué el Jardín Botánico en lugar de un estudio?',
+        answerEn: 'Natural light, green landscapes, and a real sense of space — the Botanical Garden gives a first birthday session a warmth and scale a studio backdrop can\'t replicate, especially with the Japanese garden\'s pond and bridge.',
+        answerEs: 'Luz natural, paisajes verdes y una verdadera sensación de espacio — el Jardín Botánico le da a una sesión de primer añito una calidez y escala que un fondo de estudio no puede replicar, especialmente con el estanque y el puente del jardín japonés.',
+      },
+      {
+        questionEn: 'Do I need a permit to shoot at the Botanical Garden?',
+        questionEs: '¿Necesito un permiso para hacer fotos en el Jardín Botánico?',
+        answerEn: 'We handle logistics and any required coordination with the garden — you just need to show up and enjoy the session.',
+        answerEs: 'Nosotros manejamos la logística y cualquier coordinación necesaria con el jardín — tú solo necesitas llegar y disfrutar la sesión.',
+      },
+      {
+        questionEn: 'Can we bring a birthday balloon or small decor?',
+        questionEs: '¿Podemos llevar un globo de cumpleaños o decoración pequeña?',
+        answerEn: 'Yes — a number balloon or small picnic setup works great here, as shown in this session. We\'ll guide you on what travels and photographs well.',
+        answerEs: 'Sí — un globo con número o un pequeño montaje de picnic funciona muy bien aquí, como se ve en esta sesión. Te orientamos sobre qué es fácil de llevar y fotografía bien.',
+      },
+      {
+        questionEn: 'How many edited photos do we get?',
+        questionEs: '¿Cuántas fotos editadas recibimos?',
+        answerEn: 'We deliver every frame worth keeping, fully edited — sessions like this one are exactly why: it\'s genuinely hard to narrow a great family session down to a fixed number.',
+        answerEs: 'Entregamos cada toma que valga la pena, completamente editada — sesiones como esta son exactamente el porqué: es genuinamente difícil reducir una gran sesión familiar a un número fijo.',
+      },
+    ],
+    relatedSpokeIds: [],
+    ctaHeadlineEn: 'Ready to plan your first birthday session at the Botanical Garden?',
+    ctaHeadlineEs: '¿Listo para planear tu sesión de primer añito en el Jardín Botánico?',
+    ctaValuePropEn: 'Message us on WhatsApp to check availability and plan the details — timing, outfits, and any small decor you\'d like to bring.',
+    ctaValuePropEs: 'Escríbenos por WhatsApp para revisar disponibilidad y planear los detalles — horario, outfits, y cualquier decoración pequeña que quieras llevar.',
+    waMessageEn: 'Hello! I want to plan a first birthday family photo session at the Botanical Garden.',
+    waMessageEs: 'Hola! Quiero planear una sesión de fotos familiar de primer añito en el Jardín Botánico.',
+  },
   draftSpoke('birthday-quinceanera-santo-domingo', 'birthday/quinceanera-photographer-santo-domingo', 'cumpleanos/fotografo-quinceanera-santo-domingo', 'birthday-photographer', 1, { latitude: 18.4861, longitude: -69.9312 }, 'Santo Domingo', 'Distrito Nacional'),
   draftSpoke('birthday-quinceanera-punta-cana',    'birthday/quinceanera-photographer-punta-cana',    'cumpleanos/fotografo-quinceanera-punta-cana',    'birthday-photographer', 2, { latitude: 18.5601, longitude: -68.3725 }, 'Punta Cana',    'La Altagracia'),
   draftSpoke('birthday-sweet-16-dr',               'birthday/sweet-16-photographer-dominican-republic', 'cumpleanos/sweet-16-republica-dominicana',     'birthday-photographer', 2, { latitude: 18.7357, longitude: -70.1627 }, 'Dominican Republic', 'Various'),

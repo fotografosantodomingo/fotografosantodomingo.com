@@ -38,7 +38,7 @@ export default function Navigation() {
       { href: '/services/event-photography', labelKey: 'items.eventPhotography', descriptionKey: 'descriptions.eventPhotography' },
       { href: '/services/commercial-photography', labelKey: 'items.commercialPhotography', descriptionKey: 'descriptions.commercialPhotography' },
       { href: '/services/family-photography', labelKey: 'items.familyPhotography', descriptionKey: 'descriptions.familyPhotography' },
-      { href: '/services/drone-services-photography-punta-cana', labelKey: 'items.droneServices', descriptionKey: 'descriptions.droneServices' },
+      { href: '/services/drone', labelKey: 'items.droneServices', descriptionKey: 'descriptions.droneServices' },
       { href: '/services/proposal-photography', labelKey: 'items.proposalPhotography', descriptionKey: 'descriptions.proposalPhotography' },
       { href: '/services', labelKey: 'items.additionalServices', descriptionKey: 'descriptions.additionalServices' },
     ]

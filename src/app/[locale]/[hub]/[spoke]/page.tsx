@@ -21,6 +21,7 @@ import ProposalGallery from '@/components/spoke/ProposalGallery'
 import ProposalZonaColonialGallery from '@/components/spoke/ProposalZonaColonialGallery'
 import BautismoSantoDomingoGallery from '@/components/spoke/BautismoSantoDomingoGallery'
 import ZonaColonialFamilyGallery from '@/components/spoke/ZonaColonialFamilyGallery'
+import TwoColumnGallery from '@/components/spoke/TwoColumnGallery'
 import { buildSpokeSchemas } from '@/lib/spoke-schema'
 import {
   findSpokeByRoute,
@@ -159,6 +160,11 @@ export default function SpokePage({
   const isProposalZonaColonial = spokeData.id === 'weddings-proposal-photographer-zona-colonial-santo-domingo'
   const isBautismoSantoDomingo = spokeData.id === 'events-baptism-sd'
   const isFamilyZonaColonial = spokeData.id === 'family-zona-colonial-santo-domingo'
+  const isTwoColumnGallerySpoke = [
+    'drone-haina-industrial-santo-domingo',
+    'drone-puerto-manzanillo-monte-cristi',
+    'birthday-jardin-botanico-primer-anito',
+  ].includes(spokeData.id)
 
   return (
     <>
@@ -176,7 +182,7 @@ export default function SpokePage({
       <SpokePageTemplate
         spoke={spokeData}
         locale={params.locale}
-        noHeroImage={isZonaColonial || isProposalSpoke || isProposalZonaColonial || isBautismoSantoDomingo || isFamilyZonaColonial}
+        noHeroImage={isZonaColonial || isProposalSpoke || isProposalZonaColonial || isBautismoSantoDomingo || isFamilyZonaColonial || isTwoColumnGallerySpoke}
         customGallery={
           isZonaColonial ? (
             <ZonaColonialGallery locale={params.locale} />
@@ -188,6 +194,14 @@ export default function SpokePage({
             <BautismoSantoDomingoGallery locale={params.locale} />
           ) : isFamilyZonaColonial ? (
             <ZonaColonialFamilyGallery locale={params.locale} />
+          ) : isTwoColumnGallerySpoke ? (
+            <TwoColumnGallery
+              locale={params.locale}
+              images={spokeData.gallery.map((img) => ({ id: img.publicId, altEn: img.altEn, altEs: img.altEs }))}
+              videos={spokeData.videos}
+              headingEn={`Real Shots from ${spokeData.geoCity}`}
+              headingEs={`Fotos Reales de ${spokeData.geoCity}`}
+            />
           ) : undefined
         }
       />

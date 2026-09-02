@@ -549,5 +549,21 @@ export const realEstateDronePhotographyContent: ServiceContent = {
           en: 'Capture the exact perspective of every future floor before construction. Interactive virtual tours, RAW files for 3D renders, and up to 12K HDR resolution. From $370 USD.',
         },
       },
+      {
+        href: { es: '/drone/proyecto-drone-zona-industrial-haina', en: '/drone/haina-industrial-zone-drone-project' },
+        label: { es: 'Caso real: Análisis de tráfico en Haina', en: 'Real case: Traffic analytics in Haina' },
+        description: {
+          es: 'Vuelo continuo de 1 hora para una empresa de análisis de tráfico — llegadas y salidas de autobuses documentadas en 4K.',
+          en: 'A continuous 1-hour flight for a traffic-analytics company — bus arrivals and departures documented in 4K.',
+        },
+      },
+      {
+        href: { es: '/drone/proyecto-drone-puerto-manzanillo-monte-cristi', en: '/drone/puerto-manzanillo-heavy-lift-drone-project' },
+        label: { es: 'Caso real: Puerto de Manzanillo, Monte Cristi', en: 'Real case: Puerto de Manzanillo, Monte Cristi' },
+        description: {
+          es: 'Documentación aérea de operaciones de izaje pesado y logística marítima en un puerto industrial.',
+          en: 'Aerial documentation of heavy-lift operations and maritime logistics at an industrial port.',
+        },
+      },
     ],
 }
