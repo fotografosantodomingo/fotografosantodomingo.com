@@ -34,6 +34,14 @@ function cldFromId(publicId: string): string {
   return `${CLOUDINARY_BASE}/${publicId}.webp`
 }
 
+/** Sitemap image URLs must be absolute (Google rejects relative ones).
+ *  Most RichImage.src values are already full Cloudinary URLs, but a few
+ *  older entries store a site-relative /images/... path (valid in <img
+ *  src>, invalid in a sitemap) — normalize those against BASE_URL here. */
+function toAbsoluteUrl(url: string): string {
+  return url.startsWith('http://') || url.startsWith('https://') ? url : `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`
+}
+
 /** ZonaColonialGallery.tsx renders its images inline in JSX (no exported
  *  IMAGES constant, unlike the other 4 custom galleries) — mirrored here
  *  by hand. If that file's image set changes, update this list too. */
@@ -62,7 +70,7 @@ const CUSTOM_GALLERY_BY_SPOKE_ID: Record<string, { id: string; altEn: string; al
 
 function richImageToSitemapImage(img: RichImage, locale: 'es' | 'en', fallbackTitle: string): SitemapImage {
   return {
-    url: img.src,
+    url: toAbsoluteUrl(img.src),
     title: (locale === 'es' ? img.alt.es : img.alt.en) || fallbackTitle,
     caption: img.caption ? (locale === 'es' ? img.caption.es : img.caption.en) : ((locale === 'es' ? img.alt.es : img.alt.en) || fallbackTitle),
   }
@@ -78,7 +86,7 @@ function extractGalleryField(
   if (!field) return []
   return field.map((item, i) =>
     typeof item === 'string'
-      ? { url: item, title: `${fallbackTitle} ${i + 1}`, caption: fallbackTitle }
+      ? { url: toAbsoluteUrl(item), title: `${fallbackTitle} ${i + 1}`, caption: fallbackTitle }
       : richImageToSitemapImage(item, locale, fallbackTitle)
   )
 }
@@ -111,7 +119,7 @@ function buildFromServiceContent(locale: 'es' | 'en'): SitemapPageImages[] {
       ...extractGalleryField(content.heroGallery, locale, fallbackTitle),
       ...(content.mobileHeroImage
         ? typeof content.mobileHeroImage === 'string'
-          ? [{ url: content.mobileHeroImage, title: fallbackTitle, caption: fallbackTitle }]
+          ? [{ url: toAbsoluteUrl(content.mobileHeroImage), title: fallbackTitle, caption: fallbackTitle }]
           : [richImageToSitemapImage(content.mobileHeroImage, locale, fallbackTitle)]
         : []),
       ...extractGalleryField(content.longFormGallery, locale, fallbackTitle),
