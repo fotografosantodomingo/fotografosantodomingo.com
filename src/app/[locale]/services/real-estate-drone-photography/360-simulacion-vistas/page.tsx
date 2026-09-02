@@ -344,7 +344,11 @@ export default function Drone360Page({ params: { locale } }: Props) {
         <section className="w-full bg-gray-950" aria-label={isEs ? 'Imágenes 360° con dron para simulación de vistas' : '360° drone images for view simulation'}>
           <figure className="w-full max-h-[65vh] overflow-hidden">
             <img
-              src="/images/imagenes-360-drone-simulacion-vistas.webp"
+              src="https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_1600/real-estate-drone-photography/imagenes-360-drone-simulacion-vistas"
+              srcSet={[640, 1024, 1600, 1920]
+                .map((w) => `https://res.cloudinary.com/dwewurxla/image/upload/f_auto,q_auto,w_${w}/real-estate-drone-photography/imagenes-360-drone-simulacion-vistas ${w}w`)
+                .join(', ')}
+              sizes="100vw"
               alt={isEs
                 ? 'Imágenes 360° capturadas con dron DJI Mavic 3 Pro para simulación de vistas de proyectos inmobiliarios en República Dominicana — Babula Shots'
                 : '360° images captured with DJI Mavic 3 Pro drone for real estate view simulation in the Dominican Republic — Babula Shots'}
