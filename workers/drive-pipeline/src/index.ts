@@ -4,6 +4,7 @@ import { listNewGroups, downloadFile } from './drive'
 import { generateBlogPost, substitutePlaceholders } from './anthropic'
 import { runCrossPost, linkedInAuthStart, linkedInAuthCallback, pinterestAuthStart, pinterestAuthCallback, refreshGbpToken, deviantArtAuthStart, deviantArtAuthCallback } from './social'
 import { verifyHmac, sendResultsEmail } from './email'
+import { generateBlogThumbnail } from './cloudinary'
 import type { Env, StoredImage } from './types'
 
 // ── Supabase helper ───────────────────────────────────────────────────────────
@@ -307,6 +308,16 @@ async function runPipeline(env: Env): Promise<void> {
         group_key: group.groupKey,
       }
 
+      // Best-effort real thumbnail for the blog listing — falls back to the
+      // full-size cover image (previous behavior) if Cloudinary isn't
+      // configured or the upload fails, so this can never block post creation.
+      let coverThumbnailUrl = imageUrls[0]
+      try {
+        coverThumbnailUrl = await generateBlogThumbnail(env, imageUrls[0], stored[0].fileId)
+      } catch (thumbErr) {
+        console.error(`[pipeline] thumbnail generation failed for ${group.groupKey}, using full-size image:`, (thumbErr as Error).message)
+      }
+
       // Insert draft blog post
       const { data: post, error: insertErr } = await supabase
         .from('blog_posts')
@@ -332,7 +343,7 @@ async function runPipeline(env: Env): Promise<void> {
           faq_es: generated.faq_es,
           faq_en: generated.faq_en,
           cover_image_url: imageUrls[0],
-          cover_image_thumbnail_url: imageUrls[0],
+          cover_image_thumbnail_url: coverThumbnailUrl,
           cover_image_alt_es: generated.cover_image_alt_es,
           cover_image_alt_en: generated.cover_image_alt_en,
           cover_image_title_es: generated.cover_image_title_es,

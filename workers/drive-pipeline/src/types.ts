@@ -44,6 +44,14 @@ export interface Env {
   DA_CLIENT_ID?: string
   DA_CLIENT_SECRET?: string
   DA_REFRESH_TOKEN?: string
+  // Cloudinary — optional. Used only to generate a real blog cover-image
+  // thumbnail at ingestion time (see cloudinary.ts). If unset, thumbnail
+  // generation is skipped and cover_image_thumbnail_url falls back to the
+  // existing behavior (same URL as cover_image_url) — post creation is
+  // never blocked by this being absent.
+  CLOUDINARY_CLOUD_NAME?: string
+  CLOUDINARY_API_KEY?: string
+  CLOUDINARY_API_SECRET?: string
 }
 
 export interface DriveFile {
