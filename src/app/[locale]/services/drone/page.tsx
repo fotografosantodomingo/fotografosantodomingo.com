@@ -148,10 +148,43 @@ export default function DroneServicesPage({ params: { locale } }: Props) {
                 >
                   WhatsApp
                 </a>
-                <Link href={`/${locale}/get-quote`} className="btn-secondary">
+                <Link href={`/${locale}/get-quote?family=real-estate-drone-photography&cta=drone-hub-page`} className="btn-secondary">
                   {isEs ? 'Solicitar Cotización' : 'Request a Quote'}
                 </Link>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Hero image ── */}
+        <section className="w-full bg-gray-950" aria-label={isEs ? 'Piloto de drone con licencia en República Dominicana' : 'Licensed drone pilot in the Dominican Republic'}>
+          <figure className="w-full max-h-[65vh] overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://res.cloudinary.com/dwewurxla/image/upload/v1776369513/republica_dominicana_piloto_con_drone_y_licencia_urk2n7.webp"
+              alt={isEs
+                ? 'Piloto de drone con licencia operando en República Dominicana — Babula Shots'
+                : 'Licensed drone pilot operating in the Dominican Republic — Babula Shots'}
+              className="w-full h-full object-cover object-center"
+              loading="eager"
+              width={1600}
+              height={900}
+            />
+          </figure>
+        </section>
+
+        {/* ── Bienes Raíces y Drone intro ── */}
+        <section className="py-20 bg-canvas">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                {isEs ? 'Bienes Raíces y Drone' : 'Real Estate & Drone'}
+              </h2>
+              <p className="text-lg text-ink-muted leading-relaxed">
+                {isEs
+                  ? 'La producción con dron en República Dominicana necesita una mezcla de creatividad y disciplina operativa. Nuestro enfoque combina planificación de vuelo, seguridad, cumplimiento local y dirección visual para que hoteles, real estate y marcas reciban activos aéreos listos para vender mejor.'
+                  : 'Drone production in the Dominican Republic needs a mix of creativity and operational discipline. Our approach combines flight planning, safety, local compliance, and visual direction so hotels, real estate, and brands receive aerial assets ready to sell better.'}
+              </p>
             </div>
           </div>
         </section>

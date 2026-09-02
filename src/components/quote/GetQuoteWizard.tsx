@@ -102,6 +102,9 @@ export default function GetQuoteWizard({ locale }: Props) {
       )
       if (matchEntry) {
         setForm(prev => ({ ...prev, serviceType: matchEntry[0] as QuoteServiceType }))
+        // Service is already known from the deep link — skip straight to the
+        // service-specific questions instead of making the visitor pick it again.
+        setStep(2)
       }
     }
   }, [])
