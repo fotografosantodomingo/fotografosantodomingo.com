@@ -173,7 +173,7 @@ export default async function PhotoStudioPage({ params: { locale } }: Props) {
               className="font-display uppercase text-ink"
               style={{ fontSize: 'clamp(36px, 7vw, 112px)', lineHeight: '0.95', letterSpacing: '-0.01em' }}
             >
-              {isEs ? 'Estudio · Fashion Editorial' : 'Studio · Fashion Editorial'}
+              {isEs ? 'Estudio Fotográfico en Santo Domingo' : 'Photo Studio in Santo Domingo'}
             </h1>
             <p className="text-ink-muted text-base md:text-lg max-w-2xl mt-6 leading-relaxed">
               {isEs

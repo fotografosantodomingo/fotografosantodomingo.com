@@ -239,6 +239,16 @@ export const weddingPhotographyContent: ServiceContent = {
             en: 'Yes. After the ceremony we coordinate an hour at Plaza España, Calle Las Damas, or Alcázar de Colón before the reception cocktail. It\'s one of the city\'s most photogenic backdrops.',
           },
         },
+        {
+          question: {
+            es: '¿Cuáles son las opciones de recepción cerca de la Catedral Primada de América?',
+            en: 'What are the wedding reception possibilities near the Primada Cathedral?',
+          },
+          answer: {
+            es: 'La Catedral está en pleno centro de la Zona Colonial, así que la mayoría de las parejas hacen la sesión de pareja ahí mismo (Plaza España, Calle Las Damas) y luego se trasladan a la recepción — normalmente 10-20 minutos en carro. Las opciones más comunes son Casas del XVI (boutique, dentro de la Zona Colonial, la más cercana), JW Marriott Santo Domingo en Piantini (salones de gran escala), Hilton Santo Domingo con vista al Malecón, o Hotel El Embajador con jardines. Coordinamos el itinerario completo — ceremonia, sesión de pareja y traslado — para que la cobertura fotográfica no pierda continuidad entre locaciones.',
+            en: 'The Cathedral sits right in the heart of the Colonial Zone, so most couples do the couple session right there (Plaza España, Calle Las Damas) and then travel to the reception — typically a 10-20 minute drive. The most common options are Casas del XVI (boutique, inside the Colonial Zone, the closest option), JW Marriott Santo Domingo in Piantini (large-scale ballrooms), Hilton Santo Domingo overlooking the Malecón, or Hotel El Embajador with its gardens. We coordinate the full itinerary — ceremony, couple session, and transfer — so photo coverage doesn\'t lose continuity between locations.',
+          },
+        },
       ],
     },
     {

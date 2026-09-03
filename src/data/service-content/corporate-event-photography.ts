@@ -268,8 +268,8 @@ export const corporateEventPhotographyContent: ServiceContent = {
     },
   longForm: {
       intro: {
-        es: 'La fotografia de eventos de alto nivel requiere velocidad, criterio editorial y control de prioridades en tiempo real. Nuestro enfoque en Republica Dominicana esta pensado para marcas, productores y organizaciones que necesitan contenido util durante y despues del evento.',
-        en: 'High-level event photography requires speed, editorial judgment, and real-time priority control. Our Dominican Republic approach is built for brands, producers, and organizations that need usable content during and after the event.',
+        es: 'Ofrecemos cobertura de eventos de alto nivel que requiere velocidad, criterio editorial y control de prioridades en tiempo real. Nuestro enfoque en Republica Dominicana esta pensado para marcas, productores y organizaciones que necesitan contenido util durante y despues del evento.',
+        en: 'We provide high-level event coverage that requires speed, editorial judgment, and real-time priority control. Our Dominican Republic approach is built for brands, producers, and organizations that need usable content during and after the event.',
       },
       sections: [
         {
