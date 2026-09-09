@@ -360,6 +360,41 @@ export default async function ProposalHubPage({ params: { locale } }: Props) {
           </div>
         </section>
 
+        {/* ── Real case study ───────────────────────────────────────────────── */}
+        <section className="py-16 sm:py-24 px-4 bg-neutral-50 dark:bg-neutral-950" aria-labelledby="case-study-heading">
+          <div className="mx-auto max-w-4xl">
+            <h2 id="case-study-heading" className="text-center text-2xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-3xl mb-4">
+              {isEs ? 'Una Propuesta Real' : 'A Real Proposal'}
+            </h2>
+            <p className="text-center text-sm text-neutral-500 dark:text-neutral-400 mb-10 max-w-2xl mx-auto">
+              {isEs
+                ? 'Cómo nos escondemos, cómo capturamos la reacción real y qué pasa después de la sorpresa — un caso real, no solo texto de marketing.'
+                : 'How we hide, how we capture the real reaction, and what happens after the surprise — a real case, not just marketing copy.'}
+            </p>
+            <Link
+              href={`/${locale}/proposal/mirador-de-paraiso-surprise-proposal`}
+              className="group flex flex-col sm:flex-row items-center gap-6 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-6 transition hover:border-amber-300 hover:shadow-lg"
+            >
+              <span className="text-4xl">🥷</span>
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white group-hover:text-amber-500 transition-colors">
+                  {isEs
+                    ? 'Una Propuesta Secreta en el Mirador de Paraíso'
+                    : 'A Secret Proposal at Mirador de Paraíso'}
+                </h3>
+                <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+                  {isEs
+                    ? 'Barahona–Pedernales · Cómo planeamos, ocultamos y documentamos toda la sorpresa'
+                    : 'Barahona–Pedernales · How we planned, hid, and documented the entire surprise'}
+                </p>
+              </div>
+              <span className="text-sm font-medium text-amber-500 group-hover:underline whitespace-nowrap">
+                {isEs ? 'Ver la historia →' : 'See the story →'}
+              </span>
+            </Link>
+          </div>
+        </section>
+
         {/* ── Final CTA ─────────────────────────────────────────────────────── */}
         {/* hero-white-lock: same fix as the hero above — always-dark section. */}
         <section className="hero-white-lock py-16 sm:py-24 px-4 bg-neutral-950 text-center">

@@ -1071,6 +1071,50 @@ export default async function FamilyPage({ params }: Props) {
           </section>
         )}
 
+        {/* ── REAL CASE STUDY ── proposal-photography only: real Mirador de Paraíso story */}
+        {family.slug === 'proposal-photography' && (
+          <section className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+                {isEs ? 'Caso Real' : 'Real Case'}
+              </p>
+              <h2
+                className="font-display uppercase text-ink mb-12"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
+                {isEs ? 'Una Propuesta en el Mirador de Paraíso' : 'A Proposal at Mirador de Paraíso'}
+              </h2>
+              <Link
+                href={`/${locale}/proposal/mirador-de-paraiso-surprise-proposal`}
+                className="group grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://res.cloudinary.com/dwewurxla/image/upload/v1788899907/Propuesta_de_matrimonio_fotografo_republica_dominicana_babula_1_iogtuy.webp"
+                  alt={isEs
+                    ? 'Vista amplia de una pareja abrazada en un mirador costero sobre el Mar Caribe, ruta Barahona–Pedernales, República Dominicana'
+                    : 'Wide view of a couple embracing at a coastal mirador above the Caribbean Sea, Barahona–Pedernales route, Dominican Republic'}
+                  width={3118}
+                  height={2080}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-auto rounded-2xl object-cover"
+                />
+                <div>
+                  <p className="text-ink text-base md:text-lg leading-relaxed">
+                    {isEs
+                      ? 'Uno de mis miradores favoritos para propuestas es este, cerca de Paraíso, Barahona — vistas espectaculares sobre el Caribe y suficiente vegetación natural para trabajar en modo ninja sin que la pareja note nada. Esta es la historia real de una propuesta que documenté ahí, desde la llegada hasta el sí.'
+                      : 'One of my favorite mirador spots for proposals is this one near Paraíso, Barahona — spectacular views over the Caribbean and just enough natural cover to work in full ninja mode without the couple noticing a thing. Here is the real story of a proposal I documented there, from arrival to the yes.'}
+                  </p>
+                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-ink group-hover:underline underline-offset-4">
+                    {isEs ? 'Ver la historia completa' : 'See the full story'} →
+                  </span>
+                </div>
+              </Link>
+            </div>
+          </section>
+        )}
+
         {/* ── LOCATIONS ── geographic SEO + venue depth + portfolio links */}
         {content?.locations && content.locations.length > 0 && (
           <section className="border-b border-hairline-soft py-16 md:py-20">
