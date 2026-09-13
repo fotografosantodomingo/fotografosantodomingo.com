@@ -25,7 +25,10 @@ export async function generateMetadata({ params: { locale } }: { params: { local
     ? 'Consejos de fotografía, guías de bodas y recomendaciones de locaciones en República Dominicana del fotógrafo profesional Michal Babula. Planifica tu sesión perfecta.'
     : 'Photography tips, wedding guides, and DR location recommendations from professional photographer Michal Babula. Plan your perfect photo session.'
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'blog fotografía santo domingo, consejos fotografía bodas, tendencias fotografía dominicana, sesiones familiares RD, drone fotografía caribe'

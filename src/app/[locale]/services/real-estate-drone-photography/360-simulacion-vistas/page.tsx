@@ -21,7 +21,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Fotografía aérea 360° con dron para simular las vistas reales de proyectos inmobiliarios antes de construirlos. Preventa, tours virtuales interactivos y renders 3D en República Dominicana. Desde $370 USD.'
     : 'Aerial 360° drone photography to simulate real views of real estate projects before construction. Pre-sale, interactive virtual tours, and 3D render backplates in the Dominican Republic. From $370 USD.'
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'imágenes 360 dron simulación vistas, fotografía aérea 360 grados inmobiliaria, drone 360 preventa proyectos, tour virtual aéreo república dominicana, simulación vistas piso dron, 360 panorámica inmobiliaria santo domingo'

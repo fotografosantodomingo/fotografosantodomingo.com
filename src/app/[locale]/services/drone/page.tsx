@@ -20,7 +20,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Fotografía y video aéreo con drone en toda República Dominicana — bienes raíces y proyectos industriales/comerciales como análisis de tráfico y levantamientos portuarios. 4K, piloto certificado.'
     : 'Aerial drone photography and video across the Dominican Republic — real estate and industrial/commercial projects like traffic analytics and port surveys. 4K, certified pilot.'
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'servicios de dron republica dominicana, fotografo drone santo domingo, dron para bienes raices, dron industrial republica dominicana, video aereo 4k dron'

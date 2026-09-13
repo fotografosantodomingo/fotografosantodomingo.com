@@ -202,7 +202,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     : 'Professional photographic coverage of product presentations, networking events and B2B corporate events at JW Marriott Santo Domingo, Dominican Republic. Express delivery for social and press.'
 
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'fotografo eventos empresariales JW Marriott Santo Domingo, fotografo presentacion producto santo domingo, fotografo networking republica dominicana, fotografia corporativa JW Marriott, cobertura eventos B2B Santo Domingo'

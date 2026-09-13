@@ -37,7 +37,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Fotógrafo profesional en Punta Cana: bodas, sesiones familiares en la playa, retratos, fotografía aérea con drone, inmobiliaria y eventos corporativos. Cobertura en Bávaro, Cap Cana, Macao y toda la zona este.'
     : 'Professional photographer in Punta Cana: weddings, beach family sessions, portraits, aerial drone, real estate, and corporate events. Coverage across Bávaro, Cap Cana, Macao and the whole east coast.'
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     alternates: {
       canonical: `${BASE_URL}/${locale}/punta-cana`,

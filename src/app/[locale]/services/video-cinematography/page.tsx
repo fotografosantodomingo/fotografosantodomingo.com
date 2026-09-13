@@ -286,7 +286,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     : 'Video production with 4K standard and 8K available. Combination of Mavic 3 drone and ground camera, waterproof housing, single operator. Multidisciplinary director of photography in Santo Domingo, Punta Cana, and all of the Dominican Republic.'
 
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'videografo santo domingo, cinematografo republica dominicana, video 4k punta cana, video drone republica dominicana, filmacion 8k, videografo drone wedding, video cinematografico santo domingo, produccion audiovisual rd'

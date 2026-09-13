@@ -30,7 +30,10 @@ export async function generateMetadata({
     : 'book photographer punta cana, book photographer santo domingo, hire photographer dominican republic, stripe deposit photography, wedding photographer booking DR, book photo session dominican republic'
 
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords,
     alternates: {

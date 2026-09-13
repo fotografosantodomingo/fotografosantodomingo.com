@@ -19,7 +19,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     : 'Formal quotation for drone visual documentation in Punta Cana and Santo Domingo. Includes scope, deliverables, investment, and payment terms.'
 
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'cotizacion drone punta cana, propuesta servicios drone republica dominicana, documentacion visual de construccion, cotizacion formal audiovisual'

@@ -20,7 +20,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Fotografía de propuesta de matrimonio en República Dominicana — modo ninja oculto con teleobjetivo 400–600 mm, Punta Cana, Santo Domingo, Samaná y toda la isla. Precio desde $270 USD + ITBIS.'
     : 'Proposal photography in Dominican Republic — hidden ninja mode with 400–600 mm telephoto lens, Punta Cana, Santo Domingo, Samaná and the entire island. Starting from $270 USD + tax.'
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'fotografo propuesta matrimonio republica dominicana, fotografo propuesta oculta punta cana, fotografo sorpresa pedida de mano RD, fotografo propuesta modo ninja, fotografia propuesta playa dominicana'

@@ -140,7 +140,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     : 'A real surprise proposal captured discreetly from the ground and air at Mirador de Paraíso, on the Barahona–Pedernales coastal route, Dominican Republic.'
 
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'propuesta sorpresa republica dominicana, fotografo propuesta barahona, propuesta matrimonio pedernales, fotografia de propuesta republica dominicana, fotografo oculto propuesta, fotografo sorpresa compromiso'

@@ -79,7 +79,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Sesión de fotos en estudio profesional en Santo Domingo, RD. Especialistas en fashion editorial, retratos creativos y fotografía artística. Iluminación profesional, fondos editoriales y dirección creativa. Desde $120 USD.'
     : 'Professional photo studio sessions in Santo Domingo, DR. Specialists in fashion editorial, creative portraits, and fine art photography. Pro lighting, editorial backdrops, and creative direction. From $120 USD.'
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     alternates: {
       canonical: `${BASE_URL}/${locale}/photo-studio-santo-domingo`,

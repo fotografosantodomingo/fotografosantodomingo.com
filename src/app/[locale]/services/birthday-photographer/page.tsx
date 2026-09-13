@@ -403,7 +403,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     : 'Professional birthday photography in Santo Domingo, Punta Cana, and Boca Chica. Sessions for babies, kids, quinceañeras, and family celebrations.'
 
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'fotografo de cumpleanos santo domingo, fotografia de cumpleanos punta cana, fotografo quincenera santo domingo, sesion smash cake republica dominicana, cobertura fiesta infantil'

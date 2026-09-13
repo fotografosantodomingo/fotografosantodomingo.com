@@ -102,7 +102,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : undefined
 
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description: desc,
     ...(keywords ? { keywords } : {}),
     alternates: {

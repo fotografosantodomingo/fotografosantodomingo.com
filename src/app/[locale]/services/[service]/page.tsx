@@ -128,7 +128,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const keywords = seo ? (isEs ? seo.keywords.es : seo.keywords.en) : undefined
 
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     ...(keywords ? { keywords } : {}),
     alternates: {

@@ -19,7 +19,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Reseñas verificadas de clientes de Babula Shots en Google y Trustpilot. Lee lo que dicen parejas, empresas y familias sobre el fotógrafo profesional en Santo Domingo.'
     : 'Verified client reviews of Babula Shots on Google and Trustpilot. Read what couples, businesses and families say about the professional photographer in Santo Domingo.'
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     alternates: {
       canonical: `${BASE_URL}/${locale}/testimonials`,

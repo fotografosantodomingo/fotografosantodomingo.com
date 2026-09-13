@@ -17,7 +17,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Reserva tu sesión fotográfica en Santo Domingo, Punta Cana o cualquier lugar de República Dominicana. Respuesta en 1 hora por WhatsApp, email o teléfono.'
     : 'Book your photography session in Santo Domingo, Punta Cana or anywhere in Dominican Republic. Response within 1 hour via WhatsApp, email or phone.'
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'contacto fotógrafo santo domingo, cotizar sesión fotográfica RD, whatsapp fotógrafo bodas, reservar fotógrafo dominicana, presupuesto fotografía'

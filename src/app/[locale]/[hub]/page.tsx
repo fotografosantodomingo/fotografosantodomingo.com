@@ -77,7 +77,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : `${cityName.toLowerCase()} photographer, ${familyTitle.toLowerCase()} ${cityName.toLowerCase()}, ${familySeo?.keywords.en ?? ''}`
 
   return {
-    title: `${h1} | Babula Shots`,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: `${h1} | Babula Shots` },
     description,
     keywords,
     alternates: {

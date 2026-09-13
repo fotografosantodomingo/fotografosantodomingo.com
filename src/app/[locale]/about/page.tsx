@@ -19,7 +19,10 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
     ? 'Conoce a Michal Babula, fotógrafo profesional en Santo Domingo desde 2015. Más de 500 clientes satisfech@s en bodas, retratos, drone y eventos por toda República Dominicana.'
     : 'Meet Michal Babula — professional photographer in Santo Domingo since 2015. Over 500 satisfied clients across weddings, portraits, drone, and events throughout the Dominican Republic.'
   return {
-    title,
+    // `absolute` bypasses the layout's "%s | Babula Shots" template — this
+    // title already carries the brand, so without it the rendered <title>
+    // doubles to "... | Babula Shots | Babula Shots".
+    title: { absolute: title },
     description,
     keywords: isEs
       ? 'fotógrafo profesional santo domingo, Michal Babula fotógrafo, fotógrafo con experiencia en bodas, retratos ejecutivos santo domingo, fotógrafo dominicana'
