@@ -2,10 +2,16 @@ import type { CrossPostResult, Env } from './types'
 
 // Instagram's container step ("/media") fails ("Media ID is not available") on
 // very large source images. Serve IG a dimension-capped JPEG via Supabase's
-// image render endpoint (bounds BOTH sides to 1440px, IG's feed max). Facebook
-// and LinkedIn tolerate full-res, so only the IG path uses this.
+// image render endpoint (bounds BOTH sides to 1440px, IG's feed max).
 function igImageUrl(publicUrl: string): string {
   return renderCapped(publicUrl, 1440)
+}
+
+// Facebook's photo-by-URL upload rejects files over ~4 MB with a bare
+// "Invalid parameter" (seen 2026-09-13 on a 14 MB drone JPEG). Cap to 2048px,
+// which keeps the rendered JPEG well under the limit; LinkedIn still gets full-res.
+function fbImageUrl(publicUrl: string): string {
+  return renderCapped(publicUrl, 2048)
 }
 
 // Generic Supabase render-endpoint cap (returns a JPEG bounded to size×size).
@@ -39,7 +45,7 @@ async function postToFacebook(
       const res = await fetch(`https://graph.facebook.com/${pageId}/photos`, {
         method: 'POST',
         body: new URLSearchParams({
-          url: imageUrls[0],
+          url: fbImageUrl(imageUrls[0]),
           caption: fullCaption,
           published: 'true',
           access_token: token,
@@ -55,7 +61,7 @@ async function postToFacebook(
     for (const url of imageUrls) {
       const r = await fetch(`https://graph.facebook.com/${pageId}/photos`, {
         method: 'POST',
-        body: new URLSearchParams({ url, published: 'false', access_token: token }),
+        body: new URLSearchParams({ url: fbImageUrl(url), published: 'false', access_token: token }),
       })
       const j = await r.json() as { id?: string; error?: { message: string } }
       if (!r.ok || j.error) throw new Error(`Photo upload: ${j.error?.message ?? r.status}`)

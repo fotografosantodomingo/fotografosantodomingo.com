@@ -102,22 +102,25 @@ Per brand:
    to the Page in Meta Business Suite)
 4. **Enable 2FA** on the FB account that owns the Page (Meta's Business
    policy may require it before API publishing works)
-5. **Graph API Explorer** (developers.facebook.com/tools/explorer):
-   - Select the app from the Meta App dropdown
-   - Permissions: `pages_show_list`, `pages_read_engagement`,
-     `pages_manage_posts`, `instagram_business_basic` (or `instagram_basic`),
-     `instagram_business_content_publish` (or `instagram_content_publish`)
-   - Generate Access Token → in popup, **explicitly select the Page** +
-     **the IG account**
+5. **Use a Business Manager System User, not the Graph API Explorer.**
+   Explorer tokens derive from a personal login and die on the next password
+   change (this broke fotografosantodomingo.com in Sep 2026). System User
+   tokens never expire unless revoked.
+   - In the app's Use cases, open each use case and **Add** the permissions
+     `pages_manage_posts`, `pages_read_engagement`, `pages_show_list`,
+     `instagram_basic`, `instagram_content_publish` (a permission not added
+     to a use case does not appear in the token generator).
+   - business.facebook.com → Settings → Users → System users → Add (Admin)
+   - Assign assets with Full control: the Page, the IG account, the app
+   - Generate token → app → expiration **Never** → tick the five permissions
+     above plus `business_management`
 
 ```bash
-# In a python session or with a local helper:
-#   1. Exchange short-lived user token for long-lived (60d) via /oauth/access_token
-#   2. GET /{page-id}?fields=access_token,instagram_business_account using the
-#      long-lived user token → this gives you a PERMANENT Page Access Token
-#      and the IG Business Account ID
-# (See workers/drive-pipeline/scripts/derive-meta-tokens.py if present, or
-# the inline Python in the original session's git log.)
+# The system-user token identifies the user, not the Page. Exchange it:
+#   GET /v21.0/me/accounts?fields=id,name,instagram_business_account,access_token
+#   → copy the Page's access_token (permanent) and instagram_business_account.id
+#   Verify: GET /v21.0/debug_token?input_token=PAGE_TOKEN&access_token=PAGE_TOKEN
+#   → expect "type": "PAGE", "expires_at": 0
 
 wrangler secret put META_PAGE_ACCESS_TOKEN
 wrangler secret put META_PAGE_ID

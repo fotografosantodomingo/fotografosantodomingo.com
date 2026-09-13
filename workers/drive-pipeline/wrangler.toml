@@ -4,9 +4,10 @@ compatibility_date = "2025-05-01"
 compatibility_flags = ["nodejs_compat"]
 
 [triggers]
-# Twice daily, Santo Domingo time (AST = UTC-4, no DST):
-#   10:00 AST → 14:00 UTC   |   19:00 AST → 23:00 UTC
-crons = ["0 14 * * *", "0 23 * * *"]
+# Every 3rd day of the month at 10:00 Santo Domingo time (AST = UTC-4, no DST → 14:00 UTC).
+# Day-of-month step resets on the 1st, so the gap is 1-3 days across a month boundary.
+# One Drive group is processed per run, so this is at most one post every 3 days.
+crons = ["0 14 */3 * *"]
 
 [vars]
 SUPABASE_URL = "https://ummlavdykprwozwzhvge.supabase.co"
