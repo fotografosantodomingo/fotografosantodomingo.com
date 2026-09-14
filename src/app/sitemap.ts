@@ -355,5 +355,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/en/services/real-estate-drone-photography/360-simulacion-vistas`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.75 },
     { url: `${BASE_URL}/es/proposal/mirador-de-paraiso-surprise-proposal`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
     { url: `${BASE_URL}/en/proposal/mirador-de-paraiso-surprise-proposal`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE_URL}/es/services/analog-film-photography`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.75 },
+    { url: `${BASE_URL}/en/services/analog-film-photography`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.75 },
   ]
 }

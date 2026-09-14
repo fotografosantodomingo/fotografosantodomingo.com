@@ -1118,6 +1118,35 @@ export default async function FamilyPage({ params }: Props) {
           </section>
         )}
 
+        {/* ── ANALOG ADD-ON ── cross-sell on people-centric families only */}
+        {['wedding-photography', 'luxury-portrait-photography', 'family-beach-photography', 'proposal-photography', 'birthday-event-photography'].includes(family.slug) && (
+          <section className="border-b border-hairline-soft py-16 md:py-20">
+            <div className="container mx-auto px-4">
+              <Link
+                href={`/${locale}/services/analog-film-photography`}
+                className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-hairline-soft px-6 py-6 hover:border-hairline transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="text-3xl">🎞️</span>
+                  <div>
+                    <h3 className="text-ink font-semibold">
+                      {isEs ? 'Complemento: Fotografía Analógica' : 'Add-On: Analog Film Photography'}
+                    </h3>
+                    <p className="text-ink-muted text-sm mt-1">
+                      {isEs
+                        ? 'Añade rollos de película real a tu sesión — entrega por separado, 1-2 semanas.'
+                        : 'Add real film to your session — delivered separately, 1-2 weeks.'}
+                    </p>
+                  </div>
+                </div>
+                <span className="text-sm font-medium text-ink group-hover:underline underline-offset-4 whitespace-nowrap">
+                  {isEs ? 'Ver más' : 'Learn more'} →
+                </span>
+              </Link>
+            </div>
+          </section>
+        )}
+
         {/* ── LOCATIONS ── geographic SEO + venue depth + portfolio links */}
         {content?.locations && content.locations.length > 0 && (
           <section className="border-b border-hairline-soft py-16 md:py-20">
