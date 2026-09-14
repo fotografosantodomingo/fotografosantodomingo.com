@@ -93,6 +93,17 @@ export default async function PortfolioPage({ params: { locale } }: Props) {
           )}
         />
       ))}
+      {/* Per-image Photograph schemas — supplementary entity for AI/LLM
+          answer engines (GEO); Google Images relies on ImageObject above. */}
+      {images.filter((img) => img.featured).map((img) => (
+        <script
+          key={`photo-${img.id}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={generateJsonLd(
+            schemaGenerators.photograph(img, locale)
+          )}
+        />
+      ))}
 
       <PortfolioClient images={images} locale={locale} />
     </>

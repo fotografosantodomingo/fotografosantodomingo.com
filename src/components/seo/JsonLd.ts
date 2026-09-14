@@ -34,7 +34,7 @@ export const schemaGenerators = {
 
   localBusiness: () => ({
     '@context': 'https://schema.org',
-    '@type': ['LocalBusiness', 'ProfessionalService'],
+    '@type': ['LocalBusiness', 'ProfessionalService', 'PhotographyBusiness'],
     '@id': `${BASE_URL}/#business`,
     name: 'Fotografo Santo Domingo',
     alternateName: 'Babula Shots',
@@ -84,7 +84,7 @@ export const schemaGenerators = {
   // ----------------------------------------------------------
   localBusinessWithRating: (stats: ReviewStats) => ({
     '@context': 'https://schema.org',
-    '@type': ['LocalBusiness', 'ProfessionalService'],
+    '@type': ['LocalBusiness', 'ProfessionalService', 'PhotographyBusiness'],
     '@id': `${BASE_URL}/#business`,
     name: 'Fotografo Santo Domingo',
     alternateName: 'Babula Shots',
@@ -179,6 +179,28 @@ export const schemaGenerators = {
       },
       license: `${BASE_URL}/terms`,
       acquireLicensePage: `${BASE_URL}/contact`,
+    }
+  },
+
+  // ----------------------------------------------------------
+  // Photograph — supplementary entity alongside imageObject(). Google gives
+  // this type no special rich-result treatment (ImageObject is what drives
+  // Google Images); this exists for AI/LLM answer engines doing GEO, as a
+  // richer, more specific description of the same photo. Only real fields:
+  // locationCreated comes from the image's own `location` column when set,
+  // and there's no per-image shoot-date data to put in dateCreated, so it's
+  // omitted rather than invented.
+  // ----------------------------------------------------------
+  photograph: (image: PortfolioImage, locale: string) => {
+    const imageId = `${BASE_URL}/${locale}/portfolio#image-${image.id}`
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Photograph',
+      about: { '@id': imageId },
+      creator: { '@type': 'Person', '@id': `${BASE_URL}/#person` },
+      ...(image.location
+        ? { locationCreated: { '@type': 'Place', name: image.location } }
+        : {}),
     }
   },
 
