@@ -56,6 +56,37 @@ export async function generateMetadata({ params: { locale } }: Props): Promise<M
   }
 }
 
+const FAQ_ITEMS = [
+  {
+    q: { es: '¿Esto reemplaza mis fotos digitales?', en: 'Does this replace my digital photos?' },
+    a: {
+      es: 'No. Tu cobertura digital completa sigue exactamente igual, con su entrega normal. La película es un complemento adicional, no un reemplazo.',
+      en: 'No. Your full digital coverage stays exactly the same, with its normal delivery. Film is an additional complement, not a replacement.',
+    },
+  },
+  {
+    q: { es: '¿Puedo elegir qué momentos se capturan en película?', en: 'Can I choose which moments get shot on film?' },
+    a: {
+      es: 'Sí — lo coordinamos juntos antes de la sesión, priorizando los momentos con luz natural donde el look de la película se aprecia más.',
+      en: 'Yes — we coordinate it together before the session, prioritizing natural-light moments where film\'s look shows best.',
+    },
+  },
+  {
+    q: { es: '¿En qué formato recibo las fotos de película?', en: 'What format do I receive the film photos in?' },
+    a: {
+      es: 'Como escaneos digitales en alta resolución, listos para descargar e imprimir.',
+      en: 'As high-resolution digital scans, ready to download and print.',
+    },
+  },
+  {
+    q: { es: '¿Por qué toma más tiempo que mis fotos digitales?', en: 'Why does it take longer than my digital photos?' },
+    a: {
+      es: 'Porque es un proceso físico real — el rollo se revela y escanea en un laboratorio, no es instantáneo como un archivo digital.',
+      en: 'Because it\'s a real physical process — the roll is developed and scanned at a lab, not instant like a digital file.',
+    },
+  },
+]
+
 const AVAILABLE_FOR = [
   { es: 'Bodas', en: 'Weddings', href: 'wedding-photography' },
   { es: 'Retratos de lujo', en: 'Luxury portraits', href: 'luxury-portrait-photography' },
@@ -100,10 +131,21 @@ export default function AnalogFilmPhotographyPage({ params: { locale } }: Props)
     // Offer here rather than inventing a price.
   }
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ_ITEMS.map((item) => ({
+      '@type': 'Question',
+      name: isEs ? item.q.es : item.q.en,
+      acceptedAnswer: { '@type': 'Answer', text: isEs ? item.a.es : item.a.en },
+    })),
+  }
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={generateJsonLd(breadcrumbSchema)} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       <main className="min-h-screen bg-canvas text-ink">
 
@@ -158,11 +200,106 @@ export default function AnalogFilmPhotographyPage({ params: { locale } }: Props)
               <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-6">
                 {isEs ? 'Por Qué Ahora' : 'Why Now'}
               </p>
-              <p className="text-ink text-lg md:text-xl leading-relaxed">
-                {isEs
-                  ? 'He pasado el último tiempo dedicado a dominar la fotografía analógica — cámaras de película real, sin pantalla, sin vista previa. Ahora que confío en el proceso, lo ofrezco como complemento opcional: mientras cubro tu sesión digitalmente como siempre, también disparo un rollo de película en los momentos que se prestan para ese look.'
-                  : 'I\'ve spent the last stretch mastering analog film photography — real film cameras, no screen, no preview. Now that I trust the process, I\'m offering it as an optional complement: while I cover your session digitally as always, I also shoot a roll of film during the moments that suit that look.'}
-              </p>
+              <div className="space-y-5 text-ink text-lg md:text-xl leading-relaxed">
+                <p>
+                  {isEs
+                    ? 'La película no perdona errores. No hay pantalla para revisar la toma, no hay una segunda oportunidad instantánea — cada disparo del rollo cuenta, y eso cambia por completo la forma de trabajar. Me obliga a ir más lento, a leer la luz real en vez de confiar en un histograma, a esperar el momento exacto en lugar de disparar de más y elegir después.'
+                    : 'Film doesn\'t forgive mistakes. There\'s no screen to check the shot, no instant second chance — every frame on the roll counts, and that changes how you work completely. It forces me to slow down, to read real light instead of trusting a histogram, to wait for the exact moment instead of shooting in bulk and choosing later.'}
+                </p>
+                <p>
+                  {isEs
+                    ? 'He dedicado el último tiempo a dominar ese proceso completo — exposición, cámaras mecánicas, y todo lo que implica trabajar sin red de seguridad digital. Ahora que confío en el resultado, lo ofrezco como complemento opcional: mientras cubro tu sesión digitalmente como siempre, también disparo uno o más rollos en los momentos que se prestan para ese look.'
+                    : 'I\'ve spent the last stretch mastering that entire process — exposure, mechanical cameras, everything that comes with working without a digital safety net. Now that I trust the result, I\'m offering it as an optional complement: while I cover your session digitally as always, I also shoot one or more rolls during the moments that suit that look.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── WHY FILM — the tangible, honest aesthetic case ── */}
+        <section className="border-b border-hairline-soft py-20 md:py-28">
+          <div className="container mx-auto px-4">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'La Diferencia Real' : 'The Real Difference'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink mb-12 max-w-2xl"
+              style={{ fontSize: 'clamp(26px, 4vw, 40px)', lineHeight: '1.05' }}
+            >
+              {isEs ? 'Qué Ofrece la Película Que lo Digital No' : 'What Film Gives You That Digital Doesn\'t'}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+              <div>
+                <span className="text-2xl mb-3 block">🎞️</span>
+                <h3 className="text-ink font-semibold mb-2">{isEs ? 'Grano, no ruido' : 'Grain, not noise'}</h3>
+                <p className="text-ink-muted text-sm leading-relaxed">
+                  {isEs
+                    ? 'El grano de la película tiene textura y carácter propio — es parte de la imagen, no un defecto a corregir. El ruido digital, en cambio, siempre se ve como un error.'
+                    : 'Film grain has its own texture and character — it\'s part of the image, not a flaw to correct. Digital noise, by contrast, always reads as a mistake.'}
+                </p>
+              </div>
+              <div>
+                <span className="text-2xl mb-3 block">🌇</span>
+                <h3 className="text-ink font-semibold mb-2">{isEs ? 'Color y luces más suaves' : 'Softer color and highlights'}</h3>
+                <p className="text-ink-muted text-sm leading-relaxed">
+                  {isEs
+                    ? 'La película absorbe cielos brillantes y luz dura de forma más orgánica que un sensor digital, con tonos de piel más cálidos y naturales.'
+                    : 'Film absorbs bright skies and harsh light more gracefully than a digital sensor, with warmer, more natural skin tones.'}
+                </p>
+              </div>
+              <div>
+                <span className="text-2xl mb-3 block">⏳</span>
+                <h3 className="text-ink font-semibold mb-2">{isEs ? 'Momentos más genuinos' : 'More genuine moments'}</h3>
+                <p className="text-ink-muted text-sm leading-relaxed">
+                  {isEs
+                    ? 'Sin pantalla que revisar entre disparos, ni tú ni yo nos distraemos del momento — el resultado son reacciones más naturales, menos posadas.'
+                    : 'With no screen to check between shots, neither of us gets pulled out of the moment — the result is more natural, less posed reactions.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── HOW IT WORKS ── */}
+        <section className="border-b border-hairline-soft py-20 md:py-28">
+          <div className="container mx-auto px-4">
+            <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">
+              {isEs ? 'El Proceso' : 'The Process'}
+            </p>
+            <h2
+              className="font-display uppercase text-ink mb-12 max-w-2xl"
+              style={{ fontSize: 'clamp(26px, 4vw, 40px)', lineHeight: '1.05' }}
+            >
+              {isEs ? 'Cómo Funciona' : 'How It Works'}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                {
+                  num: '01',
+                  es: 'Antes de tu sesión, coordinamos juntos qué momentos se prestan mejor para película — luz natural, instantes íntimos, sin flash de estudio.',
+                  en: 'Before your session, we coordinate together which moments suit film best — natural light, intimate instants, no studio flash.',
+                },
+                {
+                  num: '02',
+                  es: 'Durante tu sesión digital normal, también disparo uno o más rollos en esos momentos clave.',
+                  en: 'During your normal digital session, I also shoot one or more rolls during those key moments.',
+                },
+                {
+                  num: '03',
+                  es: 'El rollo se revela y escanea en un laboratorio especializado en película analógica.',
+                  en: 'The roll is developed and scanned at a lab specialized in analog film.',
+                },
+                {
+                  num: '04',
+                  es: 'Recibes los escaneos en alta resolución digitalmente, en una entrega separada de 1-2 semanas.',
+                  en: 'You receive the high-resolution scans digitally, in a separate delivery of 1-2 weeks.',
+                },
+              ].map((step) => (
+                <div key={step.num} className="flex flex-col">
+                  <span className="text-4xl font-extrabold text-ink/15 leading-none mb-3">{step.num}</span>
+                  <p className="text-ink-muted text-sm leading-relaxed">{isEs ? step.es : step.en}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -227,6 +364,40 @@ export default function AnalogFilmPhotographyPage({ params: { locale } }: Props)
                   <span className="text-ink-muted group-hover:text-ink transition-colors">→</span>
                 </Link>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── FAQ ── */}
+        <section className="border-b border-hairline-soft py-16 md:py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl">
+              <p className="font-mono uppercase tracking-widest text-[11px] text-ink-muted mb-4">FAQ</p>
+              <h2
+                className="font-display uppercase text-ink mb-12"
+                style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.0' }}
+              >
+                {isEs ? 'Preguntas Frecuentes' : 'Frequently Asked'}
+              </h2>
+              <ul className="border-t border-hairline-soft">
+                {FAQ_ITEMS.map((item, i) => (
+                  <li key={item.q.es} className="border-b border-hairline-soft py-6 md:py-7">
+                    <div className="flex items-start gap-4 md:gap-6">
+                      <span className="font-mono uppercase tracking-widest text-[10px] text-ink-muted shrink-0 w-8 mt-1">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <div className="flex-1">
+                        <h3 className="text-ink text-base md:text-lg leading-snug font-medium">
+                          {isEs ? item.q.es : item.q.en}
+                        </h3>
+                        <p className="text-ink-muted text-sm md:text-base leading-relaxed mt-3">
+                          {isEs ? item.a.es : item.a.en}
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
