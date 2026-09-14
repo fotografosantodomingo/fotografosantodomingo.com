@@ -201,7 +201,7 @@ export async function sendNewsletterWelcome(data: {
         </p>
         <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0"/>
         <p style="color:#94a3b8;font-size:12px;text-align:center">
-          Fotógrafo Santo Domingo — Babula Shots · C. El Conde 142, Santo Domingo 11111<br/>
+          Fotógrafo Santo Domingo — Babula Shots · C. El Conde 142, Santo Domingo 10210<br/>
           <a href="https://www.fotografosantodomingo.com" style="color:#0ea5e9">fotografosantodomingo.com</a>
           &nbsp;·&nbsp;
           <a href="https://instagram.com/babulashotsrd" style="color:#0ea5e9">@babulashotsrd</a>

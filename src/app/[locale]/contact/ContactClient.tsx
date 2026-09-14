@@ -403,7 +403,7 @@ export default function ContactPage() {
                       {t('contact.info.location') || 'Location'}
                     </h3>
                     <p className="text-ink-muted">C. El Conde 142</p>
-                    <p className="text-ink-muted">Santo Domingo 11111</p>
+                    <p className="text-ink-muted">Santo Domingo 10210</p>
                     <p className="text-ink-muted text-sm">{t('contact.info.locationDetail')}</p>
                   </div>
                 </div>
