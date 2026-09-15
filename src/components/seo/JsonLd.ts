@@ -38,7 +38,7 @@ export const schemaGenerators = {
     '@id': `${BASE_URL}/#business`,
     name: 'Fotografo Santo Domingo',
     alternateName: 'Babula Shots',
-    image: `${BASE_URL}/api/og`,
+    image: `${BASE_URL}/images/babula-shots-michal-babula-fotografo-profesional.webp`,
     url: BASE_URL,
     telephone: '+1-809-720-9547',
     address: {
@@ -88,7 +88,7 @@ export const schemaGenerators = {
     '@id': `${BASE_URL}/#business`,
     name: 'Fotografo Santo Domingo',
     alternateName: 'Babula Shots',
-    image: `${BASE_URL}/api/og`,
+    image: `${BASE_URL}/images/babula-shots-michal-babula-fotografo-profesional.webp`,
     url: BASE_URL,
     telephone: '+18097209547',
     address: {
